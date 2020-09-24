@@ -106,13 +106,11 @@ public class sClient
             {
                 byte[] packetBytes = _receivedData.ReadBytes(packetLength);
 
-                Debug.Log("sClient(3) calls ThreadManager");
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
                     using (sPacket packet = new sPacket(packetBytes))
                     {
                         int packetId = packet.ReadInt();
-                        Debug.LogWarning("(1)PACKETID= " + packetId);
                         sServer.PacketHandler _delegate;
                         sServer._packetHandlers.TryGetValue(packetId, out _delegate);
                         _delegate?.Invoke(packetId, packet);
@@ -169,32 +167,25 @@ public class sClient
         {
             int packetLength = packetData.ReadInt();
             byte[] packetBytes = packetData.ReadBytes(packetLength);
-           /* Debug.Log("sClient(4) calls ThreadManager");
             ThreadManager.ExecuteOnMainThread(() =>
             {
                 using (sPacket packet = new sPacket(packetBytes))
                 {
                     int packetID = packet.ReadInt();
-                    Debug.LogWarning("(2)PACKETID= " + packetID);
-                    Debug.Log("Dictonary contains = " + sServer._packetHandlers.ContainsKey(packetID));
-                    if (sServer._packetHandlers.ContainsKey(packetID))
-                    {
-                        sServer.PacketHandler _delegate;
-                        sServer._packetHandlers.TryGetValue(packetID, out _delegate);
-                        _delegate?.Invoke(packetID, packet);
-                    }
+                    if(sServer._packetHandlers.TryGetValue(packetID, out sServer.PacketHandler _delegate))
+                      _delegate?.Invoke(packetID, packet);
                 }
-            });*/
+            });
         }
         public void Disconnect()
         {
-            Debug.Log("CALLED DISCONNECT ON UDP");
             _endPoint = null;
         }
     }
 
     public void SendIntoGame(string playerName)
     {
+        /*
         _player = sNetworkManager.instance.InstantiatePlayer();
         _player.Init(_id, playerName);
         //Tell the other players about new player
@@ -211,7 +202,7 @@ public class sClient
             }
         }
 
-
+         */
     }
 
     public void Disconnect()

@@ -33,7 +33,10 @@ public class ClientHandle : MonoBehaviour
         int id = packet.ReadInt();
         Vector3 position = packet.ReadVector3();
 
-        GameManager._players[id].transform.position = position;
+        if (GameManager._players.TryGetValue(id, out PlayerManager pm))
+        {
+            pm.transform.position = position;
+        }
     }
 
     public static void PlayerRotation(sPacket packet)
@@ -41,6 +44,11 @@ public class ClientHandle : MonoBehaviour
         int id = packet.ReadInt();
         Quaternion rotation = packet.ReadQuaternion();
 
-        GameManager._players[id].transform.rotation = rotation;
+
+        if(GameManager._players.TryGetValue(id, out PlayerManager pm ))
+        {
+            pm.transform.rotation = rotation;
+        }
+
     }
 }

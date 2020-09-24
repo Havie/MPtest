@@ -75,9 +75,6 @@ public static class sServer
 
                 if (_clients.ContainsKey(clientId))
                 {
-                    Debug.LogWarning("Check Endpoint for ID:" + clientId);
-                    Debug.LogWarning("_clients contains key = " + _clients.ContainsKey(clientId));
-
                     if (_clients[clientId]._udp._endPoint == null)
                     {
                         _clients[clientId]._udp.Connect(clientEndPoint); //first time through?
@@ -89,7 +86,7 @@ public static class sServer
                     // Debug.Log("Test val1: " + _clients[clientId]._udp._endPoint + " , val2: " + clientEndPoint + " comparison= " + (_clients[clientId]._udp._endPoint == clientEndPoint));
                     if (_clients[clientId]._udp._endPoint.ToString().Equals(clientEndPoint.ToString()))
                     {
-                        //_clients[clientId]._udp.HandleData(packet);
+                        _clients[clientId]._udp.HandleData(packet);
                     }
                 }
                 else
@@ -134,9 +131,7 @@ public static class sServer
 
             };
 
-        Debug.LogWarning("THE ID FOR welcomeReceived=" + (int)ClientPackets.welcomeReceived);
-        Debug.LogWarning("THE ID FOR Playermovent=" + (int)ClientPackets.playerMovement);
-        Debug.Log("Initliazed Packets.");
+        Debug.Log("Initilalized Packets.");
     }
 }
 

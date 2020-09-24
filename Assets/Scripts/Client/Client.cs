@@ -47,7 +47,18 @@ public class Client : MonoBehaviour
     {
         InitClientData();
         _tcp.Connect();
-        _isConnected = true;
+       //Figure out if the connection succeeded or not 
+        ThreadManager.ExecuteOnMainThread(() =>
+        {
+            StartCoroutine(ConnectionCheck(1));
+        });
+    }
+
+    IEnumerator ConnectionCheck(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        _isConnected = _tcp._socket.Connected;
+        UIManager.instance.Connected(_isConnected);
     }
 
     public class TCP
@@ -146,7 +157,6 @@ public class Client : MonoBehaviour
             while(packetLength >0 && packetLength <= _receivedData.UnreadLength())
             {
                 byte[] packetBytes = _receivedData.ReadBytes(packetLength);
-                Debug.Log("Client calls ThreadManager");
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
                     using (sPacket packet = new sPacket(packetBytes))
@@ -252,13 +262,11 @@ public class Client : MonoBehaviour
                 int packetLength = packet.ReadInt();
                 data = packet.ReadBytes(packetLength); // removes initial 4 byes that tell length , not sure why 
             }
-            Debug.Log("Client(2) calls ThreadManager "); 
             ThreadManager.ExecuteOnMainThread(() =>
             {
                 using (sPacket packet = new sPacket(data))
                 {
                     int packetId = packet.ReadInt();
-                    Debug.Log("(2) packetId=" + packetId);
                     Client.PacketHandler _delegate;
                     if (_packetHandlers.TryGetValue(packetId, out _delegate))
                     {
@@ -290,10 +298,6 @@ public class Client : MonoBehaviour
 
         };
 
-        Debug.Log("(int)ServerPackets.welcome: " + (int)ServerPackets.welcome);
-        Debug.Log("(int)ServerPackets.spawnPlayer: " + (int)ServerPackets.spawnPlayer);
-        Debug.Log("(int)ServerPackets.playerPosition: " + (int)ServerPackets.playerPosition);
-        Debug.Log("(int)ServerPackets.playerRotation:  " + (int)ServerPackets.playerRotation);
         Debug.Log("InitClientData packets ");
     }
 
