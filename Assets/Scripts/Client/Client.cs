@@ -252,7 +252,7 @@ public class Client : MonoBehaviour
                 int packetLength = packet.ReadInt();
                 data = packet.ReadBytes(packetLength); // removes initial 4 byes that tell length , not sure why 
             }
-            Debug.Log("Client(2) calls ThreadManager "); //test
+            Debug.Log("Client(2) calls ThreadManager "); 
             ThreadManager.ExecuteOnMainThread(() =>
             {
                 using (sPacket packet = new sPacket(data))
