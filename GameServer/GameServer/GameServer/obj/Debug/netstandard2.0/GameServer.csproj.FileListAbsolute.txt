@@ -1,0 +1,9 @@
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\bin\Debug\netstandard2.0\GameServer.deps.json
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\bin\Debug\netstandard2.0\GameServer.dll
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\bin\Debug\netstandard2.0\GameServer.pdb
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\obj\Debug\netstandard2.0\GameServer.csprojAssemblyReference.cache
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\obj\Debug\netstandard2.0\GameServer.csproj.CoreCompileInputs.cache
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\obj\Debug\netstandard2.0\GameServer.AssemblyInfoInputs.cache
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\obj\Debug\netstandard2.0\GameServer.AssemblyInfo.cs
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\obj\Debug\netstandard2.0\GameServer.dll
+E:\FakeDesktop\Unity\MPtest\GameServer\GameServer\GameServer\obj\Debug\netstandard2.0\GameServer.pdb
