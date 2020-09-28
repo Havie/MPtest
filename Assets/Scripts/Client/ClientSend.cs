@@ -45,14 +45,25 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void SendItem(int itemLVL, int stationID)
+    public static void SendWorkStationID(int stationID)
+    {
+        using (sPacket packet = new sPacket((int)ClientPackets.stationID))
+        {
+            packet.Write(stationID);
+
+            SendTCPData(packet);
+
+        }
+    }
+
+    public static void SendItem(int itemLVL, int toStationID)
     {
         Debug.Log("Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
         {
             packet.Write(itemLVL);
             //Who am I sending it to? (station/ClientID?)
-            packet.Write(stationID); 
+            packet.Write(toStationID); 
 
             SendTCPData(packet);
 

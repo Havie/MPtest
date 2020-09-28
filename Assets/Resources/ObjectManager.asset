@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: ObjectManager
   m_EditorClassIdentifier: 
   _sprites:
+  - {fileID: 21300000, guid: f37ffd069993bec49ae01e01f0869d41, type: 3}
   - {fileID: 21300000, guid: f330966bdd994df41a631b22377eb9e2, type: 3}
+  - {fileID: 21300000, guid: b010fbfd77b1c634397e0ea7611706f8, type: 3}
   _objects:
+  - {fileID: 6467200454433006771, guid: 1973b2fd5bd111445a1c37f2b6295b1b, type: 3}
   - {fileID: 6467200454433006771, guid: de4b9158f6dbe6440b5579dd5847acaa, type: 3}
+  - {fileID: 2517847756698285902, guid: 851ec6177b1938a4797af3d5bd5316be, type: 3}

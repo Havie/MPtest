@@ -98,10 +98,8 @@ public class UIManager : MonoBehaviour
         _workStationDropDown.SetActive(false);
 
         //Spawn Object and allow me to rotate it 
-        //GameObject tmp = GameObject.Instantiate(_tmpObjectPREFAB, new Vector3(0, 0, 0), Quaternion.identity);
         BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
         bo.SetLevel(itemLevel);
-        //tmp.transform.SetParent(bo.transform);
 
         _worldCanvas.SetActive(true);
     }

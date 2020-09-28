@@ -127,6 +127,7 @@ public static class sServer
             {
                 { (int)ClientPackets.welcomeReceived , sServerHandle.WelcomeReceived},
                 { (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
+                { (int)ClientPackets.stationID , sServerHandle.StationIDReceived},
                 { (int)ClientPackets.item , sServerHandle.ItemReceived}
 
             };

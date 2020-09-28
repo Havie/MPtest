@@ -33,6 +33,7 @@ public class UIWorkStationManager : MonoBehaviour
         WorkStation ws = _workStations[_dropdown.value];
         GameManager.instance.AssignWorkStation(ws);
         UIManager.instance.BeginLevel(_dropdown.value); //This # might need to change and be based on the workstation
+        ClientSend.SendWorkStationID((int)ws._myStation);
     }
 
     public int GetStationCount() => _workStations.Count-1;

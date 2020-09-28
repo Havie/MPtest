@@ -7,7 +7,12 @@ public class ObjectController : MonoBehaviour
 
 
     private int _dampening = 10;
+    private Vector3 _startSize;
 
+    private void Awake()
+    {
+        _startSize = this.transform.localScale;
+    }
 
 
     public void DoRotation(Vector3 dir)
@@ -46,11 +51,7 @@ public class ObjectController : MonoBehaviour
     }
     public void ChangeApperanceStill()
     {
-        this.transform.localScale = new Vector3
-            (1.25f * this.transform.localScale.x,
-            1.25f * this.transform.localScale.y,
-            1.25f * this.transform.localScale.z);
-
+        this.transform.localScale = _startSize;
 
         ChangeMaterialColor(1f);
     }

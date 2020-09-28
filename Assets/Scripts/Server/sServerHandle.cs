@@ -9,8 +9,6 @@ public class sServerHandle
     {
         int clientIdCheck = packet.ReadInt();
         string username = packet.ReadString();
-        int workStation = packet.ReadInt();
-
 
         Debug.Log($"{sServer._clients[fromClient]._tcp._socket.Client.RemoteEndPoint} connected successfully and is now player {fromClient}");
         if (fromClient != clientIdCheck)
@@ -18,16 +16,6 @@ public class sServerHandle
             Debug.Log($"Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
         }
 
-
-        // send player into game 
-
-        if (sServer._clients[fromClient] != null)
-        {
-            //sServer._clients[fromClient].SendIntoGame(username);
-            sServer._clients[fromClient].SetWorkStation(workStation);
-        }
-        else
-            Debug.Log("Found an error");
 
     }
     public static void PlayerMovement(int fromClient, sPacket packet)
@@ -45,6 +33,17 @@ public class sServerHandle
             if(client._player!=null)
                 client._player.SetInput(inputs, rotation);
         }
+    }
+
+    public static void StationIDReceived(int fromClient, sPacket packet)
+    {
+        int stationID = packet.ReadInt();
+        Debug.Log("The stationID Read was : " + stationID);
+        sClient client = sServer._clients[fromClient];
+        if (client != null)
+            client._workStation = stationID;
+        else
+            Debug.Log("Found an error w StationIDReceived");
     }
 
     public static void ItemReceived(int fromClient, sPacket packet)

@@ -53,16 +53,24 @@ public class BuildableObject : MonoBehaviour
     {
         return _manager.GetSprite(lvl);
     }
-    private void SpawnCurrentObject()
+    public GameObject SpawnCurrentObject()
+    {
+        return SpawnCurrentObject(Vector3.zero);
+    }
+    public GameObject SpawnCurrentObject(Vector3 pos)
     {
         if (_currentObj != null)
-            Destroy(_currentObj);
+            Destroy(_currentObj); //Im not sure I need this 
 
-        Debug.Log("CURRENT LEVEL = " + (int)_mlvl);
+        Debug.Log("The spawn loc heard is " + pos);
+        //Debug.Log("CURRENT LEVEL = " + (int)_mlvl);
 
         //GetNextObj
         _currentObj = GameObject.Instantiate<GameObject>
-            (_manager.GetObject((int)_mlvl), Vector3.zero, Quaternion.identity);
+            (_manager.GetObject((int)_mlvl), pos, Quaternion.identity);
         _currentObj.transform.SetParent(this.transform);
+
+        return _currentObj;
     }
+    
 }
