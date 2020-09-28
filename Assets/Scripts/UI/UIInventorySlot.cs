@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class UIInventorySlot : MonoBehaviour
 {
-    Image _img;
+    [SerializeField] Image _myIcon;
+    Image _bgIcon;
     Sprite _default;
     bool _autoSend = false; //Only for OutINV, set by InventoryManager
     int _itemLVL= -1;
@@ -13,10 +14,12 @@ public class UIInventorySlot : MonoBehaviour
 
     private void Awake()
     {
-        _img = this.GetComponent<Image>();
-        if (_img)
-            _default = _img.sprite;
+        _bgIcon = this.GetComponent<Image>();
+        if (_bgIcon)
+            _default = _bgIcon.sprite;
     }
+
+
 
     public void SetAutomatic(bool cond)
     {
@@ -27,7 +30,7 @@ public class UIInventorySlot : MonoBehaviour
     {
         if(!_inUse)
         {
-            _img.sprite = img;
+            _bgIcon.sprite = img;
 
         }
         else
@@ -40,17 +43,20 @@ public class UIInventorySlot : MonoBehaviour
 
     public void RestoreDefault()
     {
-        _img.sprite = _default;
+        _bgIcon.sprite = _default;
         _itemLVL = -1;
         _inUse = false;
     }
 
     public bool AssignItem(Sprite img, int level)
     {
+        Debug.Log("Called Assign ITEM " + img.name);
         if (!_inUse)
         {
-            if (_img)
-                _img.sprite = img;
+            if (_myIcon)
+                _myIcon.sprite = img;
+
+            Debug.Log("ASSINED IT");
 
             _itemLVL = level;
 
