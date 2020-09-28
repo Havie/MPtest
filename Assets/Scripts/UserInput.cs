@@ -8,6 +8,7 @@ public class UserInput : MonoBehaviour
 {
     public enum eState { FREE, ROTATION, DISPLACEMENT, UI };
     public eState _state;
+    private bool _IsMobileMode;
 
     private float _pressTimeCURR = 0;
     private float _pressTimeMAX = 1.2f;
@@ -24,7 +25,11 @@ public class UserInput : MonoBehaviour
     PointerEventData _PointerEventData;
     EventSystem _EventSystem;
 
+    private void Awake()
+    {
+        _IsMobileMode = Application.isMobilePlatform;
 
+    }
     void Start()
     {
         //Fetch the Event System from the Scene
@@ -68,8 +73,26 @@ public class UserInput : MonoBehaviour
 
     public bool InputDown()
     {
-        _inputPos = Input.mousePosition;
-        return Input.GetMouseButton(0);
+        if (!_IsMobileMode)
+        {
+            _inputPos = Input.mousePosition;
+            return Input.GetMouseButton(0);
+        }
+        else
+        {
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                bool touching = touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled;
+                _inputPos = touch.position;
+                return touching;
+            }
+            else
+            {
+                _inputPos = Vector3.zero; // will this work?
+                return false;
+            }
+        }
     }
 
     /** Player is pressing to begin interaction with an obj or UI item */
