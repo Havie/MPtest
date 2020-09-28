@@ -126,8 +126,8 @@ public static class sServer
         _packetHandlers = new Dictionary<int, PacketHandler>()
             {
                 { (int)ClientPackets.welcomeReceived , sServerHandle.WelcomeReceived},
-
-                { (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement}
+                { (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
+                { (int)ClientPackets.item , sServerHandle.ItemReceived}
 
             };
 

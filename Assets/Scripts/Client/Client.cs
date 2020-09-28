@@ -162,6 +162,7 @@ public class Client : MonoBehaviour
                     using (sPacket packet = new sPacket(packetBytes))
                     {
                         int packetId = packet.ReadInt();
+                        Debug.Log("Client heard packetId: " + packetId);
                         _packetHandlers[packetId](packet); // Invoke delegate 
                     }
                 });
@@ -287,13 +288,15 @@ public class Client : MonoBehaviour
 
     private void InitClientData()
     {
+        //This is for data coming IN
         _packetHandlers = new Dictionary<int, PacketHandler>()
         {
             //Setup the <index, Delegate> 
             { (int)ServerPackets.welcome, ClientHandle.Welcome } ,
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
-            { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation }
+            { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
+            { (int)ServerPackets.item, ClientHandle.ItemReceived }
 
 
         };

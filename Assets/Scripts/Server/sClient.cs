@@ -13,6 +13,7 @@ public class sClient
     public TCP _tcp;
     public UDP _udp;
     public sPlayer _player;
+    public int _workStation;
 
     public sClient(int clientId)
     {
@@ -110,10 +111,9 @@ public class sClient
                 {
                     using (sPacket packet = new sPacket(packetBytes))
                     {
-                        int packetId = packet.ReadInt();
-                        sServer.PacketHandler _delegate;
-                        sServer._packetHandlers.TryGetValue(packetId, out _delegate);
-                        _delegate?.Invoke(packetId, packet);
+                        int packetOperation = packet.ReadInt();
+                        sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate);
+                        _delegate?.Invoke(_id, packet);
                     }
                 });
 
@@ -171,9 +171,9 @@ public class sClient
             {
                 using (sPacket packet = new sPacket(packetBytes))
                 {
-                    int packetID = packet.ReadInt();
-                    if(sServer._packetHandlers.TryGetValue(packetID, out sServer.PacketHandler _delegate))
-                      _delegate?.Invoke(packetID, packet);
+                    int packetOperation = packet.ReadInt();
+                    if(sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate))
+                      _delegate?.Invoke(packetOperation, packet);
                 }
             });
         }
@@ -183,9 +183,15 @@ public class sClient
         }
     }
 
+    /** can use WorkStation static dic to see where we send info to*/
+    public void SetWorkStation(int workStation)
+    {
+        _workStation = workStation;
+    }
+
     public void SendIntoGame(string playerName)
     {
-        /*
+        
         _player = sNetworkManager.instance.InstantiatePlayer();
         _player.Init(_id, playerName);
         //Tell the other players about new player
@@ -200,10 +206,13 @@ public class sClient
                 //including urself
                 sServerSend.SpawnPlayer(client._id, _player);
             }
-        }
-
-         */
+        } 
     }
+    public void SendItem(int itemId)
+    {
+        sServerSend.SendItem(_id, itemId);
+    }
+
 
     public void Disconnect()
     {

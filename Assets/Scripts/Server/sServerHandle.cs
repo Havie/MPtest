@@ -8,7 +8,8 @@ public class sServerHandle
     public static void WelcomeReceived(int fromClient, sPacket packet)
     {
         int clientIdCheck = packet.ReadInt();
-        string username = packet.ReadString(); //error here
+        string username = packet.ReadString();
+        int workStation = packet.ReadInt();
 
 
         Debug.Log($"{sServer._clients[fromClient]._tcp._socket.Client.RemoteEndPoint} connected successfully and is now player {fromClient}");
@@ -21,7 +22,10 @@ public class sServerHandle
         // send player into game 
 
         if (sServer._clients[fromClient] != null)
-            sServer._clients[fromClient].SendIntoGame(username);
+        {
+            //sServer._clients[fromClient].SendIntoGame(username);
+            sServer._clients[fromClient].SetWorkStation(workStation);
+        }
         else
             Debug.Log("Found an error");
 
@@ -41,7 +45,28 @@ public class sServerHandle
             if(client._player!=null)
                 client._player.SetInput(inputs, rotation);
         }
-       // sServer._clients[fromClient]._player.SetInput(inputs, rotation);
+    }
+
+    public static void ItemReceived(int fromClient, sPacket packet)
+    {
+
+        int itemLvl = packet.ReadInt();
+        Debug.Log("The itemLvl Read was : " + itemLvl);
+        int stationID = packet.ReadInt();
+        Debug.Log("The stationID Read was : " + stationID);
+
+        foreach (sClient c in sServer._clients.Values)
+        {
+            //if client workstation ID matches stationID 
+            if(c._workStation == stationID)
+            {
+                //Send the item to their inventory:
+                c.SendItem(itemLvl);
+            }
+
+
+        }
+
     }
 
 }

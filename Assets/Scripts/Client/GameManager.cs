@@ -7,10 +7,21 @@ public class GameManager : MonoBehaviour
     public static GameManager instance { get; private set; }
 
 
+    public bool _autoSend = true;
+
     public static Dictionary<int, PlayerManager> _players = new Dictionary<int, PlayerManager>();
 
     public GameObject _localPlayerPREFAB;
     public GameObject _playerPREFAB;
+
+    public WorkStation _workStation;
+    public UIInventoryManager _invIN;
+    public UIInventoryManager _invOUT;
+
+
+
+    public void SetInventoryIn(UIInventoryManager inv) {  _invIN = inv; }
+    public void SetInventoryOut(UIInventoryManager inv)  { _invOUT = inv;  }
 
 
 
@@ -22,8 +33,15 @@ public class GameManager : MonoBehaviour
             Destroy(this);
     }
 
+    public void AssignWorkStation(WorkStation station)
+    {
+        _workStation = station;
+        //Send packet here to set our clientid and workstation on server 
+    }
 
 
+
+    //UNUSED for reference
     public void SpawnPlayer(int id, string username, Vector3 pos, Quaternion rot)
     {
         GameObject player;

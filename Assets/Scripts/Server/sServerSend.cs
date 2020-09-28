@@ -100,5 +100,16 @@ public class sServerSend
 
     }
 
+    public static void SendItem(int toClient, int itemID)
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.item))
+        {
+            packet.Write(itemID);
+
+            SendTCPData(toClient, packet);
+
+        }
+    }
+
     #endregion
 }

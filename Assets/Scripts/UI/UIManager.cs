@@ -13,9 +13,12 @@ public class UIManager : MonoBehaviour
     public Button _bHost;
     public InputField _usernameField;
     public Text _loadingTxt;
+    public GameObject _workStationDropDown;
 
     public Button _tmpConfirmWorkStation;
     public GameObject _tmpObjectPREFAB;
+
+    public GameObject _worldCanvas;
 
     private void Awake()
     {
@@ -32,6 +35,7 @@ public class UIManager : MonoBehaviour
     {
         _loadingTxt.enabled = false;
         _tmpConfirmWorkStation.gameObject.SetActive(false);
+        _workStationDropDown.SetActive(false);
         Debug.Log(" confirm station off");
     }
 
@@ -81,16 +85,24 @@ public class UIManager : MonoBehaviour
     {
         _tmpConfirmWorkStation.gameObject.SetActive(true);
         _loadingTxt.enabled = true;
-        _loadingTxt.text = "Select Work Station (TODO)";
+        _loadingTxt.text = "Select Work Station";
+        _workStationDropDown.SetActive(true);
 
     }
 
-    public void Test()
+
+    public void BeginLevel(int itemLevel)
     {
         _tmpConfirmWorkStation.gameObject.SetActive(false);
         _loadingTxt.enabled = false;
+        _workStationDropDown.SetActive(false);
 
         //Spawn Object and allow me to rotate it 
-        GameObject.Instantiate(_tmpObjectPREFAB, new Vector3(0, 0, 0), Quaternion.identity);
+        //GameObject tmp = GameObject.Instantiate(_tmpObjectPREFAB, new Vector3(0, 0, 0), Quaternion.identity);
+        BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
+        bo.SetLevel(itemLevel);
+        //tmp.transform.SetParent(bo.transform);
+
+        _worldCanvas.SetActive(true);
     }
 }

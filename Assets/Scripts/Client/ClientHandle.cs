@@ -51,4 +51,17 @@ public class ClientHandle : MonoBehaviour
         }
 
     }
+
+    public static void ItemReceived(sPacket packet)
+    {
+        int itemLvl = packet.ReadInt(); //get rid of the first btye data?
+       
+        Debug.Log($"..Item Received , itemLevel={itemLvl} .");
+
+        //Tell the leftSide UI 
+        GameManager.instance._invIN.AddItemToSlot(itemLvl);
+
+    }
+
+
 }
