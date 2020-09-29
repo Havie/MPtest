@@ -8,6 +8,8 @@ public class UIWorkStationManager : MonoBehaviour
     [SerializeField] List<WorkStation> _workStations;
     [SerializeField] Dropdown _dropdown;
 
+    [SerializeField] bool test = false;
+
     private void Start()
     {
         if(_dropdown)
@@ -19,8 +21,12 @@ public class UIWorkStationManager : MonoBehaviour
             _dropdown.ClearOptions();
             _dropdown.AddOptions(dropOptions);
         }
+
+        if (test)
+            AssignWorkStation(2);
     }
 
+    /**Called from UI asset confirm workstation button  */
     public void AssignWorkStation(int index)
     {
         if(_workStations.Count > index)

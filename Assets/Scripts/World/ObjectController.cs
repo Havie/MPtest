@@ -56,14 +56,20 @@ public class ObjectController : MonoBehaviour
         ChangeMaterialColor(1f);
     }
 
-    //METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY (TODO)
+    //METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
     private void ChangeMaterialColor(float opacity)
     {
+        if (opacity > 1)
+            Debug.LogWarning("Setting opacity > 1. Needs to be 0.0 - 1.0f");
+
         var mrender = this.GetComponent<MeshRenderer>();
         if (mrender)
         {
             Material m = mrender.material;
-            m.color = new Color(m.color.r, m.color.b, m.color.b, opacity);
+            Color color = m.color;
+            color.a = opacity;
+            m.color = color;
+            mrender.material = m; 
         }
 
     }

@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //singleton
     public static GameManager instance { get; private set; }
 
-
+    #region GameVariables
     public bool _autoSend = true;
+    public int _inventorySize = 50;
+    public bool _isStackable = false;
+    public bool _addChaotic = false;
+    #endregion
 
-    public static Dictionary<int, PlayerManager> _players = new Dictionary<int, PlayerManager>();
-
-    public GameObject _localPlayerPREFAB;
-    public GameObject _playerPREFAB;
 
     public WorkStation _workStation;
     public UIInventoryManager _invIN;
@@ -20,11 +21,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    public void SetInventoryIn(UIInventoryManager inv) {  _invIN = inv; }
-    public void SetInventoryOut(UIInventoryManager inv)  { _invOUT = inv;  }
-
-
-
+    /**Singleton*/
     private void Awake()
     {
         if (instance == null)
@@ -32,15 +29,27 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(this);
     }
-
+    /** Work station is used to identify what items are produced here and where items are sent to */
     public void AssignWorkStation(WorkStation station)
     {
         _workStation = station;
-        //Send packet here to set our clientid and workstation on server 
+        BuildableObject.Instance.SetLevel((int)_workStation._myStation);
     }
+    public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
+    public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
 
 
 
+
+
+
+
+
+    #region oldTutorialStuff
+    //old
+    public static Dictionary<int, PlayerManager> _players = new Dictionary<int, PlayerManager>();
+    public GameObject _localPlayerPREFAB;
+    public GameObject _playerPREFAB;
     //UNUSED for reference
     public void SpawnPlayer(int id, string username, Vector3 pos, Quaternion rot)
     {
@@ -59,4 +68,5 @@ public class GameManager : MonoBehaviour
             _players.Add(id, pm);
         }
     }
+    #endregion
 }

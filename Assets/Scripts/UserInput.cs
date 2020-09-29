@@ -186,7 +186,6 @@ public class UserInput : MonoBehaviour
             {
                 if (!slot.GetInUse())
                 {
-                    slot.SetLarger();
                     slot.PreviewSlot(BuildableObject.Instance.GetCurrentSprite());
                     _currentSelection.GetComponent<MeshRenderer>().enabled = false;
                     if (slot != _lastSlot && _lastSlot != null)
@@ -203,7 +202,7 @@ public class UserInput : MonoBehaviour
             {
                 if (slot != null)
                 {
-                    Debug.Log("FOUND UI SLOT");
+                    Debug.Log($"FOUND UI SLOT {slot.name}");
                     slot.SetNormal();
                     slot.AssignItem(BuildableObject.Instance.GetCurrentSprite(), (int)BuildableObject.Instance._mlvl);
                     Destroy(_currentSelection);
@@ -231,19 +230,26 @@ public class UserInput : MonoBehaviour
             var slot = CheckRayCastForUI();
             if (slot)
             {
-                int itemLvl = slot.GetItemID();
+                Debug.LogWarning($"Slot found= {slot.name}");
+                int itemID = slot.GetItemID();
                 slot.RestoreDefault();
                 float zCoord = Camera.main.WorldToScreenPoint(slot.transform.position).z;
-                var obj =BuildableObject.Instance.SpawnCurrentObject(GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
+                var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
                 _currentSelection = obj;
-                Debug.Log($"OBJ loc {obj.transform.position}");
                 if (_currentSelection)
                 {
+                    Debug.Log($"OBJ loc {obj.transform.position}");
                     _currentSelection.ChangeApperanceMoving();
-                     _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                    _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                    _state = eState.DISPLACEMENT;
                 }
-                _state = eState.DISPLACEMENT;
+
+                else
+                    Debug.LogWarning("This happened?1");
+
             }
+            else
+                Debug.LogWarning("This happened?2");
         }
         else
             _state = eState.FREE;

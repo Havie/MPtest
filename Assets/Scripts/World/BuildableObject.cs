@@ -7,10 +7,11 @@ public class BuildableObject : MonoBehaviour
     public static BuildableObject Instance { get; private set; }
     [SerializeField] ObjectManager _manager;
 
+    //These should be connected to something else like the workstation IDs
     public enum eLevel { Cube0, Cube1, Cube2 };
     public eLevel _mlvl;
 
-    private GameObject _currentObj;
+    private List<GameObject> _objects;
 
     private void Awake()
     {
@@ -21,18 +22,15 @@ public class BuildableObject : MonoBehaviour
 
         _manager = Resources.Load<ObjectManager>("ObjectManager");
         Debug.Log("OBJMAN= " + _manager);
-    }
 
-    private void Start()
-    {
-
+        _objects = new List<GameObject>();
     }
 
 
     public void AddComponent()
     {
         ++_mlvl;
-        SpawnCurrentObject();
+        SpawnObject((int)_mlvl);
     }
 
     public void SetLevel(int level)
@@ -41,7 +39,7 @@ public class BuildableObject : MonoBehaviour
 
         _mlvl = (eLevel)level;
 
-        SpawnCurrentObject();
+        SpawnObject((int)_mlvl);
     }
     /** Gets it based on current ID */
     public Sprite GetCurrentSprite()
@@ -53,22 +51,22 @@ public class BuildableObject : MonoBehaviour
     {
         return _manager.GetSprite(lvl);
     }
-    public GameObject SpawnCurrentObject()
+    public GameObject SpawnObject(int itemID)
     {
-        return SpawnCurrentObject(Vector3.zero);
+        return SpawnObject( itemID, Vector3.zero);
     }
-    public GameObject SpawnCurrentObject(Vector3 pos)
+     public GameObject SpawnObject(int itemID, Vector3 pos)
     {
-        if (_currentObj != null)
-            Destroy(_currentObj); //Im not sure I need this 
 
-        Debug.Log("The spawn loc heard is " + pos);
-        //Debug.Log("CURRENT LEVEL = " + (int)_mlvl);
+
+        //Debug.Log($"The spawn loc heard is {pos} and mlevel={(int)_mlvl}." );
 
         //GetNextObj
-        _currentObj = GameObject.Instantiate<GameObject>
-            (_manager.GetObject((int)_mlvl), pos, Quaternion.identity);
+        GameObject _currentObj = GameObject.Instantiate<GameObject>
+            (_manager.GetObject(itemID), pos, Quaternion.identity);
         _currentObj.transform.SetParent(this.transform);
+
+        _objects.Add(_currentObj);
 
         return _currentObj;
     }

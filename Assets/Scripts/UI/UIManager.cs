@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     public GameObject _tmpObjectPREFAB;
 
     public GameObject _worldCanvas;
+    public GameObject _screenCanvas;
 
     private void Awake()
     {
@@ -102,5 +103,6 @@ public class UIManager : MonoBehaviour
         bo.SetLevel(itemLevel);
 
         _worldCanvas.SetActive(true);
+        _screenCanvas.SetActive(false);
     }
 }

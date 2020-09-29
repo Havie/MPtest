@@ -7,13 +7,11 @@ using UnityEngine.UI;
 //https://www.youtube.com/watch?v=Oba1k4wRy-0 //Tutorial
 public class UIInventoryManager : MonoBehaviour
 {
-
-    public class PlayerItem
-    {
-        public Sprite _iconSprite;
-    }
-
-    private List<PlayerItem> _playerInventory;
+    #region GameManager Parameters
+    private int _INVENTORYSIZE;
+    private bool _STACKABLE;
+    private bool _ADDCHAOTIC;
+    #endregion
     [SerializeField] GameObject _bSlotPREFAB;
     [SerializeField] GridLayoutGroup _layoutGroup;
     [SerializeField] Sprite[] _iconSprites;
@@ -21,69 +19,62 @@ public class UIInventoryManager : MonoBehaviour
     [SerializeField] bool _in;
     private UIInventorySlot[] _slots;
 
+    #region setup
     private void Start()
     {
+        if (_bSlotPREFAB == null)
+            _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
+        GetGameManagerData();
+        GenInventory();
 
-        _slots = this.transform.GetComponentsInChildren<UIInventorySlot>();
+    }
 
+    private void GetGameManagerData()
+    {
+        _INVENTORYSIZE = GameManager.instance._inventorySize;
+        _STACKABLE = GameManager.instance._isStackable;
+        _ADDCHAOTIC = GameManager.instance._addChaotic;
         if (_in)
             GameManager.instance.SetInventoryIn(this);
         else
         {
             GameManager.instance.SetInventoryOut(this);
-            SetOutChildren();
         }
-
-        TutorialStart();
     }
 
-    #region setup
-
-    private void TutorialStart()
-    {
-        _playerInventory = new List<PlayerItem>();
-        int size = _iconSprites.Length - 1;
-        for (int i=1; i<104; i++)
-        {
-            PlayerItem newitem = new PlayerItem();
-
-            newitem._iconSprite = _iconSprites[Random.Range(0, size)];
-
-            _playerInventory.Add(newitem);
-        }
-
-        GenInventory();
-    }
 
     private void GenInventory()
     {
-        Debug.Log("player inventory.count = " + _playerInventory.Count);
+        _slots = new UIInventorySlot[_INVENTORYSIZE];
         //Make sure we cant scroll horiz unless we need it 
-        if (_playerInventory.Count <= 10)
-            _layoutGroup.constraintCount = _playerInventory.Count;
+        if (_INVENTORYSIZE <= 10)
+            _layoutGroup.constraintCount = _INVENTORYSIZE;
         else
             _layoutGroup.constraintCount = 10;
-           // _layoutGroup.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        // _layoutGroup.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
 
-        foreach (var item in _playerInventory)
+        bool cond = GameManager.instance._autoSend;
+        string prefix;
+        if (_in)
+            prefix = "in_";
+        else
+            prefix = "out_";
+        for (int i=0; i<_INVENTORYSIZE; ++i)
         {
             GameObject newButton = Instantiate(_bSlotPREFAB) as GameObject;
             newButton.SetActive(true);
-            newButton.GetComponent<UIInventorySlot>().AssignItem(item._iconSprite, 1);
             newButton.transform.SetParent(_layoutGroup.transform, false);
+            newButton.name = "bSlot_"+ prefix+" #"+i;
+            _slots[i] = newButton.GetComponent<UIInventorySlot>();
+            if (!_in) //Set our out slots to auto send or not
+                _slots[i].SetAutomatic(cond);
         }
     }
+
+
 
     #endregion
 
-    private void SetOutChildren()
-    {
-        bool cond = GameManager.instance._autoSend;
-        foreach (var slot in _slots)
-        {
-            slot.SetAutomatic(cond);
-        }
-    }
 
     public bool HasFreeSlot()
     {
@@ -98,13 +89,28 @@ public class UIInventoryManager : MonoBehaviour
 
     public void AddItemToSlot(int itemLvl)
     {
-        foreach(UIInventorySlot slots in _slots)
+        if (!_ADDCHAOTIC)
         {
-            if(!slots.GetInUse())
+            foreach (UIInventorySlot slot in _slots)
             {
-                Sprite sp =BuildableObject.Instance.GetSpriteByLevel(itemLvl);
-                slots.AssignItem(sp, itemLvl);
+                if (!slot.GetInUse())
+                {
+                    Sprite sp = BuildableObject.Instance.GetSpriteByLevel(itemLvl);
+                    slot.AssignItem(sp, itemLvl);
+                    return;
+                }
             }
+        }
+        else
+        {
+            List<UIInventorySlot> _available = new List<UIInventorySlot>();
+            foreach(UIInventorySlot slot in _slots)
+            {
+                if (!slot.GetInUse())
+                    _available.Add(slot);
+            }
+            Sprite sp = BuildableObject.Instance.GetSpriteByLevel(itemLvl);
+            _available[Random.Range(0, _available.Count - 1)].AssignItem(sp, itemLvl);
         }
     }
 }
