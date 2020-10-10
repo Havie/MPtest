@@ -17,6 +17,7 @@ public class UserInput : MonoBehaviour
     private Vector3 _lastPos; //prior input loc
     private Vector3 _mOffset; //distance between obj in world and camera
     private UIInventorySlot _lastSlot;
+    [SerializeField]
     private ObjectController _currentSelection;
 
 
@@ -102,6 +103,7 @@ public class UserInput : MonoBehaviour
         if (InputDown())
         {
             _lastPos = _inputPos;
+            //Somehow this is coming back null? fix is to toggle on and off the box collider on obj in scene? wth
             _currentSelection = CheckForObjectAtLoc(_lastPos);
             _pressTimeCURR = 0;
             if (_currentSelection)         //if you get an obj do rotation
@@ -186,10 +188,10 @@ public class UserInput : MonoBehaviour
             {
                 if (!slot.GetInUse())
                 {
-                    slot.PreviewSlot(BuildableObject.Instance.GetCurrentSprite());
+                    slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID));
                     _currentSelection.GetComponent<MeshRenderer>().enabled = false;
                     if (slot != _lastSlot && _lastSlot != null)
-                        _lastSlot.RestoreDefault();
+                        _lastSlot.UndoPreview();
                     _lastSlot = slot;
                 }
             }
@@ -202,10 +204,10 @@ public class UserInput : MonoBehaviour
             {
                 if (slot != null)
                 {
-                    Debug.Log($"FOUND UI SLOT {slot.name}");
+                    //Debug.Log($"FOUND UI SLOT {slot.name}");
                     slot.SetNormal();
-                    slot.AssignItem(BuildableObject.Instance.GetCurrentSprite(), (int)BuildableObject.Instance._mlvl);
-                    Destroy(_currentSelection);
+                    slot.AssignItem((int)_currentSelection._myID, 1);
+                    Destroy(_currentSelection.gameObject);
                 }
                 else
                 {
@@ -213,6 +215,8 @@ public class UserInput : MonoBehaviour
                     _currentSelection.GetComponent<MeshRenderer>().enabled = true;
                     _currentSelection.ChangeApperanceStill();
                     _currentSelection.transform.position = Vector3.zero;
+                    //Really weird Fix to prevent raycast bug
+                    ToggleBoxColliderTest();
                 }
             }
             _state = eState.FREE;
@@ -230,15 +234,15 @@ public class UserInput : MonoBehaviour
             var slot = CheckRayCastForUI();
             if (slot)
             {
-                Debug.LogWarning($"Slot found= {slot.name}");
+                //Debug.LogWarning($"Slot found= {slot.name}");
                 int itemID = slot.GetItemID();
-                slot.RestoreDefault();
+                slot.RemoveItem();
                 float zCoord = Camera.main.WorldToScreenPoint(slot.transform.position).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
                 _currentSelection = obj;
                 if (_currentSelection)
                 {
-                    Debug.Log($"OBJ loc {obj.transform.position}");
+                    //Debug.Log($"OBJ loc {obj.transform.position}");
                     _currentSelection.ChangeApperanceMoving();
                     _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                     _state = eState.DISPLACEMENT;
@@ -259,7 +263,7 @@ public class UserInput : MonoBehaviour
 
     private void ResetObjectAndSlot()
     {
-        _lastSlot.RestoreDefault();
+        _lastSlot.UndoPreview();
         _currentSelection.GetComponent<MeshRenderer>().enabled = true;
         _lastSlot = null;
     }
@@ -272,13 +276,40 @@ public class UserInput : MonoBehaviour
     public ObjectController CheckForObjectAtLoc(Vector3 pos)
     {
         var ray = Camera.main.ScreenPointToRay(pos);
+        //Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
+            //Debug.Log($"The Hit succeeded @loc:{pos} ,   the hit is: {hit.transform.gameObject}");
             return (hit.transform.gameObject.GetComponent<ObjectController>());
         }
+       /* else
+        {
+            Debug.LogWarning($"The Hit @loc:{pos} somehow missed");
+            var bo = GameObject.FindObjectOfType<BuildableObject>();
+            if (bo && bo.transform.childCount>0)
+            {
+                
+                var child = bo.transform.GetChild(0);
+                var screenloc = Camera.main.WorldToScreenPoint(child.position);
+                Debug.LogError($"{child.gameObject.name} is @loc:{screenloc} , and world pos = {child.transform.position}");
+            }
+
+        }*/
 
         return null;
 
+    }
+
+    /**This is a really weird fix I found to prevent the raycast from missing the box */
+    private void ToggleBoxColliderTest()
+    {
+        if(_currentSelection)
+        {
+            var box = _currentSelection.GetComponent<Collider>();
+            box.enabled = false;
+            _currentSelection = null;
+            box.enabled = true;
+        }
     }
 
     public bool CheckRayCastForUI(Vector3 pos)

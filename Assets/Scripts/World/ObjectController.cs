@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObjectController : MonoBehaviour
 {
 
-
+    public ObjectManager.eItemID _myID;
     private int _dampening = 10;
     private Vector3 _startSize;
 

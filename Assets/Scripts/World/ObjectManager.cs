@@ -8,6 +8,8 @@ using UnityEngine;
 public class ObjectManager : ScriptableObject
 {
 
+    public enum eItemID { sHusk, sIron, sBladeHot, sBlade, sHandle, sSword, sHilt, sFinal,
+                          aHusk, aIron, aBladeHot, aBlade, aHandle, aSword, aHilt, aFinal };
 
     [SerializeField] List<Sprite> _sprites;
     [SerializeField] List<GameObject> _objects;
@@ -22,6 +24,11 @@ public class ObjectManager : ScriptableObject
     public GameObject GetObject(int level)
     {
        return _objects[level];
+    }
 
+    public string getItemName(int level)
+    {
+       eItemID tmp= (eItemID)level;
+        return tmp.ToString(); //figure something else out later
     }
 }

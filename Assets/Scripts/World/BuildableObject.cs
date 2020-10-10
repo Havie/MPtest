@@ -5,11 +5,10 @@ using UnityEngine;
 public class BuildableObject : MonoBehaviour
 {
     public static BuildableObject Instance { get; private set; }
-    [SerializeField] ObjectManager _manager;
+    private ObjectManager _manager;
 
     //These should be connected to something else like the workstation IDs
-    public enum eLevel { Cube0, Cube1, Cube2 };
-    public eLevel _mlvl;
+    public ObjectManager.eItemID _mID;
 
     private List<GameObject> _objects;
 
@@ -21,35 +20,44 @@ public class BuildableObject : MonoBehaviour
             Destroy(this);
 
         _manager = Resources.Load<ObjectManager>("ObjectManager");
-        Debug.Log("OBJMAN= " + _manager);
 
         _objects = new List<GameObject>();
     }
 
-
-    public void AddComponent()
-    {
-        ++_mlvl;
-        SpawnObject((int)_mlvl);
-    }
-
-    public void SetLevel(int level)
+    #region localWork
+    /** TMP: Used at start to mimick setting starting workstationID Eventually nothing should be in scene */
+    public void SetItemID(int id)
     {
         //range check TODO ?
 
-        _mlvl = (eLevel)level;
+        _mID = (ObjectManager.eItemID)id;
 
-        SpawnObject((int)_mlvl);
+        SpawnObject((int)_mID);
     }
+    /**Used to advance construction of workspace objects */
+    public void AddComponent()
+    {
+        ++_mID;
+        SpawnObject((int)_mID);
+    }
+
+
+    #endregion
+    #region globalWork
     /** Gets it based on current ID */
     public Sprite GetCurrentSprite()
     {
-        return _manager.GetSprite((int)_mlvl);
+        return _manager.GetSprite((int)_mID);
     }
     /** Gets it from the Manager */
-    public Sprite GetSpriteByLevel(int lvl)
+    public Sprite GetSpriteByID(int id)
     {
-        return _manager.GetSprite(lvl);
+        return _manager.GetSprite(id);
+    }
+    /** Gets it from the Manager */
+    public string GetItemNameByID(int id)
+    {
+        return _manager.getItemName(id);
     }
     public GameObject SpawnObject(int itemID)
     {
@@ -57,10 +65,7 @@ public class BuildableObject : MonoBehaviour
     }
      public GameObject SpawnObject(int itemID, Vector3 pos)
     {
-
-
         //Debug.Log($"The spawn loc heard is {pos} and mlevel={(int)_mlvl}." );
-
         //GetNextObj
         GameObject _currentObj = GameObject.Instantiate<GameObject>
             (_manager.GetObject(itemID), pos, Quaternion.identity);
@@ -70,5 +75,5 @@ public class BuildableObject : MonoBehaviour
 
         return _currentObj;
     }
-    
+    #endregion
 }
