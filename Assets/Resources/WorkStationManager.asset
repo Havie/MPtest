@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _workStations:
   - {fileID: 11400000, guid: 83ee4cd14e2c033479dd73f9080cec19, type: 2}
-  - {fileID: 11400000, guid: b1bcccbacd312734c94278182c0900e0, type: 2}
-  - {fileID: 11400000, guid: cc896cc269572b840a6b8408613e4657, type: 2}
+  - {fileID: 11400000, guid: 3287c03e3a9fbc941b847c4f8bf94801, type: 2}
+  - {fileID: 11400000, guid: c5bb6f9a14b43724aac7017e3587dc77, type: 2}

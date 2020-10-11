@@ -37,6 +37,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetNormalMenu(GameObject inv) { _normalInventory = inv; }
+    public void SetKittingMenu(GameObject inv) { _kittingInventory = inv; }
+
     private void Start()
     {
         //Set up workstation selection
@@ -127,15 +130,6 @@ public class UIManager : MonoBehaviour
             _workStationDropDown.SetActive(false);
         }
 
-        //Setup the proper UI for our workStation
-        WorkStation ws = GameManager.instance._workStation;
-        if (ws.isKittingStation())
-            SwitchToKitting();
-
-         // (TMP) Spawn Object and allow me to rotate it 
-         BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
-         bo.SetItemID(itemLevel);
-
         if (_worldCanvas && _screenCanvas)
         {
             _worldCanvas.SetActive(true); //when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
@@ -143,10 +137,23 @@ public class UIManager : MonoBehaviour
         }
         else
             Debug.LogWarning("(UIManager): Missing BeginLevel Canvases");
+
+        //Setup the proper UI for our workStation
+        WorkStation ws = GameManager.instance._workStation;
+       // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");
+        if (ws.isKittingStation())
+            SwitchToKitting();
+
+         // (TMP) Spawn Object and allow me to rotate it 
+         BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
+         bo.SetItemID(itemLevel);
+
+        
     }
 
     private void SwitchToKitting()
     {
+
         if (_normalInventory)
             _normalInventory.SetActive(false);
 

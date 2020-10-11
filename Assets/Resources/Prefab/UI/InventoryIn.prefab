@@ -608,8 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bSlotPREFAB: {fileID: 0}
-  _iconSprites: []
-  _in: 1
+  _inventoryType: 0
 --- !u!1 &4033160302388866772
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,7 +890,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4033160302938662010}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1478,6 +1477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a301db92424287f40bd77f9c72bdafee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _text: {fileID: 0}
+  _img: {fileID: 0}
 --- !u!1 &8484437639074308399
 GameObject:
   m_ObjectHideFlags: 0

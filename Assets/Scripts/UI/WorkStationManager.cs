@@ -14,7 +14,7 @@ public class WorkStationManager : ScriptableObject
     //for testing injections
     public List<WorkStation> GetStationList() => _workStations;
 
-    public int GetStationCount() => _workStations.Count - 1;
+    public int GetStationCount() => _workStations.Count ;
 
     public void SetupDropDown(Dropdown dropdown)
     {

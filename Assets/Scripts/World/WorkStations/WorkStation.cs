@@ -4,19 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
+[CreateAssetMenu(fileName = "WorkStation", menuName = "WorkStation/new Station")]
 public class WorkStation : ScriptableObject
 {
     //Which station sends its finished item to 
     //Eventually allow users to change this
-    public static Dictionary<int, int> _stationFlow = new Dictionary<int, int>()
+    /*public static Dictionary<int, int> _stationFlow = new Dictionary<int, int>()
      {
         {0,0}, //for now send back to self 
         {1,2},
         {2,1}
-      };
-    public enum eStation { SELF, KITTING, TWO, THREE, FOUR, FIVE, SHIPPING};
+      };*/
+
+    public enum eStation { SELF, KITTING, TWO, THREE, FOUR, FIVE, SHIPPING, NONE};
     public eStation _myStation;
+    public eStation _sendOutputToStation;
     public string _stationName =>_myStation.ToString();
 
 

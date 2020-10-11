@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd63fca86f75afa4e8eedc2d412c4850, type: 3}
+  m_Script: {fileID: 11500000, guid: 977898da102ecb5469631e2fc21fe578, type: 3}
   m_Name: TWO
   m_EditorClassIdentifier: 
   _myStation: 2
-  _tasks: []
+  _sendOutputToStation: 3
+  _tasks:
+  - {fileID: 11400000, guid: ba3b9b7ec3145584aa2c952ee61bc0be, type: 2}

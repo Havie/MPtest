@@ -8,7 +8,7 @@ public class UIInventorySlot : MonoBehaviour
     [SerializeField] Image _myIcon;
     private Sprite _defaultIcon;
     private UIInventoryManager _manager;
-    bool _autoSend = false; //Only for OutINV, set by InventoryManager
+    public bool _autoSend = false; //Only for OutINV, set by InventoryManager
     int _itemID= -1;
     public bool _inUse;
     int _numItemsStored = 0;
@@ -79,7 +79,7 @@ public class UIInventorySlot : MonoBehaviour
     /**Assigns an img to the child sprite of this object, and keeps track of its id */
     public bool AssignItem(int id, int count)
     {
-        // Debug.Log(this.gameObject.name + " Assign ITEM " + img.name + "id=" +id);
+        // Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + " autosend="+_autoSend);
         if (!_inUse)
         {
             var bo = BuildableObject.Instance;
@@ -97,7 +97,7 @@ public class UIInventorySlot : MonoBehaviour
                     Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
                 SendData(); // out only
             }
-        }
+             }
 
         return false;
     }
@@ -116,14 +116,14 @@ public class UIInventorySlot : MonoBehaviour
     }
     public void SendData()
     {
-        //Debug.Log("   ....... CALLLED SEND DATA ........        ");
+        Debug.Log("   ....... CALLLED SEND DATA ........        ");
         WorkStation myStation = GameManager.instance._workStation;
 
-        if (_inUse && WorkStation._stationFlow.ContainsKey((int)myStation._myStation))
+        if (_inUse )//&& WorkStation._stationFlow.ContainsKey((int)myStation._myStation))
         {
-            int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
-            // Debug.Log($"Sending ItemLevelID {_itemLVL} to Station: {StationToSend}");
-            ClientSend.SendItem(_itemID, StationToSend);
+            //int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
+             Debug.Log($"Sending ItemLevelID {_itemID} to Station: {(int)myStation._sendOutputToStation}");
+            ClientSend.SendItem(_itemID, (int)myStation._sendOutputToStation);
             CheckKitting();
             RemoveItem(); // should always call RestoreDefault;
         }
