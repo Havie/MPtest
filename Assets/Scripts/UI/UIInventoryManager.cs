@@ -14,11 +14,12 @@ public class UIInventoryManager : MonoBehaviour
     private bool _STACKABLE;
     private bool _ADDCHAOTIC;
     #endregion
-    [SerializeField] GameObject _bSlotPREFAB;
+    GameObject _bSlotPREFAB;
     //[SerializeField] GridLayoutGroup _layoutGroup;
     //[SerializeField] Sprite[] _iconSprites;
     public enum eInvType { IN, OUT, STATION };
     [SerializeField] eInvType _inventoryType;
+    private Button _optionalSendButton;
     private UIInventorySlot[] _slots;
     private List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
 
@@ -29,11 +30,23 @@ public class UIInventoryManager : MonoBehaviour
 
     private string _prefix;
 
+    /** Note: If world canvas is turned on at start of scene this script will bug out because work station is not assigned yet
+    * Can solve this later if it becomes a real problem */
     #region InitalSetup
     private void Start()
     {
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
+        if (!_optionalSendButton)
+        {
+            var go = GameObject.FindGameObjectWithTag("SendButton");
+            if (go != null)
+            {
+                _optionalSendButton = go.GetComponent<Button>();
+                _optionalSendButton.interactable = false;
+            }
+        }
+           
         GetGameManagerData();
         GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
@@ -316,8 +329,10 @@ public class UIInventoryManager : MonoBehaviour
             else if (_inventoryType == eInvType.STATION) //Set our infinite station items
                 SetInfiniteItem(wm, myWS, _seenTasks, _slots, i);
         }
-        if (_inventoryType == eInvType.OUT)
+        if (_inventoryType == eInvType.IN)
             SetUpStartingItems();
+        else if (_inventoryType == eInvType.OUT)
+            SetUpBatchOutput(wm, myWS);
     }
 
     private bool  NotStackableAndNotKitting()
@@ -349,7 +364,7 @@ public class UIInventoryManager : MonoBehaviour
         if(GameManager.instance._batchSize==1)
         {
             WorkStation mwWS = GameManager.instance._workStation;
-            SortBySelfStations(startingIndex, stationSequence, myWS, _seenTasks, i);
+            SortBySelfStations(myWS, _seenTasks, i);
         }
         else
         {
@@ -393,7 +408,7 @@ public class UIInventoryManager : MonoBehaviour
         }
         return false;
     }
-    private bool SortBySelfStations(int startingIndex, int[] stationSequence, WorkStation ws, Dictionary<Task, int> _seenTasks, int i)
+    private bool SortBySelfStations( WorkStation ws, Dictionary<Task, int> _seenTasks, int i)
     {
         foreach (Task t in ws._tasks)
         {
@@ -447,6 +462,42 @@ public class UIInventoryManager : MonoBehaviour
                     AddItemToSlot((int)item); //seems like this is going to the OUT slots???
                 }
                
+            }
+        }
+    }
+    private void SetUpBatchOutput(WorkStationManager wm, WorkStation myWS)
+    {
+        //Need to assign (# of items produced at this station + # of items required at subsequent stations) *BATCHSIZE
+        int[] stationSequence = getProperSequence(wm, myWS);//really feels like a doubly linked list might be better?
+        var stationList = wm.GetStationList();
+        //Figure out myplace in Sequence 
+        int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
+        int BATCHSIZE = GameManager.instance._batchSize;
+        for (int i = startingIndex; i < stationList.Count; i++)
+        {
+            WorkStation ws = stationList[i];
+            foreach (var task in ws._tasks)
+            {
+                if(ws!=myWS)
+                {
+                    foreach (var item in task._requiredItemIDs)
+                    {
+                        for (int j = 0; j < BATCHSIZE; j++)
+                        {
+                            AddItemToSlot((int)item);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in task._finalItemID)
+                    {
+                        for (int j = 0; j < BATCHSIZE; j++)
+                        {
+                            AddItemToSlot((int)item);
+                        }
+                    }
+                }
             }
         }
     }
@@ -520,6 +571,7 @@ public class UIInventoryManager : MonoBehaviour
         return false;
     }
 
+    /**Used by IN-inventory with no specific slot in mind */
     public void AddItemToSlot(int itemID)
     {
         if (!_ADDCHAOTIC)
@@ -579,5 +631,30 @@ public class UIInventoryManager : MonoBehaviour
     {
         button.transform.SetAsLastSibling();
     }
+
+    /** When an item gets assigned to the batch tell the manager*/
+    public void CheckIfBatchIsReady()
+    {
+        foreach (var slot in _slots)
+        {
+            if (!slot.GetInUse())
+            {
+                if(_optionalSendButton)
+                    _optionalSendButton.interactable = false;
+                return;
+            }
+        }
+        //If all buttons hold the correct items , we can send
+        if (_optionalSendButton)
+            _optionalSendButton.interactable = true;
+
+
+    }
+
+    public void SendBatch()
+    {
+
+    }
+
     #endregion
 }

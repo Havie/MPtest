@@ -9,6 +9,8 @@ public class UIInventorySlot : MonoBehaviour
     private Sprite _defaultIcon;
     private UIInventoryManager _manager;
     public bool _autoSend = false; //Only for OutINV, set by InventoryManager
+    public bool _isOutSlot;
+    private int _requiredID;
     int _itemID= -1;
     public bool _inUse;
     int _numItemsStored = 0;
@@ -28,6 +30,11 @@ public class UIInventorySlot : MonoBehaviour
     public void SetAutomatic(bool cond)
     {
         _autoSend = cond;
+        _isOutSlot = true; // only OUT-INV calls this method so safe to assume
+    }
+    public void SetRequiredID(int itemID)
+    {
+        _requiredID = itemID;
     }
     public bool GetInUse() => _inUse;
     public void PreviewSlot(Sprite img)
@@ -79,9 +86,12 @@ public class UIInventorySlot : MonoBehaviour
     /**Assigns an img to the child sprite of this object, and keeps track of its id */
     public bool AssignItem(int id, int count)
     {
-         Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + " autosend="+_autoSend);
+         //Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + " autosend="+_autoSend);
         if (!_inUse)
         {
+            if (_isOutSlot && id != _requiredID)
+                return false;
+
             var bo = BuildableObject.Instance;
             Sprite img = bo.GetSpriteByID(id);
 
@@ -97,10 +107,19 @@ public class UIInventorySlot : MonoBehaviour
                     Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
                 SendData(); // out only
             }
-             }
+            else if(_isOutSlot) //non pull send
+            {
+                TellManager();
+            }
+        }
 
         return false;
     }
+    private void TellManager()
+    {
+        _manager.CheckIfBatchIsReady();
+    }
+
     public void SetLarger()
     {
         this.transform.localScale = _LARGER;
