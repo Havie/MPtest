@@ -79,7 +79,7 @@ public class UIInventorySlot : MonoBehaviour
     /**Assigns an img to the child sprite of this object, and keeps track of its id */
     public bool AssignItem(int id, int count)
     {
-        // Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + " autosend="+_autoSend);
+         Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + " autosend="+_autoSend);
         if (!_inUse)
         {
             var bo = BuildableObject.Instance;

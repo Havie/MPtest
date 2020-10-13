@@ -878,7 +878,7 @@ MonoBehaviour:
   _workStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
     type: 2}
   _testSceneInjection: 1
-  _stationToInject: 1
+  _stationToInject: 2
 --- !u!1 &2065194972
 GameObject:
   m_ObjectHideFlags: 0
