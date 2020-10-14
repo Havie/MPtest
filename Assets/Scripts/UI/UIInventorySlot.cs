@@ -10,7 +10,7 @@ public class UIInventorySlot : MonoBehaviour
     private UIInventoryManager _manager;
     public bool _autoSend = false; //Only for OutINV, set by InventoryManager
     public bool _isOutSlot;
-    private int _requiredID;
+    private int _requiredID=-1;
     int _itemID= -1;
     public bool _inUse;
     int _numItemsStored = 0;
@@ -19,6 +19,9 @@ public class UIInventorySlot : MonoBehaviour
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
     private Vector3 _SMALLER = new Vector3(0.5f, 0.5f, 0.5f);
 
+    private Color _VISIBLE = new Color(255, 255, 255, 1);
+    private Color _TRANSPARENT = new Color(255, 255, 255, 0.5f);
+    private Color _INVALID = new Color(255, 155, 155, 0.5f);
 
     private void Awake()
     {
@@ -32,20 +35,36 @@ public class UIInventorySlot : MonoBehaviour
         _autoSend = cond;
         _isOutSlot = true; // only OUT-INV calls this method so safe to assume
     }
+    public int RequiredID => _requiredID;
+    public bool RequiresCertainID()
+    {
+        return _requiredID != -1;
+    }
     public void SetRequiredID(int itemID)
     {
         _requiredID = itemID;
+        //Set transparent icon 
+        AssignSprite(_requiredID,true);
     }
     public bool GetInUse() => _inUse;
     public void PreviewSlot(Sprite img)
     {
-
-
-        if (!_inUse)
+        if (!_inUse && _requiredID == -1)
+        {
             _myIcon.sprite = img;
+        }
+        else if (!_inUse && _requiredID != -1)
+        {
+            Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
+            if (BuildableObject.Instance.GetSpriteByID(_requiredID) != img)
+                _myIcon.color = _INVALID;
+            else
+                _myIcon.color = _VISIBLE;
+        }
         else
         {
             //display something that shows slot is in use
+            _myIcon.color = _INVALID;
         }
         _manager.SetImportant(this.gameObject);
         SetLarger();
@@ -55,12 +74,18 @@ public class UIInventorySlot : MonoBehaviour
 
     public void RestoreDefault()
     {
-        _myIcon.sprite = _defaultIcon;
-        _itemID = -1;
-        _numItemsStored = 0;
-        _inUse = false;
         SetNormal();
-        //Debug.Log($"Reset {this.gameObject.name} to default img {_myIcon.sprite} , {_defaultIcon}");
+        _inUse = false;
+        _numItemsStored = 0;
+        _itemID = -1;
+        if (_requiredID != -1)
+        {
+            AssignSprite(_requiredID, true);
+        }
+        else
+        {
+            _myIcon.sprite = _defaultIcon;
+        }
     }
 
     public void UndoPreview()
@@ -70,35 +95,64 @@ public class UIInventorySlot : MonoBehaviour
         if (_numItemsStored > 0)
         {
             SetNormal();
+            if (_requiredID != -1)
+                AssignSprite(_requiredID, false);
+            else
+                AssignSprite(_itemID, false);
         }
         else
-            RestoreDefault();
+        {
+           RestoreDefault();
+        }
+           
     }
 
     public void RemoveItem()
     {
         --_numItemsStored;
         if (_numItemsStored <= 0)
-            RestoreDefault();
+        {
+            if (_requiredID != -1)
+            {
+                AssignSprite(_requiredID, true);
+                _itemID = -1;
+                _inUse = false;
+                SetNormal();
+            }
+            else
+                RestoreDefault();
+        }
     }
 
+    private void AssignSprite(int id, bool transparent)
+    {
 
+        //Debug.Log($"{this.gameObject.name} AssignSprite {id} , {transparent}");
+        var bo = BuildableObject.Instance;
+        Sprite img = bo.GetSpriteByID(id);
+
+        if (_myIcon)
+            _myIcon.sprite = img;
+
+       
+        if(transparent)
+            _myIcon.color = _TRANSPARENT;
+        else
+            _myIcon.color = _VISIBLE;
+    }
     /**Assigns an img to the child sprite of this object, and keeps track of its id */
     public bool AssignItem(int id, int count)
     {
-         //Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + " autosend="+_autoSend);
+        //if (this.gameObject.name.Contains("tation"))
+         //   Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + "  , autosend="+_autoSend + " , _inUse="+ _inUse + " , _isOutSlot=" + _isOutSlot + " , _requiredID=" + _requiredID) ;
         if (!_inUse)
         {
             if (_isOutSlot && id != _requiredID)
-                return false;
+               return false;
 
-            var bo = BuildableObject.Instance;
-            Sprite img = bo.GetSpriteByID(id);
+            AssignSprite(id, false);
 
-            if (_myIcon)
-                _myIcon.sprite = img;
-
-            _itemID = id;
+             _itemID = id;
             _numItemsStored = count;
             _inUse = true;
             if (_autoSend)

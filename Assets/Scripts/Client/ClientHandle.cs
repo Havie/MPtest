@@ -59,7 +59,7 @@ public class ClientHandle : MonoBehaviour
         Debug.Log($"..Item Received , itemLevel={itemLvl} .");
 
         //Tell the leftSide UI 
-        GameManager.instance._invIN.AddItemToSlot(itemLvl);
+        GameManager.instance._invIN.AddItemToSlot(itemLvl, false);
 
     }
 

@@ -23,7 +23,7 @@ public class UIInventoryManager : MonoBehaviour
     private UIInventorySlot[] _slots;
     private List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
 
-    private int _xMaxRows;
+    private int _xMaxPerRow;
     private int _cellPadding = 75;
     private float _startingX = 37.5f;
     private float _startingY = -37.5f;
@@ -46,7 +46,7 @@ public class UIInventoryManager : MonoBehaviour
                 _optionalSendButton.interactable = false;
             }
         }
-           
+
         GetGameManagerData();
         GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
@@ -58,9 +58,9 @@ public class UIInventoryManager : MonoBehaviour
         if (_inventoryType == eInvType.IN && Input.GetKeyDown(KeyCode.A))
         {
             foreach (var s in _slots)
-                s.AssignItem(1,1);
+                s.AssignItem(1, 1);
 
-            AddItemToSlot(2);
+            AddItemToSlot(2, false);
         }
     }
 
@@ -128,7 +128,7 @@ public class UIInventoryManager : MonoBehaviour
             }
             else //Sum the total required items from self + all subseqential workstations, and * BATCH_SIZE
             {
-                return SumSequence(BATCHSIZE, wm, myWS, true, true) * BATCHSIZE;
+                return SumSequence(BATCHSIZE, wm, myWS, true, true, false) * BATCHSIZE;
             }
 
         }
@@ -147,7 +147,7 @@ public class UIInventoryManager : MonoBehaviour
             }
             else //Sum the total required items (not self) all subseqential workstations, and * BATCH_SIZE
             {
-                return SumSequence(BATCHSIZE, wm, myWS, true, false) * BATCHSIZE;
+                return SumSequence(BATCHSIZE, wm, myWS, true, false, false) * BATCHSIZE;
             }
 
 
@@ -168,7 +168,7 @@ public class UIInventoryManager : MonoBehaviour
             //else were kitting and its 
             else  //Sum the total required items from  all subseqential workstations (not mult BATCH_SIZE cuz INF slots)
             {
-                return SumSequence(BATCHSIZE, wm, myWS, true, false);
+                return SumSequence(BATCHSIZE, wm, myWS, true, false, true);
             }
 
 
@@ -178,11 +178,11 @@ public class UIInventoryManager : MonoBehaviour
     private void PrintASequence(int[] sequence, string seqName)
     {
         string p = "";
-        for (int i = 0; i < sequence.Length ; ++i)
+        for (int i = 0; i < sequence.Length; ++i)
         {
             p += $" , {sequence[i]}";
         }
-       // Debug.Log(seqName+ ": " + p);
+        // Debug.Log(seqName+ ": " + p);
     }
     /** This is kind of a mess, thinking of making a doubly linked list class at some point*/
     private int[] getProperSequence(WorkStationManager wm, WorkStation myWS)
@@ -240,7 +240,7 @@ public class UIInventoryManager : MonoBehaviour
         return finalSequence;
     }
 
-    private int FindPlaceInSequence(int[] sequence , int myStationID)
+    private int FindPlaceInSequence(int[] sequence, int myStationID)
     {
         int index = 0;
         for (int i = 0; i < sequence.Length; i++)
@@ -252,29 +252,70 @@ public class UIInventoryManager : MonoBehaviour
         return index;
     }
 
-    private int SumSequence(int BATCHSIZE, WorkStationManager wm, WorkStation myWS, bool reqItemsOverFinalItems, bool includeSelf)
+    private int SumSequence(int BATCHSIZE, WorkStationManager wm, WorkStation myWS, bool reqItemsOverFinalItems, bool includeSelf, bool excludeDuplicates)
     {
         int count = 0;
         int[] stationSequence = getProperSequence(wm, myWS);
         var stationList = wm.GetStationList();
         //Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
+        List<int> seenItems = new List<int>();
         if (!includeSelf)
             ++startingIndex;
         //Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        for (int i = startingIndex ; i < stationSequence.Length; i++)
+        for (int i = startingIndex; i < stationSequence.Length; i++)
         {
             WorkStation ws = stationList[i]; /// think this is in order?
             foreach (Task t in ws._tasks)
             {
-                
-                if(reqItemsOverFinalItems)
-                    count += t._requiredItemIDs.Count;
+                if (reqItemsOverFinalItems)
+                {
+                    if (!excludeDuplicates)
+                        count += t._requiredItemIDs.Count;
+                    else   //verify no duplicates
+                    {
+                        foreach (var item in t._requiredItemIDs)
+                        {
+                            int itemId = (int)item;
+                            if (!seenItems.Contains(itemId))
+                            {
+                                seenItems.Add(itemId);
+                                ++count;
+                            }
+                        }
+                    }
+                }
                 else
-                    count += t._finalItemID.Count;
+                {
+                    if (!excludeDuplicates)
+                        count += t._finalItemID.Count;
+                    else  //verify no duplicates
+                    {
+                        foreach (var item in t._finalItemID)
+                        {
+                            int itemId = (int)item;
+                            if (!seenItems.Contains(itemId))
+                            {
+                                seenItems.Add(itemId);
+                                ++count;
+                            }
+                        }
+                    }
+                }
+
+                if(_inventoryType==eInvType.STATION)
+                {
+                    string seen = "";
+                    foreach (var item in seenItems)
+                    {
+                        seen += " , " + item;
+                    }
+                    Debug.Log("seen so far:" + seen);
+                }
+
             }
         }
-       // Debug.Log($"The # of INV items will be : {count}");
+        // Debug.Log($"The # of INV items will be : {count}");
         return count;
     }
     #endregion
@@ -285,18 +326,17 @@ public class UIInventoryManager : MonoBehaviour
     {
         if (NotStackableAndNotKitting())
             return;
-        
+
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
         //Determine layout
-        if (_INVENTORYSIZE > 4)
-            _xMaxRows = (_INVENTORYSIZE / 4) + 1;
-        else
-            _xMaxRows = _INVENTORYSIZE;
+        _xMaxPerRow = _INVENTORYSIZE;
+        if (_INVENTORYSIZE > 4 && _inventoryType != eInvType.STATION)
+            _xMaxPerRow = (_INVENTORYSIZE / 4) + 1;
 
-        if (_xMaxRows > 10)
-            _xMaxRows = 10;
+        if (_xMaxPerRow > 10)
+            _xMaxPerRow = 10;
 
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
@@ -305,7 +345,8 @@ public class UIInventoryManager : MonoBehaviour
 
         //cache a conditions for forloop situations
         bool cond = GameManager.instance._autoSend; //used By eInvType.OUT
-        Dictionary<Task, int> _seenTasks = new Dictionary<Task, int>(); //used By eInvType.STATION
+        Dictionary<Task, int> seenTasks = new Dictionary<Task, int>(); //used By eInvType.STATION
+        List<int> seenItems = new List<int>();
         WorkStationManager wm = UIManager.instance._workstationManager;
         WorkStation myWS = GameManager.instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
@@ -323,11 +364,11 @@ public class UIInventoryManager : MonoBehaviour
         {
             //Add slot component to our list
             _slots[i] = CreateNewSlot();
-    
+
             if (_inventoryType == eInvType.OUT) //Set our out slots to auto send or not
                 _slots[i].SetAutomatic(cond);
             else if (_inventoryType == eInvType.STATION) //Set our infinite station items
-                SetInfiniteItem(wm, myWS, _seenTasks, _slots, i);
+                SetInfiniteItem(wm, myWS, seenTasks, seenItems, i);
         }
         if (_inventoryType == eInvType.IN)
             SetUpStartingItems();
@@ -335,7 +376,7 @@ public class UIInventoryManager : MonoBehaviour
             SetUpBatchOutput(wm, myWS);
     }
 
-    private bool  NotStackableAndNotKitting()
+    private bool NotStackableAndNotKitting()
     {
         if (_inventoryType == eInvType.STATION && !_STACKABLE)
         {
@@ -343,7 +384,7 @@ public class UIInventoryManager : MonoBehaviour
             if (!ws.isKittingStation())
             {
                 Destroy(this.gameObject); //good enough for now might need to go higher to parents
-                Debug.Log($"{ws._stationName}  is not a kitting station??? {ws.isKittingStation()}" );
+                Debug.Log($"{ws._stationName}  is not a kitting station??? {ws.isKittingStation()}");
                 return true;
             }
         }
@@ -351,117 +392,135 @@ public class UIInventoryManager : MonoBehaviour
     }
 
     /**Sets the stackable items at this stations inventory based off the required items needed at this station */
-    private void SetInfiniteItem(WorkStationManager wm, WorkStation myWS, Dictionary<Task, int> _seenTasks, UIInventorySlot[] _slots, int i)
+    private void SetInfiniteItem(WorkStationManager wm, WorkStation myWS, Dictionary<Task, int> seenTasks, List<int> seenItems, int i)
     {
-        //Debug.Log($"SetINF@{i} , slotsize={_slots.Length}");
+        Debug.LogWarning($"SetINF@{i} , slotsize={_slots.Length}");
 
         //need to look at the tasks in all workstations after me  (ignore self because required items in next staton are same as mine)
         int[] stationSequence = getProperSequence(wm, myWS);//really feels like a doubly linked list might be better?
         var stationList = wm.GetStationList();
         //Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-       // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        if(GameManager.instance._batchSize==1)
+        // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
+        if (GameManager.instance._batchSize == 1)
         {
             WorkStation mwWS = GameManager.instance._workStation;
-            SortBySelfStations(myWS, _seenTasks, i);
+            AddItemFromTasksAtOwnStation(myWS, seenTasks, i, seenItems);
         }
         else
         {
             if (!GameManager.instance._workStation.isKittingStation())
                 Debug.LogWarning("This happened for a non kitting station, dont think this shud");
 
-            SortByAllStations(startingIndex, stationSequence,  stationList, _seenTasks, i);
+            AddItemFromTasksAtSubsequentialStations(startingIndex, stationSequence, stationList, seenTasks, i, seenItems);
         }
     }
-    private bool SortByAllStations(int startingIndex, int[] stationSequence, List<WorkStation> stationList, Dictionary<Task, int> _seenTasks, int i )
+    /** Tries to add items from current station and all subsequential work station tasks*/
+    private bool AddItemFromTasksAtSubsequentialStations(int startingIndex, int[] stationSequence, List<WorkStation> stationList, Dictionary<Task, int> seenTasks, int i, List<int> seenItems)
     {
         for (int j = startingIndex + 1; j < stationSequence.Length; j++)
         {
             WorkStation ws = stationList[j]; /// think this is in order?
             foreach (Task t in ws._tasks)
             {
-                if (_seenTasks.ContainsKey(t))
-                {
-                    int amntOfItemsSeen = _seenTasks[t];
-                    int requiredItemsInTask = t._requiredItemIDs.Count;
-                    if (amntOfItemsSeen < requiredItemsInTask)
-                    {
-                        _seenTasks.Remove(t);
-                        _seenTasks.Add(t, amntOfItemsSeen + 1);
-                        //Debug.Log($"Wtf is going on here ( {amntOfItemsSeen}, {t._requiredItemIDs[amntOfItemsSeen]})");
-                        int id = (int)t._requiredItemIDs[amntOfItemsSeen];
-                        //Debug.Log($"(1) Assigned Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[amntOfItemsSeen]}");
-                        _slots[i].AssignItem(id, int.MaxValue);
-                        return true;
-                    }
-                }
-                else
-                {
-                    _seenTasks.Add(t, 1);
-                    int id = (int)t._requiredItemIDs[0];
-                    //Debug.Log($"(0) Assigned Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[0]}");
-                    _slots[i].AssignItem(id, int.MaxValue);
+                if (TryToAssignAnItem(seenTasks, t, seenItems, i))
                     return true;
-                }
             }
         }
         return false;
     }
-    private bool SortBySelfStations( WorkStation ws, Dictionary<Task, int> _seenTasks, int i)
+    /**Only tries to add items from tasks at own workstation */
+    private bool AddItemFromTasksAtOwnStation(WorkStation ws, Dictionary<Task, int> seenTasks, int i, List<int> seenItems)
     {
         foreach (Task t in ws._tasks)
         {
-            if (_seenTasks.ContainsKey(t))
+            if (TryToAssignAnItem(seenTasks, t, seenItems, i))
+                return true;
+        }
+        return false;
+    }
+
+    /**Tries to assign an unseen item from a task. Dictonary is used to keep track of last item index seen in task. */
+    private bool TryToAssignAnItem(Dictionary<Task, int> seenTasks, Task t, List<int> seenItems, int i)
+    {
+        if (seenTasks.ContainsKey(t))
+        {
+            int amntOfItemsSeen = seenTasks[t];
+            int requiredItemsInTask = t._requiredItemIDs.Count;
+            //Debug.Log($"Amount of items seen in Task {t} is {amntOfItemsSeen} vs {requiredItemsInTask}");
+            if (amntOfItemsSeen < requiredItemsInTask)
             {
-                int amntOfItemsSeen = _seenTasks[t];
-                int requiredItemsInTask = t._requiredItemIDs.Count;
-                if (amntOfItemsSeen < requiredItemsInTask)
+                seenTasks.Remove(t);
+                seenTasks.Add(t, amntOfItemsSeen + 1);
+                int id = (int)t._requiredItemIDs[amntOfItemsSeen];
+                //Debug.Log($"(1) Assigned INFINITE Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[amntOfItemsSeen]}");
+               // Debug.Log($"(1) Trying to Assign INFINITE Item ID {id}, task::{t}::item::{t._requiredItemIDs[amntOfItemsSeen]}");
+
+                if (!seenItems.Contains(id))
                 {
-                    _seenTasks.Remove(t);
-                    _seenTasks.Add(t, amntOfItemsSeen + 1);
-                    //Debug.Log($"Wtf is going on here ( {amntOfItemsSeen}, {t._requiredItemIDs[amntOfItemsSeen]})");
-                    int id = (int)t._requiredItemIDs[amntOfItemsSeen];
-                    //Debug.Log($"(1) Assigned Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[amntOfItemsSeen]}");
-                    _slots[i].AssignItem(id, int.MaxValue);
+                    AssignItem(id, i, seenItems);
                     return true;
                 }
+                else //keep looking in this task for more items since weve already seen one of these 
+                {
+                    TryToAssignAnItem(seenTasks, t, seenItems, i);
+                }
+
             }
-            else
+        }
+        else
+        {
+            seenTasks.Add(t, 1);
+            int id = (int)t._requiredItemIDs[0];
+            // Debug.Log($"(0) Assigned INFINITE Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[0]}");
+           // Debug.Log($"(0) Trying to Assign INFINITE Item ID {id}, ::task::{t}::item::{t._requiredItemIDs[0]}");
+
+            if (!seenItems.Contains(id))
             {
-                _seenTasks.Add(t, 1);
-                int id = (int)t._requiredItemIDs[0];
-                //Debug.Log($"(0) Assigned Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[0]}");
-                _slots[i].AssignItem(id, int.MaxValue);
+                AssignItem(id, i, seenItems);
                 return true;
             }
         }
+
         return false;
+    }
+    /** Assigns the item to a a given slot and adds item to our list so it cant be readded twice*/
+    private void AssignItem(int id, int i, List<int> seenItems)
+    {
+        _slots[i].AssignItem(id, int.MaxValue);
+        seenItems.Add(id);
+        //Debugging 
+        /*string seen = "";
+        foreach (var item in seenItems)
+        {
+            seen += " , " + item;
+        }
+        Debug.Log($" ADDED {id } to SLOT{i},  seen INF so far:" + seen);*/
     }
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     private void SetSizeOfContentArea()
     {
-        if (_xMaxRows == 0)
+        if (_xMaxPerRow == 0)
             return;
         RectTransform rt = this.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2((_xMaxRows * _cellPadding) + (_cellPadding / 2), (((_INVENTORYSIZE / _xMaxRows) * _cellPadding) + (_cellPadding / 2)));
+        rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) + (_cellPadding)));
 
     }
 
     private void SetUpStartingItems()
     {
         int BATCHSIZE = GameManager.instance._batchSize;
-        foreach(var task in GameManager.instance._workStation._tasks)
+        foreach (var task in GameManager.instance._workStation._tasks)
         {
             int count = BATCHSIZE;
             foreach (var item in task._requiredItemIDs)
             {
                 for (int i = 0; i < count; i++)
                 {
-                    Debug.Log("Add item" +(int)item );
-                    AddItemToSlot((int)item); //seems like this is going to the OUT slots???
+                    Debug.Log("Add item" + (int)item);
+                    AddItemToSlot((int)item, false);
                 }
-               
+
             }
         }
     }
@@ -478,23 +537,23 @@ public class UIInventoryManager : MonoBehaviour
             WorkStation ws = stationList[i];
             foreach (var task in ws._tasks)
             {
-                if(ws!=myWS)
+                if (ws != myWS)
                 {
                     foreach (var item in task._requiredItemIDs)
                     {
                         for (int j = 0; j < BATCHSIZE; j++)
                         {
-                            AddItemToSlot((int)item);
+                            AddItemToSlot((int)item, true);
                         }
                     }
                 }
-                else
+                else if (!myWS.isKittingStation())
                 {
                     foreach (var item in task._finalItemID)
                     {
                         for (int j = 0; j < BATCHSIZE; j++)
                         {
-                            AddItemToSlot((int)item);
+                            AddItemToSlot((int)item, true);
                         }
                     }
                 }
@@ -508,15 +567,15 @@ public class UIInventoryManager : MonoBehaviour
     #region RunTimeOperations
     private Vector2 NextSlotLocation(int slotSize)
     {
-        if(_xMaxRows==0)
+        if (_xMaxPerRow == 0)
         {
             Debug.LogWarning("max rows=0?");
-            _xMaxRows++;
+            _xMaxPerRow++;
         }
-        int yoff = slotSize / _xMaxRows;
-        int xoff = slotSize % _xMaxRows;
-        float yLoc = _startingY - (_cellPadding*yoff);
-        float xLoc = _startingX + ((xoff* _cellPadding));
+        int yoff = slotSize / _xMaxPerRow;
+        int xoff = slotSize % _xMaxPerRow;
+        float yLoc = _startingY - (_cellPadding * yoff);
+        float xLoc = _startingX + ((xoff * _cellPadding));
         /*
             Debug.Log($"Prediction2 @{slotSize} ={_inventoryType}::XlocEND={xLoc}, ylocEND={yLoc} , xMaxRows={_xMaxRows}" +
             $"(Extra stuff): slotlen:{slotSize}, xMaxRows:{_xMaxRows} , yoff:{yoff} xoff{xoff}");
@@ -524,22 +583,22 @@ public class UIInventoryManager : MonoBehaviour
         return new Vector2(xLoc, yLoc);
 
     }
-  
+
     private UIInventorySlot CreateNewSlot()
     {
         Vector2 location = Vector2.zero;
-        int slotSize=-1;
+        int slotSize = -1;
         //Determine if theres any free spots in main slots 
         for (int i = 0; i < _slots.Length; i++)
         {
             if (_slots[i] == null)
             {
-                slotSize=(i);
+                slotSize = (i);
                 break;
             }
         }
-        if(slotSize==-1)
-            slotSize =(_slots.Length + _extraSlots.Count);
+        if (slotSize == -1)
+            slotSize = (_slots.Length + _extraSlots.Count);
 
         location = NextSlotLocation(slotSize);
 
@@ -563,7 +622,7 @@ public class UIInventoryManager : MonoBehaviour
             if (slot.GetInUse() == false)
                 return true;
         }
-        foreach(var slot in _extraSlots)
+        foreach (var slot in _extraSlots)
         {
             if (slot.GetInUse() == false)
                 return true;
@@ -572,25 +631,22 @@ public class UIInventoryManager : MonoBehaviour
     }
 
     /**Used by IN-inventory with no specific slot in mind */
-    public void AddItemToSlot(int itemID)
+    public void AddItemToSlot(int itemID, bool makeRequired)
     {
+        //if(_inventoryType==eInvType.OUT)
+        // Debug.Log($"Adding Item to slot {itemID}");
+
         if (!_ADDCHAOTIC)
         {
             foreach (UIInventorySlot slot in _slots)
             {
-                if (!slot.GetInUse())
-                {
-                    slot.AssignItem( itemID, 1);
+                if (TryToAdd(slot, itemID, makeRequired))
                     return;
-                }
             }
             foreach (UIInventorySlot slot in _extraSlots)
             {
-                if (!slot.GetInUse())
-                {
-                    slot.AssignItem(itemID, 1);
+                if (TryToAdd(slot, itemID, makeRequired))
                     return;
-                }
             }
             //fell thru so we are full
             UIInventorySlot nSlot = CreateNewSlot();
@@ -602,29 +658,98 @@ public class UIInventoryManager : MonoBehaviour
             List<UIInventorySlot> _available = new List<UIInventorySlot>();
             foreach (UIInventorySlot slot in _slots)
             {
-                if (slot != null && !slot.GetInUse())
-                    _available.Add(slot);
+                if (_slots != null)
+                {
+                    if (slot.RequiresCertainID())
+                    {
+                        if (slot.RequiredID == itemID)
+                            _available.Add(slot);
+                    }
+                    else if (slot.GetInUse())
+                    {
+                        _available.Add(slot);
+                    }
+                }
+
             }
             if (_available.Count > 0)
-                _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1);
+            {
+                if (makeRequired)
+                    _available[UnityEngine.Random.Range(0, _available.Count - 1)].SetRequiredID(itemID);
+                else
+                    _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1);
+            }
             else
             {
                 foreach (UIInventorySlot slot in _extraSlots)
                 {
-                    if (slot != null && !slot.GetInUse())
-                        _available.Add(slot);
+                    if (_slots != null)
+                    {
+                        if (slot.RequiresCertainID())
+                        {
+                            if (slot.RequiredID == itemID)
+                                _available.Add(slot);
+                        }
+                        else if (slot.GetInUse())
+                        {
+
+                            _available.Add(slot);
+                        }
+                    }
                 }
                 if (_available.Count > 0)
-                    _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1);
+                {
+                    if (makeRequired)
+                        _available[UnityEngine.Random.Range(0, _available.Count - 1)].SetRequiredID(itemID);
+                    else
+                        _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1);
+                }
                 else
                 {
                     UIInventorySlot nSlot = CreateNewSlot();
-                    nSlot.AssignItem(itemID, 1);
+                    if (makeRequired)
+                        nSlot.SetRequiredID(itemID);
+                    else
+                        nSlot.AssignItem(itemID, 1);
+
                     _extraSlots.Add(nSlot);
                 }
             }
-           
+
         }
+    }
+
+    private bool TryToAdd(UIInventorySlot slot, int itemID, bool makeRequired)
+    {
+        if (!slot.GetInUse())
+        {
+            if (makeRequired)
+            {
+                if (!slot.RequiresCertainID())
+                {
+                    slot.SetRequiredID(itemID);
+                    return true;
+                }
+            }
+            else //normal add 
+            {
+                if (slot.RequiresCertainID())
+                {
+                    if (slot.RequiredID == itemID)
+                    {
+                        slot.AssignItem(itemID, 1);
+                        return true;
+                    }
+                    else
+                    {
+                        slot.AssignItem(itemID, 1);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public void SetImportant(GameObject button)
@@ -639,7 +764,7 @@ public class UIInventoryManager : MonoBehaviour
         {
             if (!slot.GetInUse())
             {
-                if(_optionalSendButton)
+                if (_optionalSendButton)
                     _optionalSendButton.interactable = false;
                 return;
             }
@@ -653,7 +778,12 @@ public class UIInventoryManager : MonoBehaviour
 
     public void SendBatch()
     {
-
+        foreach (var slot in _slots)
+        {
+            slot.SendData();
+            if (_optionalSendButton)
+                _optionalSendButton.interactable = false;
+        }
     }
 
     #endregion

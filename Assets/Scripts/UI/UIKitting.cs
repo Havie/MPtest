@@ -43,6 +43,7 @@ public class UIKitting : MonoBehaviour
             _timeToOrder += Time.deltaTime;
     }
 
+    /**Kittings "Final ItemIDs should be the final item(s) that go to shipping */
     private void SendInNewOrder()
     {
         _timeToOrder = 0;

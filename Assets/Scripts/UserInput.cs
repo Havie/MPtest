@@ -188,6 +188,7 @@ public class UserInput : MonoBehaviour
             {
                 if (!slot.GetInUse())
                 {
+                    Debug.Log($"trying to preview for itemID {(int)_currentSelection._myID}");
                     slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID));
                     _currentSelection.GetComponent<MeshRenderer>().enabled = false;
                     if (slot != _lastSlot && _lastSlot != null)
@@ -236,6 +237,7 @@ public class UserInput : MonoBehaviour
             {
                 //Debug.LogWarning($"Slot found= {slot.name}");
                 int itemID = slot.GetItemID();
+                Debug.Log($"Removing ItemID{itemID} from {slot.name}");
                 slot.RemoveItem();
                 float zCoord = Camera.main.WorldToScreenPoint(slot.transform.position).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();

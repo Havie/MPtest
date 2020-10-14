@@ -8,8 +8,8 @@ using UnityEngine;
 public class ObjectManager : ScriptableObject
 {
 
-    public enum eItemID { GreenRect, BlueBolt, PinkTop, RedBot, YellowTop, PurplePlug,
-                          RectwBolts, RectwTop, RectwBot, RedTopwYellow, RectwCynYellow, rectwCynPlugged,};
+    public enum eItemID { GreenRect=1, BlueBolt, PinkTop, RedBot, YellowPart, PurplePlug,
+                          RectwBolts, RectwTop, RectwBot, PinkTopwYellow, RectwCynYellow, rectwCynPlugged,};
 
     [SerializeField] List<Sprite> _sprites;
     [SerializeField] List<GameObject> _objects;
