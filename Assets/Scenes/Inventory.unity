@@ -962,7 +962,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _autoSend: 0
   _batchSize: 2
-  _inventorySize: 34
   _addChaotic: 0
   _isStackable: 0
   _workStationArrangement: 0

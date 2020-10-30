@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     #region Game Modifiers
     public bool _autoSend = true;
     public int _batchSize = 10;
-    public int _inventorySize = 50; //This will have to become batch size once stations are set
     public bool _addChaotic = false;
     public bool _isStackable = false;
     public bool _workStationArrangement = false;
