@@ -10,10 +10,10 @@ public class UIInventorySlot : MonoBehaviour
     private UIInventoryManager _manager;
     private bool _autoSend = false; //Only for OutINV, set by InventoryManager
     private bool _isOutSlot;
-    private int _requiredID=-1;
-    int _itemID= -1;
+    int _itemID = -1;
     public bool _inUse;
     int _numItemsStored = 0;
+    public int RequiredID { get; private set; } = -1;
 
     private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
@@ -35,28 +35,28 @@ public class UIInventorySlot : MonoBehaviour
         _autoSend = cond;
         _isOutSlot = true; // only OUT-INV calls this method so safe to assume
     }
-    public int RequiredID => _requiredID;
+
     public bool RequiresCertainID()
     {
-        return _requiredID != -1;
+        return RequiredID != -1;
     }
     public void SetRequiredID(int itemID)
     {
-        _requiredID = itemID;
+        RequiredID = itemID;
         //Set transparent icon 
-        AssignSprite(_requiredID,true);
+        AssignSprite(RequiredID,true);
     }
     public bool GetInUse() => _inUse;
     public void PreviewSlot(Sprite img)
     {
-        if (!_inUse && _requiredID == -1)
+        if (!_inUse && RequiredID == -1)
         {
             _myIcon.sprite = img;
         }
-        else if (!_inUse && _requiredID != -1)
+        else if (!_inUse && RequiredID != -1)
         {
             //Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
-            if (BuildableObject.Instance.GetSpriteByID(_requiredID) != img)
+            if (BuildableObject.Instance.GetSpriteByID(RequiredID) != img)
                 _myIcon.color = _INVALID;
             else
                 _myIcon.color = _VISIBLE;
@@ -78,9 +78,9 @@ public class UIInventorySlot : MonoBehaviour
         _inUse = false;
         _numItemsStored = 0;
         _itemID = -1;
-        if (_requiredID != -1)
+        if (RequiredID != -1)
         {
-            AssignSprite(_requiredID, true);
+            AssignSprite(RequiredID, true);
         }
         else
         {
@@ -95,8 +95,8 @@ public class UIInventorySlot : MonoBehaviour
         if (_numItemsStored > 0)
         {
             SetNormal();
-            if (_requiredID != -1)
-                AssignSprite(_requiredID, false);
+            if (RequiredID != -1)
+                AssignSprite(RequiredID, false);
             else
                 AssignSprite(_itemID, false);
         }
@@ -112,9 +112,9 @@ public class UIInventorySlot : MonoBehaviour
         --_numItemsStored;
         if (_numItemsStored <= 0)
         {
-            if (_requiredID != -1)
+            if (RequiredID != -1)
             {
-                AssignSprite(_requiredID, true);
+                AssignSprite(RequiredID, true);
                 _itemID = -1;
                 _inUse = false;
                 SetNormal();
@@ -147,7 +147,7 @@ public class UIInventorySlot : MonoBehaviour
          //   Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + "  , autosend="+_autoSend + " , _inUse="+ _inUse + " , _isOutSlot=" + _isOutSlot + " , _requiredID=" + _requiredID) ;
         if (!_inUse)
         {
-            if (_isOutSlot && id != _requiredID)
+            if (_isOutSlot && id != RequiredID)
                return false;
 
             AssignSprite(id, false);
