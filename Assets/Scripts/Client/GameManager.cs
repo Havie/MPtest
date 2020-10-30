@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
 
 #region oldTutorialStuff
     //old
-    public static Dictionary<int, PlayerManager> _players = new Dictionary<int, PlayerManager>();
+    /*public static Dictionary<int, PlayerManager> _players = new Dictionary<int, PlayerManager>();
     public GameObject _localPlayerPREFAB;
     public GameObject _playerPREFAB;
     //UNUSED for reference
@@ -93,6 +93,6 @@ public class GameManager : MonoBehaviour
 
             _players.Add(id, pm);
         }
-    }
+    }*/
 #endregion
 }

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: FIVE
   m_EditorClassIdentifier: 
   _myStation: 5
-  _sendOutputToStation: 4
+  _sendOutputToStation: 6
   _tasks: []

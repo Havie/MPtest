@@ -8,8 +8,8 @@ public class UIInventorySlot : MonoBehaviour
     [SerializeField] Image _myIcon;
     private Sprite _defaultIcon;
     private UIInventoryManager _manager;
-    public bool _autoSend = false; //Only for OutINV, set by InventoryManager
-    public bool _isOutSlot;
+    private bool _autoSend = false; //Only for OutINV, set by InventoryManager
+    private bool _isOutSlot;
     private int _requiredID=-1;
     int _itemID= -1;
     public bool _inUse;
@@ -55,7 +55,7 @@ public class UIInventorySlot : MonoBehaviour
         }
         else if (!_inUse && _requiredID != -1)
         {
-            Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
+            //Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
             if (BuildableObject.Instance.GetSpriteByID(_requiredID) != img)
                 _myIcon.color = _INVALID;
             else
@@ -165,6 +165,8 @@ public class UIInventorySlot : MonoBehaviour
             {
                 TellManager();
             }
+
+            return true;
         }
 
         return false;

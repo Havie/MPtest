@@ -6,9 +6,14 @@ using UnityEngine.UI;
 
 public class UserInput : MonoBehaviour
 {
-    public enum eState { FREE, ROTATION, DISPLACEMENT, UI };
-    public eState _state;
-    private bool _IsMobileMode;
+    public static UserInput Instance { get; private set; }
+
+    public enum eState { FREE, ROTATION, DISPLACEMENT, UI, PREVIEWCONSTRUCTION };
+    public eState _state { get; private set; }
+    public  bool _IsMobileMode { get; private set; }
+    public Camera _mainCamera { get; private set; }
+
+    public ObjectController _currentSelection { get; private set; }
 
     private float _pressTimeCURR = 0;
     private float _pressTimeMAX = 1.2f;
@@ -17,17 +22,24 @@ public class UserInput : MonoBehaviour
     private Vector3 _lastPos; //prior input loc
     private Vector3 _mOffset; //distance between obj in world and camera
     private UIInventorySlot _lastSlot;
-    [SerializeField]
-    private ObjectController _currentSelection;
 
-
+    private Vector3 _objStartPos;
+    private Quaternion _objStartRot;
     //UI
     [SerializeField] GraphicRaycaster _Raycaster;
     PointerEventData _PointerEventData;
     EventSystem _EventSystem;
 
+
+    private int _tmpZfix = -9;
+
     private void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(this);
+
         _IsMobileMode = Application.isMobilePlatform;
 
     }
@@ -35,6 +47,7 @@ public class UserInput : MonoBehaviour
     {
         //Fetch the Event System from the Scene
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
+        _mainCamera = Camera.main;
     }
 
 
@@ -63,6 +76,11 @@ public class UserInput : MonoBehaviour
             case eState.UI:
                 {
                     CheckUI();
+                    break;
+                }
+            case eState.PREVIEWCONSTRUCTION:
+                {
+                    CheckPreviewConstruction();
                     break;
                 }
         }
@@ -152,8 +170,10 @@ public class UserInput : MonoBehaviour
                 if (_currentSelection)
                 {
                     _currentSelection.ChangeApperanceMoving();
-                    float zCoord = Camera.main.WorldToScreenPoint(_currentSelection.transform.position).z;
+                    float zCoord = _mainCamera.WorldToScreenPoint(_currentSelection.transform.position).z;
                     _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                    _objStartPos = _currentSelection.transform.position;
+                    _objStartRot = _currentSelection.transform.rotation;
                 }
                 _state = eState.DISPLACEMENT;
             }
@@ -178,46 +198,58 @@ public class UserInput : MonoBehaviour
     {
 
         UIInventorySlot slot = CheckRayCastForUI();
-        if (InputDown() && _currentSelection)
+        if (InputDown())
         {
-            float zCoord = Camera.main.WorldToScreenPoint(_currentSelection.transform.position).z;
-            Vector3 worldLoc = GetInputWorldPos(zCoord);
-            _currentSelection.Follow(new Vector3(worldLoc.x, worldLoc.y, _currentSelection.transform.position.z) + _mOffset);
-
-            if (slot != null)
+            if (_currentSelection)
             {
-                if (!slot.GetInUse())
+                Vector3 worldLoc = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
+                _currentSelection.Follow(worldLoc + _mOffset);
+
+                if (slot != null) //we are hovering over a slot 
                 {
-                    Debug.Log($"trying to preview for itemID {(int)_currentSelection._myID}");
-                    slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID));
-                    _currentSelection.GetComponent<MeshRenderer>().enabled = false;
-                    if (slot != _lastSlot && _lastSlot != null)
-                        _lastSlot.UndoPreview();
-                    _lastSlot = slot;
+                    if (!slot.GetInUse())
+                    {
+                        //Debug.Log($"trying to preview for itemID {(int)_currentSelection._myID}");
+                        slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID));
+                        _currentSelection.ChangeAppearanceHidden();
+                        if (slot != _lastSlot && _lastSlot != null)
+                            _lastSlot.UndoPreview();
+                        _lastSlot = slot;
+                    }
+                }
+                else if (_lastSlot)
+                    ResetObjectAndSlot();
+
+                if (PreviewManager._inPreview)
+                {
+                    _state = eState.PREVIEWCONSTRUCTION;
                 }
             }
-            else if (_lastSlot != null)
-                ResetObjectAndSlot();
         }
         else //Input UP
         {
             if (_currentSelection)
             {
+                bool assigned = false;
                 if (slot != null)
                 {
                     //Debug.Log($"FOUND UI SLOT {slot.name}");
                     slot.SetNormal();
-                    slot.AssignItem((int)_currentSelection._myID, 1);
-                    Destroy(_currentSelection.gameObject);
+                    assigned= slot.AssignItem((int)_currentSelection._myID, 1);
+                    if(assigned)
+                        Destroy(_currentSelection.gameObject);
                 }
-                else
+                if (!assigned) 
                 {
-                    //else reset size and Pos
-                    _currentSelection.GetComponent<MeshRenderer>().enabled = true;
-                    _currentSelection.ChangeApperanceStill();
-                    _currentSelection.transform.position = Vector3.zero;
+                    //put it back to where we picked it up 
+                    if (slot) // we tried dropping in incompatible slot
+                    {
+                        _currentSelection.transform.position = _objStartPos;
+                        _currentSelection.transform.rotation = _objStartRot;
+                    }
+                    _currentSelection.ChangeApperanceNormal();
                     //Really weird Fix to prevent raycast bug
-                    ToggleBoxColliderTest();
+                    FixRayCastBug();
                 }
             }
             _state = eState.FREE;
@@ -237,17 +269,22 @@ public class UserInput : MonoBehaviour
             {
                 //Debug.LogWarning($"Slot found= {slot.name}");
                 int itemID = slot.GetItemID();
-                Debug.Log($"Removing ItemID{itemID} from {slot.name}");
+               // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
                 slot.RemoveItem();
-                float zCoord = Camera.main.WorldToScreenPoint(slot.transform.position).z;
+                Vector3 slotLoc = slot.transform.position;
+                slotLoc.z = _tmpZfix; //somehow changing the scale messed things up so we cant use the worldcanvas UIs z Loc, its too far back
+                float zCoord = _mainCamera.WorldToScreenPoint(slotLoc).z; // might want to cache the camera someday
                 var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
                 _currentSelection = obj;
+                //Debug.Log($"OBJ spawn loc={obj.transform.position}");
                 if (_currentSelection)
                 {
                     //Debug.Log($"OBJ loc {obj.transform.position}");
                     _currentSelection.ChangeApperanceMoving();
                     _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                     _state = eState.DISPLACEMENT;
+                    _objStartPos = new Vector3(0, 0, _tmpZfix);
+                    _objStartRot = Quaternion.identity;
                 }
 
                 else
@@ -263,21 +300,64 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
+
+    public bool CheckPreviewConstruction()
+    {
+
+        if (InputDown())
+        {
+            if (_currentSelection)
+            {
+                Vector3 worldLoc = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
+                _currentSelection.Follow(worldLoc + _mOffset);
+            }
+
+            if (!PreviewManager._inPreview)
+                _state = eState.DISPLACEMENT;
+        }
+        else //Input UP
+        {
+            if (_currentSelection)
+            {
+                if (PreviewManager._inPreview)
+                    PreviewManager.ConfirmCreation();
+
+                _currentSelection = null;
+            }
+            _state = eState.FREE;
+        }
+
+
+      
+
+        return false;
+    }
+
     private void ResetObjectAndSlot()
     {
-        _lastSlot.UndoPreview();
-        _currentSelection.GetComponent<MeshRenderer>().enabled = true;
-        _lastSlot = null;
+        if (_currentSelection)
+            _currentSelection.ChangeApperanceNormal();
+        if (_lastSlot)
+        {
+            _lastSlot.UndoPreview();
+            _lastSlot = null;
+        }
+    }
+    private Vector3 GetCurrentWorldLocBasedOnMouse(Transform transform)
+    {
+        float zCoord = _mainCamera.WorldToScreenPoint(transform.position).z;
+        Vector3 worldLoc = GetInputWorldPos(zCoord);
+        return new Vector3(worldLoc.x, worldLoc.y, transform.position.z) + _mOffset;
     }
 
     private Vector3 GetInputWorldPos(float zLoc)
     {
-        return Camera.main.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc));
+        return _mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc));
     }
 
     public ObjectController CheckForObjectAtLoc(Vector3 pos)
     {
-        var ray = Camera.main.ScreenPointToRay(pos);
+        var ray = _mainCamera.ScreenPointToRay(pos);
         //Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -292,7 +372,7 @@ public class UserInput : MonoBehaviour
             {
                 
                 var child = bo.transform.GetChild(0);
-                var screenloc = Camera.main.WorldToScreenPoint(child.position);
+                var screenloc = _mainCamera.WorldToScreenPoint(child.position);
                 Debug.LogError($"{child.gameObject.name} is @loc:{screenloc} , and world pos = {child.transform.position}");
             }
 
@@ -303,7 +383,7 @@ public class UserInput : MonoBehaviour
     }
 
     /**This is a really weird fix I found to prevent the raycast from missing the box */
-    private void ToggleBoxColliderTest()
+    private void FixRayCastBug()
     {
         if(_currentSelection)
         {
@@ -318,7 +398,7 @@ public class UserInput : MonoBehaviour
     {
         //BROKEN GOING TO NEED TO FIX THIS FOR TOUCH
         //https://answers.unity.com/questions/979726/touch-to-ray-on-canvas.html
-        var ray = Camera.main.ScreenPointToRay(pos);
+        var ray = _mainCamera.ScreenPointToRay(pos);
         RaycastHit[] hits = Physics.RaycastAll(ray);
         foreach (var h in hits)
         {

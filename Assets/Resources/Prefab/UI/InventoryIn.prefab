@@ -32,8 +32,8 @@ RectTransform:
   m_Father: {fileID: 3199339850586549372}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.36389518}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -429,7 +429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Content: {fileID: 3199339851558138525}
   m_Horizontal: 0
-  m_Vertical: 1
+  m_Vertical: 0
   m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
@@ -607,7 +607,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caed5301b0d6e444dbc54640c35d177e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bSlotPREFAB: {fileID: 0}
   _inventoryType: 0
 --- !u!1 &4033160302388866772
 GameObject:
@@ -877,7 +876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4033160302938662009}
   m_Layer: 5
-  m_Name: InventoryIN
+  m_Name: InventoryIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1752,8 +1751,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 4033160302224812273}
-  m_Horizontal: 1
-  m_Vertical: 1
+  m_Horizontal: 0
+  m_Vertical: 0
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1

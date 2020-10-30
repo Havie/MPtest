@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
         if (_workstationManager != null && _workStationDropDown)
             _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
         else
-            Debug.LogWarning("(UIManager): Missing _workstationManager ");
+            Debug.LogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this should be fine) ");
 
         if (_loadingTxt && _tmpConfirmWorkStation && _workStationDropDown)
         {
@@ -145,8 +145,8 @@ public class UIManager : MonoBehaviour
             SwitchToKitting();
 
          // (TMP) Spawn Object and allow me to rotate it 
-         BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
-         bo.SetItemID(itemLevel);
+        // BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
+         //bo.SetItemID(itemLevel);
 
         
     }

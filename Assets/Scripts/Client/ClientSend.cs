@@ -30,20 +30,6 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void PlayerMovement(bool[] inputs)
-    {
-        using (sPacket packet = new sPacket((int)ClientPackets.playerMovement))
-        {
-            packet.Write(inputs.Length);
-            foreach (bool input in inputs)
-                packet.Write(input);
-
-            //use UDP cause we can afford to lose data (faster)
-            packet.Write(GameManager._players[Client.instance._myId].transform.rotation);
-
-            SendUDPData(packet);
-        }
-    }
 
     public static void SendWorkStationID(int stationID)
     {
@@ -70,6 +56,24 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    #endregion
+
+
+    #region OldFromTutorial
+    public static void PlayerMovement(bool[] inputs)
+    {
+        using (sPacket packet = new sPacket((int)ClientPackets.playerMovement))
+        {
+            packet.Write(inputs.Length);
+            foreach (bool input in inputs)
+                packet.Write(input);
+
+            //use UDP cause we can afford to lose data (faster)
+            // packet.Write(GameManager._players[Client.instance._myId].transform.rotation);
+
+            SendUDPData(packet);
+        }
+    }
     #endregion
 }
 

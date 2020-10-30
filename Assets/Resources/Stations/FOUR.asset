@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: FOUR
   m_EditorClassIdentifier: 
   _myStation: 4
-  _sendOutputToStation: 6
-  _tasks: []
+  _sendOutputToStation: 5
+  _tasks:
+  - {fileID: 11400000, guid: 6dd5007efcbd7a44898f89e3b6c05406, type: 2}
