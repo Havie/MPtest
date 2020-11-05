@@ -93,7 +93,7 @@ public class StationInventory : UIInventoryManager
                             {
                                 seenItems.Add(itemId);
                                 ++count;
-                                Debug.Log($"Kitting_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
+                                //Debug.Log($"Kitting_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                                 if(addAsInfiniteItem)
                                 {
                                     AssignInfiniteItem(itemId);
@@ -145,10 +145,8 @@ public class StationInventory : UIInventoryManager
 
         //Determine layout
         _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > 4 && _inventoryType != eInvType.STATION)
-            _xMaxPerRow = (_INVENTORYSIZE / 4) + 1;
 
-        if (_xMaxPerRow > 10)
+        if (_xMaxPerRow > 10) /// might be an issue when we have multiple Items to make, will revist
             _xMaxPerRow = 10;
 
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
@@ -199,9 +197,11 @@ public class StationInventory : UIInventoryManager
             return;
         RectTransform rt = this.GetComponent<RectTransform>();
 
-        rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding) + (_cellPadding)));
+        rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding)));
         // fix for a really weird issue with off center inv
-        this.transform.localPosition = new Vector3(this.transform.localPosition.x / 2, this.transform.localPosition.y, this.transform.localPosition.z);
+        //this.transform.localPosition = new Vector3(this.transform.localPosition.x / 2, this.transform.localPosition.y, this.transform.localPosition.z);
+        ///*Note since bSlots are anchored to top corner for IN/OUT, when they come in for station things get weird, thus the Station content pane is offset to fix this
+    
     }
 
     private void AssignInfiniteItem(int itemID)

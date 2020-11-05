@@ -195,10 +195,12 @@ public class UIInventoryManager : MonoBehaviour
         int xoff = slotSize % _xMaxPerRow;
         float yLoc = _startingY - (_cellPadding * yoff);
         float xLoc = _startingX + ((xoff * _cellPadding));
-        /*
-            Debug.Log($"Prediction2 @{slotSize} ={_inventoryType}::XlocEND={xLoc}, ylocEND={yLoc} , xMaxRows={_xMaxRows}" +
-            $"(Extra stuff): slotlen:{slotSize}, xMaxRows:{_xMaxRows} , yoff:{yoff} xoff{xoff}");
-        */
+
+        /*if (_inventoryType == eInvType.STATION)
+        {
+            Debug.Log($"Prediction2 @{slotSize} ={_inventoryType}::XlocEND={xLoc}, ylocEND={yLoc} , xMaxRows={_xMaxPerRow}" +
+            $"(Extra stuff): slotlen:{slotSize}, xMaxRows:{_xMaxPerRow} , yoff:{yoff} xoff{xoff}");
+        }*/
         return new Vector2(xLoc, yLoc);
 
     }

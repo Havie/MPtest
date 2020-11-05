@@ -132,7 +132,7 @@ public class ObjectController : MonoBehaviour
     {
         if (other.tag.Equals("Table"))
         {
-          //  _hittingTable = true;
+            _hittingTable = true;
             _table = other.gameObject;
         }
     }
