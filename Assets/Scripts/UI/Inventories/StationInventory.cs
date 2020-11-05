@@ -52,7 +52,10 @@ public class StationInventory : UIInventoryManager
         if (BATCHSIZE == 1)
         {
             foreach (Task t in myWS._tasks)
+            {
                 count += t._requiredItemIDs.Count;
+                Debug.Log($"batch size is 1 and itemCount ={t._requiredItemIDs.Count} for Task:{t}");
+            }
 
             return count;
         }
@@ -116,6 +119,10 @@ public class StationInventory : UIInventoryManager
                         {
                             seenItems.Add(itemId);
                             ++count;
+                            if (addAsInfiniteItem)
+                            {
+                                AssignInfiniteItem(itemId);
+                            }
                         }
                     }
                 }
@@ -150,7 +157,6 @@ public class StationInventory : UIInventoryManager
         SetSizeOfContentArea();
 
         //cache a conditions for forloop situations
-        bool cond = GameManager.instance._autoSend; //used By eInvType.OUT
         Dictionary<Task, int> seenTasks = new Dictionary<Task, int>(); //used By eInvType.STATION
         List<int> seenItems = new List<int>();
         WorkStationManager wm = UIManager.instance._workstationManager;
@@ -166,7 +172,7 @@ public class StationInventory : UIInventoryManager
             //Add slot component to our list
             _slots[i] = CreateNewSlot();
 
-           // SetInfiniteItem(wm, myWS, seenTasks, seenItems, i);
+
         }
         ParseItemList(wm, myWS, true);
     }
@@ -179,130 +185,23 @@ public class StationInventory : UIInventoryManager
             if (!ws.isKittingStation())
             {
                 Destroy(this.gameObject); //good enough for now might need to go higher to parents
-                Debug.Log($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
+                Debug.LogWarning($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
                 return true;
             }
         }
         return false;
     }
 
-    /**Sets the stackable items at this stations inventory based off the required items needed at this station */
-    private void SetInfiniteItem(WorkStationManager wm, WorkStation myWS, Dictionary<Task, int> seenTasks, List<int> seenItems, int i)
+    /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
+    private void SetSizeOfContentArea()
     {
-        //Debug.LogWarning($"SetINF@{i} , slotsize={_slots.Length}");
+        if (_xMaxPerRow == 0)
+            return;
+        RectTransform rt = this.GetComponent<RectTransform>();
 
-        //need to look at the tasks in all workstations after me  (ignore self because required items in next staton are same as mine)
-        int[] stationSequence = getProperSequence(wm, myWS);//really feels like a doubly linked list might be better?
-        var stationList = wm.GetStationList();
-        //Figure out myplace in Sequence 
-        int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-        // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        if (GameManager.instance._batchSize == 1)
-        {
-            WorkStation mwWS = GameManager.instance._workStation;
-            AddItemFromTasksAtOwnStation(myWS, seenTasks, i, seenItems);
-        }
-        else
-        {
-            if (!GameManager.instance._workStation.isKittingStation())
-                Debug.LogWarning("This happened for a non kitting station, dont think this shud");
-
-            AddItemFromTasksAtSubsequentialStations(startingIndex, stationSequence, stationList, seenTasks, i, seenItems);
-        }
-    }
-    /** Tries to add items from current station and all subsequential work station tasks*/
-    private bool AddItemFromTasksAtSubsequentialStations(int startingIndex, int[] stationSequence, List<WorkStation> stationList, Dictionary<Task, int> seenTasks, int i, List<int> seenItems)
-    {
-        for (int j = startingIndex + 1; j < stationSequence.Length; j++)
-        {
-            WorkStation ws = stationList[j]; /// think this is in order?
-            foreach (Task t in ws._tasks)
-            {
-                if (TryToAssignIfiniteItem(seenTasks, t, seenItems, i))
-                    return true;
-            }
-        }
-        return false;
-    }
-    /**Only tries to add items from tasks at own workstation */
-    private bool AddItemFromTasksAtOwnStation(WorkStation ws, Dictionary<Task, int> seenTasks, int i, List<int> seenItems)
-    {
-        foreach (Task t in ws._tasks)
-        {
-            if (TryToAssignIfiniteItem(seenTasks, t, seenItems, i))
-                return true;
-        }
-        return false;
-    }
-
-    /**Tries to assign an unseen item from a task. Dictonary is used to keep track of last item index seen in task. */
-    private bool TryToAssignIfiniteItem(Dictionary<Task, int> seenTasks, Task t, List<int> seenItems, int i)
-    {
-        if (seenTasks.ContainsKey(t))
-        {
-            int amntOfItemsSeen = seenTasks[t];
-            int requiredItemsInTask = t._requiredItemIDs.Count;
-            //Debug.Log($"Amount of items seen in Task {t} is {amntOfItemsSeen} vs {requiredItemsInTask}");
-            if (amntOfItemsSeen < requiredItemsInTask)
-            {
-                seenTasks.Remove(t);
-                seenTasks.Add(t, amntOfItemsSeen + 1);
-                if (BuildableObject.Instance.IsBasicItem(t._requiredItemIDs[amntOfItemsSeen]))
-                {
-                    int id = (int)t._requiredItemIDs[amntOfItemsSeen];
-                    //Debug.Log($"(1) Assigned INFINITE Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[amntOfItemsSeen]}");
-                    // Debug.Log($"(1) Trying to Assign INFINITE Item ID {id}, task::{t}::item::{t._requiredItemIDs[amntOfItemsSeen]}");
-
-                    if (!seenItems.Contains(id))
-                    {
-                        AssignInfiniteItem(id, i, seenItems);
-                        return true;
-                    }
-                    else //keep looking in this task for more items since weve already seen one of these 
-                    {
-                        TryToAssignIfiniteItem(seenTasks, t, seenItems, i);
-                    }
-                }
-               // else
-                  //  Debug.Log($" FAILED id={ (int)t._requiredItemIDs[amntOfItemsSeen]} , {BuildableObject.Instance.GetItemNameByID((int)t._requiredItemIDs[amntOfItemsSeen])} ... from task::{t}");
-            }
-        }
-        else
-        {
-            seenTasks.Add(t, 1);
-            if (BuildableObject.Instance.IsBasicItem(t._requiredItemIDs[0]))
-            {
-                int id = (int)t._requiredItemIDs[0];
-                // Debug.Log($"(0) Assigned INFINITE Item ID {id}, from Station:{ws}::task::{t}::item::{t._requiredItemIDs[0]}");
-                // Debug.Log($"(0) Trying to Assign INFINITE Item ID {id}, ::task::{t}::item::{t._requiredItemIDs[0]}");
-
-                if (!seenItems.Contains(id))
-                {
-                    AssignInfiniteItem(id, i, seenItems);
-                    return true;
-                }
-            }
-            else
-            {
-                //Debug.Log($" FAILED id={ (int)t._requiredItemIDs[0]}, {BuildableObject.Instance.GetItemNameByID((int)t._requiredItemIDs[0])} ... from task::{t}");
-                TryToAssignIfiniteItem(seenTasks, t, seenItems, i);
-            }
-        }
-
-        return false;
-    }
-    /** Assigns the item to a a given slot and adds item to our list so it cant be readded twice*/
-    private void AssignInfiniteItem(int id, int i, List<int> seenItems)
-    {
-        _slots[i].AssignItem(id, int.MaxValue);
-        seenItems.Add(id);
-        //Debugging 
-       /* string seen = "";
-        foreach (var item in seenItems)
-        {
-            seen += " , " + item;
-        }
-        Debug.Log($" ADDED {id } to SLOT{i},  seen INF so far:" + seen);*/
+        rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding) + (_cellPadding)));
+        // fix for a really weird issue with off center inv
+        this.transform.localPosition = new Vector3(this.transform.localPosition.x / 2, this.transform.localPosition.y, this.transform.localPosition.z);
     }
 
     private void AssignInfiniteItem(int itemID)
@@ -331,17 +230,7 @@ public class StationInventory : UIInventoryManager
         nSlot.AssignItem(itemID, int.MaxValue);
         _extraSlots.Add(nSlot);
     }
-    /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
-    private void SetSizeOfContentArea()
-    {
-        if (_xMaxPerRow == 0)
-            return;
-        RectTransform rt = this.GetComponent<RectTransform>();
 
-        rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding) + (_cellPadding)));
-        // fix for a really weird issue with off center inv
-        this.transform.localPosition = new Vector3(this.transform.localPosition.x / 2, this.transform.localPosition.y, this.transform.localPosition.z);
-    }
 
 
 

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977898da102ecb5469631e2fc21fe578, type: 3}
+  m_Name: p_SIX
+  m_EditorClassIdentifier: 
+  _myStation: 6
+  _sendOutputToStation: 7
+  _tasks:
+  - {fileID: 11400000, guid: 139b9325bcc8d6044b9c394394d3bea1, type: 2}

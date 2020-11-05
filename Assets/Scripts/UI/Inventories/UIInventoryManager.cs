@@ -15,8 +15,8 @@ public class UIInventoryManager : MonoBehaviour
     protected bool _ADDCHAOTIC;
     #endregion
     protected GameObject _bSlotPREFAB;
-    //[SerializeField] GridLayoutGroup _layoutGroup;
-    //[SerializeField] Sprite[] _iconSprites;
+    [SerializeField] GameObject _scrollBarVert;   
+    [SerializeField] GameObject _scrollBarHoriz;
     public enum eInvType { IN, OUT, STATION };
     protected eInvType _inventoryType;
     protected Button _optionalSendButton;
@@ -43,6 +43,8 @@ public class UIInventoryManager : MonoBehaviour
         }
          //Debug.Log(seqName+ ": " + p);
     }
+   
+    
     /** This is kind of a mess, thinking of making a doubly linked list class at some point*/
     protected int[] getProperSequence(WorkStationManager wm, WorkStation myWS)
     {
@@ -170,6 +172,14 @@ public class UIInventoryManager : MonoBehaviour
         }
         // Debug.Log($"The # of INV items will be : {count}");
         return count;
+    }
+
+    protected void TurnOffScrollBars()
+    {
+        if (_scrollBarVert)
+            _scrollBarVert.SetActive(false);
+        if (_scrollBarHoriz)
+            _scrollBarHoriz.SetActive(false);
     }
     #endregion
 

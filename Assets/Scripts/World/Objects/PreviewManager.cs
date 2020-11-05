@@ -12,15 +12,20 @@ public static class PreviewManager
 
     public static void ShowPreview(ObjectController controller, ObjectController otherController, int createdID)
     {
+        if(_inPreview)
+        {
+            Debug.LogError("trying to preview again too fast ??");
+            return;
+        }
+
         //disable both items mesh renderers
         controller.ChangeAppearanceHidden();
         otherController.ChangeAppearanceHidden();
         //Store for later to undo
         _previewedItems.Add(controller);
         _previewedItems.Add(otherController);
-
-        //Spawn a new obj via CreatedID and set opacity to preview 
-        Debug.Log("createdid=" + createdID);
+          //Spawn a new obj via CreatedID and set opacity to preview 
+        Debug.LogError("createdid=" + createdID);
         var obj = BuildableObject.Instance.SpawnObject(createdID);
         obj.GetComponent<ObjectController>().ChangeApperancePreview();
         //Set its orientation to match its female parent
@@ -42,9 +47,11 @@ public static class PreviewManager
 
     public static void ConfirmCreation()
     {
-        Debug.Log("called Confirm Creation ");
+        //Debug.Log("....called Confirm Creation ");
         foreach (var item in _previewedItems)
         {
+            HandManager.RemoveItem(item);
+           // HandManager.PrintQueue();
             BuildableObject.Instance.DestroyObject(item.gameObject);
         }
         _previewItem.GetComponent<ObjectController>().ChangeApperanceNormal();

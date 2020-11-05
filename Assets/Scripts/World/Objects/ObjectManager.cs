@@ -11,7 +11,8 @@ public class ObjectManager : ScriptableObject
     public enum eItemID
     {
         GreenRect1 = 1, BlueBolt, PinkTop, RedBot, YellowPart, PurplePlug, PinkTopwYellow,
-        RectwBolts1, RectwBolts2, RectwTop, RectwBot, rectwCynPlugged, finalPower,
+        RectwBolts1, RectwBolts2, RectwTopYellow, RectwBotTopYellow, RectwTopBotPurplePlug, finalPower,
+        RectwBoltsAlt, RectwTopAlt, RectwBotAlt,RectWTopBotAlt1, RectwRedBotMissingTopBolt,
     };
 
     [SerializeField] List<Sprite> _sprites;

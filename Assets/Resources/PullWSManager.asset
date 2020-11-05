@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: PullWSManager
   m_EditorClassIdentifier: 
   _workStations:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 83ee4cd14e2c033479dd73f9080cec19, type: 2}
+  - {fileID: 11400000, guid: 961a7fbe8d46f2f4c8e3fd8372f99300, type: 2}
+  - {fileID: 11400000, guid: 1c312ea2d23d61249a34ca310cdcc61a, type: 2}
+  - {fileID: 11400000, guid: f80fd49d4c46024479013dc3f4b4f357, type: 2}
+  - {fileID: 11400000, guid: 204259c8d2cc30a4ebf144a07eb0f2a4, type: 2}
+  - {fileID: 11400000, guid: dd3686875ba69ac48a508285432f9100, type: 2}
+  - {fileID: 11400000, guid: 2838e2ab0bfd4b94bb41cafeb3014b54, type: 2}
