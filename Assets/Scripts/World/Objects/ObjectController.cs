@@ -9,11 +9,18 @@ public class ObjectController : MonoBehaviour
     private int _dampening = 10;
     private Vector3 _startSize;
     private MeshRenderer _mr;
+    private Rigidbody _rb;
+    private Collider  _collider;
+    private bool _hittingTable;
+    private GameObject _table;
 
     private void Awake()
     {
         _startSize = this.transform.localScale;
         _mr = this.GetComponent<MeshRenderer>();
+        _rb=this.gameObject.AddComponent<Rigidbody>();
+        _collider = this.gameObject.GetComponent<Collider>();
+        ToggleRB(true);
     }
 
 
@@ -37,7 +44,18 @@ public class ObjectController : MonoBehaviour
 
     public void Follow(Vector3 loc)
     {
-        this.transform.position = loc;
+        //this.transform.position = loc;
+       // Debug.LogWarning("Told to go to:" + this.transform.position);
+       if(!_hittingTable)
+            this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
+       else
+        {
+           // if were going up, allow it
+            if (loc.y > 0)
+                this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
+            //else /if direction is going to go more into table prevent it,
+        }
+
     }
 
     private void ToggleCollider(bool cond)
@@ -51,7 +69,7 @@ public class ObjectController : MonoBehaviour
         this.transform.localScale =  new Vector3
             (0.75f * this.transform.localScale.x, 
             0.75f * this.transform.localScale.y ,
-            0.75f * this.transform.localScale.z);
+            0.75f * this.transform.localScale.z); 
 
         ChangeMaterialColor(0.5f);
 
@@ -76,7 +94,24 @@ public class ObjectController : MonoBehaviour
         _mr.enabled = false;
     }
 
-    //METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
+    public void ToggleRB(bool cond)
+    {
+        _rb.isKinematic = cond;
+        _collider.isTrigger = cond;
+        _rb.useGravity = !cond;
+    }
+
+    public bool OnTable()
+    {
+        return _rb.useGravity == true;
+    }
+
+    public void ResetHittingTable()
+    {
+        _hittingTable = false;
+    }
+
+    ///METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
     private void ChangeMaterialColor(float opacity)
     {
         if (opacity > 1)
@@ -92,5 +127,19 @@ public class ObjectController : MonoBehaviour
             mrender.material = m; 
         }
 
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.Equals("Table"))
+        {
+            _hittingTable = true;
+            _table = other.gameObject;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.Equals("Table"))
+            _hittingTable = false;
     }
 }

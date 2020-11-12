@@ -5,14 +5,15 @@ using UnityEngine;
 public class UIKitting : MonoBehaviour
 {
 
-    public GameObject _bORDERPREFAB;
+    private GameObject _bORDERPREFAB;
 
     private int _ORDERFREQUENCY;
     private float _timeToOrder;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
     private int _startingY = 350;
-    private int _yOffset = -65;
+    private int _yOffset = -39;  ///-65
+    private int _xOffset = 16;   ///0
 
     private void Awake()
     {
@@ -72,6 +73,7 @@ public class UIKitting : MonoBehaviour
         _orderList.Add(ob);
         bOrder.transform.SetParent(this.transform);
         bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
+        bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
 
         //Get data based off of the incoming value
     }
@@ -111,7 +113,7 @@ public class UIKitting : MonoBehaviour
 
     private Vector3 FindPosition(int index)
     {
-        return new Vector3(0, _startingY + (_yOffset *index), 0);
+        return new Vector3(16, _startingY + (_yOffset *index), 0);
     }
 
     private void ButtonDestroyedCallback(OrderButton orderButton)

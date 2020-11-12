@@ -39,12 +39,23 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(this);
 
+        AutomaticChecks();
+
         //Test and see if this works for all scripts?
 #if UNITY_EDITOR
         Debug.unityLogger.logEnabled = true;
 #else
         Debug.unityLogger.logEnabled=false;
 #endif
+    }
+    private void AutomaticChecks()
+    {
+        if (_batchSize == 1)
+        {
+            _isStackable = true;
+            _autoSend = true;
+            _addChaotic = false;
+        }
     }
     /** Work station is used to identify what items are produced here and where items are sent to */
     public void AssignWorkStation(WorkStation station)

@@ -85,9 +85,15 @@ public class UserInput : MonoBehaviour
                 }
         }
 
+       /* var V1 = GetInputWorldPos(_tmpZfix);
+       Debug.LogError($"(1)Mouse::{V1} + mOffset={_mOffset} = {V1 + _mOffset}");
+        if (_currentSelection)
 
+        {
+            var v2 = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
+            Debug.LogError($"(2)Mouse::{v2} + mOffset={_mOffset} = {v2 + _mOffset}");
 
-
+        }*/
     }
 
     public bool InputDown()
@@ -128,6 +134,7 @@ public class UserInput : MonoBehaviour
             {
                // Debug.Log("CURR SELC= " + _currentSelection.gameObject);
                 _state = eState.ROTATION;
+
             }
             else    //if u get UI do UI 
             {
@@ -142,11 +149,6 @@ public class UserInput : MonoBehaviour
             }
 
         }
-
-
-
-
-
 
         return false;
     }
@@ -174,6 +176,12 @@ public class UserInput : MonoBehaviour
                     _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                     _objStartPos = _currentSelection.transform.position;
                     _objStartRot = _currentSelection.transform.rotation;
+
+                    //only if on table
+                    if(_currentSelection.OnTable())
+                        ResetObjectOrigin(zCoord);
+
+                    HandManager.PickUpItem(_currentSelection); //might have moved to the wrong spot
                 }
                 _state = eState.DISPLACEMENT;
             }
@@ -204,7 +212,7 @@ public class UserInput : MonoBehaviour
             {
                 Vector3 worldLoc = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
                 _currentSelection.Follow(worldLoc + _mOffset);
-
+                
                 if (slot != null) //we are hovering over a slot 
                 {
                     if (!slot.GetInUse())
@@ -248,10 +256,12 @@ public class UserInput : MonoBehaviour
                         _currentSelection.transform.rotation = _objStartRot;
                     }
                     _currentSelection.ChangeApperanceNormal();
+                   // HandManager.DropItem(_currentSelection);
                     //Really weird Fix to prevent raycast bug
                     FixRayCastBug();
                 }
             }
+          
             _state = eState.FREE;
         }
 
@@ -273,20 +283,21 @@ public class UserInput : MonoBehaviour
                 slot.RemoveItem();
                 Vector3 slotLoc = slot.transform.position;
                 slotLoc.z = _tmpZfix; //somehow changing the scale messed things up so we cant use the worldcanvas UIs z Loc, its too far back
-                float zCoord = _mainCamera.WorldToScreenPoint(slotLoc).z; // might want to cache the camera someday
+                float zCoord = _mainCamera.WorldToScreenPoint(slotLoc).z; 
                 var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
                 _currentSelection = obj;
+                HandManager.PickUpItem(_currentSelection);
                 //Debug.Log($"OBJ spawn loc={obj.transform.position}");
                 if (_currentSelection)
                 {
                     //Debug.Log($"OBJ loc {obj.transform.position}");
                     _currentSelection.ChangeApperanceMoving();
-                    _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                    //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                    _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
                     _state = eState.DISPLACEMENT;
                     _objStartPos = new Vector3(0, 0, _tmpZfix);
                     _objStartRot = Quaternion.identity;
                 }
-
                 else
                     Debug.LogWarning("This happened?1");
 
@@ -326,17 +337,38 @@ public class UserInput : MonoBehaviour
             }
             _state = eState.FREE;
         }
-
-
-      
-
         return false;
+    }
+
+    private void ResetObjectOrigin(float zCoord)
+    {
+        ///Reset the object to have the right orientation for construction when picked back up
+        if (_currentSelection)
+        {
+            _currentSelection.ChangeApperanceMoving();
+            Vector3 mouseLocWorld = GetInputWorldPos(zCoord);
+            _objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _tmpZfix);
+            //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");
+            _objStartRot = Quaternion.identity;
+            _mOffset = Vector3.zero;
+            //new
+            _currentSelection.transform.position = _objStartPos;
+            _currentSelection.transform.rotation = _objStartRot;
+            //Start moving the object
+            _state = eState.DISPLACEMENT;
+            _currentSelection.ResetHittingTable(); // so we can pick it up again
+        }
+        else
+            Debug.LogWarning("This happened?1");
     }
 
     private void ResetObjectAndSlot()
     {
         if (_currentSelection)
+        {
             _currentSelection.ChangeApperanceNormal();
+           
+        }
         if (_lastSlot)
         {
             _lastSlot.UndoPreview();
@@ -345,9 +377,13 @@ public class UserInput : MonoBehaviour
     }
     private Vector3 GetCurrentWorldLocBasedOnMouse(Transform transform)
     {
-        float zCoord = _mainCamera.WorldToScreenPoint(transform.position).z;
-        Vector3 worldLoc = GetInputWorldPos(zCoord);
-        return new Vector3(worldLoc.x, worldLoc.y, transform.position.z) + _mOffset;
+        //Debug.Log($"(1) {_inputPos.x},{_inputPos.y}");
+        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(transform.position);
+        ///gets the objects Z pos in world for depth
+        float zCoord = screenPtObj.z;
+        ///gets the world loc based on inputpos and gives it the z depth from the obj
+        Vector3 worldLocInput = GetInputWorldPos(zCoord);
+        return new Vector3(worldLocInput.x, worldLocInput.y, transform.position.z); 
     }
 
     private Vector3 GetInputWorldPos(float zLoc)
@@ -355,13 +391,13 @@ public class UserInput : MonoBehaviour
         return _mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc));
     }
 
+
     public ObjectController CheckForObjectAtLoc(Vector3 pos)
     {
         var ray = _mainCamera.ScreenPointToRay(pos);
         //Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            //Debug.Log($"The Hit succeeded @loc:{pos} ,   the hit is: {hit.transform.gameObject}");
             return (hit.transform.gameObject.GetComponent<ObjectController>());
         }
        /* else
