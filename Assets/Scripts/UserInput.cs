@@ -30,6 +30,8 @@ public class UserInput : MonoBehaviour
     PointerEventData _PointerEventData;
     EventSystem _EventSystem;
 
+    //Actions
+    private Vector3 _rotationAmount;
 
     private int _tmpZfix = -9;
 
@@ -114,7 +116,7 @@ public class UserInput : MonoBehaviour
             }
             else
             {
-                _inputPos = Vector3.zero; // will this work?
+                _inputPos = Vector3.zero; /// will this work?
                 return false;
             }
         }
@@ -127,12 +129,21 @@ public class UserInput : MonoBehaviour
         if (InputDown())
         {
             _lastPos = _inputPos;
-            //Somehow this is coming back null? fix is to toggle on and off the box collider on obj in scene? wth
-            _currentSelection = CheckForObjectAtLoc(_lastPos);
+             _currentSelection = CheckForObjectAtLoc(_lastPos);
             _pressTimeCURR = 0;
             if (_currentSelection)         //if you get an obj do rotation
             {
-               // Debug.Log("CURR SELC= " + _currentSelection.gameObject);
+                // Debug.Log("CURR SELC= " + _currentSelection.gameObject);
+
+                var objectQuality = _currentSelection.GetComponent<ObjectQuality>();
+                if (objectQuality != null)
+                {
+                    QualityAction action = new QualityAction(QualityAction.eActionType.TAP);
+                    if (objectQuality.PerformAction(action))
+                        return true;
+                }
+
+                _rotationAmount = Vector3.zero; ///reset our rotation amount before re-entering
                 _state = eState.ROTATION;
 
             }
@@ -187,7 +198,16 @@ public class UserInput : MonoBehaviour
             }
             else //Do rotation
             {
-                _currentSelection.DoRotation(_inputPos - _lastPos);
+                ///Store rotation amount
+                Vector3 rotation = _inputPos - _lastPos;
+                _rotationAmount += rotation;
+                Debug.Log($" vec3={_rotationAmount} and magnitude={_rotationAmount.magnitude}");
+                if(_rotationAmount.magnitude>10)
+                {
+                   // Debug.Log("weve rotated");
+                }
+
+                _currentSelection.DoRotation(rotation);
                 _lastPos = _inputPos;
                 return true;
             }
