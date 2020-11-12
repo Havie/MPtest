@@ -173,8 +173,8 @@ public class InInventory : UIInventoryManager
         if (_INVENTORYSIZE > 4 && _inventoryType != eInvType.STATION)
             _xMaxPerRow = (_INVENTORYSIZE / 4) + 1;
 
-        if (_xMaxPerRow > 10)
-            _xMaxPerRow = 10;
+        if (_xMaxPerRow > 3)
+            _xMaxPerRow = 3;
 
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
@@ -209,7 +209,7 @@ public class InInventory : UIInventoryManager
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
             rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding) + (_cellPadding)));
+            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) - (_cellPadding / 2)));
 
     }
 
