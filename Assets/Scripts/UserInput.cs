@@ -31,7 +31,7 @@ public class UserInput : MonoBehaviour
     EventSystem _EventSystem;
 
     //Actions
-    private Vector3 _rotationAmount;
+    private Vector2 _rotationAmount;
 
     private int _tmpZfix = -9;
 
@@ -133,17 +133,9 @@ public class UserInput : MonoBehaviour
             _pressTimeCURR = 0;
             if (_currentSelection)         //if you get an obj do rotation
             {
-                // Debug.Log("CURR SELC= " + _currentSelection.gameObject);
+                // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
 
-                var objectQuality = _currentSelection.GetComponent<ObjectQuality>();
-                if (objectQuality != null)
-                {
-                    QualityAction action = new QualityAction(QualityAction.eActionType.TAP);
-                    if (objectQuality.PerformAction(action))
-                        return true;
-                }
-
-                _rotationAmount = Vector3.zero; ///reset our rotation amount before re-entering
+                _rotationAmount =Vector2.zero; ///reset our rotation amount before re-entering
                 _state = eState.ROTATION;
 
             }
@@ -160,6 +152,7 @@ public class UserInput : MonoBehaviour
             }
 
         }
+        
 
         return false;
     }
@@ -179,7 +172,9 @@ public class UserInput : MonoBehaviour
             //if time>max do displacement
             if (_pressTimeCURR >= _pressTimeMAX)
             {
+                
                 _currentSelection = CheckForObjectAtLoc(_inputPos);
+                _currentSelection= FindAbsoluteParent(_currentSelection);
                 if (_currentSelection)
                 {
                     _currentSelection.ChangeApperanceMoving();
@@ -189,7 +184,7 @@ public class UserInput : MonoBehaviour
                     _objStartRot = _currentSelection.transform.rotation;
 
                     //only if on table
-                    if(_currentSelection.OnTable())
+                    if (_currentSelection.OnTable())
                         ResetObjectOrigin(zCoord);
 
                     HandManager.PickUpItem(_currentSelection); //might have moved to the wrong spot
@@ -200,14 +195,7 @@ public class UserInput : MonoBehaviour
             {
                 ///Store rotation amount
                 Vector3 rotation = _inputPos - _lastPos;
-                _rotationAmount += rotation;
-                Debug.Log($" vec3={_rotationAmount} and magnitude={_rotationAmount.magnitude}");
-                if(_rotationAmount.magnitude>10)
-                {
-                   // Debug.Log("weve rotated");
-                }
-
-                _currentSelection.DoRotation(rotation);
+                _rotationAmount += _currentSelection.DoRotation(rotation);
                 _lastPos = _inputPos;
                 return true;
             }
@@ -215,7 +203,12 @@ public class UserInput : MonoBehaviour
 
         }
         else
+        {
+            TryPerformAction(QualityAction.eActionType.ROTATE);
+            TryPerformAction(QualityAction.eActionType.TAP);
+
             _state = eState.FREE;
+        }
 
         return false;
 
@@ -492,4 +485,33 @@ public class UserInput : MonoBehaviour
         return null;
     }
 
+
+    #region QualityActions
+    private bool TryPerformAction(QualityAction.eActionType type)
+    {
+
+        var objectQuality = _currentSelection.GetComponent<ObjectQuality>();
+        if (objectQuality != null)
+        {
+            QualityAction action = new QualityAction(type, _inputPos, _rotationAmount);
+            if (objectQuality.PerformAction(action))
+                return true;
+        }
+
+        return false;
+    }
+
+    private ObjectController FindAbsoluteParent(ObjectController startingObj)
+    {
+        ObjectController parent = startingObj._parent;
+        ObjectController child = startingObj;
+        while(parent != null)
+        {
+            child = parent;
+            parent = child._parent;
+        }
+
+        return child;
+    }
+    #endregion
 }

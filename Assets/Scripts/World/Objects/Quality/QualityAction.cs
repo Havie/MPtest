@@ -7,10 +7,14 @@ public class QualityAction
     public enum eActionType { TAP, ROTATE}; ///static by default
     public eActionType _actionType;
 
+    public Vector3 _location;
+    public Vector2 _rotation;
 
-    public QualityAction(eActionType action)
+    public QualityAction(eActionType action, Vector3 location, Vector2 rotation)
     {
         _actionType = action;
+        _location = location;
+        _rotation = rotation;
     }
 
    
