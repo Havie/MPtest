@@ -48,13 +48,37 @@ public static class PreviewManager
     public static void ConfirmCreation()
     {
         //Debug.Log("....called Confirm Creation ");
+
+        List<ObjectQuality> qualities = new List<ObjectQuality>();
+
         foreach (var item in _previewedItems)
         {
+            var overallQuality = item.GetComponent<OverallQuality>();
+            if(overallQuality)
+            {
+                foreach (var quality in overallQuality._qualities)
+                {
+                    qualities.Add(quality);
+                }
+            }
+
             HandManager.RemoveItem(item);
-           // HandManager.PrintQueue();
+            // HandManager.PrintQueue();
             BuildableObject.Instance.DestroyObject(item.gameObject);
         }
-        _previewItem.GetComponent<ObjectController>().ChangeApperanceNormal();
+        var oc = _previewItem.GetComponent<ObjectController>();
+        oc.ChangeApperanceNormal();
+        HandManager.PickUpItem(oc);
+        ///Update our overall quality, passing the data to the next object 
+        var finalQuality =_previewItem.GetComponent<OverallQuality>();
+        if(finalQuality)
+        {
+            foreach (var q in qualities)
+            {
+                finalQuality.ReadOutQuality(q); //how is this not null/missing if we destroyed obj above?
+            }
+        }
+
         ResetSelf();
     }
 

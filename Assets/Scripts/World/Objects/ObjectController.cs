@@ -15,6 +15,7 @@ public class ObjectController : MonoBehaviour
     private Rigidbody _rb;
     private Collider  _collider;
     private bool _hittingTable;
+    private bool _isSubObject;
     [HideInInspector]
     public ObjectController _parent;
 
@@ -24,8 +25,9 @@ public class ObjectController : MonoBehaviour
     {
         _startSize = this.transform.localScale;
         _mr = this.GetComponent<MeshRenderer>();
-        _rb=this.gameObject.AddComponent<Rigidbody>();
+        _rb= this.gameObject.AddComponent<Rigidbody>();
         _collider = this.gameObject.GetComponent<Collider>();
+        _isSubObject = this.GetComponent<OverallQuality>() == null; 
 
         if (transform.parent==null)
             _parent = null;
@@ -35,7 +37,7 @@ public class ObjectController : MonoBehaviour
         ToggleRB(true);
 
 
-        Debug.Log($"I am {this.gameObject} Parent=" + _parent);
+        //Debug.Log($"I am {this.gameObject} Parent=" + _parent);
     }
 
 
@@ -166,9 +168,13 @@ public class ObjectController : MonoBehaviour
 
     public void ToggleRB(bool cond)
     {
-        _rb.isKinematic = cond;
-        _collider.isTrigger = cond;
-        _rb.useGravity = !cond;
+        if (_rb)  ///This gets kind of weird with the subobjects
+        {
+            _rb.isKinematic = cond;
+            _rb.useGravity = !cond;
+        }
+        if(_collider)
+            _collider.isTrigger = cond;
     }
 
     public bool OnTable()

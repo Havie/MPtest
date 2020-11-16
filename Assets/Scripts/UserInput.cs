@@ -204,9 +204,11 @@ public class UserInput : MonoBehaviour
         }
         else
         {
-            TryPerformAction(QualityAction.eActionType.ROTATE);
-            TryPerformAction(QualityAction.eActionType.TAP);
-
+            if (_currentSelection)
+            {
+                TryPerformAction(QualityAction.eActionType.ROTATE);
+                TryPerformAction(QualityAction.eActionType.TAP);
+            }
             _state = eState.FREE;
         }
 
@@ -408,9 +410,10 @@ public class UserInput : MonoBehaviour
     public ObjectController CheckForObjectAtLoc(Vector3 pos)
     {
         var ray = _mainCamera.ScreenPointToRay(pos);
-        //Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
+        if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
+            //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
             return (hit.transform.gameObject.GetComponent<ObjectController>());
         }
        /* else
@@ -489,7 +492,6 @@ public class UserInput : MonoBehaviour
     #region QualityActions
     private bool TryPerformAction(QualityAction.eActionType type)
     {
-
         var objectQuality = _currentSelection.GetComponent<ObjectQuality>();
         if (objectQuality != null)
         {
@@ -514,4 +516,32 @@ public class UserInput : MonoBehaviour
         return child;
     }
     #endregion
+
+
+    public void InjectItem(int itemID)
+    {
+       
+        var tmp = _mainCamera.WorldToScreenPoint(new Vector3(0,0,_tmpZfix));
+        var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(tmp.z)).GetComponent<ObjectController>();
+
+        if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
+        {
+            _currentSelection = obj;
+            HandManager.PickUpItem(_currentSelection);
+            Debug.Log($"OBJ spawn loc={obj.transform.position}");
+            if (_currentSelection)
+            {
+                _currentSelection.ChangeApperanceMoving();
+                //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
+                _state = eState.DISPLACEMENT;
+                _objStartPos = new Vector3(0, 0, _tmpZfix);
+                _objStartRot = Quaternion.identity;
+
+                Debug.Log($"Final loc={_currentSelection.transform.position}");
+            }
+        }
+        
+
+    }
 }

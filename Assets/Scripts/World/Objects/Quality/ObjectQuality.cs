@@ -8,24 +8,49 @@ using UnityEngine;
 [RequireComponent(typeof(ObjectController))]
 public class ObjectQuality : MonoBehaviour
 {
+    [SerializeField] QualityStep _qualityStep;
 
-    [SerializeField] int _requiredActions;
+  
     private int _currentActions;
-
-    [SerializeField] QualityAction.eActionType _qualityAction;
-    [SerializeField] float _requiredRotationThreshold;
     private float _rotationAmount;
+    private bool _isDummy;
 
 
-   public bool PerformAction(QualityAction action)
+    public int MaxQuality => _qualityStep._requiredActions;
+    public int ID => _qualityStep.Identifier;
+    public int CurrentQuality => _currentActions;
+    public QualityStep QualityStep => _qualityStep;
+
+    private void OnEnable()
     {
-        if (action._actionType == _qualityAction)
+        //Test
+    }
+
+    public void InitalizeAsDummy(QualityStep qs, int currentActions)
+    {
+        _qualityStep = qs;
+        AssignCurrentActions(currentActions);
+        _isDummy = true;
+    }
+
+    /// used between item creations to carry data
+    public void AssignCurrentActions(int amount)
+    {
+        _currentActions = amount;
+    }
+
+    public bool PerformAction(QualityAction action)
+    {
+        if (_isDummy)
+            return false;
+
+        if (action._actionType == _qualityStep._qualityAction)
         {
          
             HandleAction(action);
             PerformEffect();
 
-            Debug.Log(GetQuality()+ "%");
+            //Debug.Log(GetQuality()+ "%");
             return true;
         }
 
@@ -34,14 +59,16 @@ public class ObjectQuality : MonoBehaviour
 
     public int GetQuality()
     {
-        if (_currentActions > _requiredActions)
+        if (_currentActions > _qualityStep._requiredActions)///we might want to require some type of tool is equipt
             return -1;
 
-          return (int)((((float)_currentActions /_requiredActions)*100f));
+          return (int)((((float)_currentActions / _qualityStep._requiredActions) *100f));
     }
 
     private void HandleAction(QualityAction action)
-    {
+    {   
+     
+
         if(action._actionType == QualityAction.eActionType.ROTATE)
         {
             ///figure out the object we are ons rotation axis;
@@ -58,13 +85,17 @@ public class ObjectQuality : MonoBehaviour
                 }
                 else
                     Debug.LogWarning("No implementation for keeping track of both rotations at the moment, shouldnt need to be a mechanic");
-           
-                if(_rotationAmount>=_requiredRotationThreshold)
+
+                Debug.Log($"_rotationAmount={_rotationAmount} from ( { action._rotation.x}, { action._rotation.y}) is >= {_qualityStep._requiredRotationThreshold}");
+                if( Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold)
                 {
                     ++_currentActions; ///Increase our quality
-                    _rotationAmount = _rotationAmount - _requiredRotationThreshold; ///reset 
+                    if(_rotationAmount>0)
+                        _rotationAmount -= _qualityStep._requiredRotationThreshold; ///reset 
+                    else
+                        _rotationAmount += _qualityStep._requiredRotationThreshold; ///reset 
 
-                    Debug.Log("Successful rotation");
+                    Debug.Log($"Successful rotation! reset to {_rotationAmount}");
                 }
 
             }
@@ -85,7 +116,7 @@ public class ObjectQuality : MonoBehaviour
 
 
 
-
+  
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
     [CustomEditor(typeof(ObjectQuality))]
@@ -99,25 +130,25 @@ public class ObjectQuality : MonoBehaviour
 
         public override void OnInspectorGUI()
         {
-            _objQ._currentActions = EditorGUILayout.IntField("Required Actions", _objQ._currentActions);
-            _objQ._qualityAction = (QualityAction.eActionType)EditorGUILayout.EnumPopup("Quality Action Type", _objQ._qualityAction);
-
-            switch (_objQ._qualityAction)
+            _objQ._qualityStep = (QualityStep)EditorGUILayout.ObjectField("Quality Step", _objQ._qualityStep, typeof(QualityStep), true);
+            ///Expose but do not make editable 
+            if (_objQ._qualityStep != null)
             {
-                case QualityAction.eActionType.TAP:
-                    {
-                        break;
-                    }
-                case QualityAction.eActionType.ROTATE:
-                    {
-                        _objQ._requiredRotationThreshold = EditorGUILayout.FloatField("Required Rotation Threshold", _objQ._requiredRotationThreshold);
-                        break;
-                    }
+                EditorGUILayout.LabelField("Read Only (for debugging):", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField($"Current Actions", _objQ._currentActions.ToString());
+                EditorGUILayout.LabelField("Required Actions", _objQ.MaxQuality.ToString());
+              
+               if(_objQ._qualityStep._qualityAction==QualityAction.eActionType.ROTATE)
+                    EditorGUILayout.LabelField("RotationAmount", _objQ._rotationAmount.ToString());
+
             }
+
+
         }
     }
 
     #endregion
+    
 }
 
 

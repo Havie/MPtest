@@ -1520,6 +1520,7 @@ MonoBehaviour:
     type: 2}
   _testSceneInjection: 1
   _stationToInject: 2
+  _itemToInject: 18
 --- !u!1 &2065194972
 GameObject:
   m_ObjectHideFlags: 0
