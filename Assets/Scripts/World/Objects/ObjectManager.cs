@@ -12,7 +12,7 @@ public class ObjectManager : ScriptableObject
     {
         GreenRect1 = 1, BlueBolt, PinkTop, RedBot, YellowPart, PurplePlug, PinkTopwYellow,
         RectwBolts1, RectwBolts2, RectwTopYellow, RectwBotTopYellow, RectwTopBotPurplePlug, finalPower,
-        RectwBoltsAlt, RectwTopAlt, RectwBotAlt,RectWTopBotAlt1, RectwRedBotMissingTopBolt,
+        RectwBoltsAlt, RectwTopAltMissingBotBolt, RectwBotAlt,RectWTopBotAlt1, RectwRedBotMissingTopBolt, RectwTopAltBoltBot
     };
 
     [SerializeField] List<Sprite> _sprites;
@@ -30,6 +30,8 @@ public class ObjectManager : ScriptableObject
 
     public GameObject GetObject(int level)
     {
+        if (level >= _objects.Count)
+            Debug.LogWarning($"levelID {level}  greater than max count {_objects.Count} . Will error ");
         return _objects[level];
     }
 

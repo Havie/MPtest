@@ -38,10 +38,10 @@ public class InSocket : Socket
                 int requiredAttachmentID =(int) _requiredAttachmentID[i];
                 if (socket && CheckConditions(socket, requiredAttachmentID))
                 {
-                    Debug.Log($"match for  {_controller.gameObject}:{this.gameObject.name}:{_controller._myID}  and {socket._controller.gameObject}:{socket}{socket._controller._myID}");
+                    //Debug.Log($"match for  {_controller.gameObject}:{this.gameObject.name}:{_controller._myID}  and {socket._controller.gameObject}:{socket}{socket._controller._myID}");
                     PreviewManager.ShowPreview(_controller, socket._controller, (int)_createdID[i]);
                 }
-                else if (socket)
+               /* else if (socket)
                 {
                     if (i < _requiredAttachmentID.Length)
                     {
@@ -54,6 +54,7 @@ public class InSocket : Socket
                     else
                         Debug.Log($"Attachment Angle was invalid"); 
                  }
+               */
             }
         }
     }
@@ -89,7 +90,7 @@ public class InSocket : Socket
             //check the angles of attachment
             Vector3 dir = socket.transform.position - this.transform.position;
             float angle = Vector3.Dot(this.transform.forward.normalized, dir.normalized);
-            Debug.Log($"angle={angle} for {requiredAttachmentID}   and inprev= {PreviewManager._inPreview}");
+            //Debug.Log($"angle={angle} for {requiredAttachmentID}   and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
                 if (angle > _attachmentSensitivity) // 1 is perfect match 
@@ -102,8 +103,8 @@ public class InSocket : Socket
             else  //OnTriggerExit
                 valid = true;
         }
-        else
-            Debug.LogWarning($"incomming::{(int)socket._controller._myID} != {requiredAttachmentID}");
+       // else
+          //  Debug.LogWarning($"incomming::{(int)socket._controller._myID} != {requiredAttachmentID}");
 
         return valid;
 

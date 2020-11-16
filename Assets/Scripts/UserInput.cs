@@ -30,6 +30,8 @@ public class UserInput : MonoBehaviour
     PointerEventData _PointerEventData;
     EventSystem _EventSystem;
 
+    //Actions
+    private Vector2 _rotationAmount;
 
     private int _tmpZfix = -9;
 
@@ -114,7 +116,7 @@ public class UserInput : MonoBehaviour
             }
             else
             {
-                _inputPos = Vector3.zero; // will this work?
+                _inputPos = Vector3.zero; /// will this work?
                 return false;
             }
         }
@@ -127,12 +129,13 @@ public class UserInput : MonoBehaviour
         if (InputDown())
         {
             _lastPos = _inputPos;
-            //Somehow this is coming back null? fix is to toggle on and off the box collider on obj in scene? wth
-            _currentSelection = CheckForObjectAtLoc(_lastPos);
+             _currentSelection = CheckForObjectAtLoc(_lastPos);
             _pressTimeCURR = 0;
             if (_currentSelection)         //if you get an obj do rotation
             {
-               // Debug.Log("CURR SELC= " + _currentSelection.gameObject);
+                // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
+
+                _rotationAmount =Vector2.zero; ///reset our rotation amount before re-entering
                 _state = eState.ROTATION;
 
             }
@@ -149,6 +152,7 @@ public class UserInput : MonoBehaviour
             }
 
         }
+        
 
         return false;
     }
@@ -168,7 +172,9 @@ public class UserInput : MonoBehaviour
             //if time>max do displacement
             if (_pressTimeCURR >= _pressTimeMAX)
             {
+                
                 _currentSelection = CheckForObjectAtLoc(_inputPos);
+                _currentSelection= FindAbsoluteParent(_currentSelection);
                 if (_currentSelection)
                 {
                     _currentSelection.ChangeApperanceMoving();
@@ -178,7 +184,7 @@ public class UserInput : MonoBehaviour
                     _objStartRot = _currentSelection.transform.rotation;
 
                     //only if on table
-                    if(_currentSelection.OnTable())
+                    if (_currentSelection.OnTable())
                         ResetObjectOrigin(zCoord);
 
                     HandManager.PickUpItem(_currentSelection); //might have moved to the wrong spot
@@ -187,7 +193,9 @@ public class UserInput : MonoBehaviour
             }
             else //Do rotation
             {
-                _currentSelection.DoRotation(_inputPos - _lastPos);
+                ///Store rotation amount
+                Vector3 rotation = _inputPos - _lastPos;
+                _rotationAmount += _currentSelection.DoRotation(rotation);
                 _lastPos = _inputPos;
                 return true;
             }
@@ -195,7 +203,14 @@ public class UserInput : MonoBehaviour
 
         }
         else
+        {
+            if (_currentSelection)
+            {
+                TryPerformAction(QualityAction.eActionType.ROTATE);
+                TryPerformAction(QualityAction.eActionType.TAP);
+            }
             _state = eState.FREE;
+        }
 
         return false;
 
@@ -395,9 +410,10 @@ public class UserInput : MonoBehaviour
     public ObjectController CheckForObjectAtLoc(Vector3 pos)
     {
         var ray = _mainCamera.ScreenPointToRay(pos);
-        //Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
+        if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
+            //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
             return (hit.transform.gameObject.GetComponent<ObjectController>());
         }
        /* else
@@ -472,4 +488,60 @@ public class UserInput : MonoBehaviour
         return null;
     }
 
+
+    #region QualityActions
+    private bool TryPerformAction(QualityAction.eActionType type)
+    {
+        var objectQuality = _currentSelection.GetComponent<ObjectQuality>();
+        if (objectQuality != null)
+        {
+            QualityAction action = new QualityAction(type, _inputPos, _rotationAmount);
+            if (objectQuality.PerformAction(action))
+                return true;
+        }
+
+        return false;
+    }
+
+    private ObjectController FindAbsoluteParent(ObjectController startingObj)
+    {
+        ObjectController parent = startingObj._parent;
+        ObjectController child = startingObj;
+        while(parent != null)
+        {
+            child = parent;
+            parent = child._parent;
+        }
+
+        return child;
+    }
+    #endregion
+
+
+    public void InjectItem(int itemID)
+    {
+       
+        var tmp = _mainCamera.WorldToScreenPoint(new Vector3(0,0,_tmpZfix));
+        var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(tmp.z)).GetComponent<ObjectController>();
+
+        if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
+        {
+            _currentSelection = obj;
+            HandManager.PickUpItem(_currentSelection);
+            Debug.Log($"OBJ spawn loc={obj.transform.position}");
+            if (_currentSelection)
+            {
+                _currentSelection.ChangeApperanceMoving();
+                //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
+                _state = eState.DISPLACEMENT;
+                _objStartPos = new Vector3(0, 0, _tmpZfix);
+                _objStartRot = Quaternion.identity;
+
+                Debug.Log($"Final loc={_currentSelection.transform.position}");
+            }
+        }
+        
+
+    }
 }
