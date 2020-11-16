@@ -18,17 +18,17 @@ public static class PreviewManager
             return;
         }
 
-        //disable both items mesh renderers
+        ///disable both items mesh renderers
         controller.ChangeAppearanceHidden();
         otherController.ChangeAppearanceHidden();
-        //Store for later to undo
+        ///Store for later to undo
         _previewedItems.Add(controller);
         _previewedItems.Add(otherController);
           //Spawn a new obj via CreatedID and set opacity to preview 
-        Debug.LogError("createdid=" + createdID);
+        //Debug.LogError("createdid=" + createdID);
         var obj = BuildableObject.Instance.SpawnObject(createdID);
         obj.GetComponent<ObjectController>().ChangeApperancePreview();
-        //Set its orientation to match its female parent
+        ///Set its orientation to match its female parent
         obj.transform.position = controller.gameObject.transform.position;
         obj.transform.rotation = controller.gameObject.transform.rotation;
         _previewItem = obj;
@@ -48,13 +48,37 @@ public static class PreviewManager
     public static void ConfirmCreation()
     {
         //Debug.Log("....called Confirm Creation ");
+
+        List<ObjectQuality> qualities = new List<ObjectQuality>();
+
         foreach (var item in _previewedItems)
         {
+            var overallQuality = item.GetComponent<OverallQuality>();
+            if(overallQuality)
+            {
+                foreach (var quality in overallQuality._qualities)
+                {
+                    qualities.Add(quality);
+                }
+            }
+
             HandManager.RemoveItem(item);
-           // HandManager.PrintQueue();
+            // HandManager.PrintQueue();
             BuildableObject.Instance.DestroyObject(item.gameObject);
         }
-        _previewItem.GetComponent<ObjectController>().ChangeApperanceNormal();
+        var oc = _previewItem.GetComponent<ObjectController>();
+        oc.ChangeApperanceNormal();
+        HandManager.PickUpItem(oc);
+        ///Update our overall quality, passing the data to the next object 
+        var finalQuality =_previewItem.GetComponent<OverallQuality>();
+        if(finalQuality)
+        {
+            foreach (var q in qualities)
+            {
+                finalQuality.ReadOutQuality(q); //how is this not null/missing if we destroyed obj above?
+            }
+        }
+
         ResetSelf();
     }
 

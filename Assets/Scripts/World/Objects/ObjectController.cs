@@ -6,56 +6,128 @@ public class ObjectController : MonoBehaviour
 {
 
     public ObjectManager.eItemID _myID;
+    public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE};
+    public eRotationAxis _rotationAxis= eRotationAxis.YAXIS;
+    public bool _canFollow = true;
     private int _dampening = 10;
     private Vector3 _startSize;
     private MeshRenderer _mr;
     private Rigidbody _rb;
     private Collider  _collider;
     private bool _hittingTable;
-    private GameObject _table;
+    private bool _isSubObject;
+    [HideInInspector]
+    public ObjectController _parent;
+
+
 
     private void Awake()
     {
         _startSize = this.transform.localScale;
         _mr = this.GetComponent<MeshRenderer>();
-        _rb=this.gameObject.AddComponent<Rigidbody>();
+        _rb= this.gameObject.AddComponent<Rigidbody>();
         _collider = this.gameObject.GetComponent<Collider>();
+        _isSubObject = this.GetComponent<OverallQuality>() == null; 
+
+        if (transform.parent==null)
+            _parent = null;
+        else
+            _parent = transform.parent.GetComponentInParent<ObjectController>(); //cache this if it works    
+       
         ToggleRB(true);
+
+
+        //Debug.Log($"I am {this.gameObject} Parent=" + _parent);
     }
 
 
-    public void DoRotation(Vector3 dir)
+    public Vector2 DoRotation(Vector3 dir)
     {
         float dot;
+
         //find out if object is right side up in world 
-        if (Vector3.Dot(transform.up, Vector3.up) >= 0)
-            dot = -Vector3.Dot(dir, Camera.main.transform.right);
-        else
-            dot = Vector3.Dot(dir, Camera.main.transform.right);
+      
 
-        //horiz
-        transform.Rotate(transform.up, dot / _dampening, Space.World);
+        if (_rotationAxis == eRotationAxis.YAXIS)
+        {
+            if (Vector3.Dot(transform.up, Vector3.up) >= 0)
+                dot = -Vector3.Dot(dir, Camera.main.transform.right);
+            else
+                dot = Vector3.Dot(dir, Camera.main.transform.right);
 
-        //vertical 
-        //Project the  dir changed onto the camera.Right 
-       // transform.Rotate(Camera.main.transform.right, Vector3.Dot(dir, Camera.main.transform.up) / _dampening, Space.World);
+            ///Horiz  Project the  dir changed onto the camera.Up 
+            transform.Rotate(transform.up, dot / _dampening, Space.World);
 
+            return new Vector2(0, dot / _dampening);
+
+        }
+        if (_rotationAxis == eRotationAxis.XAXIS)
+        {
+            if (Vector3.Dot(transform.up, Vector3.up) >= 0)
+                dot = Vector3.Dot(dir, Camera.main.transform.up);
+            else
+                dot = Vector3.Dot(dir, Camera.main.transform.up);
+
+            ///Vertical  Project the  dir changed onto the camera.Right 
+
+            transform.Rotate(Camera.main.transform.right, dot / _dampening, Space.World);
+
+            return new Vector2(dot / _dampening, 0);
+        }
+        else if (_rotationAxis == eRotationAxis.BOTH)
+        {
+            Vector2 retVal = Vector2.zero;
+            if (Vector3.Dot(transform.up, Vector3.up) >= 0)
+                dot = -Vector3.Dot(dir, Camera.main.transform.right);
+            else
+                dot = Vector3.Dot(dir, Camera.main.transform.right);
+
+            ///Horiz
+            transform.Rotate(transform.up, dot / _dampening, Space.World);
+
+            retVal.y = dot / _dampening;
+
+            if (Vector3.Dot(transform.up, Vector3.up) >= 0)
+                dot = Vector3.Dot(dir, Camera.main.transform.up);
+            else
+                dot = Vector3.Dot(dir, Camera.main.transform.up);
+
+            ///Vertical
+            transform.Rotate(Camera.main.transform.right, Vector3.Dot(dir, Camera.main.transform.up) / _dampening, Space.World);
+
+            retVal.x = dot / _dampening;
+            ///***RetVal will be wrong not sure how to handle rotation values on both axes, dont think this should ever happen
+            return retVal; ///return 0 to be safe were not getting confusing #s out
+                           ///Could return a vector3 instead and have userInput keep track of it there
+        }
+        else ///NONE
+            return Vector2.zero;
+
+
+        //return dot / _dampening;
     }
 
     public void Follow(Vector3 loc)
     {
-        //this.transform.position = loc;
-       // Debug.LogWarning("Told to go to:" + this.transform.position);
-       if(!_hittingTable)
-            this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
-       else
+        if (_canFollow)
         {
-           // if were going up, allow it
-            if (loc.y > 0)
-                this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
-            //else /if direction is going to go more into table prevent it,
-        }
 
+            //this.transform.position = loc;
+            // Debug.LogWarning("Told to go to:" + this.transform.position);
+            if (!_hittingTable)
+                this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
+            else
+            {
+                // if were going up, allow it
+                if (loc.y > 0)
+                    this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
+                //else /if direction is going to go more into table prevent it,
+            }
+        }
+        else if (_parent)
+        {
+            _parent.Follow(loc);
+        }
     }
 
     private void ToggleCollider(bool cond)
@@ -96,9 +168,13 @@ public class ObjectController : MonoBehaviour
 
     public void ToggleRB(bool cond)
     {
-        _rb.isKinematic = cond;
-        _collider.isTrigger = cond;
-        _rb.useGravity = !cond;
+        if (_rb)  ///This gets kind of weird with the subobjects
+        {
+            _rb.isKinematic = cond;
+            _rb.useGravity = !cond;
+        }
+        if(_collider)
+            _collider.isTrigger = cond;
     }
 
     public bool OnTable()
@@ -133,7 +209,6 @@ public class ObjectController : MonoBehaviour
         if (other.tag.Equals("Table"))
         {
             _hittingTable = true;
-            _table = other.gameObject;
         }
     }
 
