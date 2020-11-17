@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2559721150124535384}
   - component: {fileID: 5998357439919911057}
   m_Layer: 0
-  m_Name: socket_in (alt)
+  m_Name: socket_in_alt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2280397063963341147}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: -0.275, z: -0.04}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 805222316804169311}
   m_RootOrder: 1
@@ -156,7 +156,7 @@ Transform:
   m_GameObject: {fileID: 2691937287061780641}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.275, z: -0.04}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 805222316804169311}
   m_RootOrder: 0

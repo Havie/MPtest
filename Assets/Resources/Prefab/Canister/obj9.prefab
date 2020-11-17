@@ -107,8 +107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attachmentSensitivity: 0
-  _requiredAttachmentID: 0700000003000000
-  _createdID: 0a00000013000000
+  _requiredAttachmentID: 070000000300000018000000
+  _createdID: 0a0000001300000015000000
 --- !u!1 &2597678987005598714
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +141,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 805222316804169311}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8641343721732883864
 MeshFilter:
@@ -251,9 +251,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3769709769909672400}
+  - {fileID: 4101315246673143638}
   - {fileID: 6844505840420055034}
   - {fileID: 7567895852258045695}
-  - {fileID: 4101315246673143638}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -384,7 +384,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 805222316804169311}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6757956236640868025
 MeshFilter:
@@ -462,7 +462,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _qualityStep: {fileID: 11400000, guid: 7ac19d165e93f054ca66f5149f476b56, type: 2}
-  _currentActions: 0
 --- !u!65 &133809601737488572
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -509,7 +508,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 805222316804169311}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &257089788134623561
 MeshFilter:
@@ -587,7 +586,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _qualityStep: {fileID: 11400000, guid: f20ac148d2cbb6c4997131d8f6639d63, type: 2}
-  _currentActions: 0
 --- !u!65 &7671264462524140929
 BoxCollider:
   m_ObjectHideFlags: 0
