@@ -8,6 +8,8 @@ using UnityEngine;
 [RequireComponent(typeof(ObjectController))]
 public class ObjectQuality : MonoBehaviour
 {
+    protected static GameObject _qualityVFXPREFAB;
+    private ParticleSystem _vfx;
     [SerializeField] QualityStep _qualityStep;
 
   
@@ -20,6 +22,13 @@ public class ObjectQuality : MonoBehaviour
     public int ID => _qualityStep.Identifier;
     public int CurrentQuality => _currentActions;
     public QualityStep QualityStep => _qualityStep;
+
+
+    private void Awake()
+    {
+        if (_qualityVFXPREFAB == null)
+            _qualityVFXPREFAB = Resources.Load<GameObject>("Prefab/VFX/Quality_increase");
+    }
 
     private void OnEnable()
     {
@@ -48,7 +57,6 @@ public class ObjectQuality : MonoBehaviour
         {
          
             HandleAction(action);
-            PerformEffect();
 
             //Debug.Log(GetQuality()+ "%");
             return true;
@@ -86,15 +94,15 @@ public class ObjectQuality : MonoBehaviour
                 else
                     Debug.LogWarning("No implementation for keeping track of both rotations at the moment, shouldnt need to be a mechanic");
 
-                Debug.Log($"_rotationAmount={_rotationAmount} from ( { action._rotation.x}, { action._rotation.y}) is >= {_qualityStep._requiredRotationThreshold}");
+                Debug.Log($"_rotationAmount={_rotationAmount} from ( { action._rotation.x}, { action._rotation.y}) is >= {_qualityStep._requiredRotationThreshold} = { Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold}");
                 if( Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold)
                 {
-                    ++_currentActions; ///Increase our quality
-                    if(_rotationAmount>0)
+                    if (_rotationAmount>0)
                         _rotationAmount -= _qualityStep._requiredRotationThreshold; ///reset 
                     else
                         _rotationAmount += _qualityStep._requiredRotationThreshold; ///reset 
 
+                    IncreaseQuality();
                     Debug.Log($"Successful rotation! reset to {_rotationAmount}");
                 }
 
@@ -104,19 +112,33 @@ public class ObjectQuality : MonoBehaviour
         }
         else if (action._actionType == QualityAction.eActionType.TAP)
         {
-            ++_currentActions; ///Increase our quality
+            IncreaseQuality();
             Debug.Log("Successful TAP");
         }
     }
     private void PerformEffect()
     {
         ///do any VFX 
+        if (_vfx == null)
+        {
+            _vfx = GameObject.Instantiate<GameObject>(_qualityVFXPREFAB, this.transform).GetComponent<ParticleSystem>();
+        }
+        else
+        {
+            _vfx.Play();
+        }
+    }
+
+    private void IncreaseQuality()
+    {
+        ++_currentActions; ///Increase our quality
+        PerformEffect();
     }
 
 
 
 
-  
+
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
     [CustomEditor(typeof(ObjectQuality))]
