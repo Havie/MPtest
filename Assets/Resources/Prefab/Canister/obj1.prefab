@@ -378,3 +378,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _qualities: []
+  _lastKnownQuality: 0
+  _currentQuality: 0
+  _maxQuality: 0
