@@ -128,6 +128,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _qualities:
   - {fileID: 4563947243003116205}
+  _lastKnownQuality: 0
+  _currentQuality: 0
+  _maxQuality: 0
 --- !u!1 &2854804585543048782
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _qualityStep: {fileID: 11400000, guid: 7ac19d165e93f054ca66f5149f476b56, type: 2}
-  _currentActions: 0
 --- !u!65 &7815917003113162882
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -280,13 +282,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4254392372810415748}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: -0, y: 0.0065944665, z: -0, w: -0.99997824}
   m_LocalPosition: {x: 0.01, y: 0.262, z: 0.124}
   m_LocalScale: {x: 0.059483416, y: 0.059483416, z: 0.059483416}
   m_Children: []
   m_Father: {fileID: 805222316804169311}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 359.244, z: 0}
 --- !u!33 &7837178066366002735
 MeshFilter:
   m_ObjectHideFlags: 0
