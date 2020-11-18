@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using HighlightPlus;
 using UnityEngine;
 
 public class ObjectController : MonoBehaviour
@@ -11,7 +10,8 @@ public class ObjectController : MonoBehaviour
     public bool _canFollow = true;
     private int _dampening = 10;
     private Vector3 _startSize;
-    private MeshRenderer _mr;
+    private MeshRenderer _meshRenderer;
+    private MeshRenderer[] _childrenMeshRenderers;
     private Rigidbody _rb;
     private Collider  _collider;
     private bool _hittingTable;
@@ -19,13 +19,15 @@ public class ObjectController : MonoBehaviour
     [HideInInspector]
     public ObjectController _parent;
 
+    private HighlightTrigger _highlightTrigger;
 
 
     private void Awake()
     {
         _startSize = this.transform.localScale;
-        _mr = this.GetComponent<MeshRenderer>();
-        _rb= this.gameObject.AddComponent<Rigidbody>();
+        _meshRenderer = this.GetComponent<MeshRenderer>();
+        _childrenMeshRenderers = GetComponentsInChildren<MeshRenderer>();
+        _rb = this.gameObject.AddComponent<Rigidbody>();
         _collider = this.gameObject.GetComponent<Collider>();
         _isSubObject = this.GetComponent<OverallQuality>() == null; 
 
@@ -35,6 +37,12 @@ public class ObjectController : MonoBehaviour
             _parent = transform.parent.GetComponentInParent<ObjectController>(); //cache this if it works    
        
         ToggleRB(true);
+
+        var effect = transform.gameObject.AddComponent<HighlightEffect>();
+        var profile = Resources.Load<HighlightProfile>("Shaders/Highlight Plus Profile");
+        if(profile!=null)
+            effect.ProfileLoad(profile);
+        _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
 
 
         //Debug.Log($"I am {this.gameObject} Parent=" + _parent);
@@ -136,7 +144,18 @@ public class ObjectController : MonoBehaviour
         this.GetComponent<Collider>().enabled = cond;
     }
 
-    public void ChangeApperanceMoving()
+    private void TrySetChildren(float opacity)
+    {
+        if (_parent != null)
+            return; /// we are a child so our parent will handle this
+
+        foreach (var mr in _childrenMeshRenderers)
+        {
+            ChangeMaterialColor(mr, opacity);
+        }
+    }
+
+    public void ChangeAppearanceMoving()
     {
         this.transform.localScale =  new Vector3
             (0.75f * this.transform.localScale.x, 
@@ -145,25 +164,39 @@ public class ObjectController : MonoBehaviour
 
         ChangeMaterialColor(0.5f);
 
+        TrySetChildren(0.5f);
+
        // ToggleCollider(false);
 
     }
-    public void ChangeApperanceNormal()
+    public void ChangeAppearanceNormal()
     {
         this.transform.localScale = _startSize;
-        _mr.enabled = true;
+        _meshRenderer.enabled = true;
         ChangeMaterialColor(1f);
-
+        TrySetChildren(1f);
         //ToggleCollider(true);
     }
 
-    public void ChangeApperancePreview()
+    public void ChangeAppearancePreview()
     {
         ChangeMaterialColor(0.5f);
     }
     public void ChangeAppearanceHidden()
     {
-        _mr.enabled = false;
+        _meshRenderer.enabled = false;
+    }
+
+    public void ChangeAppearancePickedUp()
+    {
+        if (_highlightTrigger)
+            _highlightTrigger.Highlight(true);
+    }
+
+    public void ChangeAppearancePutDown()
+    {
+        if (_highlightTrigger)
+            _highlightTrigger.Highlight(false);
     }
 
     public void ToggleRB(bool cond)
@@ -190,19 +223,23 @@ public class ObjectController : MonoBehaviour
     ///METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
     private void ChangeMaterialColor(float opacity)
     {
+        ChangeMaterialColor(_meshRenderer, opacity);
+
+    }
+
+    private void ChangeMaterialColor(MeshRenderer mr , float opacity)
+    {
         if (opacity > 1)
             Debug.LogWarning("Setting opacity > 1. Needs to be 0.0 - 1.0f");
 
-        var mrender = this.GetComponent<MeshRenderer>();
-        if (mrender)
+        if (mr)
         {
-            Material m = mrender.material;
+            Material m = mr.material;
             Color color = m.color;
             color.a = opacity;
             m.color = color;
-            mrender.material = m; 
+            mr.material = m;
         }
-
     }
     private void OnTriggerEnter(Collider other)
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using HighlightPlus;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +19,11 @@ public static class HandManager
         }
 
         item.ToggleRB(true);
+        item.ChangeAppearancePickedUp();
         _objects.Enqueue(item);
+
+      
+
     }
 
     public static void DropItem(ObjectController item)
@@ -28,6 +31,7 @@ public static class HandManager
         if (item)
         {
             item.ToggleRB(false);
+            item.ChangeAppearancePutDown();
             if(_objects.Contains(item))
             {
                 var qItem = _objects.Dequeue();
@@ -42,6 +46,7 @@ public static class HandManager
                 }
                     
             }
+          
         }
     }
 
