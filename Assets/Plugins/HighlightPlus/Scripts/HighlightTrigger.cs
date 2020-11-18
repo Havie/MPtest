@@ -102,55 +102,63 @@ namespace HighlightPlus {
 
 		void SwitchCollider (Collider newCollider) {
 			currentCollider = newCollider;
-			if (currentCollider != null) {
+			/*if (currentCollider != null) {
 				Highlight (true);
 			} else {
 				Highlight (false);
-			}
+			}*/
 		}
 
 
 		void OnMouseDown () {
-            if (isActiveAndEnabled && triggerMode == TriggerMode.ColliderEventsOnlyOnThisObject) {
-				Highlight (true);
+            if (isActiveAndEnabled && triggerMode == TriggerMode.ColliderEventsOnlyOnThisObject) 
+			{
+				//Highlight (true);
 			}
 		}
 
 		void OnMouseEnter () {
-            if (isActiveAndEnabled && triggerMode == TriggerMode.ColliderEventsOnlyOnThisObject) {
-				Highlight (true);
+            if (isActiveAndEnabled && triggerMode == TriggerMode.ColliderEventsOnlyOnThisObject) 
+			{
+				//Highlight (true);
 			}
 		}
 
 		void OnMouseExit () {
-            if (isActiveAndEnabled && triggerMode == TriggerMode.ColliderEventsOnlyOnThisObject) {
-				Highlight (false);
+            if (isActiveAndEnabled && triggerMode == TriggerMode.ColliderEventsOnlyOnThisObject) 
+			{
+				//Highlight (false);
 			}
 		}
 
-		void Highlight (bool state) {
-			HighlightEffect hb = transform.GetComponent<HighlightEffect> ();
-			if (hb == null && state) {
-				hb = gameObject.AddComponent<HighlightEffect> ();
+		public void Highlight (bool cond) 
+		{
+			HighlightEffect hb = transform.GetComponent<HighlightEffect>();
+			if (hb == null && cond) 
+			{
+				hb = gameObject.AddComponent<HighlightEffect>();
 			}
-			if (hb != null) {
-				hb.SetHighlighted (state);
+			if (hb != null) 
+			{
+				hb.SetHighlighted(cond);
 			}
 		}
 
 		public void Init() {
-			if (raycastCamera == null) {
-				raycastCamera = HighlightManager.GetCamera ();
+			if (raycastCamera == null) 
+			{
+				raycastCamera = HighlightManager.GetCamera();
 			}
-			if (triggerMode == TriggerMode.RaycastOnThisObjectAndChildren) {
-				colliders = GetComponentsInChildren<Collider> ();
+			if (triggerMode == TriggerMode.RaycastOnThisObjectAndChildren)
+			{
+				colliders = GetComponentsInChildren<Collider>();
 			}
 		}
 
         public void OnTriggerEnter(Collider other) {
 			if (triggerMode == TriggerMode.Volume) {
 				if ((volumeLayerMask & (1 << other.gameObject.layer)) != 0) {
-					Highlight(true);
+					//Highlight(true);
 				}
 			}
         }
@@ -158,7 +166,7 @@ namespace HighlightPlus {
         public void OnTriggerExit(Collider other) {
 			if (triggerMode == TriggerMode.Volume) {
 				if ((volumeLayerMask & (1 << other.gameObject.layer)) != 0) {
-					Highlight(false);
+					//Highlight(false);
 				}
 			}
         }

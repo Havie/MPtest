@@ -27,7 +27,7 @@ public static class PreviewManager
           //Spawn a new obj via CreatedID and set opacity to preview 
         //Debug.LogError("createdid=" + createdID);
         var obj = BuildableObject.Instance.SpawnObject(createdID);
-        obj.GetComponent<ObjectController>().ChangeApperancePreview();
+        obj.GetComponent<ObjectController>().ChangeAppearancePreview();
         ///Set its orientation to match its female parent
         obj.transform.position = controller.gameObject.transform.position;
         obj.transform.rotation = controller.gameObject.transform.rotation;
@@ -39,7 +39,7 @@ public static class PreviewManager
     {
         foreach (var item in _previewedItems)
         {
-            item.ChangeApperanceNormal();
+            item.ChangeAppearanceNormal();
         }
         BuildableObject.Instance.DestroyObject(_previewItem);
         ResetSelf();
@@ -67,7 +67,7 @@ public static class PreviewManager
             BuildableObject.Instance.DestroyObject(item.gameObject);
         }
         var oc = _previewItem.GetComponent<ObjectController>();
-        oc.ChangeApperanceNormal();
+        oc.ChangeAppearanceNormal();
         HandManager.PickUpItem(oc);
         ///Update our overall quality, passing the data to the next object 
         var finalQuality =_previewItem.GetComponent<OverallQuality>();

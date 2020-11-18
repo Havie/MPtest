@@ -177,7 +177,7 @@ public class UserInput : MonoBehaviour
                 _currentSelection= FindAbsoluteParent(_currentSelection);
                 if (_currentSelection)
                 {
-                    _currentSelection.ChangeApperanceMoving();
+                    _currentSelection.ChangeAppearanceMoving();
                     float zCoord = _mainCamera.WorldToScreenPoint(_currentSelection.transform.position).z;
                     _mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                     _objStartPos = _currentSelection.transform.position;
@@ -270,7 +270,7 @@ public class UserInput : MonoBehaviour
                         _currentSelection.transform.position = _objStartPos;
                         _currentSelection.transform.rotation = _objStartRot;
                     }
-                    _currentSelection.ChangeApperanceNormal();
+                    _currentSelection.ChangeAppearanceNormal();
                    // HandManager.DropItem(_currentSelection);
                     //Really weird Fix to prevent raycast bug
                     FixRayCastBug();
@@ -306,7 +306,7 @@ public class UserInput : MonoBehaviour
                 if (_currentSelection)
                 {
                     //Debug.Log($"OBJ loc {obj.transform.position}");
-                    _currentSelection.ChangeApperanceMoving();
+                    _currentSelection.ChangeAppearanceMoving();
                     //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                     _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
                     _state = eState.DISPLACEMENT;
@@ -360,7 +360,7 @@ public class UserInput : MonoBehaviour
         ///Reset the object to have the right orientation for construction when picked back up
         if (_currentSelection)
         {
-            _currentSelection.ChangeApperanceMoving();
+            _currentSelection.ChangeAppearanceMoving();
             Vector3 mouseLocWorld = GetInputWorldPos(zCoord);
             _objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _tmpZfix);
             //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");
@@ -381,7 +381,7 @@ public class UserInput : MonoBehaviour
     {
         if (_currentSelection)
         {
-            _currentSelection.ChangeApperanceNormal();
+            _currentSelection.ChangeAppearanceNormal();
            
         }
         if (_lastSlot)
@@ -531,7 +531,7 @@ public class UserInput : MonoBehaviour
             Debug.Log($"OBJ spawn loc={obj.transform.position}");
             if (_currentSelection)
             {
-                _currentSelection.ChangeApperanceMoving();
+                _currentSelection.ChangeAppearanceMoving();
                 //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                 _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
                 _state = eState.DISPLACEMENT;

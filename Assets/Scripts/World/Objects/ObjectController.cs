@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using HighlightPlus;
 using UnityEngine;
 
 public class ObjectController : MonoBehaviour
@@ -20,6 +19,7 @@ public class ObjectController : MonoBehaviour
     [HideInInspector]
     public ObjectController _parent;
 
+    private HighlightTrigger _highlightTrigger;
 
 
     private void Awake()
@@ -37,6 +37,12 @@ public class ObjectController : MonoBehaviour
             _parent = transform.parent.GetComponentInParent<ObjectController>(); //cache this if it works    
        
         ToggleRB(true);
+
+        var effect = transform.gameObject.AddComponent<HighlightEffect>();
+        var profile = Resources.Load<HighlightProfile>("Shaders/Highlight Plus Profile");
+        if(profile!=null)
+            effect.ProfileLoad(profile);
+        _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
 
 
         //Debug.Log($"I am {this.gameObject} Parent=" + _parent);
@@ -149,7 +155,7 @@ public class ObjectController : MonoBehaviour
         }
     }
 
-    public void ChangeApperanceMoving()
+    public void ChangeAppearanceMoving()
     {
         this.transform.localScale =  new Vector3
             (0.75f * this.transform.localScale.x, 
@@ -163,7 +169,7 @@ public class ObjectController : MonoBehaviour
        // ToggleCollider(false);
 
     }
-    public void ChangeApperanceNormal()
+    public void ChangeAppearanceNormal()
     {
         this.transform.localScale = _startSize;
         _meshRenderer.enabled = true;
@@ -172,13 +178,25 @@ public class ObjectController : MonoBehaviour
         //ToggleCollider(true);
     }
 
-    public void ChangeApperancePreview()
+    public void ChangeAppearancePreview()
     {
         ChangeMaterialColor(0.5f);
     }
     public void ChangeAppearanceHidden()
     {
         _meshRenderer.enabled = false;
+    }
+
+    public void ChangeAppearancePickedUp()
+    {
+        if (_highlightTrigger)
+            _highlightTrigger.Highlight(true);
+    }
+
+    public void ChangeAppearancePutDown()
+    {
+        if (_highlightTrigger)
+            _highlightTrigger.Highlight(false);
     }
 
     public void ToggleRB(bool cond)
