@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-599)] ///Load a little earlier
 public class BuildableObject : MonoBehaviour
 {
     public static BuildableObject Instance { get; private set; }

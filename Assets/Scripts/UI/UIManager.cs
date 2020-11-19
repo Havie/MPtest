@@ -18,14 +18,19 @@ public class UIManager : MonoBehaviour
     public Button _tmpConfirmWorkStation;
     public GameObject _tmpObjectPREFAB;
 
-    public GameObject _worldCanvas;
-    public GameObject _screenCanvas;
 
-    public GameObject _normalInventory;
-    public GameObject _kittingInventory;
-
+    [Header("Project Components")]
     public WorkStationManager _workstationManager;
 
+    [Header("Scene Components")]
+    public GameObject _inventoryCanvas;
+    public GameObject _screenCanvas;
+    public GameObject _normalInventory;
+    public GameObject _kittingInventory;
+    public Button _hand1;
+    public Button _hand2;
+
+    #region Init
     private void Awake()
     {
         if (instance == null)
@@ -130,9 +135,9 @@ public class UIManager : MonoBehaviour
             _workStationDropDown.SetActive(false);
         }
 
-        if (_worldCanvas && _screenCanvas)
+        if (_inventoryCanvas && _screenCanvas)
         {
-            _worldCanvas.SetActive(true); //when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
+            _inventoryCanvas.SetActive(true); //when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
             _screenCanvas.SetActive(false);
         }
         else
@@ -164,6 +169,8 @@ public class UIManager : MonoBehaviour
 
     }
 
+    #endregion
+
     #region ActionsfromButtons
     public void ConnectToServer()
     {
@@ -182,6 +189,41 @@ public class UIManager : MonoBehaviour
     {
         int itemID= _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
         BeginLevel(itemID);
+    }
+
+    #endregion
+
+
+    #region RunTime Actions
+
+    public void UpdateHandLocation(int index, Vector3 worldLoc)
+    {
+        Button hand = index == 1 ? _hand1 : _hand2;
+
+        Vector3 screenLoc = UserInput.Instance.GetScreenPointBasedOnWorldLoc(worldLoc);
+        hand.transform.position = screenLoc;
+
+    }
+    public void ChangeHandSize(int index, bool smaller)
+    {
+        Button hand = index == 1 ? _hand1 : _hand2;
+
+        if (smaller)
+            hand.transform.localScale = Vector3.one * 0.75f;
+        else
+            hand.transform.localScale = Vector3.one ;
+    }
+
+    public void ResetHand(int index)
+    {
+        Button hand = index == 1 ? _hand1 : _hand2;
+        hand.transform.position = new Vector3(0, 2000, 0);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+            HandManager.PrintQueue();
     }
 
     #endregion

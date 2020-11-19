@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 
 //https://www.youtube.com/watch?v=Oba1k4wRy-0 //Tutorial
+[DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
 public class UIInventoryManager : MonoBehaviour
 {
     #region GameManager Parameters
