@@ -19,8 +19,8 @@ public static class PreviewManager
         }
 
         ///disable both items mesh renderers
-        controller.ChangeAppearanceHidden();
-        otherController.ChangeAppearanceHidden();
+        controller.ChangeAppearanceHidden(true);
+        otherController.ChangeAppearanceHidden(true);
         ///Store for later to undo
         _previewedItems.Add(controller);
         _previewedItems.Add(otherController);
@@ -62,7 +62,7 @@ public static class PreviewManager
                 }
             }
 
-            HandManager.RemoveItem(item);
+            HandManager.RemoveDeletedItem(item);
             // HandManager.PrintQueue();
             BuildableObject.Instance.DestroyObject(item.gameObject);
         }

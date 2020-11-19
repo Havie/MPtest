@@ -2400,7 +2400,7 @@ GameObject:
   - component: {fileID: 1658971849}
   - component: {fileID: 1658971848}
   m_Layer: 5
-  m_Name: WorldCanvas
+  m_Name: InventoryCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2855,7 +2855,7 @@ MonoBehaviour:
   _workStationDropDown: {fileID: 0}
   _tmpConfirmWorkStation: {fileID: 0}
   _tmpObjectPREFAB: {fileID: 0}
-  _worldCanvas: {fileID: 1658971847}
+  _inventoryCanvas: {fileID: 1658971847}
   _screenCanvas: {fileID: 809996386}
   _normalInventory: {fileID: 1486263150}
   _kittingInventory: {fileID: 6474084651492353586}

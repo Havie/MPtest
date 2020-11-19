@@ -125,13 +125,12 @@ public class UserInput : MonoBehaviour
     /** Player is pressing to begin interaction with an obj or UI item */
     public bool CheckFree()
     {
-        //press down 
         if (InputDown())
         {
             _lastPos = _inputPos;
              _currentSelection = CheckForObjectAtLoc(_lastPos);
             _pressTimeCURR = 0;
-            if (_currentSelection)         //if you get an obj do rotation
+            if (_currentSelection) ///if you get an obj do rotation
             {
                 // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
 
@@ -139,7 +138,7 @@ public class UserInput : MonoBehaviour
                 _state = eState.ROTATION;
 
             }
-            else    //if u get UI do UI 
+            else ///if u get UI do UI 
             {
                 var slot = CheckRayCastForUI();
                 if (slot != null)
@@ -162,14 +161,14 @@ public class UserInput : MonoBehaviour
     {
         if (InputDown() && _currentSelection)
         {
-            //if no movement increment time 
+            ///if no movement increment time 
             float dis = Vector3.Distance(_inputPos, _lastPos);
             if (dis < _holdLeniency)
                 _pressTimeCURR += Time.deltaTime;
             else
                 _pressTimeCURR = 0;
 
-            //if time>max do displacement
+            ///if holding down do displacement
             if (_pressTimeCURR >= _pressTimeMAX)
             {
                 
@@ -191,7 +190,7 @@ public class UserInput : MonoBehaviour
                 }
                 _state = eState.DISPLACEMENT;
             }
-            else //Do rotation
+            else ///Do rotation
             {
                 ///Store rotation amount
                 Vector3 rotation = _inputPos - _lastPos;
@@ -228,13 +227,13 @@ public class UserInput : MonoBehaviour
                 Vector3 worldLoc = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
                 _currentSelection.Follow(worldLoc + _mOffset);
                 
-                if (slot != null) //we are hovering over a slot 
+                if (slot != null) ///we are hovering over a slot 
                 {
                     if (!slot.GetInUse())
                     {
                         //Debug.Log($"trying to preview for itemID {(int)_currentSelection._myID}");
                         slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID));
-                        _currentSelection.ChangeAppearanceHidden();
+                        _currentSelection.ChangeAppearanceHidden(true);
                         if (slot != _lastSlot && _lastSlot != null)
                             _lastSlot.UndoPreview();
                         _lastSlot = slot;
@@ -249,7 +248,7 @@ public class UserInput : MonoBehaviour
                 }
             }
         }
-        else //Input UP
+        else ///Input UP
         {
             if (_currentSelection)
             {
@@ -287,8 +286,7 @@ public class UserInput : MonoBehaviour
     {
         if (InputDown())
         {
-            //If found slot in use 
-            //spawn obj and go to displacement 
+            ///If found slot in use spawn obj and go to displacement 
             var slot = CheckRayCastForUI();
             if (slot)
             {
@@ -297,7 +295,7 @@ public class UserInput : MonoBehaviour
                // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
                 slot.RemoveItem();
                 Vector3 slotLoc = slot.transform.position;
-                slotLoc.z = _tmpZfix; //somehow changing the scale messed things up so we cant use the worldcanvas UIs z Loc, its too far back
+                slotLoc.z = _tmpZfix; 
                 float zCoord = _mainCamera.WorldToScreenPoint(slotLoc).z; 
                 var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
                 _currentSelection = obj;
@@ -305,13 +303,11 @@ public class UserInput : MonoBehaviour
                 //Debug.Log($"OBJ spawn loc={obj.transform.position}");
                 if (_currentSelection)
                 {
-                    //Debug.Log($"OBJ loc {obj.transform.position}");
-                    _currentSelection.ChangeAppearanceMoving();
-                    //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
-                    _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
-                    _state = eState.DISPLACEMENT;
+                    _mOffset = Vector3.zero; /// it spawns here so no difference
                     _objStartPos = new Vector3(0, 0, _tmpZfix);
                     _objStartRot = Quaternion.identity;
+
+                    _state = eState.DISPLACEMENT;
                 }
                 else
                     Debug.LogWarning("This happened?1");
@@ -366,10 +362,10 @@ public class UserInput : MonoBehaviour
             //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");
             _objStartRot = Quaternion.identity;
             _mOffset = Vector3.zero;
-            //new
+            ///new
             _currentSelection.transform.position = _objStartPos;
             _currentSelection.transform.rotation = _objStartRot;
-            //Start moving the object
+            ///Start moving the object
             _state = eState.DISPLACEMENT;
             _currentSelection.ResetHittingTable(); // so we can pick it up again
         }
@@ -381,8 +377,7 @@ public class UserInput : MonoBehaviour
     {
         if (_currentSelection)
         {
-            _currentSelection.ChangeAppearanceNormal();
-           
+            _currentSelection.ChangeAppearanceHidden(false);
         }
         if (_lastSlot)
         {
@@ -406,6 +401,10 @@ public class UserInput : MonoBehaviour
         return _mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc));
     }
 
+    public Vector3 GetScreenPointBasedOnWorldLoc(Vector3 pos)
+    {
+        return  _mainCamera.WorldToScreenPoint(pos);
+    }
 
     public ObjectController CheckForObjectAtLoc(Vector3 pos)
     {

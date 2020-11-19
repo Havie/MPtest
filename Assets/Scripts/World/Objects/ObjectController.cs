@@ -1,25 +1,38 @@
 ﻿using HighlightPlus;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ObjectController : MonoBehaviour
 {
 
     public ObjectManager.eItemID _myID;
+    ///Rotational / Movement
     public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE};
     public eRotationAxis _rotationAxis= eRotationAxis.YAXIS;
     public bool _canFollow = true;
     private int _dampening = 10;
+    ///effect stuff
     private Vector3 _startSize;
     private MeshRenderer _meshRenderer;
     private MeshRenderer[] _childrenMeshRenderers;
+    private HighlightTrigger _highlightTrigger;
+    ///Components
     private Rigidbody _rb;
     private Collider  _collider;
     private bool _hittingTable;
     private bool _isSubObject;
     [HideInInspector]
     public ObjectController _parent;
+    ///Hand Stuff
+    [HideInInspector]
+    public Transform _handLocation;
+    private bool _pickedUp;
+    private int _handIndex=1;
+    private Vector3 _handOffset;
+    private float _handStartZ;
 
-    private HighlightTrigger _highlightTrigger;
+
 
 
     private void Awake()
@@ -36,25 +49,67 @@ public class ObjectController : MonoBehaviour
         else
             _parent = transform.parent.GetComponentInParent<ObjectController>(); //cache this if it works    
        
-        ToggleRB(true);
+        ToggleRB(true); ///turn off physics 
+        SetUpHighlightComponent();
+        DetermineHandLocation();
 
+    }
+
+    private void SetUpHighlightComponent()
+    {
         var effect = transform.gameObject.AddComponent<HighlightEffect>();
         var profile = Resources.Load<HighlightProfile>("Shaders/Highlight Plus Profile");
-        if(profile!=null)
+        if (profile != null)
             effect.ProfileLoad(profile);
         _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
 
-
-        //Debug.Log($"I am {this.gameObject} Parent=" + _parent);
     }
 
+    private void Update()
+    {
+        if (_handLocation)
+        {
+            _handLocation.position = this.transform.position + _handOffset;
+            if (_pickedUp)
+            {
+                UIManager.instance.UpdateHandLocation(_handIndex, _handLocation.position);
+            }
+        }
+    }
+
+    private void DetermineHandLocation()
+    {
+        if (_isSubObject)
+            return;
+
+        var collider = this.GetComponent<Collider>();
+        float bottom = collider.bounds.center.y - collider.bounds.extents.y ;
+        float top = collider.bounds.center.y + collider.bounds.extents.y;
+        float front = collider.bounds.center.z + collider.bounds.extents.z;
+        float back = collider.bounds.center.z - collider.bounds.extents.z;
+        float left = collider.bounds.center.x + collider.bounds.extents.x;
+        float right = collider.bounds.center.x - collider.bounds.extents.x;
+
+        var prefab = Resources.Load<GameObject>("Prefab/hand_loc_dummy");
+        if(prefab)
+        {
+            var dummy =GameObject.Instantiate<GameObject>(prefab, BuildableObject.Instance.transform);
+            _handLocation = dummy.transform;
+            var index = this.gameObject.name.IndexOf("(Clone)");
+            if(index!=-1)
+                this.gameObject.name = this.gameObject.name.Substring(0 ,this.gameObject.name.IndexOf("(Clone)"));
+            _handLocation.gameObject.name = this.gameObject.name + "_hand_dummy";
+            _handOffset = new Vector3(left, bottom, front) - this.transform.position ;
+            _handStartZ = (this.transform.position + _handOffset).z;
+        }    
+    }
 
     public Vector2 DoRotation(Vector3 dir)
     {
+
         float dot;
 
         //find out if object is right side up in world 
-      
 
         if (_rotationAxis == eRotationAxis.YAXIS)
         {
@@ -157,46 +212,91 @@ public class ObjectController : MonoBehaviour
 
     public void ChangeAppearanceMoving()
     {
-        this.transform.localScale =  new Vector3
-            (0.75f * this.transform.localScale.x, 
-            0.75f * this.transform.localScale.y ,
-            0.75f * this.transform.localScale.z); 
+        Vector3 smaller= new Vector3
+            (0.75f * this.transform.localScale.x,
+            0.75f * this.transform.localScale.y,
+            0.75f * this.transform.localScale.z);
+
+        this.transform.localScale = smaller;
+
+        if (_handLocation)
+            UIManager.instance.ChangeHandSize(_handIndex, true);
 
         ChangeMaterialColor(0.5f);
 
         TrySetChildren(0.5f);
 
-       // ToggleCollider(false);
+        // ToggleCollider(false);
+
+        Debug.Log($"{this.gameObject.name} heard change moving");
 
     }
     public void ChangeAppearanceNormal()
     {
         this.transform.localScale = _startSize;
+        if (_handLocation)
+            UIManager.instance.ChangeHandSize(_handIndex, false);
+
         _meshRenderer.enabled = true;
         ChangeMaterialColor(1f);
         TrySetChildren(1f);
         //ToggleCollider(true);
+
+        Debug.Log($"{this.gameObject.name} heard change normal");
     }
 
     public void ChangeAppearancePreview()
     {
         ChangeMaterialColor(0.5f);
     }
-    public void ChangeAppearanceHidden()
+    public void ChangeAppearanceHidden(bool cond)
     {
-        _meshRenderer.enabled = false;
+        _meshRenderer.enabled = !cond;
     }
 
-    public void ChangeAppearancePickedUp()
+    public void PickedUp()
     {
         if (_highlightTrigger)
             _highlightTrigger.Highlight(true);
+
+        var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
+        foreach (var item in childrenHighlights)
+        {
+            item.Highlight(true);
+        }
+
+        HandManager.OrderChanged += UpdateHand;
+        _pickedUp = true;
+        _handIndex = 1;
     }
 
-    public void ChangeAppearancePutDown()
+    public void PutDown()
     {
         if (_highlightTrigger)
             _highlightTrigger.Highlight(false);
+
+        var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
+        foreach (var item in childrenHighlights)
+        {
+            item.Highlight(false);
+        }
+
+        HandManager.OrderChanged -= UpdateHand;
+        _pickedUp = false;
+    }
+    private void UpdateHand(Queue<ObjectController> queue)
+    {
+        ///find my order in the Queue
+        _handIndex = 1;
+        while(queue.Count!=0)
+        {
+            var controller = queue.Dequeue();
+            ++_handIndex;
+            if (controller == this)
+            {
+                return;
+            }
+        }
     }
 
     public void ToggleRB(bool cond)
@@ -253,5 +353,12 @@ public class ObjectController : MonoBehaviour
     {
         if (other.tag.Equals("Table"))
             _hittingTable = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (_handLocation)
+            Destroy(_handLocation.gameObject);
+        _handLocation = null;
     }
 }

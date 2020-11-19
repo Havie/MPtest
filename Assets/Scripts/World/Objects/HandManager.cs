@@ -1,29 +1,30 @@
 ﻿using HighlightPlus;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public static class HandManager
 {
+    public static event Action<Queue<ObjectController>> OrderChanged = delegate { };
     public static Queue<ObjectController> _objects = new Queue<ObjectController>();
     private static int _handSize=2;
 
     public static void PickUpItem(ObjectController item)
     {
         if (_objects.Contains(item))
-            return;
+            return; ///might have to reorder queue instead if this is possible?
 
         if (_objects.Count > _handSize - 1)
         {
             //Debug.Log($"Size={_objects.Count} and next in Queue is= {_objects.Peek()}");
             DropItem(_objects.Dequeue());
         }
-
+        Queue<ObjectController> cloned = CloneQueue();
+        OrderChanged(cloned);
         item.ToggleRB(true);
-        item.ChangeAppearancePickedUp();
+        item.PickedUp();
         _objects.Enqueue(item);
-
-      
-
+        CheckHandPositions();
     }
 
     public static void DropItem(ObjectController item)
@@ -31,7 +32,7 @@ public static class HandManager
         if (item)
         {
             item.ToggleRB(false);
-            item.ChangeAppearancePutDown();
+            item.PutDown();
             if(_objects.Contains(item))
             {
                 var qItem = _objects.Dequeue();
@@ -42,22 +43,27 @@ public static class HandManager
                 else
                 {
                     _objects.Clear();
-                    _objects.Enqueue(qItem);
+                    _objects.Enqueue(qItem); ///our queue can only have two items so resetting the order is ez
                 }
-                    
+                Queue<ObjectController> cloned = CloneQueue() ;
+                OrderChanged(cloned);
             }
-          
+
+            CheckHandPositions();
         }
+
     }
+
 
     /// <summary>
     /// If object is about to be deleted use this
     /// </summary>
     /// <param name="item"></param>
-    public static void RemoveItem(ObjectController item)
+    public static void RemoveDeletedItem(ObjectController item)
     {
         if (item)
         {
+            item.PutDown();
             if (_objects.Contains(item))
             {
                 var qItem = _objects.Dequeue();
@@ -70,9 +76,12 @@ public static class HandManager
                     _objects.Clear();
                     _objects.Enqueue(qItem);
                 }
-
+                Queue<ObjectController> cloned = CloneQueue();
+                OrderChanged(cloned);
             }
         }
+
+        CheckHandPositions();
     }
 
     public static void PrintQueue()
@@ -90,7 +99,29 @@ public static class HandManager
         Debug.LogWarning(q);
     }
 
+    public static void CheckHandPositions()
+    {
+        if (_objects.Count < 2)
+            UIManager.instance.ResetHand(2);
+        if (_objects.Count < 1)
+            UIManager.instance.ResetHand(1);
+    }
 
-  
+    private static Queue<ObjectController> CloneQueue()
+    {
+        Queue<ObjectController> objects1 = new Queue<ObjectController>();
+        Queue<ObjectController> objects2 = new Queue<ObjectController>();
+        while (_objects.Count > 0)
+        {
+            var item = _objects.Dequeue();
+            objects1.Enqueue(item);
+            objects2.Enqueue(item);
+        }
+        _objects = objects1;
+        return objects2;
+    }
+
+
+
 
 }

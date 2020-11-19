@@ -5,9 +5,11 @@ using UnityEngine;
 namespace HighlightPlus {
 
     public enum TriggerMode {
+		None = -1,
 		ColliderEventsOnlyOnThisObject = 0,
 		RaycastOnThisObjectAndChildren = 1,
         Volume = 2
+		
 	}
 
 	public enum RayCastSource {
@@ -34,24 +36,30 @@ namespace HighlightPlus {
 		Collider currentCollider;
 		static RaycastHit[] hits;
 
-		void OnEnable () {
+		void OnEnable () 
+		{
 			Init ();
 		}
 
 
 		void Start () {
-			if (triggerMode == TriggerMode.RaycastOnThisObjectAndChildren) {
-				if (raycastCamera == null) {
+			if (triggerMode == TriggerMode.RaycastOnThisObjectAndChildren)
+			{
+				if (raycastCamera == null) 
+				{
 					raycastCamera = HighlightManager.GetCamera ();
-					if (raycastCamera == null) {
+					if (raycastCamera == null) 
+					{
 						Debug.LogError ("Highlight Trigger on " + gameObject.name + ": no camera found!");
 					}
 				}
-				if (colliders != null && colliders.Length > 0) {
+				/*if (colliders != null && colliders.Length > 0) {
 					hits = new RaycastHit[MAX_RAYCAST_HITS];
 					StartCoroutine (DoRayCast ());
-				}
-			} else {
+				}*/
+			} 
+			else 
+			{
 				Collider collider = GetComponent<Collider> ();
 				if (collider == null) {
 					if (GetComponent<MeshFilter> () != null) {
@@ -61,6 +69,46 @@ namespace HighlightPlus {
 			}
 		}
 
+
+		public void Highlight(bool cond)
+		{
+			HighlightEffect hb = transform.GetComponent<HighlightEffect>();
+			if (hb == null && cond)
+			{
+				hb = gameObject.AddComponent<HighlightEffect>();
+			}
+			if (hb != null)
+			{
+				hb.SetHighlighted(cond);
+			}
+		}
+
+		public void Init()
+		{
+			if (raycastCamera == null)
+			{
+				raycastCamera = HighlightManager.GetCamera();
+			}
+			if (triggerMode == TriggerMode.RaycastOnThisObjectAndChildren)
+			{
+				colliders = GetComponentsInChildren<Collider>();
+			}
+		}
+
+
+
+
+
+		/*
+		 
+		void SwitchCollider (Collider newCollider) {
+			currentCollider = newCollider;
+			if (currentCollider != null) {
+				Highlight (true);
+			} else {
+				Highlight (false);
+			}
+		}
 
 		IEnumerator DoRayCast () {
 			while (triggerMode == TriggerMode.RaycastOnThisObjectAndChildren) {
@@ -98,18 +146,7 @@ namespace HighlightPlus {
 				yield return null;
 			}
 		}
-
-
-		void SwitchCollider (Collider newCollider) {
-			currentCollider = newCollider;
-			/*if (currentCollider != null) {
-				Highlight (true);
-			} else {
-				Highlight (false);
-			}*/
-		}
-
-
+		 
 		void OnMouseDown () {
             if (isActiveAndEnabled && triggerMode == TriggerMode.ColliderEventsOnlyOnThisObject) 
 			{
@@ -130,31 +167,11 @@ namespace HighlightPlus {
 				//Highlight (false);
 			}
 		}
+		*/
 
-		public void Highlight (bool cond) 
-		{
-			HighlightEffect hb = transform.GetComponent<HighlightEffect>();
-			if (hb == null && cond) 
-			{
-				hb = gameObject.AddComponent<HighlightEffect>();
-			}
-			if (hb != null) 
-			{
-				hb.SetHighlighted(cond);
-			}
-		}
 
-		public void Init() {
-			if (raycastCamera == null) 
-			{
-				raycastCamera = HighlightManager.GetCamera();
-			}
-			if (triggerMode == TriggerMode.RaycastOnThisObjectAndChildren)
-			{
-				colliders = GetComponentsInChildren<Collider>();
-			}
-		}
 
+		/*
         public void OnTriggerEnter(Collider other) {
 			if (triggerMode == TriggerMode.Volume) {
 				if ((volumeLayerMask & (1 << other.gameObject.layer)) != 0) {
@@ -170,8 +187,8 @@ namespace HighlightPlus {
 				}
 			}
         }
+		*/
 
-
-    }
+	}
 
 }
