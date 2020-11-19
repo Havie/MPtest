@@ -18,8 +18,10 @@ public class ObjectController : MonoBehaviour
     private bool _isSubObject;
     [HideInInspector]
     public ObjectController _parent;
-
+    [HideInInspector]
+    public Vector3 _handLocation;
     private HighlightTrigger _highlightTrigger;
+    
 
 
     private void Awake()
@@ -44,10 +46,22 @@ public class ObjectController : MonoBehaviour
             effect.ProfileLoad(profile);
         _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
 
+        DetermineHandLocation();
 
-        //Debug.Log($"I am {this.gameObject} Parent=" + _parent);
     }
 
+    private void DetermineHandLocation()
+    {
+        var collider = this.GetComponent<Collider>();
+        float bottom = collider.bounds.center.y - collider.bounds.extents.y ;
+        float top = collider.bounds.center.y + collider.bounds.extents.y;
+        float front = collider.bounds.center.z + collider.bounds.extents.z;
+        float back = collider.bounds.center.z - collider.bounds.extents.z;
+        float left = collider.bounds.center.x + collider.bounds.extents.x;
+        float right = collider.bounds.center.x - collider.bounds.extents.x;
+
+        _handLocation = new Vector3(right, bottom, front);
+    }
 
     public Vector2 DoRotation(Vector3 dir)
     {
