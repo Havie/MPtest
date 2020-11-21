@@ -105,12 +105,12 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0
+    - _OutlineWidth: 0.1
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 1
-    - _ScaleRatioB: 1
-    - _ScaleRatioC: 1
+    - _ScaleRatioA: 0.8333333
+    - _ScaleRatioB: 0.6770833
+    - _ScaleRatioC: 0.27083334
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0
@@ -123,10 +123,10 @@ Material:
     - _StencilWriteMask: 255
     - _TextureHeight: 512
     - _TextureWidth: 512
-    - _UnderlayDilate: 0
+    - _UnderlayDilate: 1
     - _UnderlayOffsetX: 0
-    - _UnderlayOffsetY: 0
-    - _UnderlaySoftness: 0
+    - _UnderlayOffsetY: -0.5
+    - _UnderlaySoftness: 1
     - _VertexOffsetX: 0
     - _VertexOffsetY: 0
     - _WeightBold: 0.75
@@ -154,9 +154,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Light_Gontserrat SDF
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -412041983
   material: {fileID: -6077142157318975726}
-  materialHashCode: 0
+  materialHashCode: -1917052182
   m_Version: 1.1.0
   m_SourceFontFileGUID: 6c844060d1fc80e4b9f552054d133086
   m_SourceFontFile_EditorRef: {fileID: 0}
