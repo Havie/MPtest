@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 [CreateAssetMenu(menuName ="Quality/Quality Step")]
 public class QualityStep : ScriptableObject
@@ -13,7 +13,7 @@ public class QualityStep : ScriptableObject
     public float _requiredRotationThreshold;
 
 
-
+    #if UNITY_EDITOR
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
     [CustomEditor(typeof(QualityStep))]
@@ -47,7 +47,9 @@ public class QualityStep : ScriptableObject
                     }
             }
         }
-    }
+}
 
     #endregion
+
+    #endif
 }

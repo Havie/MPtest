@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEditor;
-using UnityEditor.Experimental.TerrainAPI;
 using UnityEngine;
 
 
@@ -138,7 +136,7 @@ public class ObjectQuality : MonoBehaviour
 
 
 
-
+#if UNITY_EDITOR
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
     [CustomEditor(typeof(ObjectQuality))]
@@ -170,7 +168,7 @@ public class ObjectQuality : MonoBehaviour
     }
 
     #endregion
-    
+#endif
 }
 
 
