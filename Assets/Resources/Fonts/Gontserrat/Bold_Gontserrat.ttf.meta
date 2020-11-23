@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 3875341a653561d46b3eadb8db3ff3be
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Gontserrat
+  fontNames:
+  - Gontserrat
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 246fcd5092125ba4d8ff80ecb2cfaf96, type: 3}
+  - {fileID: 12800000, guid: a1e36c6993ec12b40b35c9afa8a90248, type: 3}
+  - {fileID: 12800000, guid: 37f8066af11b715478547cab69fdeec0, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
