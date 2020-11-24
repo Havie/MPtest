@@ -14,6 +14,8 @@ public class UIInventorySlot : MonoBehaviour
     public bool _inUse;
     int _numItemsStored = 0;
     public int RequiredID { get; private set; } = -1;
+    public int debugID;
+
 
     private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
@@ -27,6 +29,11 @@ public class UIInventorySlot : MonoBehaviour
     {
         _defaultIcon = _myIcon.sprite;
 
+    }
+    private void LateUpdate()
+    {
+        ///Tmp sol to expose in inspector
+        debugID = RequiredID;
     }
     public void SetManager(UIInventoryManager manager) { _manager = manager; }
 
@@ -55,7 +62,7 @@ public class UIInventorySlot : MonoBehaviour
         }
         else if (!_inUse && RequiredID != -1)
         {
-            //Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
+            //UIManager.instance.DebugLog("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
             if (BuildableObject.Instance.GetSpriteByID(RequiredID) != img)
                 _myIcon.color = _INVALID;
             else
@@ -90,7 +97,7 @@ public class UIInventorySlot : MonoBehaviour
 
     public void UndoPreview()
     {
-       // Debug.Log($"UndoPreview {this.gameObject.name} #items {_numItemsStored} , {_myIcon.sprite}");
+       // UIManager.instance.DebugLog($"UndoPreview {this.gameObject.name} #items {_numItemsStored} , {_myIcon.sprite}");
 
         if (_numItemsStored > 0)
         {
@@ -127,7 +134,7 @@ public class UIInventorySlot : MonoBehaviour
     private void AssignSprite(int id, bool transparent)
     {
 
-        //Debug.Log($"{this.gameObject.name} AssignSprite {id} , {transparent}");
+        //UIManager.instance.DebugLog($"{this.gameObject.name} AssignSprite {id} , {transparent}");
         var bo = BuildableObject.Instance;
         Sprite img = bo.GetSpriteByID(id);
 
@@ -144,11 +151,14 @@ public class UIInventorySlot : MonoBehaviour
     public bool AssignItem(int id, int count)
     {
         //if (this.gameObject.name.Contains("tation"))
-         //   Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + "  , autosend="+_autoSend + " , _inUse="+ _inUse + " , _isOutSlot=" + _isOutSlot + " , _requiredID=" + _requiredID) ;
+          // UIManager.instance.DebugLog(this.gameObject.name + " Assign ITEM "  + "id=" +id  + "  , autosend="+_autoSend + " , _inUse="+ _inUse + " , _isOutSlot=" + _isOutSlot + " , _requiredID=" + RequiredID) ;
         if (!_inUse)
         {
             if (_isOutSlot && id != RequiredID)
-               return false;
+            {
+                UIManager.instance.DebugLogWarning($"wrong id {id} vs {RequiredID}");
+                return false;
+            }
 
             AssignSprite(id, false);
 
@@ -157,8 +167,9 @@ public class UIInventorySlot : MonoBehaviour
             _inUse = true;
             if (_autoSend)
             {
+                UIManager.instance.DebugLog("send data");
                 if (count > 1)
-                    Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
+                    UIManager.instance.DebugLogWarning("Trying to autosend more than 1 item? shouldnt happen");
                 SendData(); // out only
             }
             else if(_isOutSlot) //non pull send
@@ -191,19 +202,19 @@ public class UIInventorySlot : MonoBehaviour
     }
     public void SendData()
     {
-        Debug.Log("   ....... CALLLED SEND DATA ........        ");
+       // UIManager.instance.DebugLog("   ....... CALLLED SEND DATA ........        ");
         WorkStation myStation = GameManager.instance._workStation;
 
         if (_inUse )//&& WorkStation._stationFlow.ContainsKey((int)myStation._myStation))
         {
             //int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
-             Debug.Log($"Sending ItemLevelID {_itemID} to Station: {(int)myStation._sendOutputToStation}");
+             UIManager.instance.DebugLog($"Sending ItemLevelID {_itemID} to Station: {(int)myStation._sendOutputToStation}");
             ClientSend.SendItem(_itemID, (int)myStation._sendOutputToStation);
             CheckKitting();
             RemoveItem(); // should always call RestoreDefault;
         }
-        else
-            Debug.LogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
+       // else
+          //  UIManager.instance.DebugLogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
     }
 
     /** Find and remove an order from kittings in orders */

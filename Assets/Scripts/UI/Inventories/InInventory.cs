@@ -75,7 +75,7 @@ public class InInventory : UIInventoryManager
             {
                 WorkStation ws = stationList[startingIndex - 1];
                 Task lastTask = ws._tasks[ws._tasks.Count - 1];
-                Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
+                //Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
                 count += lastTask._finalItemID.Count;
                 if(AddToSlotOnFind)
                 {
@@ -127,6 +127,7 @@ public class InInventory : UIInventoryManager
                 {
                     for (int j = 0; j < BATCHSIZE; j++)
                         AddItemToSlot((int)item, false);
+
                 }
             }
             count += listItems.Count;

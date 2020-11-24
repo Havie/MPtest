@@ -42,6 +42,25 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    //public static void SendItem(int itemLVL, int toStationID)
+    //{
+    //    ThreadManager.ExecuteOnMainThread(() =>
+    //    {
+    //        Debug.Log("Sending Item on channel : " + (int)ClientPackets.item);
+    //        sPacket packet = new sPacket((int)ClientPackets.item);
+    //        {
+    //            packet.Write(itemLVL);
+    //            //Who am I sending it to? (station/ClientID?)
+    //            packet.Write(toStationID);
+
+    //            SendTCPData(packet);
+
+    //        }
+    //    });
+    //}
+
+    /// ObjectDisposedException: Cannot access a disposed object.
+
     public static void SendItem(int itemLVL, int toStationID)
     {
         Debug.Log("Sending Item on channel : " + (int)ClientPackets.item);
@@ -49,12 +68,13 @@ public class ClientSend : MonoBehaviour
         {
             packet.Write(itemLVL);
             //Who am I sending it to? (station/ClientID?)
-            packet.Write(toStationID); 
+            packet.Write(toStationID);
 
             SendTCPData(packet);
 
         }
     }
+
 
     #endregion
 

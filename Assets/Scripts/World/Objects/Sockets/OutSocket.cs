@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class OutSocket : Socket
+namespace LEAN
 {
-    private void Awake()
+    public class OutSocket : Socket
     {
-        _in = false;
+        private void Awake()
+        {
+            _in = false;
+        }
     }
 }

@@ -22,14 +22,19 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-
+    
     public WorkStation _workStation;
+    [HideInInspector]
     public UIInventoryManager _invIN;
+    [HideInInspector]
     public UIInventoryManager _invOUT;
+    [HideInInspector]
     public UIInventoryManager _invSTATION;
+    [HideInInspector]
     public UIKitting _invKITTING;
 
-
+    ///mobile
+    private bool _isMobileMode;
 
     /**Singleton*/
     private void Awake()
@@ -40,6 +45,7 @@ public class GameManager : MonoBehaviour
             Destroy(this);
 
         AutomaticChecks();
+        MobileSetUp();
 
         //Test and see if this works for all scripts?
 #if UNITY_EDITOR
@@ -57,6 +63,18 @@ public class GameManager : MonoBehaviour
             _addChaotic = false;
         }
     }
+    private void MobileSetUp()
+    {
+        _isMobileMode = Application.isMobilePlatform;
+        if(_isMobileMode)
+        {
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
+            Screen.autorotateToPortrait = false;
+            Screen.autorotateToLandscapeRight = false;
+            Screen.autorotateToPortraitUpsideDown = false;
+        }
+    }
+
     /** Work station is used to identify what items are produced here and where items are sent to */
     public void AssignWorkStation(WorkStation station)
     {

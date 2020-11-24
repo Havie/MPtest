@@ -256,7 +256,7 @@ public class UIInventoryManager : MonoBehaviour
     public void AddItemToSlot(int itemID, bool makeRequired)
     {
         //if(_inventoryType==eInvType.OUT)
-        // Debug.Log($"Adding Item to slot {itemID}");
+         //Debug.Log($"Adding Item to slot {itemID} , <color=red> chaos={_ADDCHAOTIC} </color>");
 
         if (!_ADDCHAOTIC)
         {
@@ -278,7 +278,8 @@ public class UIInventoryManager : MonoBehaviour
         }
         else
         {
-            AddChaotic(itemID, makeRequired);
+            Debug.LogWarning($"Adding Item to slot {itemID} , <color=red> AddChaotic is broken </color>");
+            AddChaotic(itemID, makeRequired); ///This is broken 
 
         }
     }
@@ -328,7 +329,10 @@ public class UIInventoryManager : MonoBehaviour
         if (_available.Count > 0)
         {
             if (makeRequired)
+            {
                 _available[UnityEngine.Random.Range(0, _available.Count - 1)].SetRequiredID(itemID);
+                Debug.Log($"3..Adding req ID:{itemID}");
+            }
             else
                 _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1);
         }
@@ -336,7 +340,10 @@ public class UIInventoryManager : MonoBehaviour
         {
             UIInventorySlot nSlot = CreateNewSlot();
             if (makeRequired)
+            {
                 nSlot.SetRequiredID(itemID);
+                Debug.Log($"2..Adding req ID:{itemID}");
+            }
             else
                 nSlot.AssignItem(itemID, 1);
 
@@ -353,6 +360,7 @@ public class UIInventoryManager : MonoBehaviour
             {
                 if (!slot.RequiresCertainID())
                 {
+                   // Debug.Log($"Adding req ID:{itemID}");
                     slot.SetRequiredID(itemID);
                     return true;
                 }
@@ -387,15 +395,16 @@ public class UIInventoryManager : MonoBehaviour
     /** When an item gets assigned to the batch tell the manager*/
     public void CheckIfBatchIsReady()
     {
-        foreach (var slot in _slots)
-        {
-            if (!slot.GetInUse())
-            {
-                if (_optionalSendButton)
-                    _optionalSendButton.interactable = false;
-                return;
-            }
-        }
+        ///Disable for testing:
+        //foreach (var slot in _slots)
+        //{
+        //    if (!slot.GetInUse())
+        //    {
+        //        if (_optionalSendButton)
+        //            _optionalSendButton.interactable = false;
+        //        return;
+        //    }
+        //}
         //If all buttons hold the correct items , we can send
         if (_optionalSendButton)
             _optionalSendButton.interactable = true;

@@ -23,7 +23,7 @@ public class ClientHandle : MonoBehaviour
     {
         int itemLvl = packet.ReadInt(); //get rid of the first btye data?
        
-        Debug.Log($"..Item Received , itemLevel={itemLvl} .");
+        Debug.Log($"..<color=green>Item Received</color> , itemID={itemLvl} .");
 
         //Tell the leftSide UI 
         GameManager.instance._invIN.AddItemToSlot(itemLvl, false);

@@ -50,6 +50,11 @@ public class UserInput : MonoBehaviour
         //Fetch the Event System from the Scene
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
         _mainCamera = Camera.main;
+        if(_Raycaster==null)
+        {
+            Debug.LogWarning("raycaster for User input is null, trying to find manually");
+            _Raycaster= UIManager.instance._inventoryCanvas.GetComponent<GraphicRaycaster>();
+        }    
     }
 
 

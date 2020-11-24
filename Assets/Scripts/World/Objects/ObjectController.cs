@@ -227,7 +227,7 @@ public class ObjectController : MonoBehaviour
 
         // ToggleCollider(false);
 
-        Debug.Log($"{this.gameObject.name} heard change moving");
+        //Debug.Log($"{this.gameObject.name} heard change moving");
 
     }
     public void ChangeAppearanceNormal()
@@ -241,7 +241,7 @@ public class ObjectController : MonoBehaviour
         TrySetChildren(1f);
         //ToggleCollider(true);
 
-        Debug.Log($"{this.gameObject.name} heard change normal");
+        //Debug.Log($"{this.gameObject.name} heard change normal");
     }
 
     public void ChangeAppearancePreview()

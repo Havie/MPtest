@@ -74,7 +74,7 @@ public class OutInventory : UIInventoryManager
             {
                 foreach (var item in t._finalItemID)
                 {
-                    // Debug.LogError($" Making {item} required");
+                    Debug.LogError($" Making {item} required from task:{t} at ws{myWS}");
                     AddItemToSlot((int)item, true);
                 }
             }
