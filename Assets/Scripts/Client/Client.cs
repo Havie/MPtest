@@ -67,7 +67,7 @@ public class Client : MonoBehaviour
     {
         InitClientData();
         UIManager.instance.DebugLog("Tellng the tcp to connect:");
-        _tcp.Connect();
+        _tcp.Connect(this);
         //Figure out if the connection succeeded or not 
         ThreadManager.ExecuteOnMainThread(() =>
         {
@@ -78,7 +78,10 @@ public class Client : MonoBehaviour
     IEnumerator ConnectionCheck(int seconds)
     {
         yield return new WaitForSeconds(seconds);
-        _isConnected = _tcp._socket.Connected;
+
+        //_isConnected = _tcp._socket.Connected;
+        UIManager.instance.DebugLogWarning($"Socket connection agreement: _isConnected:{_isConnected} vs socket.Connected{_tcp._socket.Connected}");
+
         UIManager.instance.Connected(_isConnected);
     }
 
@@ -90,10 +93,11 @@ public class Client : MonoBehaviour
         private byte[] _receivedBuffer;
         public bool _connectionRan;
 
-        public void Connect()
+        private Client _client;
+
+        public void Connect(Client client)
         {
-            UIManager.instance.DebugLog("trying to connect....");
-            _socket = new TcpClient     //= how this constructor works , it just somehow does this:
+            _socket = new TcpClient     //how this constructor works is it just somehow does this:
             {
                 ReceiveBufferSize = _dataBufferSize,  //  _socket.ReceiveBufferSize = _dataBufferSize;
                 SendBufferSize = _dataBufferSize    //  _socket.SendBufferSize = _dataBufferSize
@@ -161,7 +165,9 @@ public class Client : MonoBehaviour
 
         private void ConnectCallback(IAsyncResult result)
         {
-            _socket.EndConnect(result);
+            _socket.EndConnect(result);///seems to be an odd way to telling us we are connected?
+
+            _client._isConnected = _socket.Connected; ///gonna try only setting this here since sockets seem to be connected without this callback?
 
 
             if (!_socket.Connected)

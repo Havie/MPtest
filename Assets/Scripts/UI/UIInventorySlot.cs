@@ -208,7 +208,7 @@ public class UIInventorySlot : MonoBehaviour
         if (_inUse )//&& WorkStation._stationFlow.ContainsKey((int)myStation._myStation))
         {
             //int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
-             UIManager.instance.DebugLog($"Sending ItemLevelID {_itemID} to Station: {(int)myStation._sendOutputToStation}");
+            UIManager.instance.DebugLog($"Sending ItemLevelID {_itemID} to Station: {(int)myStation._sendOutputToStation}");
             ClientSend.SendItem(_itemID, (int)myStation._sendOutputToStation);
             CheckKitting();
             RemoveItem(); // should always call RestoreDefault;
