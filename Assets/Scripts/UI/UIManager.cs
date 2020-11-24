@@ -74,7 +74,8 @@ public class UIManager : MonoBehaviour
         else
             Debug.LogWarning("(UIManager): Missing BeginLevel Canvases");
 
-        BroadcastListener.Instance.OnHostIpFound += DisableHostButton;
+        if(BroadcastListener.Instance)
+            BroadcastListener.Instance.OnHostIpFound += DisableHostButton;
     }
 
 

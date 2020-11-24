@@ -70,51 +70,25 @@ public static class sServer
         _tcpListener.Start();
         _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
 
-
-        BroadcastListener.Instance.BroadCastIP();
-        BroadcastListener.Instance.SetAsHost(); ///will start to forward all info to us now
-        UIManager.instance.DisableHostButton("");
-        ///Use the _udp from the broadcaster now 
-        //_udpListener = new UdpClient(_port);
-        //_udpListener.BeginReceive(UDPReceiveCallBack, null);
-
+        if (BroadcastListener.Instance)
+        {
+            BroadcastListener.Instance.BroadCastIP();
+            BroadcastListener.Instance.SetAsHost(); ///will start to forward all info to us now
+            UIManager.instance.DisableHostButton("");
+        }
+        else
+        {
+            ///Use the _udp from the broadcaster now 
+            Debug.LogWarning("Going the non-broadcast route");
+            _udpListener = new UdpClient(_port);
+            _udpListener.BeginReceive(UDPReceiveCallBack, null);
+        }
 
         UIManager.instance.DebugLog($"Server started on <color=blue>{_port}</color> , GetLocalIPAddress: <color=green>{GetLocalIPAddress()}</color>");
 
     }
 
-    private static void Two()
-    {
-        // Get server related information.
-        IPHostEntry heserver = Dns.Resolve(GetLocalIPAddress());
-
-        foreach (IPAddress curAdd in heserver.AddressList)
-        {
-
-            UIManager.instance.DebugLog($"Server started on <color=blue>{_port}</color>. IPAddress={curAdd} vs GetLocalIPAddress: <color=green>{GetLocalIPAddress()}</color>");
-        }
-    }
-
-    private static void One()
-    {
-        foreach (var netInterface in NetworkInterface.GetAllNetworkInterfaces())
-        {
-            //if (netInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
-            // netInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-            {
-                foreach (var addrInfo in netInterface.GetIPProperties().UnicastAddresses)
-                {
-                    if (addrInfo.Address.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        var ipAddress = addrInfo.Address;
-
-                        UIManager.instance.DebugLog($"Server started on <color=blue>{_port}</color>. IPAddress={ipAddress} vs GetLocalIPAddress: <color=green>{GetLocalIPAddress()}</color>");
-
-                    }
-                }
-            }
-        }
-    }
+   
 
 
     private static void TCPConnectCallback(IAsyncResult result)
@@ -269,6 +243,43 @@ public static class sServer
             }
         }
         throw new Exception("No network adapters with an IPv4 address in the system!");
+    }
+
+    #endregion
+
+    #region broken stuff
+
+    private static void Two()
+    {
+        // Get server related information.
+        IPHostEntry heserver = Dns.Resolve(GetLocalIPAddress());
+
+        foreach (IPAddress curAdd in heserver.AddressList)
+        {
+
+            UIManager.instance.DebugLog($"Server started on <color=blue>{_port}</color>. IPAddress={curAdd} vs GetLocalIPAddress: <color=green>{GetLocalIPAddress()}</color>");
+        }
+    }
+
+    private static void One()
+    {
+        foreach (var netInterface in NetworkInterface.GetAllNetworkInterfaces())
+        {
+            //if (netInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
+            // netInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+            {
+                foreach (var addrInfo in netInterface.GetIPProperties().UnicastAddresses)
+                {
+                    if (addrInfo.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        var ipAddress = addrInfo.Address;
+
+                        UIManager.instance.DebugLog($"Server started on <color=blue>{_port}</color>. IPAddress={ipAddress} vs GetLocalIPAddress: <color=green>{GetLocalIPAddress()}</color>");
+
+                    }
+                }
+            }
+        }
     }
 
     #endregion

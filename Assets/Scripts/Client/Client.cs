@@ -11,7 +11,7 @@ public class Client : MonoBehaviour
     public static Client instance;
     public static int _dataBufferSize = 4096;
 
-    private string _ip = "192.168.1.19";  //"127.0.0.1"; // local host
+    private string _ip = "127.0.0.1"; //"192.168.1.19";  //"127.0.0.1"; // local host
     private int _port = 26951; //Match server  ///shud just take this from the serverClass on Awake
     public int _myId = 0;
     public TCP _tcp;
@@ -48,10 +48,13 @@ public class Client : MonoBehaviour
         _tcp = new TCP();
         _udp = new UDP();
 
-       BroadcastListener.Instance.OnHostIpFound += UpdateHostIP;
+        if (BroadcastListener.Instance)
+            BroadcastListener.Instance.OnHostIpFound += UpdateHostIP;
        sServer.OnHostIpFound += UpdateHostIP;
 
         UIManager.instance.DebugLog("Client..listening for a hostIP");
+
+        _port = sNetworkManager._defaultPort;
     }
 
     private void UpdateHostIP(string address)
@@ -59,7 +62,8 @@ public class Client : MonoBehaviour
         _ip = address;
         UIManager.instance.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
         ///As Soon as we hear about the first host, Stop caring. (Might have to change later if we swap things, or host DC's)
-        BroadcastListener.Instance.OnHostIpFound -= UpdateHostIP;
+        if (BroadcastListener.Instance)
+            BroadcastListener.Instance.OnHostIpFound -= UpdateHostIP;
         sServer.OnHostIpFound -= UpdateHostIP;
     }
 
@@ -81,7 +85,7 @@ public class Client : MonoBehaviour
 
         //_isConnected = _tcp._socket.Connected;
         UIManager.instance.DebugLogWarning($"Socket connection agreement: _isConnected:{_isConnected} vs socket.Connected{_tcp._socket.Connected}");
-
+        _isConnected = _tcp._socket.Connected;
         UIManager.instance.Connected(_isConnected);
     }
 
