@@ -44,7 +44,7 @@ public class ClientSend : MonoBehaviour
 
     public static void SendItem(int itemLVL, int toStationID)
     {
-        Debug.Log("Sending Item on channel : " + (int)ClientPackets.item);
+        UIManager.instance.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
         {
             packet.Write(itemLVL);

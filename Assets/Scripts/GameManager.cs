@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public UIInventoryManager _invSTATION;
     public UIKitting _invKITTING;
 
+    private bool _isMobileMode;
 
 
     /**Singleton*/
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(this);
 
+        MobileSetUp();
         AutomaticChecks();
 
         //Test and see if this works for all scripts?
@@ -47,6 +49,18 @@ public class GameManager : MonoBehaviour
 #else
         Debug.unityLogger.logEnabled=false;
 #endif
+    }
+
+    private void MobileSetUp()
+    {
+        _isMobileMode = Application.isMobilePlatform;
+        if (_isMobileMode)
+        {
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
+            Screen.autorotateToPortrait = false;
+            Screen.autorotateToLandscapeRight = false;
+            Screen.autorotateToPortraitUpsideDown = false;
+        }
     }
     private void AutomaticChecks()
     {

@@ -18,12 +18,14 @@ public class ClientHandle : MonoBehaviour
         Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
     }
 
+
  
     public static void ItemReceived(sPacket packet)
     {
         int itemLvl = packet.ReadInt(); //get rid of the first btye data?
-       
-        Debug.Log($"..Item Received , itemLevel={itemLvl} .");
+
+        ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
+        UIManager.instance.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
         GameManager.instance._invIN.AddItemToSlot(itemLvl, false);

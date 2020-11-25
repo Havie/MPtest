@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
@@ -74,8 +75,8 @@ public class UIManager : MonoBehaviour
         else
             Debug.LogWarning("(UIManager): Missing BeginLevel Canvases");
 
-       // if (BroadcastListener.Instance)
-        //    BroadcastListener.Instance.OnHostIpFound += DisableHostButton;
+
+        sServer.OnHostIpFound += DisableHostButton;
     }
 
 
@@ -242,9 +243,18 @@ public class UIManager : MonoBehaviour
     {
         if (_debugText)
         {
-            _debugText.text = _debugText.text + "\n" + text;
-            if (_debugText.text.Length > _maxTextSize)
-                _debugText.text = text;
+            try
+            {
+                _debugText.text = _debugText.text + "\n" + text;
+
+                if (_debugText.text.Length > _maxTextSize)
+                    _debugText.text = _debugText.text.Substring(_debugText.text.Length - 1 - _maxTextSize);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"DebugText throwng exepection {e}");
+            }
+
         }
         Debug.Log(text);
     }
@@ -252,19 +262,31 @@ public class UIManager : MonoBehaviour
     {
         if (_debugText)
         {
-            _debugText.text = _debugText.text + "\n" + text;
-            if (_debugText.text.Length > _maxTextSize)
-                _debugText.text = text;
+            try
+            {
+                _debugText.text = _debugText.text + "\n" + text;
+
+                if (_debugText.text.Length > _maxTextSize)
+                    _debugText.text = _debugText.text.Substring(_debugText.text.Length - 1 - _maxTextSize);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"DebugText throwng exepection {e}");
+            }
         }
         Debug.LogWarning(text);
     }
     public void DebugLogError(string text)
     {
-        if (_debugText)
+        try
         {
             _debugText.text = _debugText.text + "\n" + text;
             if (_debugText.text.Length > _maxTextSize)
                 _debugText.text = text;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"DebugText throwng exepection {e}");
         }
         Debug.LogError(text);
     }
@@ -284,9 +306,16 @@ public class UIManager : MonoBehaviour
             _bHost.interactable = false;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+            BroadCastIp();
+    }
+
     public void BroadCastIp()
     {
-       // BroadcastListener.Instance.BroadCastIP();
+        // BroadcastListener.Instance.BroadCastIP();
+        sServer.BroadCastIP();
     }
 
     public void PrintMyIp()
@@ -299,6 +328,6 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
-       // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
+        // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
     }
 }

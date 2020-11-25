@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
-
+using System.Text;
 
 public static class sServer
 {
@@ -19,6 +19,23 @@ public static class sServer
     public delegate void PacketHandler(int fromClient, sPacket packet);
     public static Dictionary<int, PacketHandler> _packetHandlers;
 
+    public static event Action<string> OnHostIpFound = delegate { };
+    public static bool _iAmHost;
+
+    public static void ListenForHostBroadCasts()
+    {
+        _udpListener = new UdpClient(sNetworkManager._defaultPort);
+        _udpListener.EnableBroadcast = true;
+        _udpListener.BeginReceive(UDPReceiveCallBack, null);
+        UIManager.instance.DebugLog("Server..listening for hostIP");
+    }
+    public static void BroadCastIP()
+    {
+        var data = Encoding.UTF8.GetBytes(GetLocalIPAddress());
+       _udpListener.Send(data, data.Length, "255.255.255.255", sNetworkManager._defaultPort);
+
+    }
+
     public static void Start(int maxPlayers, int port)
     {
         _maxPlayers = maxPlayers;
@@ -31,27 +48,41 @@ public static class sServer
         _tcpListener.Start();
         _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
 
-        _udpListener = new UdpClient(_port);
-        _udpListener.BeginReceive(UDPReceiveCallBack, null);
+        BroadCastIP();
+        _iAmHost = true;
 
-        Debug.Log($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
+        //_udpListener = new UdpClient(_port);
+        // _udpListener.BeginReceive(UDPReceiveCallBack, null);
+
+        UIManager.instance.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
     }
 
+    ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 
+    ///      game logic like UIManager.instance.DebugLog is not safe (and will sometimes crash without error and mess other things up)
     private static void TCPConnectCallback(IAsyncResult result)
     {
-        TcpClient client = _tcpListener.EndAcceptTcpClient(result);
-        _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
-        Debug.Log($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color>");
-
-        for (int i = 1; i <= _maxPlayers; ++i)
+        try
         {
-            if (_clients[i]._tcp._socket == null)
+            TcpClient client = _tcpListener.EndAcceptTcpClient(result);
+            _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
+            Debug.Log($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color>");
+            ///WARNING TRYING TO PRINT THIS TO THE WINDOW CRASHES WITH NO WARNINGS 
+            //UIManager.instance.DebugLog($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color> .");
+
+            for (int i = 1; i <= _maxPlayers; ++i)
             {
-                _clients[i]._tcp.Connect(client);
-                return;
+                if (_clients[i]._tcp._socket == null)
+                {
+                    _clients[i]._tcp.Connect(client);
+                    return;
+                }
             }
+            Debug.Log($"{client.Client.RemoteEndPoint} failed to connect: Server Full!");
         }
-        Debug.Log($"{client.Client.RemoteEndPoint} failed to connect: Server Full!");
+        catch (Exception e)
+        {
+            Debug.Log($"Error TCPConnectCallback : {e}");
+        }
     }
 
     private static void UDPReceiveCallBack(IAsyncResult result)
@@ -66,6 +97,24 @@ public static class sServer
             {
                 return;
             }
+
+            string receiveString = Encoding.ASCII.GetString(data);
+            if (LookLikeIpAddress(receiveString))
+            {
+                ThreadManager.ExecuteOnMainThread(() =>
+                {
+                    UIManager.instance.DebugLogWarning($"Server Received a string IP: {receiveString}");
+                    OnHostIpFound(receiveString);
+                });
+
+                return;
+            }
+            if (!_iAmHost) /// we dont want to process data , we might even want to close our UDP here but idk how
+            {
+                _udpListener.Close();
+                return;
+            }
+
             using (sPacket packet = new sPacket(data))
             {
                 int clientId = packet.ReadInt();

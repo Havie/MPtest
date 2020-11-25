@@ -10,7 +10,7 @@ public class Client : MonoBehaviour
     public static Client instance;
     public static int _dataBufferSize = 4096;
 
-    private string _ip = "192.168.1.19"; //"127.0.0.1"; // local host
+    private string _ip =  "127.0.0.1"; // local host  //"192.168.1.19"
     private int _port = 0000; //Match server
     public int _myId = 0;
     public TCP _tcp;
@@ -39,10 +39,23 @@ public class Client : MonoBehaviour
 
     private void Start()
     {
+        sServer.ListenForHostBroadCasts();
+        sServer.OnHostIpFound += UpdateHostIP;
         _port = sNetworkManager._defaultPort;
         _tcp = new TCP();
         _udp = new UDP();
     }
+
+
+    private void UpdateHostIP(string address)
+    {
+        _ip = address;
+        UIManager.instance.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
+        ///As Soon as we hear about the first host, Stop caring. (Might have to change later if we swap things, or host DC's)
+
+        sServer.OnHostIpFound -= UpdateHostIP;
+    }
+
 
     public void ConnectToServer()
     {
