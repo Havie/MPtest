@@ -34,14 +34,14 @@ public static class sServer
         _udpListener = new UdpClient(_port);
         _udpListener.BeginReceive(UDPReceiveCallBack, null);
 
-        Debug.Log($"Server started on {_port}.");
+        Debug.Log($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
     }
 
     private static void TCPConnectCallback(IAsyncResult result)
     {
         TcpClient client = _tcpListener.EndAcceptTcpClient(result);
         _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
-        Debug.Log($"Incoming connection from {client.Client.RemoteEndPoint}...");
+        Debug.Log($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color>");
 
         for (int i = 1; i <= _maxPlayers; ++i)
         {
@@ -133,6 +133,30 @@ public static class sServer
             };
 
         Debug.Log("Initilalized Packets.");
+    }
+
+    private static bool LookLikeIpAddress(string s)
+    {
+        int count = 0;
+        for (int i = 0; i < s.Length - 1; i++)
+        {
+            var c = s[i];
+            if (c.Equals('.'))
+                ++count;
+        }
+        return count > 2;
+    }
+    public static string GetLocalIPAddress()
+    {
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (var ip in host.AddressList)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                return ip.ToString();
+            }
+        }
+        throw new Exception("No network adapters with an IPv4 address in the system!");
     }
 }
 

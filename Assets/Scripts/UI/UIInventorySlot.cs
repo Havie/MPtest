@@ -191,7 +191,7 @@ public class UIInventorySlot : MonoBehaviour
     }
     public void SendData()
     {
-        Debug.Log("   ....... CALLLED SEND DATA ........        ");
+        //Debug.Log("   ....... CALLLED SEND DATA ........        ");
         WorkStation myStation = GameManager.instance._workStation;
 
         if (_inUse )//&& WorkStation._stationFlow.ContainsKey((int)myStation._myStation))
@@ -202,8 +202,8 @@ public class UIInventorySlot : MonoBehaviour
             CheckKitting();
             RemoveItem(); // should always call RestoreDefault;
         }
-        else
-            Debug.LogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
+        //else
+           // Debug.LogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
     }
 
     /** Find and remove an order from kittings in orders */

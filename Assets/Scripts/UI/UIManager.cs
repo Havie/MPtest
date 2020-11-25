@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManager : MonoBehaviour
 {
 
@@ -24,11 +26,15 @@ public class UIManager : MonoBehaviour
 
     [Header("Scene Components")]
     public GameObject _inventoryCanvas;
-    public GameObject _screenCanvas;
+    public GameObject _networkingCanvas;
     public GameObject _normalInventory;
     public GameObject _kittingInventory;
     public Button _hand1;
     public Button _hand2;
+
+    [Header("Debugg Console")]
+    public Text _debugText;
+    public int _maxTextSize = 350;
 
     #region Init
     private void Awake()
@@ -41,9 +47,6 @@ public class UIManager : MonoBehaviour
             Destroy(this);
         }
     }
-
-    public void SetNormalMenu(GameObject inv) { _normalInventory = inv; }
-    public void SetKittingMenu(GameObject inv) { _kittingInventory = inv; }
 
     private void Start()
     {
@@ -58,17 +61,22 @@ public class UIManager : MonoBehaviour
             _loadingTxt.enabled = false;
             _tmpConfirmWorkStation.gameObject.SetActive(false);
             _workStationDropDown.SetActive(false);
-            Debug.Log(" confirm station off");
+            //Debug.Log(" confirm station off");
         }
         else
-            Debug.LogWarning( "(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
+            Debug.LogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
 
+        if (_inventoryCanvas && _networkingCanvas)
+        {
+            _inventoryCanvas.SetActive(false);
+            _networkingCanvas.SetActive(true);
+        }
+        else
+            Debug.LogWarning("(UIManager): Missing BeginLevel Canvases");
 
-
-       /* if (true) //TEMP 
-            SwitchToKitting(); */
+       // if (BroadcastListener.Instance)
+        //    BroadcastListener.Instance.OnHostIpFound += DisableHostButton;
     }
-
 
 
     private void EnablePanel(bool cond)
@@ -87,7 +95,7 @@ public class UIManager : MonoBehaviour
     public void Connected(bool cond)
     {
         Debug.LogWarning("connected to server =" + cond);
-        if(_loadingTxt)
+        if (_loadingTxt)
             StartCoroutine(ConnectionResult(cond));
     }
 
@@ -127,6 +135,9 @@ public class UIManager : MonoBehaviour
 
     public void BeginLevel(int itemLevel)
     {
+        Debug.Log("called BeginLevel");
+        //Setup the proper UI for our workStation
+        WorkStation ws = GameManager.instance._workStation;
 
         if (_tmpConfirmWorkStation && _loadingTxt && _workStationDropDown)
         {
@@ -135,34 +146,35 @@ public class UIManager : MonoBehaviour
             _workStationDropDown.SetActive(false);
         }
 
-        if (_inventoryCanvas && _screenCanvas)
+        if (_inventoryCanvas && _networkingCanvas)
         {
-            _inventoryCanvas.SetActive(true); //when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
-            _screenCanvas.SetActive(false);
+            _inventoryCanvas.SetActive(true); ///when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
+            _networkingCanvas.SetActive(false);
         }
         else
-            Debug.LogWarning("(UIManager): Missing BeginLevel Canvases");
+            Debug.LogWarning("(UIManager): <color=red>Missing BeginLevel Canvases </color>");
 
-        //Setup the proper UI for our workStation
-        WorkStation ws = GameManager.instance._workStation;
-       // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");
+
+        // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");
         if (ws.isKittingStation())
             SwitchToKitting();
 
-         // (TMP) Spawn Object and allow me to rotate it 
+        // (TMP) Spawn Object and allow me to rotate it 
         // BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
-         //bo.SetItemID(itemLevel);
+        //bo.SetItemID(itemLevel);
 
-        
+
     }
 
     private void SwitchToKitting()
     {
 
-        if (_normalInventory)
+        if (_normalInventory != null)
             _normalInventory.SetActive(false);
+        else
+            Debug.LogError("normal??");
 
-        if (_kittingInventory !=null)
+        if (_kittingInventory != null)
             _kittingInventory.SetActive(true);
 
         GameManager.instance._isStackable = true;
@@ -187,9 +199,10 @@ public class UIManager : MonoBehaviour
     }
     public void ConfirmWorkStation()
     {
-        int itemID= _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
+        int itemID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
         BeginLevel(itemID);
     }
+
 
     #endregion
 
@@ -201,30 +214,91 @@ public class UIManager : MonoBehaviour
         Button hand = index == 1 ? _hand1 : _hand2;
 
         Vector3 screenLoc = UserInput.Instance.GetScreenPointBasedOnWorldLoc(worldLoc);
-        hand.transform.position = screenLoc;
+        if (hand)
+            hand.transform.position = screenLoc;
 
     }
     public void ChangeHandSize(int index, bool smaller)
     {
         Button hand = index == 1 ? _hand1 : _hand2;
-
-        if (smaller)
-            hand.transform.localScale = Vector3.one * 0.75f;
-        else
-            hand.transform.localScale = Vector3.one ;
+        if (hand)
+        {
+            if (smaller)
+                hand.transform.localScale = Vector3.one * 0.75f;
+            else
+                hand.transform.localScale = Vector3.one;
+        }
     }
 
     public void ResetHand(int index)
     {
+
         Button hand = index == 1 ? _hand1 : _hand2;
-        hand.transform.position = new Vector3(0, 2000, 0);
+        if (hand)
+            hand.transform.position = new Vector3(0, 2000, 0);
     }
 
-    private void Update()
+    public void DebugLog(string text)
     {
-        if (Input.GetKeyDown(KeyCode.H))
-            HandManager.PrintQueue();
+        if (_debugText)
+        {
+            _debugText.text = _debugText.text + "\n" + text;
+            if (_debugText.text.Length > _maxTextSize)
+                _debugText.text = text;
+        }
+        Debug.Log(text);
+    }
+    public void DebugLogWarning(string text)
+    {
+        if (_debugText)
+        {
+            _debugText.text = _debugText.text + "\n" + text;
+            if (_debugText.text.Length > _maxTextSize)
+                _debugText.text = text;
+        }
+        Debug.LogWarning(text);
+    }
+    public void DebugLogError(string text)
+    {
+        if (_debugText)
+        {
+            _debugText.text = _debugText.text + "\n" + text;
+            if (_debugText.text.Length > _maxTextSize)
+                _debugText.text = text;
+        }
+        Debug.LogError(text);
+    }
+
+    public void ClearDebugLog()
+    {
+        if (_debugText)
+        {
+            _debugText.text = "";
+        }
+    }
+
+
+    public void DisableHostButton(string ignore)
+    {
+        if (_bHost)
+            _bHost.interactable = false;
+    }
+
+    public void BroadCastIp()
+    {
+       // BroadcastListener.Instance.BroadCastIP();
+    }
+
+    public void PrintMyIp()
+    {
+
+        DebugLog(sServer.GetLocalIPAddress());
     }
 
     #endregion
+
+    private void OnDisable()
+    {
+       // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
+    }
 }
