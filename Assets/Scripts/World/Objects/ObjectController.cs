@@ -27,7 +27,7 @@ public class ObjectController : MonoBehaviour
     [HideInInspector]
     public Transform _handLocation;
     private bool _pickedUp;
-    private int _handIndex=1;
+    public int _handIndex=1;
     private Vector3 _handOffset;
     private float _handStartZ;
 
@@ -69,7 +69,7 @@ public class ObjectController : MonoBehaviour
         if (_handLocation)
         {
             _handLocation.position = this.transform.position + _handOffset;
-            if (_pickedUp)
+            if (_pickedUp && !HandPreviewingMode)
             {
                 UIManager.instance.UpdateHandLocation(_handIndex, _handLocation.position);
             }
@@ -227,7 +227,7 @@ public class ObjectController : MonoBehaviour
 
         // ToggleCollider(false);
 
-        Debug.Log($"{this.gameObject.name} heard change moving");
+        //Debug.Log($"{this.gameObject.name} heard change moving");
 
     }
     public void ChangeAppearanceNormal()
@@ -241,7 +241,7 @@ public class ObjectController : MonoBehaviour
         TrySetChildren(1f);
         //ToggleCollider(true);
 
-        Debug.Log($"{this.gameObject.name} heard change normal");
+        //Debug.Log($"{this.gameObject.name} heard change normal");
     }
 
     public void ChangeAppearancePreview()
@@ -253,34 +253,65 @@ public class ObjectController : MonoBehaviour
         _meshRenderer.enabled = !cond;
     }
 
-    public void PickedUp()
+
+    #region Highlight Outline
+    public bool IsPickedUp => _pickedUp;
+    public bool IsHighlighted { get; private set; }
+
+    public bool HandPreviewingMode = false;
+
+    public void SetHighlighted(bool cond)
     {
         if (_highlightTrigger)
-            _highlightTrigger.Highlight(true);
+            _highlightTrigger.Highlight(cond);
 
         var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
         foreach (var item in childrenHighlights)
         {
-            item.Highlight(true);
+            item.Highlight(cond);
         }
 
-        HandManager.OrderChanged += UpdateHand;
+        IsHighlighted = cond;
+    }
+    public void PickedUp(int handIndex)
+    {
+        SetHighlighted(true);
+
+        //HandManager.OrderChanged += UpdateHand;
         _pickedUp = true;
-        _handIndex = 1;
+        _handIndex = handIndex;
+
+        Debug.Log($"Setting {this.gameObject.name} to handIndex{handIndex}");
+    }
+    public void ChangeHighlightAmount(float intensity)
+    {
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            effect.outline = intensity;
+
+            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
+            foreach (var item in childrenEffects)
+            {
+                item.outline = intensity;
+            }
+        }
     }
 
-    public void PutDown()
+    public float GetHighlightIntensity()
     {
         if (_highlightTrigger)
-            _highlightTrigger.Highlight(false);
-
-        var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
-        foreach (var item in childrenHighlights)
         {
-            item.Highlight(false);
+            var effect = this.GetComponent<HighlightEffect>();
+            return effect.outline;
         }
+        return 0;
+    }
+    public void PutDown()
+    {
+        SetHighlighted(false);
 
-        HandManager.OrderChanged -= UpdateHand;
+        //HandManager.OrderChanged -= UpdateHand;
         _pickedUp = false;
     }
     private void UpdateHand(Queue<ObjectController> queue)
@@ -297,7 +328,7 @@ public class ObjectController : MonoBehaviour
             }
         }
     }
-
+    #endregion
     public void ToggleRB(bool cond)
     {
         if (_rb)  ///This gets kind of weird with the subobjects

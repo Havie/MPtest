@@ -50,6 +50,9 @@ public class UserInput : MonoBehaviour
         //Fetch the Event System from the Scene
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
         _mainCamera = Camera.main;
+
+        if (_Raycaster == null)
+            _Raycaster = UIManager.instance._inventoryCanvas.GetComponent<GraphicRaycaster>();
     }
 
 
@@ -196,6 +199,7 @@ public class UserInput : MonoBehaviour
                 Vector3 rotation = _inputPos - _lastPos;
                 _rotationAmount += _currentSelection.DoRotation(rotation);
                 _lastPos = _inputPos;
+                HandleHighlightPreview();
                 return true;
             }
 
@@ -207,12 +211,45 @@ public class UserInput : MonoBehaviour
             {
                 TryPerformAction(QualityAction.eActionType.ROTATE);
                 TryPerformAction(QualityAction.eActionType.TAP);
+                CancelHighLightPreview();
             }
             _state = eState.FREE;
         }
 
         return false;
 
+    }
+
+    private void HandleHighlightPreview()
+    {
+        ///if its a current item being held in hand , return
+        if (_currentSelection.IsPickedUp)
+            return;
+
+        ///if its not highlighting turn it on 
+        if (!_currentSelection.IsHighlighted)
+        {
+            _currentSelection.SetHighlighted(true);
+            _currentSelection.ChangeHighlightAmount(0);
+        }
+
+        HandManager.StartToHandleIntensityChange(_currentSelection);
+
+    }
+
+    private void CancelHighLightPreview()
+    {
+        _currentSelection.HandPreviewingMode = false;
+
+        if (_currentSelection.IsPickedUp)
+            return;
+
+        HandManager.CancelIntensityChangePreview();
+
+        if (_currentSelection.IsHighlighted)
+            _currentSelection.SetHighlighted(false);
+
+        
     }
 
     /** Player is moving an object to or from inventory slot*/
