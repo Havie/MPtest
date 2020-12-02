@@ -15,9 +15,10 @@ public class UserInput : MonoBehaviour
 
     public ObjectController _currentSelection { get; private set; }
 
-    private float _pressTimeCURR = 0;
+    [HideInInspector]  //testing purposes
+    public float _pressTimeCURR = 0;
     private float _pressTimeMAX = 1.2f;
-    private float _holdLeniency = 1.5f;
+    private float _holdLeniency = 1.5f; 
     private Vector3 _inputPos; //current input loc
     private Vector3 _lastPos; //prior input loc
     private Vector3 _mOffset; //distance between obj in world and camera
@@ -43,6 +44,9 @@ public class UserInput : MonoBehaviour
             Destroy(this);
 
         _IsMobileMode = Application.isMobilePlatform;
+
+        if (_IsMobileMode)
+            _holdLeniency = 5f;
 
     }
     void Start()

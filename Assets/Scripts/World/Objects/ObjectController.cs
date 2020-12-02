@@ -281,7 +281,7 @@ public class ObjectController : MonoBehaviour
         _pickedUp = true;
         _handIndex = handIndex;
 
-        Debug.Log($"Setting {this.gameObject.name} to handIndex{handIndex}");
+       // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
     }
     public void ChangeHighlightAmount(float intensity)
     {
