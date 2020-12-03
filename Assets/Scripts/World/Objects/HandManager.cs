@@ -6,26 +6,130 @@ using UnityEngine;
 public static class HandManager
 {
     public static event Action<Queue<ObjectController>> OrderChanged = delegate { };
-    public static Queue<ObjectController> _objects = new Queue<ObjectController>();
-    private static int _handSize=2;
+
+    private static int _handSize = 2;
+    public static ObjectController[] _handArray = new ObjectController[_handSize];
+
+
+    private static float _outlineIntensity = 0.4f; /// little awkward to not use the cached color profile on the prefab profile
+    private static float _intensityChange = 0.01f;
+    private static bool _previewingAChange = false;
+    private static float _previewTime;
+
+
+    public static int CountPickedUpItems()
+    {
+        int count = 0;
+        for (int i = 0; i < _handSize; i++)
+        {
+            var item = _handArray[i];
+            if (item != null)
+                ++count;
+        }
+        return count;
+    }
+
+    public static bool HandContains(ObjectController newItem)
+    {
+        for (int i = 0; i < _handSize; i++)
+        {
+            var item = _handArray[i];
+            if (item == newItem)
+              return true;
+        }
+
+        return false;
+    }
 
     public static void PickUpItem(ObjectController item)
     {
-        if (_objects.Contains(item))
+        if (HandContains(item))
             return; ///might have to reorder queue instead if this is possible?
 
-        if (_objects.Count > _handSize - 1)
+        if (CountPickedUpItems() > 1)
+            DropItem(_handArray[1]);
+
+        _handArray[1] = _handArray[0];
+        _handArray[0] = item;
+
+        if (_handArray[1])
         {
-            //Debug.Log($"Size={_objects.Count} and next in Queue is= {_objects.Peek()}");
-            DropItem(_objects.Dequeue());
+            _handArray[1].PickedUp(2);
+            _handArray[1].HandPreviewingMode = false;
         }
-        Queue<ObjectController> cloned = CloneQueue();
-        OrderChanged(cloned);
+
+        _handArray[0].PickedUp(1);
+        item.HandPreviewingMode = false;
+
         item.ToggleRB(true);
-        item.PickedUp();
-        _objects.Enqueue(item);
+
+
         CheckHandPositions();
+        CancelIntensityChangePreview();
     }
+
+
+   
+    public static void StartToHandleIntensityChange(ObjectController potentialItemToBePickedUp)
+    {
+        var currentIntensity = potentialItemToBePickedUp.GetHighlightIntensity();
+        potentialItemToBePickedUp.ChangeHighlightAmount(currentIntensity + _intensityChange);
+
+        if (CountPickedUpItems() < 2)
+            return;
+
+        ObjectController ItemToBeDroppedNext = _handArray[1];
+        var currentIntensity2 = ItemToBeDroppedNext.GetHighlightIntensity();
+        ItemToBeDroppedNext.ChangeHighlightAmount(currentIntensity2 - _intensityChange);
+
+
+
+        ///We could also make the HandObject start to move towards this new item
+        if (!_previewingAChange)
+        {
+            SetHandPreviewMode(true);
+            _previewTime = 0;
+        }
+       ///weight is used to get the item to be closer to the center of new obj or hand loc in bottom corner. Just looks a bit better if stuff is fallen over
+        float weight = Vector3.Distance(ItemToBeDroppedNext.transform.position, potentialItemToBePickedUp.transform.position);
+        Vector3 avgPoint = Vector3.Lerp( potentialItemToBePickedUp._handLocation.position, potentialItemToBePickedUp.transform.position, weight);
+        Vector3 previewPos = Vector3.Lerp( ItemToBeDroppedNext._handLocation.position, avgPoint, _previewTime);
+        UIManager.instance.UpdateHandLocation(2, previewPos);
+        _previewTime += Time.deltaTime;
+
+    }
+
+
+
+    public static void CancelIntensityChangePreview()
+    {
+        if (CountPickedUpItems()==0)
+            return;
+        if(_previewingAChange)
+            SetHandPreviewMode(false);
+    }
+
+    private static void SetHandPreviewMode(bool cond)
+    {
+        _previewingAChange = cond;
+        if (CountPickedUpItems() == 1)
+        {
+            _handArray[0].HandPreviewingMode = cond;
+            _handArray[0].ChangeHighlightAmount(_outlineIntensity);
+
+        }
+        else if (CountPickedUpItems() == 2)
+        {
+            _handArray[0].HandPreviewingMode = cond;
+            _handArray[0].ChangeHighlightAmount(_outlineIntensity);
+            _handArray[1].HandPreviewingMode = cond;
+            _handArray[1].ChangeHighlightAmount(_outlineIntensity);
+        }
+        else
+            _previewingAChange = false;
+
+    }
+
 
     public static void DropItem(ObjectController item)
     {
@@ -33,30 +137,29 @@ public static class HandManager
         {
             item.ToggleRB(false);
             item.PutDown();
-            if(_objects.Contains(item))
+           // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
+            item.HandPreviewingMode = false;
+            if (_handArray[0] == item)
             {
-                var qItem = _objects.Dequeue();
-                if (qItem == item)
-                {
-                    return;
-                }
-                else
-                {
-                    _objects.Clear();
-                    _objects.Enqueue(qItem); ///our queue can only have two items so resetting the order is ez
-                }
-                Queue<ObjectController> cloned = CloneQueue() ;
-                OrderChanged(cloned);
+                ///shift other item over to slot 0
+                _handArray[0] = _handArray[1];
+                _handArray[0].PickedUp(1); ///reset our hand index
+                _handArray[1] = null;
+            }
+            else if(_handArray[1] == item)
+            {
+                _handArray[1] = null;
             }
 
             CheckHandPositions();
+            CancelIntensityChangePreview();
         }
 
     }
 
 
     /// <summary>
-    /// If object is about to be deleted use this
+    /// If object is about to be deleted use this instead 
     /// </summary>
     /// <param name="item"></param>
     public static void RemoveDeletedItem(ObjectController item)
@@ -64,61 +167,35 @@ public static class HandManager
         if (item)
         {
             item.PutDown();
-            if (_objects.Contains(item))
+            if (_handArray[0] == item)
             {
-                var qItem = _objects.Dequeue();
-                if (qItem == item)
-                {
-                    return;
-                }
-                else
-                {
-                    _objects.Clear();
-                    _objects.Enqueue(qItem);
-                }
-                Queue<ObjectController> cloned = CloneQueue();
-                OrderChanged(cloned);
+                _handArray[0] = _handArray[1];
+                _handArray[0].PickedUp(1); ///reset our hand index
+                _handArray[1] = null;
             }
-        }
+            else if (_handArray[1] == item)
+            {
+                _handArray[1] = null;
+            }
 
-        CheckHandPositions();
+            CheckHandPositions();
+        }
     }
+
+
 
     public static void PrintQueue()
     {
-        Queue<ObjectController> objects2 = new Queue<ObjectController>();
-        string q = "qList=  ";
-        while(_objects.Count>0)
-        {
-            var item = _objects.Dequeue();
-            q += " item:" + item.name;
-            objects2.Enqueue(item);
-        }
-
-        _objects = objects2;
+        string q = $"Hand[0] = { _handArray[0]} , Hand[1] = { _handArray[1]} ";
         Debug.LogWarning(q);
     }
 
     public static void CheckHandPositions()
     {
-        if (_objects.Count < 2)
+        if (CountPickedUpItems() < 2)
             UIManager.instance.ResetHand(2);
-        if (_objects.Count < 1)
+        if (CountPickedUpItems() < 1)
             UIManager.instance.ResetHand(1);
-    }
-
-    private static Queue<ObjectController> CloneQueue()
-    {
-        Queue<ObjectController> objects1 = new Queue<ObjectController>();
-        Queue<ObjectController> objects2 = new Queue<ObjectController>();
-        while (_objects.Count > 0)
-        {
-            var item = _objects.Dequeue();
-            objects1.Enqueue(item);
-            objects2.Enqueue(item);
-        }
-        _objects = objects1;
-        return objects2;
     }
 
 

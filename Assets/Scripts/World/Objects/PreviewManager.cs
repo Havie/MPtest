@@ -9,12 +9,14 @@ public static class PreviewManager
     private static GameObject _previewItem;
     public static bool _inPreview { get; private set; }
 
+    private static bool _inMiddleOfClear = false;
+
 
     public static void ShowPreview(ObjectController controller, ObjectController otherController, int createdID)
     {
         if(_inPreview)
         {
-            Debug.LogError("trying to preview again too fast ??");
+            Debug.LogWarning("trying to preview again too fast ??");
             return;
         }
 
@@ -49,6 +51,13 @@ public static class PreviewManager
     {
         //Debug.Log("....called Confirm Creation ");
 
+        if (_inMiddleOfClear)
+        {
+            Debug.LogWarning("trying to ConfirmCreation again too fast ??");
+            return;
+        }
+        _inMiddleOfClear = true;
+
         List<ObjectQuality> qualities = new List<ObjectQuality>();
 
         foreach (var item in _previewedItems)
@@ -80,6 +89,7 @@ public static class PreviewManager
         }
 
         ResetSelf();
+        _inMiddleOfClear = false;
     }
 
     private static void ResetSelf()

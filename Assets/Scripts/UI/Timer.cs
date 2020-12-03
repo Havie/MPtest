@@ -15,6 +15,9 @@ public class Timer : MonoBehaviour
     [SerializeField] Color _cLow;
     [SerializeField] Color _cBad;
 
+
+    private bool test=true;
+
     private void Awake()
     {
         if (_text == null)
@@ -28,11 +31,19 @@ public class Timer : MonoBehaviour
        
     }
 
+
     private void FixedUpdate()
     {
-        _time -= Time.fixedDeltaTime;
-        UpdateTime(_time);
-        CheckTimeColor();
+        if (!test)
+        {
+            _time -= Time.fixedDeltaTime;
+            UpdateTime(_time);
+            CheckTimeColor();
+        }
+        else
+        {
+            _text.text=UserInput.Instance._pressTimeCURR.ToString();
+        }
     }
 
     private void UpdateTime(float time)
