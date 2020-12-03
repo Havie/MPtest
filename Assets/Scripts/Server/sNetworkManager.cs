@@ -15,23 +15,31 @@ public class sNetworkManager : MonoBehaviour
             instance = this;
         else if (instance != this)
         {
-            Debug.LogWarning("Duplicate Clients, destroying");
+            Debug.LogWarning("Duplicate NetworkManagers, destroying");
             Destroy(this);
         }
     }
 
     private void Start()
     {
-        //ToDo increase port # if failed or use scriptable Obj 
-#if UNITY_EDITOR
+    ///Is it possible this port fails? If so we need to iterate through ports and tell others
+    #if UNITY_EDITOR
         sServer.Start(6, _defaultPort); // Find unused port 
-#else
+    #else
          sServer.Start(6, _defaultPort); // Find unused port 
-#endif
+    #endif
     }
 
-    public sPlayer InstantiatePlayer()
+    void BroadCastGameManagerChanges()
     {
-        return Instantiate(_playerPrefab, Vector3.zero, Quaternion.identity).GetComponent<sPlayer>();
+
     }
+
+
+    #region oldTutorialCode
+    //public sPlayer InstantiatePlayer()
+    //{
+    //    return Instantiate(_playerPrefab, Vector3.zero, Quaternion.identity).GetComponent<sPlayer>();
+    //}
+    #endregion
 }

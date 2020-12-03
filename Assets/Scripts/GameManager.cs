@@ -12,8 +12,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Modifiers")]
     #region Game Modifiers
-    public bool _autoSend = true;
+    public int _orderFrequency = 3;
     public int _batchSize = 10;
+    public bool _autoSend = true;
     public bool _addChaotic = false;
     public bool _isStackable = false;
     public bool _workStationArrangement = false;
@@ -21,10 +22,9 @@ public class GameManager : MonoBehaviour
     public bool _decreaseChangeOverTime = false;
     public bool _HUDManagement = false;
     public bool _HostDefectPausing = false;
-    public int _orderFrequency = 3;
 
     #endregion
-
+ 
 
     [Header("Components")]
     [HideInInspector] public WorkStation _workStation;
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UIInventoryManager _invSTATION;
     [HideInInspector] public UIKitting _invKITTING;
     [SerializeField] WorkStationManager _batchWorkStationManager;
-    [SerializeField] WorkStationManager _pulltWorkStationManager;
+    [SerializeField] WorkStationManager _pullWorkStationManager;
 
     public WorkStationManager CurrentWorkStationManager { get; private set; }
 
@@ -81,9 +81,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     private void DetermineCurrentWorkStation()
     {
-        CurrentWorkStationManager = _batchSize > 1 ? _batchWorkStationManager : _pulltWorkStationManager;
+        CurrentWorkStationManager = _batchSize > 1 ? _batchWorkStationManager : _pullWorkStationManager;
     
     }
     /** Work station is used to identify what items are produced here and where items are sent to */
@@ -94,7 +95,23 @@ public class GameManager : MonoBehaviour
     public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
     public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
     public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
-    public void SetInventroyKitting(UIKitting inv) { _invKITTING = inv; }
+    public void SetInventoryKitting(UIKitting inv) { _invKITTING = inv; }
+
+    #region Setters for Host Changes
+    public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
+    public void BatchChanged(IntWrapper val) { _batchSize = val._value; }
+    public void AutoSendChanged(bool cond) { _autoSend = cond; }
+    public void AddChaoticChanged(bool cond) { _addChaotic = cond; }
+    public void IsStackableChanged(bool cond) { _isStackable = cond; }
+    public void WorkStationArrangementChanged(bool cond) { _workStationArrangement = cond; }
+    public void WorkStationTaskChanged(bool cond) { _workStationTaskChanging = cond; }
+    public void DecreasedChangedOverTimeChanged(bool cond) { _decreaseChangeOverTime = cond; }
+    public void HUDManagementChanged(bool cond) { _HUDManagement = cond; }
+    public void HostDefectPausingChanged(bool cond) { _HostDefectPausing = cond; }
+
+    #endregion
+
+
 
 
 

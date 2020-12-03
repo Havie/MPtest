@@ -51,6 +51,7 @@ public class sServerSend
 
     public static void Welcome(int toClient, string msg)
     {
+        ///TODO Write all the GameManager DATA:
         using (sPacket packet = new sPacket((int)ServerPackets.welcome)) //Auto call packet.Dispose when done "UsingBlock"
         {
             packet.Write(msg);

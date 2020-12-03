@@ -193,25 +193,7 @@ public class sClient
         _workStation = workStation;
     }
 
-    public void SendIntoGame(string playerName)
-    {
-        
-        _player = sNetworkManager.instance.InstantiatePlayer();
-        _player.Init(_id, playerName);
-        //Tell the other players about new player
-        foreach (sClient client in sServer._clients.Values)
-        {
-            if (client._player != null)
-            {
-                if (client._id != _id)
-                {
-                    sServerSend.SpawnPlayer(_id, client._player);
-                }
-                //including urself
-                sServerSend.SpawnPlayer(client._id, _player);
-            }
-        } 
-    }
+   
     public void SendItem(int itemId)
     {
         sServerSend.SendItem(_id, itemId);
@@ -226,5 +208,28 @@ public class sClient
         _tcp.Disconnect();
         _udp.Disconnect();
     }
+
+
+    #region Old TUtorialCode
+    //public void SendIntoGame(string playerName)
+    //{
+
+    //    _player = sNetworkManager.instance.InstantiatePlayer();
+    //    _player.Init(_id, playerName);
+    //    //Tell the other players about new player
+    //    foreach (sClient client in sServer._clients.Values)
+    //    {
+    //        if (client._player != null)
+    //        {
+    //            if (client._id != _id)
+    //            {
+    //                sServerSend.SpawnPlayer(_id, client._player);
+    //            }
+    //            //including urself
+    //            sServerSend.SpawnPlayer(client._id, _player);
+    //        }
+    //    }
+    //}
+    #endregion
 
 }

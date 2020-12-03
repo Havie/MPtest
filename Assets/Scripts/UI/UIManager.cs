@@ -98,7 +98,9 @@ public class UIManager : MonoBehaviour
 
     public void Connected(bool cond)
     {
-        Debug.LogWarning("connected to server =" + cond);
+        if(!cond)
+            Debug.LogWarning($"connected to server = <color=red>{cond}</color>");
+
         if (_loadingTxt)
             StartCoroutine(ConnectionResult(cond));
     }
@@ -208,6 +210,11 @@ public class UIManager : MonoBehaviour
     }
 
 
+    public void SwitchToHost()
+    {
+
+    }
+
     #endregion
 
 
@@ -242,6 +249,42 @@ public class UIManager : MonoBehaviour
             hand.transform.position = new Vector3(0, 2000, 0);
     }
 
+
+    public void DisableHostButton(string ignore)
+    {
+        if (_bHost)
+            _bHost.interactable = false;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+            BroadCastIp();
+    }
+
+    public void BroadCastIp()
+    {
+        // BroadcastListener.Instance.BroadCastIP();
+        sServer.BroadCastIP();
+    }
+
+    public void PrintMyIp()
+    {
+
+        DebugLog(sServer.GetLocalIPAddress());
+    }
+
+    #endregion
+
+    private void OnDisable()
+    {
+        // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
+    }
+
+
+
+
+    #region Debugger
     public void DebugLog(string text)
     {
         if (_debugText)
@@ -302,35 +345,5 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
-    public void DisableHostButton(string ignore)
-    {
-        if (_bHost)
-            _bHost.interactable = false;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-            BroadCastIp();
-    }
-
-    public void BroadCastIp()
-    {
-        // BroadcastListener.Instance.BroadCastIP();
-        sServer.BroadCastIP();
-    }
-
-    public void PrintMyIp()
-    {
-
-        DebugLog(sServer.GetLocalIPAddress());
-    }
-
     #endregion
-
-    private void OnDisable()
-    {
-        // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
-    }
 }

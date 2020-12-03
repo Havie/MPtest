@@ -11,6 +11,7 @@ public class ClientHandle : MonoBehaviour
         string msg = packet.ReadString();
         int myId = packet.ReadInt();
 
+        ///TODO Read In Game Manager Vars
         Debug.Log($"Message from server: { msg}");
         Client.instance._myId = myId;
         ClientSend.WelcomeReceived();
