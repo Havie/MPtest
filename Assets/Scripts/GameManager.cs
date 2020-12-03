@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
+[DefaultExecutionOrder(-1000000)] ///load early to beat UIManager 
 public class GameManager : MonoBehaviour
 {
     //singleton
     public static GameManager instance { get; private set; }
 
+    [Header("Game Modifiers")]
     #region Game Modifiers
     public bool _autoSend = true;
     public int _batchSize = 10;
@@ -23,11 +26,16 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
-    public WorkStation _workStation;
-    public UIInventoryManager _invIN;
-    public UIInventoryManager _invOUT;
-    public UIInventoryManager _invSTATION;
-    public UIKitting _invKITTING;
+    [Header("Components")]
+    [HideInInspector] public WorkStation _workStation;
+    [HideInInspector] public UIInventoryManager _invIN;
+    [HideInInspector] public UIInventoryManager _invOUT;
+    [HideInInspector] public UIInventoryManager _invSTATION;
+    [HideInInspector] public UIKitting _invKITTING;
+    [SerializeField] WorkStationManager _batchWorkStationManager;
+    [SerializeField] WorkStationManager _pulltWorkStationManager;
+
+    public WorkStationManager CurrentWorkStationManager { get; private set; }
 
     private bool _isMobileMode;
 
@@ -42,6 +50,7 @@ public class GameManager : MonoBehaviour
 
         MobileSetUp();
         AutomaticChecks();
+        DetermineCurrentWorkStation(); ///have to call on Awake for test scenes not run by networking UI
 
         //Test and see if this works for all scripts?
 #if UNITY_EDITOR
@@ -71,16 +80,22 @@ public class GameManager : MonoBehaviour
             _addChaotic = false;
         }
     }
+
+    private void DetermineCurrentWorkStation()
+    {
+        CurrentWorkStationManager = _batchSize > 1 ? _batchWorkStationManager : _pulltWorkStationManager;
+    
+    }
     /** Work station is used to identify what items are produced here and where items are sent to */
     public void AssignWorkStation(WorkStation station)
     {
         _workStation = station;
-        //BuildableObject.Instance.SetLevel((int)_workStation._myStation); // better to do this elsewhere when level starts , driven from UIManager
     }
     public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
     public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
     public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
     public void SetInventroyKitting(UIKitting inv) { _invKITTING = inv; }
+
 
 
     private void LinqTest()

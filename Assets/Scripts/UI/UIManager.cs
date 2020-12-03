@@ -11,23 +11,24 @@ public class UIManager : MonoBehaviour
 
     public static UIManager instance;
 
+
+    [Header("Networking Components")]
+    public GameObject _networkingCanvas;
     [SerializeField] GameObject _startMenu;
     public Button _bConnect;
     public Button _bHost;
     public InputField _usernameField;
     public Text _loadingTxt;
     public GameObject _workStationDropDown;
-
     public Button _tmpConfirmWorkStation;
     public GameObject _tmpObjectPREFAB;
 
 
-    [Header("Project Components")]
+    [HideInInspector]
     public WorkStationManager _workstationManager;
 
-    [Header("Scene Components")]
+    [Header("Game Components")]
     public GameObject _inventoryCanvas;
-    public GameObject _networkingCanvas;
     public GameObject _normalInventory;
     public GameObject _kittingInventory;
     public Button _hand1;
@@ -51,6 +52,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        _workstationManager = GameManager.instance.CurrentWorkStationManager;
+
         //Set up workstation selection
         if (_workstationManager != null && _workStationDropDown)
             _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
