@@ -3,9 +3,24 @@ guid: 1ca528f2809191d4cb59b92bd54a331c
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Desk Frame
+    second: {fileID: 2100000, guid: 298d03e612a695946bb421c6d420c551, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Desk Peg Board
+    second: {fileID: 2100000, guid: 298d03e612a695946bb421c6d420c551, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Desk Top
+    second: {fileID: 2100000, guid: 298d03e612a695946bb421c6d420c551, type: 2}
   materials:
-    materialImportMode: 0
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1

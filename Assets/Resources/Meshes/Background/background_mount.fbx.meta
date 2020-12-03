@@ -3,9 +3,14 @@ guid: 6475ee903308a1541b52fd51bbcc0f58
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mount
+    second: {fileID: 2100000, guid: 298d03e612a695946bb421c6d420c551, type: 2}
   materials:
-    materialImportMode: 0
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1

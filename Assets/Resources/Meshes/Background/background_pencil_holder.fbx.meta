@@ -3,9 +3,14 @@ guid: b1193530c11e9af498f4046f8e64164c
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pencil Holder
+    second: {fileID: 2100000, guid: 298d03e612a695946bb421c6d420c551, type: 2}
   materials:
-    materialImportMode: 0
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
