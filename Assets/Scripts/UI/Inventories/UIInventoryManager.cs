@@ -387,6 +387,8 @@ public class UIInventoryManager : MonoBehaviour
     /** When an item gets assigned to the batch tell the manager*/
     public void CheckIfBatchIsReady()
     {
+       ///TMP off
+       /*
         foreach (var slot in _slots)
         {
             if (!slot.GetInUse())
@@ -396,6 +398,7 @@ public class UIInventoryManager : MonoBehaviour
                 return;
             }
         }
+       */
         //If all buttons hold the correct items , we can send
         if (_optionalSendButton)
             _optionalSendButton.interactable = true;

@@ -10,8 +10,8 @@ public class Client : MonoBehaviour
     public static Client instance;
     public static int _dataBufferSize = 4096;
 
-    public string _ip = "127.0.0.1"; // local host
-    private int _port = 26951; //Match server
+    private string _ip =  "127.0.0.1"; // local host  //"192.168.1.19"
+    private int _port = 0000; //Match server
     public int _myId = 0;
     public TCP _tcp;
     public UDP _udp;
@@ -39,14 +39,28 @@ public class Client : MonoBehaviour
 
     private void Start()
     {
+        sServer.ListenForHostBroadCasts();
+        sServer.OnHostIpFound += UpdateHostIP;
+        _port = sNetworkManager._defaultPort;
         _tcp = new TCP();
         _udp = new UDP();
     }
 
+
+    private void UpdateHostIP(string address)
+    {
+        _ip = address;
+        UIManager.instance.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
+        ///As Soon as we hear about the first host, Stop caring. (Might have to change later if we swap things, or host DC's)
+
+        sServer.OnHostIpFound -= UpdateHostIP;
+    }
+
+
     public void ConnectToServer()
     {
         InitClientData();
-        _tcp.Connect();
+        _tcp.Connect(this);
        //Figure out if the connection succeeded or not 
         ThreadManager.ExecuteOnMainThread(() =>
         {
@@ -57,6 +71,9 @@ public class Client : MonoBehaviour
     IEnumerator ConnectionCheck(int seconds)
     {
         yield return new WaitForSeconds(seconds);
+
+        Debug.LogWarning($"Connection comparison <color=green>{_isConnected}</color>  <color=blue>{_tcp._socket.Connected}</color>");
+
         _isConnected = _tcp._socket.Connected;
         UIManager.instance.Connected(_isConnected);
     }
@@ -67,9 +84,11 @@ public class Client : MonoBehaviour
         private NetworkStream _stream;
         private sPacket _receivedData; 
         private byte[] _receivedBuffer;
+        private Client _client;
 
-        public void Connect()
+        public void Connect(Client client)
         {
+            _client = client;
             _socket = new TcpClient
             {
                 ReceiveBufferSize = _dataBufferSize,
@@ -89,7 +108,7 @@ public class Client : MonoBehaviour
         private void ConnectCallback(IAsyncResult result)
         {
             _socket.EndConnect(result);
-
+            _client._isConnected = _socket.Connected;
             if(!_socket.Connected)
             {
                 return;

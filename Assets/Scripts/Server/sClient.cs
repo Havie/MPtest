@@ -114,6 +114,8 @@ public class sClient
                         int packetOperation = packet.ReadInt();
                         sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate);
                         _delegate?.Invoke(_id, packet);
+
+                        Debug.Log("HandleData 1");
                     }
                 });
 
@@ -174,6 +176,8 @@ public class sClient
                     int packetOperation = packet.ReadInt();
                     if(sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate))
                       _delegate?.Invoke(packetOperation, packet);
+
+                    Debug.Log("HandleData 2");
                 }
             });
         }

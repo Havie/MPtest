@@ -5,7 +5,7 @@ using UnityEngine;
 public class sNetworkManager : MonoBehaviour
 {
     public static sNetworkManager instance { get; private set; }
-    public int _defaultPort = 26951;
+    public static int _defaultPort = 26951;
 
     public GameObject _playerPrefab;
 
