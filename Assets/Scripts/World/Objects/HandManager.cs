@@ -143,7 +143,8 @@ public static class HandManager
             {
                 ///shift other item over to slot 0
                 _handArray[0] = _handArray[1];
-                _handArray[0].PickedUp(1); ///reset our hand index
+                if (_handArray != null)
+                    _handArray[0].PickedUp(1); ///reset our hand index
                 _handArray[1] = null;
             }
             else if(_handArray[1] == item)
@@ -167,16 +168,16 @@ public static class HandManager
         if (item)
         {
             item.PutDown();
-            if (_handArray[0] == item)
+           // if (_handArray[0] == item)
             {
-                _handArray[0] = _handArray[1];
-                _handArray[0].PickedUp(1); ///reset our hand index
+              ///Seems we just need to remove everything when we make a new object now
+                _handArray[0] = null;
                 _handArray[1] = null;
             }
-            else if (_handArray[1] == item)
-            {
-                _handArray[1] = null;
-            }
+            //else if (_handArray[1] == item)
+            //{
+            //    _handArray[1] = null;
+            //}
 
             CheckHandPositions();
         }

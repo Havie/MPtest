@@ -99,8 +99,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myID: 2
   _rotationAxis: 3
-  _canFollow: 0
+  _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!65 &1427891985832586209
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -228,6 +231,9 @@ MonoBehaviour:
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!114 &7447148357142630330
 MonoBehaviour:
   m_ObjectHideFlags: 0

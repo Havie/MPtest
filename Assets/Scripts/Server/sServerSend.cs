@@ -56,6 +56,18 @@ public class sServerSend
         {
             packet.Write(msg);
             packet.Write(toClient);
+
+            packet.Write(GameManager.instance._orderFrequency);
+            packet.Write(GameManager.instance._batchSize);
+            packet.Write(GameManager.instance._autoSend);
+            packet.Write(GameManager.instance._addChaotic);
+            packet.Write(GameManager.instance._isStackable);
+            packet.Write(GameManager.instance._workStationArrangement);
+            packet.Write(GameManager.instance._workStationTaskChanging);
+            packet.Write(GameManager.instance._HUDManagement);
+            packet.Write(GameManager.instance._HostDefectPausing);
+
+
             SendTCPData(toClient, packet);
         }
     }

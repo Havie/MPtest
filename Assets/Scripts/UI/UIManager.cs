@@ -52,13 +52,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        _workstationManager = GameManager.instance.CurrentWorkStationManager;
-
-        //Set up workstation selection
-        if (_workstationManager != null && _workStationDropDown)
-            _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
-        else
-            Debug.LogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this should be fine) ");
+        SetUpWorkStationDropDownMenu(); ///Will need to be called again when client, but for non network scene need a call here as well
 
         if (_loadingTxt && _tmpConfirmWorkStation && _workStationDropDown)
         {
@@ -82,6 +76,19 @@ public class UIManager : MonoBehaviour
         sServer.OnHostIpFound += DisableHostButton;
     }
 
+
+    private void SetUpWorkStationDropDownMenu()
+    {
+        DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
+        _workstationManager = GameManager.instance.CurrentWorkStationManager;
+
+        //Set up workstation selection
+        if (_workstationManager != null && _workStationDropDown)
+            _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
+        else
+            Debug.LogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
+
+    }
 
     private void EnablePanel(bool cond)
     {
@@ -112,6 +119,7 @@ public class UIManager : MonoBehaviour
             _loadingTxt.text = "Connection Success!";
             yield return new WaitForSeconds(0.5f);
             _loadingTxt.enabled = false;
+            SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
             DisplaySelectWorkStation();
         }
         else
@@ -132,6 +140,7 @@ public class UIManager : MonoBehaviour
             _loadingTxt.enabled = true;
             _loadingTxt.text = "Select Work Station";
             _workStationDropDown.SetActive(true);
+            Debug.LogWarning("DISPLAYED the Dropdown");
         }
         else
             Debug.LogWarning("(UIManager): Missing DisplaySelectWorkStation objects");

@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    ///Needs to be called everytime the batch size changes, to keep as current as possible
     private void DetermineCurrentWorkStation()
     {
         CurrentWorkStationManager = _batchSize > 1 ? _batchWorkStationManager : _pullWorkStationManager;
@@ -92,6 +92,21 @@ public class GameManager : MonoBehaviour
     {
         _workStation = station;
     }
+
+    ///Things are reliant on batchsize
+    private void ValidateBatchSize(int amnt)
+    {
+        _batchSize = amnt;
+        ValidateAutoSend();
+        DetermineCurrentWorkStation();
+    }
+    ///We need to base auto send off batch
+    private void ValidateAutoSend()
+    {
+        if (_batchSize == 1)
+            _autoSend = true;
+    }
+
     public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
     public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
     public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
@@ -99,8 +114,8 @@ public class GameManager : MonoBehaviour
 
     #region Setters for Host Changes
     public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
-    public void BatchChanged(IntWrapper val) { _batchSize = val._value; }
-    public void AutoSendChanged(bool cond) { _autoSend = cond; }
+    public void BatchChanged(IntWrapper val) { ValidateBatchSize(val._value); }
+    public void AutoSendChanged(bool cond) { _autoSend = cond; ValidateAutoSend(); }
     public void AddChaoticChanged(bool cond) { _addChaotic = cond; }
     public void IsStackableChanged(bool cond) { _isStackable = cond; }
     public void WorkStationArrangementChanged(bool cond) { _workStationArrangement = cond; }
