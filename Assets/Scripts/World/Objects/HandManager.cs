@@ -75,6 +75,7 @@ public static class HandManager
         ///start to fade in next item to be picked up
         var currentIntensity = potentialItemToBePickedUp.GetHighlightIntensity();
         potentialItemToBePickedUp.ChangeHighlightAmount(currentIntensity + _intensityChange);
+        potentialItemToBePickedUp.ChangeHighLightColor(BuildableObject.Instance._colorHand1);
 
         int numItemsInhand = CountPickedUpItems();
 
