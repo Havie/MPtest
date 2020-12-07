@@ -5,12 +5,13 @@ using UnityEngine;
 public class sServerHandle
 {
 
+    ///This is just a callback to verify the client connected properly
     public static void WelcomeReceived(int fromClient, sPacket packet)
     {
         int clientIdCheck = packet.ReadInt();
         string username = packet.ReadString();
 
-        Debug.Log($"{sServer._clients[fromClient]._tcp._socket.Client.RemoteEndPoint} connected successfully and is now player {fromClient}");
+        Debug.Log($"<color=blue>{sServer._clients[fromClient]._tcp._socket.Client.RemoteEndPoint} </color> <color=green>{username}</color> connected successfully and is now player {fromClient}");
         if (fromClient != clientIdCheck)
         {
             Debug.Log($"Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
