@@ -71,9 +71,7 @@ public class Client : MonoBehaviour
     IEnumerator ConnectionCheck(int seconds)
     {
         yield return new WaitForSeconds(seconds);
-
-        Debug.LogWarning($"Connection comparison <color=green>{_isConnected}</color>  <color=blue>{_tcp._socket.Connected}</color>");
-
+        //Debug.LogWarning($"Connection comparison <color=green>{_isConnected}</color>  <color=blue>{_tcp._socket.Connected}</color>");
         _isConnected = _tcp._socket.Connected;
         UIManager.instance.Connected(_isConnected);
     }

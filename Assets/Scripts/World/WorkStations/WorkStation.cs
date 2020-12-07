@@ -16,10 +16,11 @@ public class WorkStation : ScriptableObject
         {2,1}
       };*/
 
-    public enum eStation { SELF, KITTING, TWO, THREE, FOUR, FIVE, SHIPPING, NONE};
+    public enum eStation { SELF, ONE, TWO, THREE, FOUR, FIVE, SHIPPING, NONE};
     public eStation _myStation;
     public eStation _sendOutputToStation;
-    public string _stationName =>_myStation.ToString();
+    public string _myStationName = "";
+    public string _stationName => _myStationName;
 
 
     public List<Task> _tasks;
