@@ -72,15 +72,33 @@ public static class HandManager
    
     public static void StartToHandleIntensityChange(ObjectController potentialItemToBePickedUp)
     {
+        ///start to fade in next item to be picked up
         var currentIntensity = potentialItemToBePickedUp.GetHighlightIntensity();
         potentialItemToBePickedUp.ChangeHighlightAmount(currentIntensity + _intensityChange);
 
-        if (CountPickedUpItems() < 2)
+        int numItemsInhand = CountPickedUpItems();
+
+        if (numItemsInhand < 1)
+            return;
+        ///start to fade the first item in hand to orange 
+        ObjectController firstItemInHand = _handArray[0];
+        var currentColor = firstItemInHand.GetHighLightColor();
+        var orangeColor = BuildableObject.Instance._colorHand2;
+        firstItemInHand.ChangeHighLightColor(Color.Lerp(currentColor, orangeColor, 0.05f));
+        ///Basing this off of the pickup times from UserInput doesnt look as good, the colors are too close
+        /// so the change happens to fast, might as well just use 0.05f constant as it looks visually appealing
+        // (UserInput.Instance._pressTimeCURR/UserInput.Instance._pressTimeMAX)/2));
+
+
+        if (numItemsInhand < 2)
             return;
 
+        ///start to fade out next item to be dropped
         ObjectController ItemToBeDroppedNext = _handArray[1];
         var currentIntensity2 = ItemToBeDroppedNext.GetHighlightIntensity();
         ItemToBeDroppedNext.ChangeHighlightAmount(currentIntensity2 - _intensityChange);
+
+ 
 
 
 
@@ -116,6 +134,7 @@ public static class HandManager
         {
             _handArray[0].HandPreviewingMode = cond;
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
+            _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
 
         }
         else if (CountPickedUpItems() == 2)
@@ -124,6 +143,7 @@ public static class HandManager
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
             _handArray[1].HandPreviewingMode = cond;
             _handArray[1].ChangeHighlightAmount(_outlineIntensity);
+            _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
         }
         else
             _previewingAChange = false;

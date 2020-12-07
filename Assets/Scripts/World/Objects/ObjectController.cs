@@ -14,7 +14,7 @@ public class ObjectController : MonoBehaviour
     ///effect stuff
     private Vector3 _startSize;
     private MeshRenderer _meshRenderer;
-    private MeshRenderer[] _childrenMeshRenderers;
+    private MeshRenderer[] _childrenMeshRenderers = new MeshRenderer[0];
     private HighlightTrigger _highlightTrigger;
     ///Components
     private Rigidbody _rb;
@@ -201,8 +201,9 @@ public class ObjectController : MonoBehaviour
 
     private void TrySetChildren(float opacity)
     {
-        if (_parent != null)
+        if (_parent != null )
             return; /// we are a child so our parent will handle this
+
 
         foreach (var mr in _childrenMeshRenderers)
         {
@@ -285,9 +286,16 @@ public class ObjectController : MonoBehaviour
         //HandManager.OrderChanged += UpdateHand;
         _pickedUp = true;
         _handIndex = handIndex;
-
+        ChangeHighLightColor(handIndex);
        // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
     }
+
+    public void ChangeHighLightColor(int handIndex)
+    {
+        Color color = handIndex==1? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
+        ChangeHighLightColor(color);
+    }
+
     public void ChangeHighlightAmount(float intensity)
     {
         if (_highlightTrigger)
@@ -301,6 +309,30 @@ public class ObjectController : MonoBehaviour
                 item.outline = intensity;
             }
         }
+    }
+    public void ChangeHighLightColor(Color color)
+    {
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            effect.outlineColor = color;
+
+            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
+            foreach (var item in childrenEffects)
+            {
+                item.outlineColor = color;
+            }
+        }
+    }
+
+    public Color GetHighLightColor()
+    {
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            return effect.outlineColor;
+        }
+        return Color.white;
     }
 
     public float GetHighlightIntensity()

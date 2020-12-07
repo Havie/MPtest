@@ -167,7 +167,7 @@ public class UIManager : MonoBehaviour
             _networkingCanvas.SetActive(false);
         }
         else
-            Debug.LogWarning("(UIManager): <color=red>Missing BeginLevel Canvases </color>");
+            Debug.LogWarning("(UIManager): <color=red>Missing BeginLevel Canvases </color> , this should be fine if in test scene");
 
 
         // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");

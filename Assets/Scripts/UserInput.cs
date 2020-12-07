@@ -17,8 +17,10 @@ public class UserInput : MonoBehaviour
 
     [HideInInspector]  //testing purposes
     public float _pressTimeCURR = 0;
-    private float _pressTimeMAX = 0.75f; ///was 1.2f
-    private float _holdLeniency = 1.5f; 
+    [HideInInspector]
+    public float _pressTimeMAX = 0.75f; ///was 1.2f
+    [HideInInspector]
+    public float _holdLeniency = 1.5f; 
     private Vector3 _inputPos; ///current input loc
     private Vector3 _lastPos; ///prior input loc
     private Vector3 _mOffset; ///distance between obj in world and camera
