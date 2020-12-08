@@ -1,6 +1,5 @@
 ﻿
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 
@@ -139,6 +138,7 @@ public class ObjectQuality : MonoBehaviour
 
 
 #if UNITY_EDITOR
+
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
     [CustomEditor(typeof(ObjectQuality))]
@@ -176,7 +176,7 @@ public class ObjectQuality : MonoBehaviour
 
             ///One way to ensure the data is serialized?
             if (EditorGUI.EndChangeCheck())
-                EditorSceneManager.MarkSceneDirty(_objQ.gameObject.scene);
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(_objQ.gameObject.scene);
 
             ///serializedObject.ApplyModifiedProperties();
         }

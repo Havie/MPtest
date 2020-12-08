@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour
             instance = this;
         else if (instance != this)
         {
-            Debug.LogWarning("Duplicate _instance, destroying : " + this.gameObject);
+            DebugLogWarning("Duplicate _instance, destroying : " + this.gameObject);
             Destroy(this);
         }
     }
@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
             //Debug.Log(" confirm station off");
         }
         else
-            Debug.LogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
+            DebugLogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
 
         if (_inventoryCanvas && _networkingCanvas)
         {
@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
             _networkingCanvas.SetActive(true);
         }
         else
-            Debug.LogWarning("(UIManager): Missing BeginLevel Canvases");
+            DebugLogWarning("(UIManager): Missing BeginLevel Canvases");
 
 
         sServer.OnHostIpFound += DisableHostButton;
@@ -79,14 +79,14 @@ public class UIManager : MonoBehaviour
 
     private void SetUpWorkStationDropDownMenu()
     {
-        DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
+        //DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
         _workstationManager = GameManager.instance.CurrentWorkStationManager;
 
         //Set up workstation selection
         if (_workstationManager != null && _workStationDropDown)
             _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
         else
-            Debug.LogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
+            DebugLogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
 
     }
 
@@ -99,14 +99,14 @@ public class UIManager : MonoBehaviour
             _usernameField.gameObject.SetActive(cond);
         }
         else
-            Debug.LogWarning("(UIManager): Missing EnablePanel objects");
+            DebugLogWarning("(UIManager): Missing EnablePanel objects");
     }
 
 
     public void Connected(bool cond)
     {
         if(!cond)
-            Debug.LogWarning($"connected to server = <color=red>{cond}</color>");
+            DebugLogWarning($"connected to server = <color=red>{cond}</color>");
 
         if (_loadingTxt)
             StartCoroutine(ConnectionResult(cond));

@@ -21,6 +21,8 @@ public class Client : MonoBehaviour
     private delegate void PacketHandler(sPacket packet);
     private static Dictionary<int, PacketHandler> _packetHandlers;
 
+    public bool IWillBeHost;
+
     private void OnApplicationQuit()
     {
         Disconnect();
@@ -39,6 +41,7 @@ public class Client : MonoBehaviour
 
     private void Start()
     {
+        _ip = sServer.GetLocalIPAddress(); ///cache this here because we might be the host and the UDP callback takes too long on tablets and 127 local host doesnt work for them? idk why
         sServer.ListenForHostBroadCasts();
         sServer.OnHostIpFound += UpdateHostIP;
         _port = sNetworkManager._defaultPort;
@@ -52,22 +55,55 @@ public class Client : MonoBehaviour
         _ip = address;
         UIManager.instance.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
         ///As Soon as we hear about the first host, Stop caring. (Might have to change later if we swap things, or host DC's)
-
         sServer.OnHostIpFound -= UpdateHostIP;
     }
 
 
     public void ConnectToServer()
     {
+        if (IWillBeHost)
+            ConnectionDelay();
+        else
+            TryToConnect();
+    }
+
+    private void TryToConnect()
+    {
         InitClientData();
         _tcp.Connect(this);
-       //Figure out if the connection succeeded or not 
+        //Figure out if the connection succeeded or not 
         ThreadManager.ExecuteOnMainThread(() =>
         {
             StartCoroutine(ConnectionCheck(1));
         });
     }
 
+    private void ConnectionDelay()
+    {
+        ThreadManager.ExecuteOnMainThread(() =>
+        {
+            StartCoroutine(WaitForServerToStart(1000)); ///like ~5 seconds
+        });
+    }
+
+    IEnumerator WaitForServerToStart(int timeOutCount)
+    {
+        bool keepTrying = true;
+
+        while (keepTrying)
+        {
+            if (sServer._iAmHost)
+                keepTrying = false;
+            else if (timeOutCount <= 0)
+                keepTrying = false;
+            else
+                --timeOutCount;
+            
+            yield return new WaitForEndOfFrame();
+
+        }
+        TryToConnect();
+    }
     IEnumerator ConnectionCheck(int seconds)
     {
         yield return new WaitForSeconds(seconds);
@@ -97,14 +133,16 @@ public class Client : MonoBehaviour
             /*  _socket.ReceiveBufferSize = _dataBufferSize;
             _socket.SendBufferSize = _dataBufferSize;*/
 
-
-
             _receivedBuffer = new byte[_dataBufferSize];
             _socket.BeginConnect(instance._ip, instance._port, ConnectCallback, _socket);
+            UIManager.instance.DebugLog($"trying to connect to..<color=orange>{instance._ip} </color> port: <color=orange>{instance._port}</color>");
+
         }
 
+      
         private void ConnectCallback(IAsyncResult result)
         {
+
             _socket.EndConnect(result);
             _client._isConnected = _socket.Connected;
             if(!_socket.Connected)

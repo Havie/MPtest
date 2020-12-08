@@ -266,7 +266,7 @@ public class ObjectController : MonoBehaviour
     {
         _meshRenderer.enabled = !cond;
         /// i have to do this for all children as well 
-        if (_parent == null)
+        if (_parent == null && _childrenMeshRenderers!=null)
             foreach (var mr in _childrenMeshRenderers)
                 mr.enabled = !cond;
     }
