@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 public class FPSCounter : MonoBehaviour
 {
+    public static FPSCounter Instance;
+
     [SerializeField] Text guiText;
 
     public float updateInterval = 0.5F;
@@ -13,7 +16,13 @@ public class FPSCounter : MonoBehaviour
     private int frames = 0; // Frames drawn over the interval
     private float timeleft; // Left time for current interval
 
-
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this);
+    }
 
     void Start()
     {
@@ -24,6 +33,8 @@ public class FPSCounter : MonoBehaviour
             return;
         }
         timeleft = updateInterval;
+
+
     }
 
 
@@ -53,5 +64,26 @@ public class FPSCounter : MonoBehaviour
             accum = 0.0F;
             frames = 0;
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+            ProfileAllTextures();
+    }
+
+    void ProfileAllTextures()
+    {
+        Debug.Log("heard");
+        Texture[] textures = Resources.FindObjectsOfTypeAll<Texture>();
+        foreach (Texture t in textures)
+        {
+            Debug.Log("Texture object " + t.name + " using: " + Profiler.GetRuntimeMemorySizeLong(t) + "Bytes");
+        }
+    }
+
+    public void ProfileAnObject(GameObject go)
+    {
+        var mat = go.GetComponent<MeshRenderer>().material;
+        var t = mat.mainTexture;
+        UIManager.instance.DebugLog($"Tex:<color=green>{t.name}</color> using <color=orange>{Profiler.GetRuntimeMemorySizeLong(t)}</color> bytes");
+
     }
 }
