@@ -99,6 +99,9 @@ MonoBehaviour:
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!136 &8929933973954864578
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -109,8 +112,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.022
-  m_Height: 0.21
+  m_Radius: 0.09
+  m_Height: 0.34
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: -0.0025}
 --- !u!114 &2663560766581012749
