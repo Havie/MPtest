@@ -113,10 +113,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a85beb1089a064d8d801eae5192895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myID: 15
+  _myID: 19
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!114 &-8424396465556989952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attachmentSensitivity: 0
   _requiredAttachmentID: 04000000
-  _createdID: 0b000000
+  _createdID: 11000000
 --- !u!1 &2885418655394584089
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,6 +356,9 @@ MonoBehaviour:
   _rotationAxis: 1
   _canFollow: 0
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!114 &4190485220307910797
 MonoBehaviour:
   m_ObjectHideFlags: 0

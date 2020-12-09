@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,5 +41,10 @@ public class ObjectManager : ScriptableObject
     {
         eItemID tmp = (eItemID)level;
         return tmp.ToString(); //figure something else out later
+    }
+
+    public Array[] GetEnumList()
+    {
+        return (Array[])System.Enum.GetValues(typeof(eItemID));
     }
 }

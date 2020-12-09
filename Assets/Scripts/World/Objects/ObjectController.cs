@@ -1,5 +1,6 @@
 ﻿using HighlightPlus;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ObjectController : MonoBehaviour
@@ -440,4 +441,66 @@ public class ObjectController : MonoBehaviour
             Destroy(_handLocation.gameObject);
         _handLocation = null;
     }
+
+
+#if UNITY_EDITOR
+    #region Custom Inspector Settings
+    /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
+    [CustomEditor(typeof(ObjectController))]
+    [CanEditMultipleObjects]
+    public class ObjectControllerEditor : Editor
+    {
+        //SerializedProperty typeProp;
+        string[] _enumList;
+
+        private void OnEnable()
+        {
+            //typeProp = serializedObject.FindProperty("test");
+            _enumList = GetEnumList();
+        }
+
+        public override void OnInspectorGUI()
+        {
+            ///Cant figure out how to completely redraw the array so best I can do is provide a numbered preview list
+            DrawPreviewDropDown();
+
+            base.OnInspectorGUI();
+
+        }
+
+        private void DrawPreviewDropDown()
+        {
+            int selected = 0;
+            string[] options = _enumList;
+            selected = EditorGUILayout.Popup("Numbered Reference list", selected, options);
+
+        }
+
+        private string[] GetEnumList()
+        {
+            var arrList = System.Enum.GetValues(typeof(ObjectManager.eItemID));
+            string[] list = new string[arrList.Length];
+            int index = 0;
+            foreach (var item in arrList)
+            {
+                list[index++] = $"{index}: {item}";
+            }
+
+
+            return list;
+        }
+
+        private ObjectManager.eItemID AssignByID(int id)
+        {
+            return (ObjectManager.eItemID)id + 1;
+        }
+
+
+    }
+
+    #endregion
+
+#endif
+
+
 }

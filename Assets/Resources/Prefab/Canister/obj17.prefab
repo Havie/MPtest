@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _myID: 17
-  _rotationAxis: 0
+  _rotationAxis: 1
   _canFollow: 1
   _parent: {fileID: 0}
   _handLocation: {fileID: 0}
@@ -497,7 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _myID: 0
-  _rotationAxis: 0
+  _rotationAxis: 1
   _canFollow: 1
   _parent: {fileID: 0}
   _handLocation: {fileID: 0}

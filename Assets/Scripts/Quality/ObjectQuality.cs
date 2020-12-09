@@ -150,13 +150,25 @@ public class ObjectQuality : MonoBehaviour
         private void OnEnable()
         {
             _objQ = target as ObjectQuality;
-            _test = serializedObject.FindProperty("QualityStep");
+            _test = serializedObject.FindProperty("_qualityStep");
         }
 
         public override void OnInspectorGUI()
         {
+            OldWay();
+            //NewWay();
+        }
 
-              //serializedObject.Update();
+        private void NewWay()
+        {
+            //serializedObject.Update();
+            //EditorGUILayout.PropertyField(_test);
+            ///serializedObject.ApplyModifiedProperties();
+        }
+
+        private void OldWay()
+        {
+            //serializedObject.Update();
             EditorGUI.BeginChangeCheck();
             //EditorGUILayout.PropertyField(_test);
 
@@ -168,8 +180,8 @@ public class ObjectQuality : MonoBehaviour
                 EditorGUILayout.LabelField("Read Only (for debugging):", EditorStyles.boldLabel);
                 EditorGUILayout.LabelField("Current Actions", _objQ._currentActions.ToString());
                 EditorGUILayout.LabelField("Required Actions", _objQ.MaxQuality.ToString());
-              
-               if(_objQ._qualityStep._qualityAction==QualityAction.eActionType.ROTATE)
+
+                if (_objQ._qualityStep._qualityAction == QualityAction.eActionType.ROTATE)
                     EditorGUILayout.LabelField("RotationAmount", _objQ._rotationAmount.ToString());
 
             }
@@ -178,9 +190,10 @@ public class ObjectQuality : MonoBehaviour
             if (EditorGUI.EndChangeCheck())
                 UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(_objQ.gameObject.scene);
 
-            ///serializedObject.ApplyModifiedProperties();
         }
     }
+
+   
 
     #endregion
 #endif
