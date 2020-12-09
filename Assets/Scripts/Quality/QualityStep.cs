@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CreateAssetMenu(menuName ="Quality/Quality Step")]
+[System.Serializable]
 public class QualityStep : ScriptableObject
 {
     public int Identifier;

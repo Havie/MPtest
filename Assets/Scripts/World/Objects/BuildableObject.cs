@@ -17,6 +17,8 @@ public class BuildableObject : MonoBehaviour
 
     private List<GameObject> _objects;
 
+    public bool DebugItemsOnSpawn;
+
     private void Awake()
     {
         if (Instance == null)
@@ -83,6 +85,10 @@ public class BuildableObject : MonoBehaviour
         _currentObj.transform.SetParent(this.transform);
 
         _objects.Add(_currentObj);
+
+
+        if(DebugItemsOnSpawn)
+            FPSCounter.Instance.ProfileAnObject(_currentObj);
 
         return _currentObj;
     }
