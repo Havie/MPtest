@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 
+
 [RequireComponent(typeof(ObjectController))]
 public class ObjectQuality : MonoBehaviour
 {
@@ -137,25 +138,35 @@ public class ObjectQuality : MonoBehaviour
 
 
 #if UNITY_EDITOR
+
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
     [CustomEditor(typeof(ObjectQuality))]
     public class ObjectQualityEditor : Editor
     {
-        ObjectQuality _objQ;
+        //[SerializedProperty]
+        [SerializeField] ObjectQuality _objQ;
+        SerializedProperty _test;
         private void OnEnable()
         {
             _objQ = target as ObjectQuality;
+            _test = serializedObject.FindProperty("QualityStep");
         }
 
         public override void OnInspectorGUI()
         {
+
+              //serializedObject.Update();
+            EditorGUI.BeginChangeCheck();
+            //EditorGUILayout.PropertyField(_test);
+
+
             _objQ._qualityStep = (QualityStep)EditorGUILayout.ObjectField("Quality Step", _objQ._qualityStep, typeof(QualityStep), true);
             ///Expose but do not make editable 
             if (_objQ._qualityStep != null)
             {
                 EditorGUILayout.LabelField("Read Only (for debugging):", EditorStyles.boldLabel);
-                EditorGUILayout.LabelField($"Current Actions", _objQ._currentActions.ToString());
+                EditorGUILayout.LabelField("Current Actions", _objQ._currentActions.ToString());
                 EditorGUILayout.LabelField("Required Actions", _objQ.MaxQuality.ToString());
               
                if(_objQ._qualityStep._qualityAction==QualityAction.eActionType.ROTATE)
@@ -163,7 +174,11 @@ public class ObjectQuality : MonoBehaviour
 
             }
 
+            ///One way to ensure the data is serialized?
+            if (EditorGUI.EndChangeCheck())
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(_objQ.gameObject.scene);
 
+            ///serializedObject.ApplyModifiedProperties();
         }
     }
 

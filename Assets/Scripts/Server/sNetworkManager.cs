@@ -9,6 +9,8 @@ public class sNetworkManager : MonoBehaviour
 
     public GameObject _playerPrefab;
 
+    private int _maxPlayers = 6;
+
     private void Awake()
     {
         if (instance == null)
@@ -24,10 +26,10 @@ public class sNetworkManager : MonoBehaviour
     {
     ///Is it possible this port fails? If so we need to iterate through ports and tell others
     #if UNITY_EDITOR
-        sServer.Start(6, _defaultPort); // Find unused port 
-    #else
-         sServer.Start(6, _defaultPort); // Find unused port 
-    #endif
+        sServer.Start(_maxPlayers, _defaultPort); 
+#else
+         sServer.Start(_maxPlayers, _defaultPort);  
+#endif
     }
 
     void BroadCastGameManagerChanges()

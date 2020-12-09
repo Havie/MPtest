@@ -14,7 +14,7 @@ public class ObjectController : MonoBehaviour
     ///effect stuff
     private Vector3 _startSize;
     private MeshRenderer _meshRenderer;
-    private MeshRenderer[] _childrenMeshRenderers = new MeshRenderer[0];
+    private List<MeshRenderer> _childrenMeshRenderers;
     private HighlightTrigger _highlightTrigger;
     ///Components
     private Rigidbody _rb;
@@ -43,7 +43,19 @@ public class ObjectController : MonoBehaviour
         _isSubObject = this.GetComponent<OverallQuality>() == null;
 
         if (transform.parent == null)
-            _childrenMeshRenderers = GetComponentsInChildren<MeshRenderer>();
+        {
+            ///Cache the meshrenders of the children
+            _childrenMeshRenderers = new List<MeshRenderer>();
+             var childrenMeshRenderers = GetComponentsInChildren<MeshRenderer>();
+            foreach (var item in childrenMeshRenderers)
+            {
+                ///but do not include the ones on sockets, they are for development debuging is all
+                if(!item.transform.GetComponent<Socket>())
+                {
+                    _childrenMeshRenderers.Add(item);
+                }
+            }
+        }
         else
             _parent = transform.parent.GetComponentInParent<ObjectController>(); //cache this if it works    
        
@@ -254,7 +266,7 @@ public class ObjectController : MonoBehaviour
     {
         _meshRenderer.enabled = !cond;
         /// i have to do this for all children as well 
-        if (_parent == null)
+        if (_parent == null && _childrenMeshRenderers!=null)
             foreach (var mr in _childrenMeshRenderers)
                 mr.enabled = !cond;
     }

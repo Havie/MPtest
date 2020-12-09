@@ -47,6 +47,10 @@ public class UIHostMenu : MonoBehaviour
     {
         UpdateGameManager();
         HostConnection();
+
+
+        ///Should put this in a coroutine, that runs this after saying "..Creating Room.."
+        /// Because Client was connecting before sNetworkManager ran Start 
         ShowMenuOptions(false);
         UIManager.instance.ConnectToServer();
     }
@@ -72,6 +76,7 @@ public class UIHostMenu : MonoBehaviour
 
     private void HostConnection()
     {
+        Client.instance.IWillBeHost = true;
         if (GameObject.FindObjectOfType<sNetworkManager>() == null && _NetworkManagerPREFAB != null)
         {
             var network=  GameObject.Instantiate(_NetworkManagerPREFAB);

@@ -55,6 +55,8 @@ public class UserInput : MonoBehaviour
     {
         //Fetch the Event System from the Scene
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
+        //Set up the new Pointer Event
+        _PointerEventData = new PointerEventData(_EventSystem);
         _mainCamera = Camera.main;
 
         if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
@@ -508,8 +510,6 @@ public class UserInput : MonoBehaviour
 
     public UIInventorySlot CheckRayCastForUI()
     {
-        //Set up the new Pointer Event
-        _PointerEventData = new PointerEventData(_EventSystem);
         //Set the Pointer Event Position to that of the mouse position
         _PointerEventData.position = Input.mousePosition; //Maybe I can use touch input last known
 
