@@ -11,23 +11,24 @@ public class UIManager : MonoBehaviour
 
     public static UIManager instance;
 
+
+    [Header("Networking Components")]
+    public GameObject _networkingCanvas;
     [SerializeField] GameObject _startMenu;
     public Button _bConnect;
     public Button _bHost;
     public InputField _usernameField;
     public Text _loadingTxt;
     public GameObject _workStationDropDown;
-
     public Button _tmpConfirmWorkStation;
     public GameObject _tmpObjectPREFAB;
 
 
-    [Header("Project Components")]
+    [HideInInspector]
     public WorkStationManager _workstationManager;
 
-    [Header("Scene Components")]
+    [Header("Game Components")]
     public GameObject _inventoryCanvas;
-    public GameObject _networkingCanvas;
     public GameObject _normalInventory;
     public GameObject _kittingInventory;
     public Button _hand1;
@@ -44,18 +45,14 @@ public class UIManager : MonoBehaviour
             instance = this;
         else if (instance != this)
         {
-            Debug.LogWarning("Duplicate _instance, destroying : " + this.gameObject);
+            DebugLogWarning("Duplicate _instance, destroying : " + this.gameObject);
             Destroy(this);
         }
     }
 
     private void Start()
     {
-        //Set up workstation selection
-        if (_workstationManager != null && _workStationDropDown)
-            _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
-        else
-            Debug.LogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this should be fine) ");
+        SetUpWorkStationDropDownMenu(); ///Will need to be called again when client, but for non network scene need a call here as well
 
         if (_loadingTxt && _tmpConfirmWorkStation && _workStationDropDown)
         {
@@ -65,7 +62,7 @@ public class UIManager : MonoBehaviour
             //Debug.Log(" confirm station off");
         }
         else
-            Debug.LogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
+            DebugLogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
 
         if (_inventoryCanvas && _networkingCanvas)
         {
@@ -73,12 +70,25 @@ public class UIManager : MonoBehaviour
             _networkingCanvas.SetActive(true);
         }
         else
-            Debug.LogWarning("(UIManager): Missing BeginLevel Canvases");
+            DebugLogWarning("(UIManager): Missing BeginLevel Canvases");
 
 
         sServer.OnHostIpFound += DisableHostButton;
     }
 
+
+    private void SetUpWorkStationDropDownMenu()
+    {
+        //DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
+        _workstationManager = GameManager.instance.CurrentWorkStationManager;
+
+        //Set up workstation selection
+        if (_workstationManager != null && _workStationDropDown)
+            _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
+        else
+            DebugLogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
+
+    }
 
     private void EnablePanel(bool cond)
     {
@@ -89,13 +99,15 @@ public class UIManager : MonoBehaviour
             _usernameField.gameObject.SetActive(cond);
         }
         else
-            Debug.LogWarning("(UIManager): Missing EnablePanel objects");
+            DebugLogWarning("(UIManager): Missing EnablePanel objects");
     }
 
 
     public void Connected(bool cond)
     {
-        Debug.LogWarning("connected to server =" + cond);
+        if(!cond)
+            DebugLogWarning($"connected to server = <color=red>{cond}</color>");
+
         if (_loadingTxt)
             StartCoroutine(ConnectionResult(cond));
     }
@@ -107,6 +119,7 @@ public class UIManager : MonoBehaviour
             _loadingTxt.text = "Connection Success!";
             yield return new WaitForSeconds(0.5f);
             _loadingTxt.enabled = false;
+            SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
             DisplaySelectWorkStation();
         }
         else
@@ -127,6 +140,7 @@ public class UIManager : MonoBehaviour
             _loadingTxt.enabled = true;
             _loadingTxt.text = "Select Work Station";
             _workStationDropDown.SetActive(true);
+            Debug.LogWarning("DISPLAYED the Dropdown");
         }
         else
             Debug.LogWarning("(UIManager): Missing DisplaySelectWorkStation objects");
@@ -153,7 +167,7 @@ public class UIManager : MonoBehaviour
             _networkingCanvas.SetActive(false);
         }
         else
-            Debug.LogWarning("(UIManager): <color=red>Missing BeginLevel Canvases </color>");
+            Debug.LogWarning("(UIManager): <color=red>Missing BeginLevel Canvases </color> , this should be fine if in test scene");
 
 
         // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");
@@ -205,6 +219,11 @@ public class UIManager : MonoBehaviour
     }
 
 
+    public void SwitchToHost()
+    {
+
+    }
+
     #endregion
 
 
@@ -239,6 +258,42 @@ public class UIManager : MonoBehaviour
             hand.transform.position = new Vector3(0, 2000, 0);
     }
 
+
+    public void DisableHostButton(string ignore)
+    {
+        if (_bHost)
+            _bHost.interactable = false;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+            BroadCastIp();
+    }
+
+    public void BroadCastIp()
+    {
+        // BroadcastListener.Instance.BroadCastIP();
+        sServer.BroadCastIP();
+    }
+
+    public void PrintMyIp()
+    {
+
+        DebugLog(sServer.GetLocalIPAddress());
+    }
+
+    #endregion
+
+    private void OnDisable()
+    {
+        // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
+    }
+
+
+
+
+    #region Debugger
     public void DebugLog(string text)
     {
         if (_debugText)
@@ -299,35 +354,5 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
-    public void DisableHostButton(string ignore)
-    {
-        if (_bHost)
-            _bHost.interactable = false;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-            BroadCastIp();
-    }
-
-    public void BroadCastIp()
-    {
-        // BroadcastListener.Instance.BroadCastIP();
-        sServer.BroadCastIP();
-    }
-
-    public void PrintMyIp()
-    {
-
-        DebugLog(sServer.GetLocalIPAddress());
-    }
-
     #endregion
-
-    private void OnDisable()
-    {
-        // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
-    }
 }

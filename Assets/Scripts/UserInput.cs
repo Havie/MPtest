@@ -17,11 +17,13 @@ public class UserInput : MonoBehaviour
 
     [HideInInspector]  //testing purposes
     public float _pressTimeCURR = 0;
-    private float _pressTimeMAX = 1.2f;
-    private float _holdLeniency = 1.5f; 
-    private Vector3 _inputPos; //current input loc
-    private Vector3 _lastPos; //prior input loc
-    private Vector3 _mOffset; //distance between obj in world and camera
+    [HideInInspector]
+    public float _pressTimeMAX = 0.75f; ///was 1.2f
+    [HideInInspector]
+    public float _holdLeniency = 1.5f; 
+    private Vector3 _inputPos; ///current input loc
+    private Vector3 _lastPos; ///prior input loc
+    private Vector3 _mOffset; ///distance between obj in world and camera
     private UIInventorySlot _lastSlot;
 
     private Vector3 _objStartPos;
@@ -46,16 +48,18 @@ public class UserInput : MonoBehaviour
         _IsMobileMode = Application.isMobilePlatform;
 
         if (_IsMobileMode)
-            _holdLeniency = 5f;
+            _holdLeniency = 5f; ///Touch controls too sensitive
 
     }
     void Start()
     {
         //Fetch the Event System from the Scene
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
+        //Set up the new Pointer Event
+        _PointerEventData = new PointerEventData(_EventSystem);
         _mainCamera = Camera.main;
 
-        if (_Raycaster == null)
+        if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
             _Raycaster = UIManager.instance._inventoryCanvas.GetComponent<GraphicRaycaster>();
     }
 
@@ -506,8 +510,6 @@ public class UserInput : MonoBehaviour
 
     public UIInventorySlot CheckRayCastForUI()
     {
-        //Set up the new Pointer Event
-        _PointerEventData = new PointerEventData(_EventSystem);
         //Set the Pointer Event Position to that of the mouse position
         _PointerEventData.position = Input.mousePosition; //Maybe I can use touch input last known
 

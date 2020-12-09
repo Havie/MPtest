@@ -6,12 +6,18 @@ using UnityEngine;
 public class BuildableObject : MonoBehaviour
 {
     public static BuildableObject Instance { get; private set; }
+    public Color _colorHand1;
+    public Color _colorHand2;
+
+
     private ObjectManager _manager;
 
     //These should be connected to something else like the workstation IDs
-    public ObjectManager.eItemID _mID;
+    public ObjectManager.eItemID _mID; ///pretty much unused atm?
 
     private List<GameObject> _objects;
+
+    public bool DebugItemsOnSpawn;
 
     private void Awake()
     {
@@ -79,6 +85,10 @@ public class BuildableObject : MonoBehaviour
         _currentObj.transform.SetParent(this.transform);
 
         _objects.Add(_currentObj);
+
+
+        if(DebugItemsOnSpawn)
+            FPSCounter.Instance.ProfileAnObject(_currentObj);
 
         return _currentObj;
     }

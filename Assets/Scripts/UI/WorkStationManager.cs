@@ -18,16 +18,20 @@ public class WorkStationManager : ScriptableObject
 
     public void SetupDropDown(Dropdown dropdown)
     {
+        //Debug.Log($"Setting up DropDown for {this.name}");
         if(dropdown)
         {
             List<string> dropOptions = new List<string>();
             foreach (WorkStation ws in _workStations)
+            {
                 dropOptions.Add(ws._stationName);
+                //Debug.Log($"...adding {ws._stationName}");
+            }
 
             dropdown.ClearOptions();
             dropdown.AddOptions(dropOptions);
         }
-
+       
     }
 
 
