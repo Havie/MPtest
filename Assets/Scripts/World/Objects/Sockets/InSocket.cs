@@ -115,6 +115,7 @@ public class InSocket : Socket
     }
 
     
+
 #if UNITY_EDITOR
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
@@ -124,19 +125,35 @@ public class InSocket : Socket
     {
         //SerializedProperty typeProp;
         string[] _enumList;
+        SerializedProperty _attachmentSensitivity;
+        SerializedProperty _requiredAttachmentID;
+        SerializedProperty _createdID;
 
         private void OnEnable()
         {
             //typeProp = serializedObject.FindProperty("test");
             _enumList = GetEnumList();
+            _attachmentSensitivity = serializedObject.FindProperty(nameof(_attachmentSensitivity));
+            _requiredAttachmentID = serializedObject.FindProperty(nameof(_requiredAttachmentID));
+            _createdID = serializedObject.FindProperty(nameof(_createdID));
         }
 
         public override void OnInspectorGUI()
         {
-            ///Cant figure out how to completely redraw the array so best I can do is provide a numbered preview list
-            DrawPreviewDropDown();
+            serializedObject.Update();
 
-            base.OnInspectorGUI();
+            // ///Cant figure out how to completely redraw the array so best I can do is provide a numbered preview list
+            //DrawPreviewDropDown();
+
+            EditorGUILayout.PropertyField(_attachmentSensitivity);
+            EditorGUILayout.PropertyField(_requiredAttachmentID);
+            EditorGUILayout.PropertyField(_createdID);
+
+
+            serializedObject.ApplyModifiedProperties();
+
+
+            // base.OnInspectorGUI();
 
         }
 
@@ -145,6 +162,8 @@ public class InSocket : Socket
             int selected = 0;
             string[] options = _enumList;
             selected = EditorGUILayout.Popup("Numbered Reference list", selected, options);
+            
+            //EditorGUILayout.EnumPopup()
 
         }
 

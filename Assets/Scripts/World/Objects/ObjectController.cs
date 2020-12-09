@@ -462,7 +462,7 @@ public class ObjectController : MonoBehaviour
         public override void OnInspectorGUI()
         {
             ///Cant figure out how to completely redraw the array so best I can do is provide a numbered preview list
-            DrawPreviewDropDown();
+           // DrawPreviewDropDown();
 
             base.OnInspectorGUI();
 

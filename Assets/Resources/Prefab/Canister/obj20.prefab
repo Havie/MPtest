@@ -191,6 +191,9 @@ MonoBehaviour:
   _rotationAxis: 1
   _canFollow: 0
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!65 &4157128441164983368
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -216,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2502416b5711884c96ce6b5cf47d4eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _qualityStep: {fileID: 0}
+  _qualityStep: {fileID: 11400000, guid: a0699ff84486cec46837025cba7665aa, type: 2}
 --- !u!1 &2706234840424314809
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,6 +323,9 @@ MonoBehaviour:
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!65 &1427891985832586209
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -457,7 +463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attachmentSensitivity: 0
   _requiredAttachmentID: 02000000
-  _createdID: 09000000
+  _createdID: 090000001700000018000000
 --- !u!1 &2854804585543048782
 GameObject:
   m_ObjectHideFlags: 0
