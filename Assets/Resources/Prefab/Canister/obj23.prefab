@@ -98,6 +98,9 @@ MonoBehaviour:
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!136 &8073884140465586528
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -351,6 +354,9 @@ MonoBehaviour:
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!114 &1256062495340184859
 MonoBehaviour:
   m_ObjectHideFlags: 0

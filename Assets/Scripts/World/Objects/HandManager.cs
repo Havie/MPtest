@@ -109,11 +109,15 @@ public static class HandManager
             SetHandPreviewMode(true);
             _previewTime = 0;
         }
-       ///weight is used to get the item to be closer to the center of new obj or hand loc in bottom corner. Just looks a bit better if stuff is fallen over
-        float weight = Vector3.Distance(ItemToBeDroppedNext.transform.position, potentialItemToBePickedUp.transform.position);
-        Vector3 avgPoint = Vector3.Lerp( potentialItemToBePickedUp._handLocation.position, potentialItemToBePickedUp.transform.position, weight);
-        Vector3 previewPos = Vector3.Lerp( ItemToBeDroppedNext._handLocation.position, avgPoint, _previewTime);
-        UIManager.instance.UpdateHandLocation(2, previewPos);
+
+        if (ItemToBeDroppedNext._handLocation != null || potentialItemToBePickedUp._handLocation != null)
+        {
+            ///weight is used to get the item to be closer to the center of new obj or hand loc in bottom corner. Just looks a bit better if stuff is fallen over
+            float weight = Vector3.Distance(ItemToBeDroppedNext.transform.position, potentialItemToBePickedUp.transform.position);
+            Vector3 avgPoint = Vector3.Lerp(potentialItemToBePickedUp._handLocation.position, potentialItemToBePickedUp.transform.position, weight);
+            Vector3 previewPos = Vector3.Lerp(ItemToBeDroppedNext._handLocation.position, avgPoint, _previewTime);
+            UIManager.instance.UpdateHandLocation(2, previewPos);
+        }
         _previewTime += Time.deltaTime;
 
     }

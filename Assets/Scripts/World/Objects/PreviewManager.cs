@@ -20,6 +20,8 @@ public static class PreviewManager
             return;
         }
 
+        Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID}");
+
         ///disable both items mesh renderers
         controller.ChangeAppearanceHidden(true);
         otherController.ChangeAppearanceHidden(true);
