@@ -26,8 +26,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 270475178720801036}
-  m_LocalRotation: {x: -0, y: -0, z: -1, w: 0}
-  m_LocalPosition: {x: 0, y: 0.16000003, z: 0.245}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.415, z: 0.245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 805222316804169311}
@@ -214,9 +214,9 @@ GameObject:
   - component: {fileID: 805222316804169311}
   - component: {fileID: 583565548468301596}
   - component: {fileID: 4419858787789467178}
-  - component: {fileID: 4208102016709415549}
   - component: {fileID: 5914350822688133686}
   - component: {fileID: 3218943569722097590}
+  - component: {fileID: 6938934511208717818}
   m_Layer: 0
   m_Name: obj22
   m_TagString: Untagged
@@ -290,20 +290,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &4208102016709415549
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2706234840424314809}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.2
-  m_Height: 0.7
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0.1}
 --- !u!114 &5914350822688133686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,6 +306,9 @@ MonoBehaviour:
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!114 &3218943569722097590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,6 +325,19 @@ MonoBehaviour:
   _lastKnownQuality: 0
   _currentQuality: 0
   _maxQuality: 0
+--- !u!65 &6938934511208717818
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2706234840424314809}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.13545036, y: 0.6908351, z: 0.099847645}
+  m_Center: {x: 0, y: 0, z: 0.007213112}
 --- !u!1 &2885418655394584089
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,6 +350,8 @@ GameObject:
   - component: {fileID: 7804400262328521107}
   - component: {fileID: 755201551011714836}
   - component: {fileID: 3632154041337368556}
+  - component: {fileID: 4988459488421885837}
+  - component: {fileID: 4129705080483525351}
   m_Layer: 0
   m_Name: obj11
   m_TagString: Untagged
@@ -429,6 +433,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.39999998, y: 0.16739434, z: 0.39999998}
   m_Center: {x: 0, y: 0.009302817, z: 0}
+--- !u!114 &4988459488421885837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2885418655394584089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a85beb1089a064d8d801eae5192895, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _myID: 0
+  _rotationAxis: 1
+  _canFollow: 0
+  _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
+--- !u!114 &4129705080483525351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2885418655394584089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2502416b5711884c96ce6b5cf47d4eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _qualityStep: {fileID: 11400000, guid: a0699ff84486cec46837025cba7665aa, type: 2}
 --- !u!1 &4431011201218748728
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,8 +490,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4431011201218748728}
-  m_LocalRotation: {x: -0, y: -0, z: -1, w: 0}
-  m_LocalPosition: {x: 0, y: 0.19500002, z: 0.245}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.377, z: 0.245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 805222316804169311}

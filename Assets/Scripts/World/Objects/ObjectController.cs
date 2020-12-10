@@ -10,6 +10,7 @@ public class ObjectController : MonoBehaviour
     ///Rotational / Movement
     public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE};
     public eRotationAxis _rotationAxis= eRotationAxis.YAXIS;
+    [HideInInspector]
     public bool _canFollow = true; ///will be true for parents, children shouldbe set to false via inspector
     private int _dampening = 10;
     ///effect stuff
@@ -28,6 +29,7 @@ public class ObjectController : MonoBehaviour
     [HideInInspector]
     public Transform _handLocation;
     private bool _pickedUp;
+    [HideInInspector]
     public int _handIndex=1;
     private Vector3 _handOffset;
     private float _handStartZ;
@@ -37,6 +39,8 @@ public class ObjectController : MonoBehaviour
 
     private void Awake()
     {
+  
+
         _startSize = this.transform.localScale;
         _meshRenderer = this.GetComponent<MeshRenderer>();
         _rb = this.gameObject.AddComponent<Rigidbody>();
@@ -45,21 +49,24 @@ public class ObjectController : MonoBehaviour
 
         if (transform.parent == null)
         {
+            _canFollow = true;
             ///Cache the meshrenders of the children
             _childrenMeshRenderers = new List<MeshRenderer>();
-             var childrenMeshRenderers = GetComponentsInChildren<MeshRenderer>();
+            var childrenMeshRenderers = GetComponentsInChildren<MeshRenderer>();
             foreach (var item in childrenMeshRenderers)
             {
                 ///but do not include the ones on sockets, they are for development debuging is all
-                if(!item.transform.GetComponent<Socket>())
+                if (!item.transform.GetComponent<Socket>())
                 {
                     _childrenMeshRenderers.Add(item);
                 }
             }
         }
         else
+        {
             _parent = transform.parent.GetComponentInParent<ObjectController>(); //cache this if it works    
-       
+            _canFollow = false;
+        }
         ToggleRB(true); ///turn off physics 
         SetUpHighlightComponent();
         DetermineHandLocation();
@@ -108,7 +115,7 @@ public class ObjectController : MonoBehaviour
             _handLocation = dummy.transform;
             var index = this.gameObject.name.IndexOf("(Clone)");
             if(index!=-1)
-                this.gameObject.name = this.gameObject.name.Substring(0 ,this.gameObject.name.IndexOf("(Clone)"));
+                this.gameObject.name = this.gameObject.name.Substring(0 ,this.gameObject.name.IndexOf("(Clone)")) +"_"+ _myID;
             _handLocation.gameObject.name = this.gameObject.name + "_hand_dummy";
             _handOffset = new Vector3(left, bottom, front) - this.transform.position ;
             _handStartZ = (this.transform.position + _handOffset).z;
@@ -276,7 +283,7 @@ public class ObjectController : MonoBehaviour
     #region Highlight Outline
     public bool IsPickedUp => _pickedUp;
     public bool IsHighlighted { get; private set; }
-
+    [HideInInspector]
     public bool HandPreviewingMode = false;
 
     public void SetHighlighted(bool cond)

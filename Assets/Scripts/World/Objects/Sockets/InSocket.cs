@@ -19,6 +19,12 @@ public class InSocket : Socket
     {
         _in = true;
         StartCoroutine(WaitDelay());
+
+        foreach (var item in _createdID)
+        {
+            Debug.Log($"InSocket _createdID #{(int)item}:{item}");
+        }
+     
     }
 
     IEnumerator WaitDelay()

@@ -14,7 +14,7 @@ public class ObjectManager : ScriptableObject
         GreenRect1 = 1, BlueBolt, PinkTop, RedBot, YellowPart, PurplePlug, PinkTopwYellow,
         RectwBolts1, RectwBolts2, RectwTopYellow, RectwBotTopYellow, RectwTopBotPurplePlug, finalPower,
         RectwBoltsAlt, RectwTopAltMissingBotBolt, RectwBotAlt,RectWTopBotAlt1, RectwRedBotMissingTopBolt, RectwTopAltBoltBot,
-        RectwTopYellowMissingBotBolt, RectwTopPurplePlugBotBolt, RectwTopPurplePlugMissingBotBolt, YellowPurplePlug, PinkwPurplePlug
+        RectwTopYellowMissingBotBolt, RectwTopPurplePlugBotBolt, RectwTopPurplePlugMissingBotBolt, YellowPurplePlug, PinkwPurplePlug, IGNORE
     };
 
     [SerializeField] List<Sprite> _sprites;

@@ -109,7 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attachmentSensitivity: 0
   _requiredAttachmentID: 02000000
-  _createdID: 0e000000
+  _createdID: 0f000000
 --- !u!54 &5998357439919911057
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -352,6 +352,9 @@ MonoBehaviour:
   _rotationAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
 --- !u!65 &3437776745237897742
 BoxCollider:
   m_ObjectHideFlags: 0
