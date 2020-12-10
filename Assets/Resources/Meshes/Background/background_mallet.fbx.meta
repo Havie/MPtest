@@ -7,13 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Mallet
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Mallet Handle
-    second: {fileID: 2100000, guid: 298d03e612a695946bb421c6d420c551, type: 2}
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Mallet Head
-    second: {fileID: 2100000, guid: 298d03e612a695946bb421c6d420c551, type: 2}
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
