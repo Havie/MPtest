@@ -898,7 +898,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.9198113, g: 0.97927517, b: 1, a: 1}
-  m_Intensity: 1.1
+  m_Intensity: 0.8
   m_Range: 15
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -943,7 +943,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 1.0521e-41, z: 0, w: -1}
+  m_BoundingSphereOverride: {x: 0, y: 2.1605e-41, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -4071,7 +4071,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3404046870804283206}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8257,7 +8257,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7386806321466313142}
   m_HandleRect: {fileID: 7386806321466313097}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
