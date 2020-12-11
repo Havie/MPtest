@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class InSocket : Socket
@@ -9,12 +10,21 @@ public class InSocket : Socket
     [SerializeField] ObjectManager.eItemID[] _requiredAttachmentID;
     [SerializeField] ObjectManager.eItemID[] _createdID;
 
+
+    public enum test { opONE, opTWO }
+
     private bool _canCollide;
 
     private void Awake()
     {
         _in = true;
         StartCoroutine(WaitDelay());
+
+        foreach (var item in _createdID)
+        {
+            Debug.Log($"InSocket _createdID #{(int)item}:{item}");
+        }
+     
     }
 
     IEnumerator WaitDelay()
@@ -31,30 +41,30 @@ public class InSocket : Socket
         //Debug.Log("Called ENTEr" +this.gameObject.name);
         if (_in) // only have the female sockets checking collisions 
         {
-           //Debug.Log($"{this.transform.gameObject.name} triggered with {other.gameObject.name}");
+            //Debug.Log($"{this.transform.gameObject.name} triggered with {other.gameObject.name}");
             var socket = other.GetComponent<Socket>();
             for (int i = 0; i < _requiredAttachmentID.Length; i++)
             {
-                int requiredAttachmentID =(int) _requiredAttachmentID[i];
+                int requiredAttachmentID = (int)_requiredAttachmentID[i];
                 if (socket && CheckConditions(socket, requiredAttachmentID))
                 {
                     //Debug.Log($"match for  {_controller.gameObject}:{this.gameObject.name}:{_controller._myID}  and {socket._controller.gameObject}:{socket}{socket._controller._myID}");
                     PreviewManager.ShowPreview(_controller, socket._controller, (int)_createdID[i]);
                 }
-               /* else if (socket)
-                {
-                    if (i < _requiredAttachmentID.Length)
-                    {
-                        Debug.Log($"..looping thru to check other attachments myID={requiredAttachmentID}...");
-                    }
-                    else if (requiredAttachmentID != (int)socket._controller._myID)
-                        Debug.Log($"{requiredAttachmentID} does not match {(int)socket._controller._myID}");
-                    else if (UserInput.Instance._currentSelection == _controller)
-                        Debug.Log(" Cant attach female to male, select and move male part");
-                    else
-                        Debug.Log($"Attachment Angle was invalid"); 
-                 }
-               */
+                /* else if (socket)
+                 {
+                     if (i < _requiredAttachmentID.Length)
+                     {
+                         Debug.Log($"..looping thru to check other attachments myID={requiredAttachmentID}...");
+                     }
+                     else if (requiredAttachmentID != (int)socket._controller._myID)
+                         Debug.Log($"{requiredAttachmentID} does not match {(int)socket._controller._myID}");
+                     else if (UserInput.Instance._currentSelection == _controller)
+                         Debug.Log(" Cant attach female to male, select and move male part");
+                     else
+                         Debug.Log($"Attachment Angle was invalid"); 
+                  }
+                */
             }
         }
     }
@@ -103,10 +113,90 @@ public class InSocket : Socket
             else  //OnTriggerExit
                 valid = true;
         }
-       // else
-          //  Debug.LogWarning($"incomming::{(int)socket._controller._myID} != {requiredAttachmentID}");
+        // else
+        //  Debug.LogWarning($"incomming::{(int)socket._controller._myID} != {requiredAttachmentID}");
 
         return valid;
 
     }
+
+    
+
+#if UNITY_EDITOR
+    #region Custom Inspector Settings
+    /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
+    [CustomEditor(typeof(InSocket))]
+    [CanEditMultipleObjects]
+    public class InSocketEditor : Editor
+    {
+        //SerializedProperty typeProp;
+        string[] _enumList;
+        SerializedProperty _attachmentSensitivity;
+        SerializedProperty _requiredAttachmentID;
+        SerializedProperty _createdID;
+
+        private void OnEnable()
+        {
+            //typeProp = serializedObject.FindProperty("test");
+            _enumList = GetEnumList();
+            _attachmentSensitivity = serializedObject.FindProperty(nameof(_attachmentSensitivity));
+            _requiredAttachmentID = serializedObject.FindProperty(nameof(_requiredAttachmentID));
+            _createdID = serializedObject.FindProperty(nameof(_createdID));
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            // ///Cant figure out how to completely redraw the array so best I can do is provide a numbered preview list
+            //DrawPreviewDropDown();
+
+            EditorGUILayout.PropertyField(_attachmentSensitivity);
+            EditorGUILayout.PropertyField(_requiredAttachmentID);
+            EditorGUILayout.PropertyField(_createdID);
+
+
+            serializedObject.ApplyModifiedProperties();
+
+
+            // base.OnInspectorGUI();
+
+        }
+
+        private void DrawPreviewDropDown()
+        {
+            int selected = 0;
+            string[] options = _enumList;
+            selected = EditorGUILayout.Popup("Numbered Reference list", selected, options);
+            
+            //EditorGUILayout.EnumPopup()
+
+        }
+
+        private string[] GetEnumList()
+        {
+            var arrList = System.Enum.GetValues(typeof(ObjectManager.eItemID));
+            string[] list = new string[arrList.Length];
+            int index = 0;
+            foreach (var item in arrList)
+            {
+                list[index++] = $"{index}: {item}";
+            }
+
+
+            return list;
+        }
+
+        private ObjectManager.eItemID AssignByID(int id)
+        {
+            return (ObjectManager.eItemID)id + 1;
+        }
+
+
+    }
+
+    #endregion
+
+#endif
+    
 }

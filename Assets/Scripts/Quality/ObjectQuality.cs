@@ -146,17 +146,41 @@ public class ObjectQuality : MonoBehaviour
     {
         //[SerializedProperty]
         [SerializeField] ObjectQuality _objQ;
-        SerializedProperty _test;
+        SerializedProperty QualityStep;
         private void OnEnable()
         {
             _objQ = target as ObjectQuality;
-            _test = serializedObject.FindProperty("QualityStep");
+            QualityStep = serializedObject.FindProperty(nameof(ObjectQuality._qualityStep));
         }
 
         public override void OnInspectorGUI()
         {
+            //OldWay();
+            NewWay();
+        }
 
-              //serializedObject.Update();
+        private void NewWay()
+        {
+            EditorGUI.BeginChangeCheck();
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(QualityStep);
+            serializedObject.ApplyModifiedProperties();
+
+            if (_objQ._qualityStep != null)
+            {
+                EditorGUILayout.LabelField("Read Only (for debugging):", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("Current Actions", _objQ._currentActions.ToString());
+                EditorGUILayout.LabelField("Required Actions", _objQ.MaxQuality.ToString());
+
+                if (_objQ._qualityStep._qualityAction == QualityAction.eActionType.ROTATE)
+                    EditorGUILayout.LabelField("RotationAmount", _objQ._rotationAmount.ToString());
+
+            }
+        }
+
+        private void OldWay()
+        {
+            //serializedObject.Update();
             EditorGUI.BeginChangeCheck();
             //EditorGUILayout.PropertyField(_test);
 
@@ -168,8 +192,8 @@ public class ObjectQuality : MonoBehaviour
                 EditorGUILayout.LabelField("Read Only (for debugging):", EditorStyles.boldLabel);
                 EditorGUILayout.LabelField("Current Actions", _objQ._currentActions.ToString());
                 EditorGUILayout.LabelField("Required Actions", _objQ.MaxQuality.ToString());
-              
-               if(_objQ._qualityStep._qualityAction==QualityAction.eActionType.ROTATE)
+
+                if (_objQ._qualityStep._qualityAction == QualityAction.eActionType.ROTATE)
                     EditorGUILayout.LabelField("RotationAmount", _objQ._rotationAmount.ToString());
 
             }
@@ -178,9 +202,10 @@ public class ObjectQuality : MonoBehaviour
             if (EditorGUI.EndChangeCheck())
                 UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(_objQ.gameObject.scene);
 
-            ///serializedObject.ApplyModifiedProperties();
         }
     }
+
+   
 
     #endregion
 #endif

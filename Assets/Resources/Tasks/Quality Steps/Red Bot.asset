@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71d74612a9b6ac54f94136701c78f94a, type: 3}
-  m_Name: Red Top
+  m_Name: Red Bot
   m_EditorClassIdentifier: 
   Identifier: 4
   _requiredActions: 2

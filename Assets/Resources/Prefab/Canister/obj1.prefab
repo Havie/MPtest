@@ -109,7 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attachmentSensitivity: 0
   _requiredAttachmentID: 02000000
-  _createdID: 0e000000
+  _createdID: 0f000000
 --- !u!54 &5998357439919911057
 Rigidbody:
   m_ObjectHideFlags: 0

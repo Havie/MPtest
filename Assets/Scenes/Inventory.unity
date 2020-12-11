@@ -550,7 +550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _colorHand1: {r: 0.96862745, g: 0.98039216, b: 0.17254902, a: 0.98039216}
   _colorHand2: {r: 0.9254902, g: 0.6683839, b: 0, a: 0.98039216}
-  _mID: 0
+  _mID: 8
   DebugItemsOnSpawn: 1
 --- !u!4 &383828560
 Transform:
@@ -1709,6 +1709,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8018265237377195845, guid: 3594cbb3bfbadb644b71f7640dc7036c,
+        type: 3}
+      propertyPath: _createdID.Array.data[0]
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8489823377087690694, guid: 3594cbb3bfbadb644b71f7640dc7036c,
         type: 3}
@@ -5323,7 +5328,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!223 &5394208262900929678
 Canvas:
   m_ObjectHideFlags: 0
