@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1a9d8a449958be44fad6a01d93b1eeb4
+guid: 6d01426ba9dbe054c8d2e6599df86cf0
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
@@ -7,7 +7,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Cap
+      name: Top Disc
     second: {fileID: 2100000, guid: bc9a34f5a8c0b9141af458a4fe602818, type: 2}
   materials:
     materialImportMode: 1

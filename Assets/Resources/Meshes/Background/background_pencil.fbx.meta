@@ -3,9 +3,39 @@ guid: 775c55257c41cc642a269bbc4a6036cc
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pencil
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pencil Eraser
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pencil Lead
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pencil Metal
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pencil Shaft
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pencil Tip
+    second: {fileID: 2100000, guid: 2c45a75995d62754c8cc3c31c0390a70, type: 2}
   materials:
-    materialImportMode: 0
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1

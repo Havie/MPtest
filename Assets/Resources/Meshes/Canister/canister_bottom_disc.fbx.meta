@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1a9d8a449958be44fad6a01d93b1eeb4
+guid: 34f81da3738b4064cbf0e59a22b7b2ac
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
@@ -7,7 +7,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Cap
+      name: Bottom Disc
     second: {fileID: 2100000, guid: bc9a34f5a8c0b9141af458a4fe602818, type: 2}
   materials:
     materialImportMode: 1
