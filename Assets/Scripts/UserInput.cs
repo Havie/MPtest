@@ -547,6 +547,12 @@ public class UserInput : MonoBehaviour
 
     private ObjectController FindAbsoluteParent(ObjectController startingObj)
     {
+        if(startingObj==null)
+        {
+            Debug.LogWarning($"Somehow we are passing ina  null startingObj???");
+            return null;
+        }
+
         ObjectController parent = startingObj._parent;
         ObjectController child = startingObj;
         while(parent != null)

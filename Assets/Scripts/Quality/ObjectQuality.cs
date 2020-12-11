@@ -82,18 +82,18 @@ public class ObjectQuality : MonoBehaviour
             ObjectController controller = GetComponent<ObjectController>();
             if (controller)
             {
-                if (controller._rotationAxis == ObjectController.eRotationAxis.XAXIS)
+                if (controller._rotateAroundAxis == ObjectController.eRotationAxis.XAXIS)
                 {
                     _rotationAmount += action._rotation.x;
                 }
-                else if (controller._rotationAxis == ObjectController.eRotationAxis.YAXIS)
+                else if (controller._rotateAroundAxis == ObjectController.eRotationAxis.YAXIS)
                 {
                     _rotationAmount += action._rotation.y;
                 }
                 else
                     Debug.LogWarning("No implementation for keeping track of both rotations at the moment, shouldnt need to be a mechanic");
 
-                Debug.Log($"_rotationAmount={_rotationAmount} from ( { action._rotation.x}, { action._rotation.y}) is >= {_qualityStep._requiredRotationThreshold} = { Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold}");
+               // Debug.Log($"_rotationAmount={_rotationAmount} from ( { action._rotation.x}, { action._rotation.y}) is >= {_qualityStep._requiredRotationThreshold} = { Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold}");
                 if( Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold)
                 {
                     if (_rotationAmount>0)
@@ -102,7 +102,7 @@ public class ObjectQuality : MonoBehaviour
                         _rotationAmount += _qualityStep._requiredRotationThreshold; ///reset 
 
                     IncreaseQuality();
-                    Debug.Log($"Successful rotation! reset to {_rotationAmount}");
+                 //   Debug.Log($"Successful rotation! reset to {_rotationAmount}");
                 }
 
             }
@@ -112,7 +112,7 @@ public class ObjectQuality : MonoBehaviour
         else if (action._actionType == QualityAction.eActionType.TAP)
         {
             IncreaseQuality();
-            Debug.Log("Successful TAP");
+            //Debug.Log("Successful TAP");
         }
     }
     private void PerformEffect()

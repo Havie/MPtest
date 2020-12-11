@@ -8,8 +8,9 @@ public class ObjectController : MonoBehaviour
 
     public ObjectManager.eItemID _myID;
     ///Rotational / Movement
-    public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE};
-    public eRotationAxis _rotationAxis= eRotationAxis.YAXIS;
+    public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE };
+    [HideInInspector]
+    public eRotationAxis _rotateAroundAxis = eRotationAxis.YAXIS;
     [HideInInspector]
     public bool _canFollow = true; ///will be true for parents, children shouldbe set to false via inspector
     private int _dampening = 10;
@@ -20,7 +21,7 @@ public class ObjectController : MonoBehaviour
     private HighlightTrigger _highlightTrigger;
     ///Components
     private Rigidbody _rb;
-    private Collider  _collider;
+    private Collider _collider;
     private bool _hittingTable;
     private bool _isSubObject;
     [HideInInspector]
@@ -30,7 +31,7 @@ public class ObjectController : MonoBehaviour
     public Transform _handLocation;
     private bool _pickedUp;
     [HideInInspector]
-    public int _handIndex=1;
+    public int _handIndex = 1;
     private Vector3 _handOffset;
     private float _handStartZ;
 
@@ -39,7 +40,7 @@ public class ObjectController : MonoBehaviour
 
     private void Awake()
     {
-  
+
 
         _startSize = this.transform.localScale;
         _meshRenderer = this.GetComponent<MeshRenderer>();
@@ -70,6 +71,7 @@ public class ObjectController : MonoBehaviour
         ToggleRB(true); ///turn off physics 
         SetUpHighlightComponent();
         DetermineHandLocation();
+        _rotateAroundAxis= DetermineRotationAccess();
 
     }
 
@@ -81,6 +83,15 @@ public class ObjectController : MonoBehaviour
             effect.ProfileLoad(profile);
         _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
 
+    }
+
+
+    private eRotationAxis DetermineRotationAccess()
+    {
+        if (_parent != null && (_myID == ObjectManager.eItemID.PinkTop || _myID == ObjectManager.eItemID.RedBot))
+            return eRotationAxis.XAXIS;
+        else
+            return eRotationAxis.YAXIS;
     }
 
     private void Update()
@@ -101,7 +112,7 @@ public class ObjectController : MonoBehaviour
             return;
 
         var collider = this.GetComponent<Collider>();
-        float bottom = collider.bounds.center.y - collider.bounds.extents.y ;
+        float bottom = collider.bounds.center.y - collider.bounds.extents.y;
         float top = collider.bounds.center.y + collider.bounds.extents.y;
         float front = collider.bounds.center.z + collider.bounds.extents.z;
         float back = collider.bounds.center.z - collider.bounds.extents.z;
@@ -109,17 +120,17 @@ public class ObjectController : MonoBehaviour
         float right = collider.bounds.center.x - collider.bounds.extents.x;
 
         var prefab = Resources.Load<GameObject>("Prefab/hand_loc_dummy");
-        if(prefab)
+        if (prefab)
         {
-            var dummy =GameObject.Instantiate<GameObject>(prefab, BuildableObject.Instance.transform);
+            var dummy = GameObject.Instantiate<GameObject>(prefab, BuildableObject.Instance.transform);
             _handLocation = dummy.transform;
             var index = this.gameObject.name.IndexOf("(Clone)");
-            if(index!=-1)
-                this.gameObject.name = this.gameObject.name.Substring(0 ,this.gameObject.name.IndexOf("(Clone)")) +"_"+ _myID;
+            if (index != -1)
+                this.gameObject.name = this.gameObject.name.Substring(0, this.gameObject.name.IndexOf("(Clone)")) + "_" + _myID;
             _handLocation.gameObject.name = this.gameObject.name + "_hand_dummy";
-            _handOffset = new Vector3(left, bottom, front) - this.transform.position ;
+            _handOffset = new Vector3(left, bottom, front) - this.transform.position;
             _handStartZ = (this.transform.position + _handOffset).z;
-        }    
+        }
     }
 
     public Vector2 DoRotation(Vector3 dir)
@@ -129,33 +140,45 @@ public class ObjectController : MonoBehaviour
 
         //find out if object is right side up in world 
 
-        if (_rotationAxis == eRotationAxis.YAXIS)
+        if (_rotateAroundAxis == eRotationAxis.YAXIS)
         {
             if (Vector3.Dot(transform.up, Vector3.up) >= 0)
                 dot = -Vector3.Dot(dir, Camera.main.transform.right);
             else
                 dot = Vector3.Dot(dir, Camera.main.transform.right);
 
+            var angle = dot / _dampening;
             ///Horiz  Project the  dir changed onto the camera.Up 
-            transform.Rotate(transform.up, dot / _dampening, Space.World);
+            transform.Rotate(transform.up, angle, Space.World);
 
-            return new Vector2(0, dot / _dampening);
+            return new Vector2(0, angle);
 
         }
-        if (_rotationAxis == eRotationAxis.XAXIS)
+        if (_rotateAroundAxis == eRotationAxis.XAXIS)
         {
-            if (Vector3.Dot(transform.up, Vector3.up) >= 0)
-                dot = Vector3.Dot(dir, Camera.main.transform.up);
-            else
-                dot = Vector3.Dot(dir, Camera.main.transform.up);
+            dot = Vector3.Dot(dir, Camera.main.transform.up);
 
             ///Vertical  Project the  dir changed onto the camera.Right 
+            var angle = dot / _dampening;
 
-            transform.Rotate(Camera.main.transform.right, dot / _dampening, Space.World);
+            transform.Rotate(-transform.forward, angle, Space.World);
 
-            return new Vector2(dot / _dampening, 0);
+            //Debug.Log($"New rotation z= {transform.rotation.z} vs  {transform.rotation.eulerAngles.z}");
+
+            ///None of this worked below to zero out the other angles
+            //var idk = Vector3.Cross(transform.right, transUp);
+            //transform.Rotate(idk, dot / _dampening);
+
+            //transform.rotation = Quaternion.FromToRotation(
+            //    transform.rotation.eulerAngles, new Vector3(0,0,transform.rotation.z));
+            //transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.z);
+
+            //transform.rotation = Quaternion.Euler(oldX, oldY, transform.rotation.z);
+            //transform.localEulerAngles = new Vector3(0, 0, transform.rotation.z);
+
+            return new Vector2(angle, 0);
         }
-        else if (_rotationAxis == eRotationAxis.BOTH)
+        else if (_rotateAroundAxis == eRotationAxis.BOTH)
         {
             Vector2 retVal = Vector2.zero;
             if (Vector3.Dot(transform.up, Vector3.up) >= 0)
@@ -221,19 +244,24 @@ public class ObjectController : MonoBehaviour
 
     private void TrySetChildren(float opacity)
     {
-        if (_parent != null )
+        if (_parent != null)
             return; /// we are a child so our parent will handle this
 
 
         foreach (var mr in _childrenMeshRenderers)
         {
-            ChangeMaterialColor(mr, opacity);
+             mr.enabled = true;
+            Material m = mr.material;
+            Color color = m.color;
+            color.a = opacity;
+            m.color = color;
+            mr.material = m;
         }
     }
 
     public void ChangeAppearanceMoving()
     {
-        Vector3 smaller= new Vector3
+        Vector3 smaller = new Vector3
             (0.75f * this.transform.localScale.x,
             0.75f * this.transform.localScale.y,
             0.75f * this.transform.localScale.z);
@@ -259,9 +287,13 @@ public class ObjectController : MonoBehaviour
             UIManager.instance.ChangeHandSize(_handIndex, false);
 
         _meshRenderer.enabled = true;
+
         ChangeMaterialColor(1f);
         TrySetChildren(1f);
         //ToggleCollider(true);
+
+        //foreach (var mr in _childrenMeshRenderers)
+        //    mr.GetComponent<ObjectController>().ChangeAppearanceNormal();
 
         //Debug.Log($"{this.gameObject.name} heard change normal");
     }
@@ -269,12 +301,13 @@ public class ObjectController : MonoBehaviour
     public void ChangeAppearancePreview()
     {
         ChangeMaterialColor(0.5f);
+        TrySetChildren(0.5f);
     }
     public void ChangeAppearanceHidden(bool cond)
     {
         _meshRenderer.enabled = !cond;
         /// i have to do this for all children as well 
-        if (_parent == null && _childrenMeshRenderers!=null)
+        if (_parent == null && _childrenMeshRenderers != null)
             foreach (var mr in _childrenMeshRenderers)
                 mr.enabled = !cond;
     }
@@ -307,12 +340,12 @@ public class ObjectController : MonoBehaviour
         _pickedUp = true;
         _handIndex = handIndex;
         ChangeHighLightColor(handIndex);
-       // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
+        // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
     }
 
     public void ChangeHighLightColor(int handIndex)
     {
-        Color color = handIndex==1? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
+        Color color = handIndex == 1 ? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
         ChangeHighLightColor(color);
     }
 
@@ -375,7 +408,7 @@ public class ObjectController : MonoBehaviour
     {
         ///find my order in the Queue
         _handIndex = 1;
-        while(queue.Count!=0)
+        while (queue.Count != 0)
         {
             var controller = queue.Dequeue();
             ++_handIndex;
@@ -393,7 +426,7 @@ public class ObjectController : MonoBehaviour
             _rb.isKinematic = cond;
             _rb.useGravity = !cond;
         }
-        if(_collider)
+        if (_collider)
             _collider.isTrigger = cond;
     }
 
@@ -414,7 +447,7 @@ public class ObjectController : MonoBehaviour
 
     }
 
-    private void ChangeMaterialColor(MeshRenderer mr , float opacity)
+    private void ChangeMaterialColor(MeshRenderer mr, float opacity)
     {
         if (opacity > 1)
             Debug.LogWarning("Setting opacity > 1. Needs to be 0.0 - 1.0f");

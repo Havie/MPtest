@@ -551,7 +551,7 @@ MonoBehaviour:
   _colorHand1: {r: 0.96862745, g: 0.98039216, b: 0.17254902, a: 0.98039216}
   _colorHand2: {r: 0.9254902, g: 0.6683839, b: 0, a: 0.98039216}
   _mID: 8
-  DebugItemsOnSpawn: 1
+  DebugItemsOnSpawn: 0
 --- !u!4 &383828560
 Transform:
   m_ObjectHideFlags: 0
@@ -2251,7 +2251,7 @@ MonoBehaviour:
     type: 2}
   _testSceneInjection: 1
   _stationToInject: 2
-  _itemToInject: 18
+  _itemToInject: 21
 --- !u!1 &2065194972
 GameObject:
   m_ObjectHideFlags: 0
@@ -4071,7 +4071,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3404046870804283206}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8257,7 +8257,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7386806321466313142}
   m_HandleRect: {fileID: 7386806321466313097}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
