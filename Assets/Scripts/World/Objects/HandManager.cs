@@ -110,7 +110,7 @@ public static class HandManager
             _previewTime = 0;
         }
 
-        if (ItemToBeDroppedNext._handLocation != null || potentialItemToBePickedUp._handLocation != null)
+        if (ItemToBeDroppedNext._handLocation != null && potentialItemToBePickedUp._handLocation != null)
         {
             ///weight is used to get the item to be closer to the center of new obj or hand loc in bottom corner. Just looks a bit better if stuff is fallen over
             float weight = Vector3.Distance(ItemToBeDroppedNext.transform.position, potentialItemToBePickedUp.transform.position);

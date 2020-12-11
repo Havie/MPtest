@@ -36,7 +36,8 @@ public static class PreviewManager
         obj.transform.position = controller.gameObject.transform.position;
         obj.transform.rotation = controller.gameObject.transform.rotation;
         _previewItem = obj;
-        _inPreview = true;
+
+          _inPreview = true;
     }
 
     public static void UndoPreview()

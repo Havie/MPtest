@@ -9,7 +9,8 @@ public class ObjectController : MonoBehaviour
     public ObjectManager.eItemID _myID;
     ///Rotational / Movement
     public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE };
-    public eRotationAxis _rotationAxis = eRotationAxis.YAXIS;
+    [HideInInspector]
+    public eRotationAxis _rotateAroundAxis = eRotationAxis.YAXIS;
     [HideInInspector]
     public bool _canFollow = true; ///will be true for parents, children shouldbe set to false via inspector
     private int _dampening = 10;
@@ -70,6 +71,7 @@ public class ObjectController : MonoBehaviour
         ToggleRB(true); ///turn off physics 
         SetUpHighlightComponent();
         DetermineHandLocation();
+        _rotateAroundAxis= DetermineRotationAccess();
 
     }
 
@@ -81,6 +83,15 @@ public class ObjectController : MonoBehaviour
             effect.ProfileLoad(profile);
         _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
 
+    }
+
+
+    private eRotationAxis DetermineRotationAccess()
+    {
+        if (_parent != null && (_myID == ObjectManager.eItemID.PinkTop || _myID == ObjectManager.eItemID.RedBot))
+            return eRotationAxis.XAXIS;
+        else
+            return eRotationAxis.YAXIS;
     }
 
     private void Update()
@@ -129,7 +140,7 @@ public class ObjectController : MonoBehaviour
 
         //find out if object is right side up in world 
 
-        if (_rotationAxis == eRotationAxis.YAXIS)
+        if (_rotateAroundAxis == eRotationAxis.YAXIS)
         {
             if (Vector3.Dot(transform.up, Vector3.up) >= 0)
                 dot = -Vector3.Dot(dir, Camera.main.transform.right);
@@ -143,7 +154,7 @@ public class ObjectController : MonoBehaviour
             return new Vector2(0, angle);
 
         }
-        if (_rotationAxis == eRotationAxis.XAXIS)
+        if (_rotateAroundAxis == eRotationAxis.XAXIS)
         {
             dot = Vector3.Dot(dir, Camera.main.transform.up);
 
@@ -167,7 +178,7 @@ public class ObjectController : MonoBehaviour
 
             return new Vector2(angle, 0);
         }
-        else if (_rotationAxis == eRotationAxis.BOTH)
+        else if (_rotateAroundAxis == eRotationAxis.BOTH)
         {
             Vector2 retVal = Vector2.zero;
             if (Vector3.Dot(transform.up, Vector3.up) >= 0)
@@ -239,7 +250,12 @@ public class ObjectController : MonoBehaviour
 
         foreach (var mr in _childrenMeshRenderers)
         {
-            ChangeMaterialColor(mr, opacity);
+             mr.enabled = true;
+            Material m = mr.material;
+            Color color = m.color;
+            color.a = opacity;
+            m.color = color;
+            mr.material = m;
         }
     }
 
@@ -271,9 +287,13 @@ public class ObjectController : MonoBehaviour
             UIManager.instance.ChangeHandSize(_handIndex, false);
 
         _meshRenderer.enabled = true;
+
         ChangeMaterialColor(1f);
         TrySetChildren(1f);
         //ToggleCollider(true);
+
+        //foreach (var mr in _childrenMeshRenderers)
+        //    mr.GetComponent<ObjectController>().ChangeAppearanceNormal();
 
         //Debug.Log($"{this.gameObject.name} heard change normal");
     }
@@ -281,6 +301,7 @@ public class ObjectController : MonoBehaviour
     public void ChangeAppearancePreview()
     {
         ChangeMaterialColor(0.5f);
+        TrySetChildren(0.5f);
     }
     public void ChangeAppearanceHidden(bool cond)
     {
