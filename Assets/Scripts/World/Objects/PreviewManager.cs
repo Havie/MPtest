@@ -20,6 +20,9 @@ public static class PreviewManager
             return;
         }
 
+        if (UserInput.Instance._state != UserInput.eState.DISPLACEMENT)
+            return; /// would feel cleaner to cache on the object, but extra work
+
         Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID}");
 
         ///disable both items mesh renderers
@@ -36,8 +39,7 @@ public static class PreviewManager
         obj.transform.position = controller.gameObject.transform.position;
         obj.transform.rotation = controller.gameObject.transform.rotation;
         _previewItem = obj;
-
-          _inPreview = true;
+         _inPreview = true;
     }
 
     public static void UndoPreview()

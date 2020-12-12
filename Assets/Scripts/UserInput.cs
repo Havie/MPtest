@@ -36,7 +36,8 @@ public class UserInput : MonoBehaviour
     //Actions
     private Vector2 _rotationAmount;
 
-    private int _tmpZfix = -9;
+    [HideInInspector]
+    public int _tmpZfix = -9;
 
     private void Awake()
     {

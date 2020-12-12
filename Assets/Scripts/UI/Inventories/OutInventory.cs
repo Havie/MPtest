@@ -222,7 +222,7 @@ public class OutInventory : UIInventoryManager
 
 
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
-    private void SetSizeOfContentArea()
+    protected override void SetSizeOfContentArea()
     {
         if (_xMaxPerRow == 0)
             return;
@@ -231,7 +231,7 @@ public class OutInventory : UIInventoryManager
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
             rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding)  - (_cellPadding/2)));
+            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding)  + (_cellPadding)));
 
        //OLD
         // rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding) + (_cellPadding)));

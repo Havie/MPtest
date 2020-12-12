@@ -175,6 +175,20 @@ public class UIInventoryManager : MonoBehaviour
         return count;
     }
 
+    protected virtual void SetSizeOfContentArea()
+    {
+        if (_xMaxPerRow == 0)
+            return;
+        RectTransform rt = this.GetComponent<RectTransform>();
+
+
+        if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
+            rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
+        else
+            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) - (_cellPadding / 2)));
+
+    }
+
     protected void TurnOffScrollBars()
     {
         if (_scrollBarVert)
@@ -233,7 +247,6 @@ public class UIInventoryManager : MonoBehaviour
         var newSlot = newButton.GetComponent<UIInventorySlot>();
         //Set the slots manager:
         newSlot.SetManager(this);
-
         return newSlot;
     }
 
@@ -271,10 +284,12 @@ public class UIInventoryManager : MonoBehaviour
                     return;
             }
             //fell thru so we are full
-            Debug.Log("we fell thru");
+            Debug.Log("we fell thru ..creating new slot");
             UIInventorySlot nSlot = CreateNewSlot();
             nSlot.AssignItem(itemID, 1);
             _extraSlots.Add(nSlot);
+            ++_INVENTORYSIZE;
+            SetSizeOfContentArea(); ///adjust scrollable area
         }
         else
         {
