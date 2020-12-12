@@ -21,7 +21,10 @@ public class InInventory : UIInventoryManager
         }
         _inventoryType = eInvType.IN;
         GetGameManagerData();
-        GenInventory();
+        if (_INVENTORYSIZE == 0)
+            UIManager.instance.HideInInventory();
+        else
+            GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
     }
 
@@ -199,7 +202,7 @@ public class InInventory : UIInventoryManager
 
 
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
-    private void SetSizeOfContentArea()
+    protected override void SetSizeOfContentArea()
     {
         if (_xMaxPerRow == 0)
             return;
@@ -209,8 +212,16 @@ public class InInventory : UIInventoryManager
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
             rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) - (_cellPadding / 2)));
+            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding)));
 
+
+        // Debug.Log($"(X:{(_xMaxPerRow * _cellPadding) + (_cellPadding / 2)} , Y: {((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding))} ) {_INVENTORYSIZE} / {_xMaxPerRow} = {(_INVENTORYSIZE / _xMaxPerRow)} Mod1:: {_INVENTORYSIZE-1 % _xMaxPerRow }");
+    }
+
+    public string GetRT()
+    {
+        RectTransform rt = this.GetComponent<RectTransform>();
+        return rt.sizeDelta.ToString();
     }
 
     #endregion

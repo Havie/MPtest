@@ -264,6 +264,7 @@ MonoBehaviour:
   _pressTimeMAX: 0.75
   _holdLeniency: 1.5
   _Raycaster: {fileID: 5394208262448427698}
+  _tmpZfix: -9
 --- !u!4 &112527775
 Transform:
   m_ObjectHideFlags: 0
@@ -2247,11 +2248,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _workStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
-    type: 2}
   _testSceneInjection: 1
-  _stationToInject: 2
-  _itemToInject: 21
+  _stationToInject: 1
+  _itemToInject: 17
 --- !u!1 &2065194972
 GameObject:
   m_ObjectHideFlags: 0
@@ -2282,7 +2281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orderFrequency: 4
-  _batchSize: 2
+  _batchSize: 1
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -4071,7 +4070,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3404046870804283206}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5328,7 +5327,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!223 &5394208262900929678
 Canvas:
   m_ObjectHideFlags: 0

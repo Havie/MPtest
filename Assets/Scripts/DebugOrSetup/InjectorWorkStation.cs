@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(10000)] // load late after game manager
 public class InjectorWorkStation : MonoBehaviour
 {
-    [SerializeField] WorkStationManager _workStationManager;
+     WorkStationManager _workStationManager;
     [SerializeField] bool _testSceneInjection = false;
     [SerializeField] int _stationToInject = 1; //Change this to a enum drop down
     [SerializeField] ObjectManager.eItemID _itemToInject;
@@ -14,6 +15,7 @@ public class InjectorWorkStation : MonoBehaviour
 
     void Start()
     {
+        _workStationManager = GameManager.instance.CurrentWorkStationManager;
         _workStations = _workStationManager.GetStationList();
         if (_testSceneInjection)
         {

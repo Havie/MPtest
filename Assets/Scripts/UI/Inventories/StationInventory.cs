@@ -190,7 +190,7 @@ public class StationInventory : UIInventoryManager
     }
 
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
-    private void SetSizeOfContentArea()
+    protected override void SetSizeOfContentArea()
     {
         if (_xMaxPerRow == 0)
             return;

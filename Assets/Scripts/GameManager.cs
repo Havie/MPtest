@@ -127,9 +127,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
-
-
-
     private void LinqTest()
     {
         //var nearestSometing = FindObjectOfType<ObjectController>()

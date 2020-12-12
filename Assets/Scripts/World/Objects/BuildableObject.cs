@@ -79,9 +79,10 @@ public class BuildableObject : MonoBehaviour
     {
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
         //GetNextObj
+        //var _objStartPos = new Vector3(pos.x, pos.y, UserInput.Instance._tmpZfix);
         GameObject _currentObj = GameObject.Instantiate<GameObject>
             (_manager.GetObject(itemID), pos, Quaternion.identity);
-        _currentObj.transform.Rotate(Vector3.left, 10);
+        _currentObj.transform.Rotate(Vector3.left, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
         _currentObj.transform.SetParent(this.transform);
 
         _objects.Add(_currentObj);

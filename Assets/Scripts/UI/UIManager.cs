@@ -196,6 +196,12 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public void HideInInventory()
+    {
+        if (_normalInventory != null)
+            _normalInventory.SetActive(false);
+    }
+
     #endregion
 
     #region ActionsfromButtons
@@ -263,12 +269,6 @@ public class UIManager : MonoBehaviour
     {
         if (_bHost)
             _bHost.interactable = false;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-            BroadCastIp();
     }
 
     public void BroadCastIp()
