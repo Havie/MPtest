@@ -2323,7 +2323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 1
+  _stationToInject: 0
   _itemToInject: 17
 --- !u!1 &2065194972
 GameObject:
