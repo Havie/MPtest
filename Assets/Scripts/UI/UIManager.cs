@@ -238,18 +238,18 @@ public class UIManager : MonoBehaviour
     {
         if (_touchPhaseDisplay)
         {
-            if (!_touchPhaseDisplay.gameObject.activeSelf)
-                _touchPhaseDisplay.gameObject.SetActive(true);
+            if (!_touchPhaseDisplay.transform.parent.gameObject.activeSelf)
+                _touchPhaseDisplay.transform.parent.gameObject.SetActive(true);
 
             _touchPhaseDisplay.fillAmount = pressTime / pressTimeMax;
-            _touchPhaseDisplay.transform.position = pos;
+            _touchPhaseDisplay.transform.parent.position = pos;
         }
     }
 
     public void HideTouchDisplay()
     {
         if (_touchPhaseDisplay)
-            _touchPhaseDisplay.gameObject.SetActive(false);
+            _touchPhaseDisplay.transform.parent.gameObject.SetActive(false);
     }
 
 
