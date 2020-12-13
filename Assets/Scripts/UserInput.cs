@@ -176,14 +176,24 @@ public class UserInput : MonoBehaviour
             ///if no movement increment time 
             float dis = Vector3.Distance(_inputPos, _lastPos);
             if (dis < _holdLeniency)
+            {
                 _pressTimeCURR += Time.deltaTime;
+                UIManager.instance.ShowTouchDisplay(
+                    _pressTimeCURR, _pressTimeMAX,
+                    new Vector3(_inputPos.x, _inputPos.y, _inputPos.z));
+                //Vibration.Vibrate(100); ///No haptic feedback on WiFi version of TabS5E :(
+            }
             else
+            {
                 _pressTimeCURR = 0;
+                UIManager.instance.HideTouchDisplay();
+            }
 
             ///if holding down do displacement
             if (_pressTimeCURR >= _pressTimeMAX)
             {
-                
+                UIManager.instance.HideTouchDisplay();
+
                 _currentSelection = CheckForObjectAtLoc(_inputPos);
                 _currentSelection= FindAbsoluteParent(_currentSelection);
                 if (_currentSelection)

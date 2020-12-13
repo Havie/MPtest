@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour
     public GameObject _kittingInventory;
     public Button _hand1;
     public Button _hand2;
+    public Image _touchPhaseDisplay;
 
     [Header("Debugg Console")]
     public Text _debugText;
@@ -224,7 +225,6 @@ public class UIManager : MonoBehaviour
         BeginLevel(itemID);
     }
 
-
     public void SwitchToHost()
     {
 
@@ -234,6 +234,24 @@ public class UIManager : MonoBehaviour
 
 
     #region RunTime Actions
+    public void ShowTouchDisplay(float pressTime, float pressTimeMax, Vector3 pos)
+    {
+        if (_touchPhaseDisplay)
+        {
+            if (!_touchPhaseDisplay.transform.parent.gameObject.activeSelf)
+                _touchPhaseDisplay.transform.parent.gameObject.SetActive(true);
+
+            _touchPhaseDisplay.fillAmount = pressTime / pressTimeMax;
+            _touchPhaseDisplay.transform.parent.position = pos;
+        }
+    }
+
+    public void HideTouchDisplay()
+    {
+        if (_touchPhaseDisplay)
+            _touchPhaseDisplay.transform.parent.gameObject.SetActive(false);
+    }
+
 
     public void UpdateHandLocation(int index, Vector3 worldLoc)
     {
@@ -263,7 +281,6 @@ public class UIManager : MonoBehaviour
         if (hand)
             hand.transform.position = new Vector3(0, 2000, 0);
     }
-
 
     public void DisableHostButton(string ignore)
     {
