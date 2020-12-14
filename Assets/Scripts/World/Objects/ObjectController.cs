@@ -441,7 +441,7 @@ public class ObjectController : MonoBehaviour
     }
 
     ///METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
-    private void ChangeMaterialColor(float opacity)
+    public void ChangeMaterialColor(float opacity)
     {
         ChangeMaterialColor(_meshRenderer, opacity);
 
