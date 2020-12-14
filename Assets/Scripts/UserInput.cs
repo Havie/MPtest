@@ -178,6 +178,14 @@ public class UserInput : MonoBehaviour
             if (dis < _holdLeniency)
             {
                 _pressTimeCURR += Time.deltaTime;
+
+                ///cap our transparency to 0.5f
+                float changeVal = (_pressTimeMAX - _pressTimeCURR)/ _pressTimeMAX;
+
+                changeVal = Mathf.Lerp(1, changeVal, 0.5f);
+                Debug.Log($"opacity set to : {changeVal} ");
+
+                _currentSelection.ChangeMaterialColor(changeVal);
                 UIManager.instance.ShowTouchDisplay(
                     _pressTimeCURR, _pressTimeMAX,
                     new Vector3(_inputPos.x, _inputPos.y, _inputPos.z));
@@ -224,13 +232,16 @@ public class UserInput : MonoBehaviour
 
 
         }
-        else
+        else /// this input UP
         {
             if (_currentSelection)
             {
                 TryPerformAction(QualityAction.eActionType.ROTATE);
                 TryPerformAction(QualityAction.eActionType.TAP);
                 CancelHighLightPreview();
+
+                UIManager.instance.HideTouchDisplay();
+                _currentSelection.ChangeMaterialColor(1);
             }
             _state = eState.FREE;
         }

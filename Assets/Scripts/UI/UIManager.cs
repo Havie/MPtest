@@ -243,7 +243,14 @@ public class UIManager : MonoBehaviour
 
             _touchPhaseDisplay.fillAmount = pressTime / pressTimeMax;
             _touchPhaseDisplay.transform.parent.position = pos;
+            _touchPhaseDisplay.color = SetTouchPhaseOpacity(_touchPhaseDisplay.fillAmount);
         }
+    }
+    private Color SetTouchPhaseOpacity(float perct)
+    {
+        Color curr = _touchPhaseDisplay.color;
+        Color newColor = new Color(curr.r, curr.g, curr.b, perct);
+        return newColor;
     }
 
     public void HideTouchDisplay()
