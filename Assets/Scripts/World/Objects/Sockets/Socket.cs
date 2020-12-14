@@ -5,8 +5,8 @@ using UnityEngine;
 public class Socket : MonoBehaviour
 {
 
-    public ObjectController _controller { get; private set; }
-
+    public ObjectController Controller { get; private set; }
+    public bool IsInit { get; private set; }
 
     //IN vars
     //not sure about this weird warning
@@ -19,7 +19,9 @@ public class Socket : MonoBehaviour
 
     private void Start()
     {
-        _controller = this.GetComponentInParent<ObjectController>();
+        Controller = this.GetComponentInParent<ObjectController>();
+        if (Controller)
+            IsInit = true;
     }
 
 

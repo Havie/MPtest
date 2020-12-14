@@ -47,8 +47,9 @@ public class UIInventorySlot : MonoBehaviour
         AssignSprite(RequiredID,true);
     }
     public bool GetInUse() => _inUse;
-    public void PreviewSlot(Sprite img)
+    public bool PreviewSlot(Sprite img)
     {
+        bool retVal = true;
         if (!_inUse && RequiredID == -1)
         {
             _myIcon.sprite = img;
@@ -57,7 +58,10 @@ public class UIInventorySlot : MonoBehaviour
         {
             //Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
             if (BuildableObject.Instance.GetSpriteByID(RequiredID) != img)
+            {
                 _myIcon.color = _INVALID;
+                retVal = false;
+            }
             else
                 _myIcon.color = _VISIBLE;
         }
@@ -65,9 +69,11 @@ public class UIInventorySlot : MonoBehaviour
         {
             //display something that shows slot is in use
             _myIcon.color = _INVALID;
+            retVal = false;
         }
         _manager.SetImportant(this.gameObject);
         SetLarger();
+        return retVal;
     }
 
     public int GetItemID() => _itemID;

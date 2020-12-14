@@ -44,9 +44,9 @@ public class InSocket : Socket
                 if (socket && CheckConditions(socket, requiredAttachmentID))
                 {
                     //Debug.Log($"match for  {_controller.gameObject}:{this.gameObject.name}:{_controller._myID}  and {socket._controller.gameObject}:{socket}{socket._controller._myID}");
-                    PreviewManager.ShowPreview(_controller, socket._controller, (int)_createdID[i]);
+                    PreviewManager.ShowPreview(Controller, socket.Controller, (int)_createdID[i]);
                 }
-                /* else if (socket)
+                /* else if (socket)  ///for debugging to get more info 
                  {
                      if (i < _requiredAttachmentID.Length)
                      {
@@ -87,10 +87,13 @@ public class InSocket : Socket
 
     private bool CheckConditions(Socket socket, int requiredAttachmentID)
     {
+        if (!socket.IsInit)
+            return false;
+
         bool valid = false;
 
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
-        if (UserInput.Instance._currentSelection != _controller && requiredAttachmentID == (int)socket._controller._myID)
+        if (UserInput.Instance._currentSelection != Controller && requiredAttachmentID == (int)socket.Controller._myID)
         {
             //check the angles of attachment
             Vector3 dir = socket.transform.position - this.transform.position;
