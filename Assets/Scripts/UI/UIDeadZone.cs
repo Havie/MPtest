@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class UIDeadZone : MonoBehaviour
 {
+    [Header("Make Sure the Image component of the deadzone is on but alpha is 0, otherwise it wont raycast")]
+    [Tooltip("The location where an item will reset to if placed in a deadzone")]
     [SerializeField] Transform _safePlace;
 
    public Transform GetSafePosition { get; private set; }

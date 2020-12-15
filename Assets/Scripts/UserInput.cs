@@ -84,7 +84,8 @@ public class UserInput : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
+        if(Input.GetMouseButtonDown(1))
+            Debug.Log($"Mouse={_inputPos}");
 
         switch (_state)
         {
@@ -369,7 +370,7 @@ public class UserInput : MonoBehaviour
                         var dz = CheckRayCastForDeadZone();
                         if(dz)
                         {
-                            ///TODO finish this is almost working
+                            ///If the item is dropped in a deadzone, reset it to a safe place
                             _currentSelection.transform.position = GetCurrentWorldLocBasedOnPos(dz.GetSafePosition);
                         }
                     }
@@ -501,23 +502,27 @@ public class UserInput : MonoBehaviour
 
         UIManager.instance.ShowPreviewInvSlot(false, _inputPos, null);
     }
-    private Vector3 GetCurrentWorldLocBasedOnMouse(Transform transform)
+    private Vector3 GetCurrentWorldLocBasedOnMouse(Transform currSelectionTransform)
     {
         //Debug.Log($"(1) {_inputPos.x},{_inputPos.y}");
-        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(transform.position);
+        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(currSelectionTransform.position);
         ///gets the objects Z pos in world for depth
         float zCoord = screenPtObj.z;
         ///gets the world loc based on inputpos and gives it the z depth from the obj
         Vector3 worldLocInput = GetInputWorldPos(zCoord);
-        return new Vector3(worldLocInput.x, worldLocInput.y, transform.position.z);
+        return new Vector3(worldLocInput.x, worldLocInput.y, currSelectionTransform.position.z);
     }
-    private Vector3 GetCurrentWorldLocBasedOnPos(Transform transform)
+    private Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo)
     {
-        //Debug.Log($"(1) {_inputPos.x},{_inputPos.y}");
-        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(transform.position);
-        ///gets the world loc based on inputpos and gives it the z depth from the obj
-        Vector3 worldLocInput = GetInputWorldPos(_tmpZfix);
-        return new Vector3(worldLocInput.x, worldLocInput.y, worldLocInput.z);
+        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(_currentSelection.transform.position);
+        float zCoord = screenPtObj.z;
+        ///gets the world loc based on transform and gives it the z depth from the obj
+        var v3= _mainCamera.ScreenToWorldPoint(
+            new Vector3(safePlaceToGo.position.x, safePlaceToGo.position.y, zCoord)
+            );
+
+        v3.z = _currentSelection.transform.position.z;
+        return v3;
     }
 
     private Vector3 GetInputWorldPos(float zLoc)
