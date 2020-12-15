@@ -34,7 +34,9 @@ public class UserInput : MonoBehaviour
     private Quaternion _objStartRot;
     //UI
     [SerializeField] GraphicRaycaster _Raycaster;
+    [SerializeField] GraphicRaycaster _RaycasterWorld;
     PointerEventData _PointerEventData;
+    PointerEventData _pointerEventDataWorld;
     EventSystem _EventSystem;
 
     //Actions
@@ -74,6 +76,7 @@ public class UserInput : MonoBehaviour
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
         //Set up the new Pointer Event
         _PointerEventData = new PointerEventData(_EventSystem);
+       
         _mainCamera = Camera.main;
 
         if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
@@ -169,13 +172,19 @@ public class UserInput : MonoBehaviour
             }
             else ///if u get UI do UI 
             {
-                var slot = CheckRayCastForUI();
+                var slot = RayCastForInvSlot();
                 if (slot != null)
                 {
                     if (slot.GetInUse())
                     {
                         _state = eState.UI;
                     }
+                }
+                else
+                {
+                   var instructions= RayCastForInstructions();
+                    if (instructions)
+                        instructions.InstructionsClicked();
                 }
             }
 
@@ -302,7 +311,7 @@ public class UserInput : MonoBehaviour
     public bool CheckDisplacement()
     {
 
-        UIInventorySlot slot = CheckRayCastForUI();
+        UIInventorySlot slot = RayCastForInvSlot();
         if (InputDown())
         {
             if (_currentSelection)
@@ -395,7 +404,7 @@ public class UserInput : MonoBehaviour
         if (InputDown())
         {
             ///If found slot in use spawn obj and go to displacement 
-            var slot = CheckRayCastForUI();
+            var slot = RayCastForInvSlot();
             if (slot)
             {
                 //Debug.LogWarning($"Slot found= {slot.name}");
@@ -592,7 +601,7 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
-    public UIInventorySlot CheckRayCastForUI()
+    public UIInventorySlot RayCastForInvSlot()
     {
         //Set the Pointer Event Position to that of the mouse position
         _PointerEventData.position = Input.mousePosition; //Maybe I can use touch input last known
@@ -609,6 +618,18 @@ public class UserInput : MonoBehaviour
             UIInventorySlot slot = result.gameObject.transform.GetComponent<UIInventorySlot>();
             if (slot)
                 return slot;
+        }
+
+        return null;
+    }
+    public UIInstructions RayCastForInstructions()
+    {
+        var ray = _mainCamera.ScreenPointToRay(_inputPos);
+        Debug.DrawRay(ray.origin, ray.direction * 1350, Color.green, 5);
+        if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
+        {
+            //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
+            return (hit.transform.gameObject.GetComponent<UIInstructions>());
         }
 
         return null;
