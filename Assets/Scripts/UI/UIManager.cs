@@ -329,7 +329,6 @@ public class UIManager : MonoBehaviour
 
 
 
-
     #region Debugger
     public void DebugLog(string text)
     {
