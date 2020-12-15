@@ -906,7 +906,7 @@ Light:
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
-    m_Resolution: 1
+    m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 0.65
     m_Bias: 0
@@ -8395,7 +8395,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7386806321466313142}
   m_HandleRect: {fileID: 7386806321466313097}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
