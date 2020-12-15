@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
     public Button _hand1;
     public Button _hand2;
     public Image _touchPhaseDisplay;
+    public Image _previewSlot;
 
     [Header("Debugg Console")]
     public Text _debugText;
@@ -73,10 +74,22 @@ public class UIManager : MonoBehaviour
         else
             DebugLogWarning("(UIManager): Missing BeginLevel Canvases");
 
-
+        ShowPreviewInvSlot(false, Vector3.zero, null);
         sServer.OnHostIpFound += DisableHostButton;
     }
 
+    public void ShowPreviewInvSlot(bool cond, Vector3 pos, Sprite img)
+    {
+        if (_previewSlot)
+        {
+            _previewSlot.gameObject.SetActive(cond);
+            if (cond)
+            {
+                _previewSlot.gameObject.transform.position = pos;
+                _previewSlot.sprite = img;
+            }
+        }
+    }
 
     private void SetUpWorkStationDropDownMenu()
     {

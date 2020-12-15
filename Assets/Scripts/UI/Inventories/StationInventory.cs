@@ -10,15 +10,15 @@ public class StationInventory : UIInventoryManager
     {
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
-        if (!_optionalSendButton)
-        {
-            var go = GameObject.FindGameObjectWithTag("SendButton");
-            if (go != null)
-            {
-                _optionalSendButton = go.GetComponent<Button>();
-                _optionalSendButton.interactable = false;
-            }
-        }
+        //if (!_optionalSendButton)
+        //{
+        //    var go = GameObject.FindGameObjectWithTag("SendButton");
+        //    if (go != null)
+        //    {
+        //        _optionalSendButton = go.GetComponent<Button>();
+        //        _optionalSendButton.interactable = false;
+        //    }
+        //}
         _inventoryType = eInvType.STATION;
         GetGameManagerData();
         GenInventory();
@@ -182,10 +182,11 @@ public class StationInventory : UIInventoryManager
             if (!ws.isKittingStation())
             {
                 Destroy(this.gameObject); //good enough for now might need to go higher to parents
-                Debug.LogWarning($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
+                UIManager.instance.DebugLogWarning($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
                 return true;
             }
         }
+        UIManager.instance.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
         return false;
     }
 
