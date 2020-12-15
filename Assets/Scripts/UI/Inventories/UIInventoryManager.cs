@@ -31,8 +31,6 @@ public class UIInventoryManager : MonoBehaviour
 
     protected string _prefix;
 
-    /** Note: If world canvas is turned on at start of scene this script will bug out because work station is not assigned yet
-    * Can solve this later if it becomes a real problem */
 
     #region Helper Initilization Methods for extended classes
     protected void PrintASequence(int[] sequence, string seqName)

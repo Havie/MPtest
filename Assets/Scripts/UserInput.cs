@@ -10,7 +10,7 @@ public class UserInput : MonoBehaviour
 
     public enum eState { FREE, ROTATION, DISPLACEMENT, UI, PREVIEWCONSTRUCTION };
     public eState _state { get; private set; }
-    public  bool _IsMobileMode { get; private set; }
+    public bool _IsMobileMode { get; private set; }
     public Camera _mainCamera { get; private set; }
 
     public ObjectController _currentSelection { get; private set; }
@@ -20,17 +20,23 @@ public class UserInput : MonoBehaviour
     [HideInInspector]
     public float _pressTimeMAX = 0.75f; ///was 1.2f
     [HideInInspector]
-    public float _holdLeniency = 1.5f; 
+    public float _holdLeniency = 1.5f;
     private Vector3 _inputPos; ///current input loc
     private Vector3 _lastPos; ///prior input loc
     private Vector3 _mOffset; ///distance between obj in world and camera
     private UIInventorySlot _lastSlot;
 
+    [SerializeField] Transform _table;
+    private float _tableHeight = -0.45f;
+    private bool _justPulledOutOfUI;
+
     private Vector3 _objStartPos;
     private Quaternion _objStartRot;
     //UI
     [SerializeField] GraphicRaycaster _Raycaster;
+    [SerializeField] GraphicRaycaster _RaycasterWorld;
     PointerEventData _PointerEventData;
+    PointerEventData _pointerEventDataWorld;
     EventSystem _EventSystem;
 
     //Actions
@@ -51,6 +57,18 @@ public class UserInput : MonoBehaviour
         if (_IsMobileMode)
             _holdLeniency = 5f; ///Touch controls too sensitive
 
+        if (_table == null)
+        {
+            var table = GameObject.FindGameObjectWithTag("Table").transform;
+            if (table)
+                _table = table.transform;
+            else
+                UIManager.instance.DebugLogWarning("Table not set up with tag for UserInput Awake");
+        }
+
+        if (_table)
+            _tableHeight = _table.position.y;
+
     }
     void Start()
     {
@@ -58,6 +76,7 @@ public class UserInput : MonoBehaviour
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
         //Set up the new Pointer Event
         _PointerEventData = new PointerEventData(_EventSystem);
+       
         _mainCamera = Camera.main;
 
         if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
@@ -68,7 +87,8 @@ public class UserInput : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
+        if(Input.GetMouseButtonDown(1))
+            Debug.Log($"Mouse={_inputPos}");
 
         switch (_state)
         {
@@ -99,15 +119,15 @@ public class UserInput : MonoBehaviour
                 }
         }
 
-       /* var V1 = GetInputWorldPos(_tmpZfix);
-       Debug.LogError($"(1)Mouse::{V1} + mOffset={_mOffset} = {V1 + _mOffset}");
-        if (_currentSelection)
+        /* var V1 = GetInputWorldPos(_tmpZfix);
+        Debug.LogError($"(1)Mouse::{V1} + mOffset={_mOffset} = {V1 + _mOffset}");
+         if (_currentSelection)
 
-        {
-            var v2 = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
-            Debug.LogError($"(2)Mouse::{v2} + mOffset={_mOffset} = {v2 + _mOffset}");
+         {
+             var v2 = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
+             Debug.LogError($"(2)Mouse::{v2} + mOffset={_mOffset} = {v2 + _mOffset}");
 
-        }*/
+         }*/
     }
 
     public bool InputDown()
@@ -140,19 +160,19 @@ public class UserInput : MonoBehaviour
         if (InputDown())
         {
             _lastPos = _inputPos;
-             _currentSelection = CheckForObjectAtLoc(_lastPos);
+            _currentSelection = CheckForObjectAtLoc(_lastPos);
             _pressTimeCURR = 0;
             if (_currentSelection) ///if you get an obj do rotation
             {
                 // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
 
-                _rotationAmount =Vector2.zero; ///reset our rotation amount before re-entering
+                _rotationAmount = Vector2.zero; ///reset our rotation amount before re-entering
                 _state = eState.ROTATION;
 
             }
             else ///if u get UI do UI 
             {
-                var slot = CheckRayCastForUI();
+                var slot = RayCastForInvSlot();
                 if (slot != null)
                 {
                     if (slot.GetInUse())
@@ -160,10 +180,16 @@ public class UserInput : MonoBehaviour
                         _state = eState.UI;
                     }
                 }
+                else
+                {
+                   var instructions= RayCastForInstructions();
+                    if (instructions)
+                        instructions.InstructionsClicked();
+                }
             }
 
         }
-        
+
 
         return false;
     }
@@ -180,10 +206,9 @@ public class UserInput : MonoBehaviour
                 _pressTimeCURR += Time.deltaTime;
 
                 ///cap our transparency to 0.5f
-                float changeVal = (_pressTimeMAX - _pressTimeCURR)/ _pressTimeMAX;
+                float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
 
                 changeVal = Mathf.Lerp(1, changeVal, 0.5f);
-                Debug.Log($"opacity set to : {changeVal} ");
 
                 _currentSelection.ChangeMaterialColor(changeVal);
                 UIManager.instance.ShowTouchDisplay(
@@ -203,7 +228,7 @@ public class UserInput : MonoBehaviour
                 UIManager.instance.HideTouchDisplay();
 
                 _currentSelection = CheckForObjectAtLoc(_inputPos);
-                _currentSelection= FindAbsoluteParent(_currentSelection);
+                _currentSelection = FindAbsoluteParent(_currentSelection);
                 if (_currentSelection)
                 {
                     _currentSelection.ChangeAppearanceMoving();
@@ -279,31 +304,43 @@ public class UserInput : MonoBehaviour
         if (_currentSelection.IsHighlighted)
             _currentSelection.SetHighlighted(false);
 
-        
+
     }
 
     /** Player is moving an object to or from inventory slot*/
     public bool CheckDisplacement()
     {
 
-        UIInventorySlot slot = CheckRayCastForUI();
+        UIInventorySlot slot = RayCastForInvSlot();
         if (InputDown())
         {
             if (_currentSelection)
             {
                 Vector3 worldLoc = GetCurrentWorldLocBasedOnMouse(_currentSelection.transform);
                 _currentSelection.Follow(worldLoc + _mOffset);
-                
+
                 if (slot != null) ///we are hovering over a slot 
                 {
                     if (!slot.GetInUse())
                     {
-                        //Debug.Log($"trying to preview for itemID {(int)_currentSelection._myID}");
-                        slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID));
-                        _currentSelection.ChangeAppearanceHidden(true);
+                        ///The slot can accept this item
+                       if (slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID)))
+                        {
+                            _currentSelection.ChangeAppearanceHidden(true);
+                            UIManager.instance.ShowPreviewInvSlot(false, _inputPos, null);
+                        }
+                        else ///the slot can not accept this item so continue to show the dummy preview
+                            ShowDummyPreviewSlot();
+
                         if (slot != _lastSlot && _lastSlot != null)
                             _lastSlot.UndoPreview();
                         _lastSlot = slot;
+                    }
+                    else
+                    {
+                        ///show a preview of just the icon floating around
+                        _lastSlot = slot; ///this being here might mess some logic up for last use
+                        ShowDummyPreviewSlot();
                     }
                 }
                 else if (_lastSlot)
@@ -324,46 +361,59 @@ public class UserInput : MonoBehaviour
                 {
                     //Debug.Log($"FOUND UI SLOT {slot.name}");
                     slot.SetNormal();
-                    assigned= slot.AssignItem((int)_currentSelection._myID, 1);
-                    if(assigned)
+                    assigned = slot.AssignItem((int)_currentSelection._myID, 1);
+                    if (assigned)
                         Destroy(_currentSelection.gameObject);
                 }
-                if (!assigned) 
+                if (!assigned)
                 {
-                    //put it back to where we picked it up 
+                    ///put it back to where we picked it up 
                     if (slot) // we tried dropping in incompatible slot
                     {
                         _currentSelection.transform.position = _objStartPos;
                         _currentSelection.transform.rotation = _objStartRot;
+
+                    }
+                    else 
+                    {
+                        var dz = CheckRayCastForDeadZone();
+                        if(dz)
+                        {
+                            ///If the item is dropped in a deadzone, reset it to a safe place
+                            _currentSelection.transform.position = GetCurrentWorldLocBasedOnPos(dz.GetSafePosition);
+                        }
                     }
                     _currentSelection.ChangeAppearanceNormal();
-                   // HandManager.DropItem(_currentSelection);
+                    // HandManager.DropItem(_currentSelection);
                     //Really weird Fix to prevent raycast bug
                     FixRayCastBug();
                 }
             }
-          
+
+            _justPulledOutOfUI = false;
             _state = eState.FREE;
         }
 
         return false;
     }
 
+
+
     public bool CheckUI()
     {
         if (InputDown())
         {
             ///If found slot in use spawn obj and go to displacement 
-            var slot = CheckRayCastForUI();
+            var slot = RayCastForInvSlot();
             if (slot)
             {
                 //Debug.LogWarning($"Slot found= {slot.name}");
                 int itemID = slot.GetItemID();
-               // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
+                // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
                 slot.RemoveItem();
                 Vector3 slotLoc = slot.transform.position;
-                slotLoc.z = _tmpZfix; 
-                float zCoord = _mainCamera.WorldToScreenPoint(slotLoc).z; 
+                slotLoc.z = _tmpZfix;
+                float zCoord = _mainCamera.WorldToScreenPoint(slotLoc).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
                 _currentSelection = obj;
                 HandManager.PickUpItem(_currentSelection);
@@ -373,8 +423,9 @@ public class UserInput : MonoBehaviour
                     _mOffset = Vector3.zero; /// it spawns here so no difference
                     _objStartPos = new Vector3(0, 0, _tmpZfix);
                     _objStartRot = Quaternion.identity;
-
+                    _justPulledOutOfUI = true;
                     _state = eState.DISPLACEMENT;
+                    _currentSelection.ChangeAppearanceHidden(true);
                 }
                 else
                     Debug.LogWarning("This happened?1");
@@ -390,6 +441,12 @@ public class UserInput : MonoBehaviour
     }
 
 
+    private void ShowDummyPreviewSlot()
+    {
+        Sprite img = BuildableObject.Instance.GetSpriteByID((int)_currentSelection._myID);
+        _currentSelection.ChangeAppearanceHidden(true);
+        UIManager.instance.ShowPreviewInvSlot(true, _inputPos, img);
+    }
     public bool CheckPreviewConstruction()
     {
 
@@ -451,16 +508,30 @@ public class UserInput : MonoBehaviour
             _lastSlot.UndoPreview();
             _lastSlot = null;
         }
+
+        UIManager.instance.ShowPreviewInvSlot(false, _inputPos, null);
     }
-    private Vector3 GetCurrentWorldLocBasedOnMouse(Transform transform)
+    private Vector3 GetCurrentWorldLocBasedOnMouse(Transform currSelectionTransform)
     {
         //Debug.Log($"(1) {_inputPos.x},{_inputPos.y}");
-        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(transform.position);
+        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(currSelectionTransform.position);
         ///gets the objects Z pos in world for depth
         float zCoord = screenPtObj.z;
         ///gets the world loc based on inputpos and gives it the z depth from the obj
         Vector3 worldLocInput = GetInputWorldPos(zCoord);
-        return new Vector3(worldLocInput.x, worldLocInput.y, transform.position.z); 
+        return new Vector3(worldLocInput.x, worldLocInput.y, currSelectionTransform.position.z);
+    }
+    private Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo)
+    {
+        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(_currentSelection.transform.position);
+        float zCoord = screenPtObj.z;
+        ///gets the world loc based on transform and gives it the z depth from the obj
+        var v3= _mainCamera.ScreenToWorldPoint(
+            new Vector3(safePlaceToGo.position.x, safePlaceToGo.position.y, zCoord)
+            );
+
+        v3.z = _currentSelection.transform.position.z;
+        return v3;
     }
 
     private Vector3 GetInputWorldPos(float zLoc)
@@ -470,31 +541,31 @@ public class UserInput : MonoBehaviour
 
     public Vector3 GetScreenPointBasedOnWorldLoc(Vector3 pos)
     {
-        return  _mainCamera.WorldToScreenPoint(pos);
+        return _mainCamera.WorldToScreenPoint(pos);
     }
 
     public ObjectController CheckForObjectAtLoc(Vector3 pos)
     {
         var ray = _mainCamera.ScreenPointToRay(pos);
-        Debug.DrawRay( ray.origin, ray.direction*1350, Color.red, 5);
+        Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
             //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
             return (hit.transform.gameObject.GetComponent<ObjectController>());
         }
-       /* else
-        {
-            Debug.LogWarning($"The Hit @loc:{pos} somehow missed");
-            var bo = GameObject.FindObjectOfType<BuildableObject>();
-            if (bo && bo.transform.childCount>0)
-            {
-                
-                var child = bo.transform.GetChild(0);
-                var screenloc = _mainCamera.WorldToScreenPoint(child.position);
-                Debug.LogError($"{child.gameObject.name} is @loc:{screenloc} , and world pos = {child.transform.position}");
-            }
+        /* else
+         {
+             Debug.LogWarning($"The Hit @loc:{pos} somehow missed");
+             var bo = GameObject.FindObjectOfType<BuildableObject>();
+             if (bo && bo.transform.childCount>0)
+             {
 
-        }*/
+                 var child = bo.transform.GetChild(0);
+                 var screenloc = _mainCamera.WorldToScreenPoint(child.position);
+                 Debug.LogError($"{child.gameObject.name} is @loc:{screenloc} , and world pos = {child.transform.position}");
+             }
+
+         }*/
 
         return null;
 
@@ -503,7 +574,7 @@ public class UserInput : MonoBehaviour
     /**This is a really weird fix I found to prevent the raycast from missing the box */
     private void FixRayCastBug()
     {
-        if(_currentSelection)
+        if (_currentSelection)
         {
             var box = _currentSelection.GetComponent<Collider>();
             box.enabled = false;
@@ -530,7 +601,7 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
-    public UIInventorySlot CheckRayCastForUI()
+    public UIInventorySlot RayCastForInvSlot()
     {
         //Set the Pointer Event Position to that of the mouse position
         _PointerEventData.position = Input.mousePosition; //Maybe I can use touch input last known
@@ -551,7 +622,40 @@ public class UserInput : MonoBehaviour
 
         return null;
     }
+    public UIInstructions RayCastForInstructions()
+    {
+        var ray = _mainCamera.ScreenPointToRay(_inputPos);
+        Debug.DrawRay(ray.origin, ray.direction * 1350, Color.green, 5);
+        if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
+        {
+            //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
+            return (hit.transform.gameObject.GetComponent<UIInstructions>());
+        }
 
+        return null;
+    }
+
+    public UIDeadZone CheckRayCastForDeadZone()
+    {
+        //Set the Pointer Event Position to that of the mouse position
+        _PointerEventData.position = Input.mousePosition; //Maybe I can use touch input last known
+
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        //Raycast using the Graphics Raycaster and mouse click position
+        _Raycaster.Raycast(_PointerEventData, results);
+
+        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+        foreach (RaycastResult result in results)
+        {
+            //Debug.Log("hit =" + result.gameObject);
+            UIDeadZone dz = result.gameObject.transform.GetComponent<UIDeadZone>();
+            if (dz)
+                return dz;
+        }
+
+        return null;
+    }
 
     #region QualityActions
     private bool TryPerformAction(QualityAction.eActionType type)
@@ -569,7 +673,7 @@ public class UserInput : MonoBehaviour
 
     private ObjectController FindAbsoluteParent(ObjectController startingObj)
     {
-        if(startingObj==null)
+        if (startingObj == null)
         {
             Debug.LogWarning($"Somehow we are passing ina  null startingObj???");
             return null;
@@ -577,7 +681,7 @@ public class UserInput : MonoBehaviour
 
         ObjectController parent = startingObj._parent;
         ObjectController child = startingObj;
-        while(parent != null)
+        while (parent != null)
         {
             child = parent;
             parent = child._parent;
@@ -590,8 +694,8 @@ public class UserInput : MonoBehaviour
 
     public void InjectItem(int itemID)
     {
-       
-        var tmp = _mainCamera.WorldToScreenPoint(new Vector3(0,0,_tmpZfix));
+
+        var tmp = _mainCamera.WorldToScreenPoint(new Vector3(0, 0, _tmpZfix));
         var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(tmp.z)).GetComponent<ObjectController>();
 
         if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
@@ -611,7 +715,7 @@ public class UserInput : MonoBehaviour
                 Debug.Log($"Final loc={_currentSelection.transform.position}");
             }
         }
-        
+
 
     }
 }

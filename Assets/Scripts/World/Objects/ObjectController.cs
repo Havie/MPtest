@@ -223,7 +223,7 @@ public class ObjectController : MonoBehaviour
             else
             {
                 // if were going up, allow it
-                if (loc.y > 0)
+                if (loc.y > this.transform.position.y)
                     this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
                 //else /if direction is going to go more into table prevent it,
             }
