@@ -86,10 +86,29 @@ public class OverallQuality : MonoBehaviour
     /** Have to add a new instance as its getting destroyed on last OBJ*/
     private void AddAsNewQuality(ObjectQuality pastObject)
     {
-       var qs= this.transform.gameObject.AddComponent<ObjectQuality>();
-        qs.InitalizeAsDummy(pastObject.QualityStep, pastObject.CurrentQuality);
+        //var qs= this.transform.gameObject.AddComponent<ObjectQuality>();
+        //qs.InitalizeAsDummy(pastObject.QualityStep, pastObject.CurrentQuality);
+        //_qualities.Add(qs);
 
-        _qualities.Add(qs);
+        ///I should instead be updating this on our children
+        ObjectQuality childQuality= FindObjectQualityOfType(pastObject.ID);
+        if (childQuality)
+            childQuality.CloneQuality(pastObject);
+        else
+            Debug.LogWarning($"Couldnt find {pastObject} on new item {this.gameObject.name}'s children");
+
+
+    }
+
+    public ObjectQuality FindObjectQualityOfType(int id)
+    {
+        foreach(ObjectQuality q in this.GetComponentsInChildren<ObjectQuality>())
+        {
+            if (q.ID == id)
+                return q;
+        }    
+
+        return null;
     }
 
 }

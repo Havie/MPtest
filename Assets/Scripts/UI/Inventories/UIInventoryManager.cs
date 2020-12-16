@@ -421,6 +421,7 @@ public class UIInventoryManager : MonoBehaviour
 
     public void SendBatch()
     {
+        Debug.Log("heared send batch");
         foreach (var slot in _slots)
         {
             slot.SendData();

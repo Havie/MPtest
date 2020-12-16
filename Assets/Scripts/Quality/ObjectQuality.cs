@@ -40,6 +40,10 @@ public class ObjectQuality : MonoBehaviour
         AssignCurrentActions(currentActions);
         _isDummy = true;
     }
+    public void CloneQuality(ObjectQuality toCopy)
+    {
+        Debug.Log($"{this.gameObject.name} copying {toCopy}");
+    }
 
     /// used between item creations to carry data
     public void AssignCurrentActions(int amount)

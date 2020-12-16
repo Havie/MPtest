@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977898da102ecb5469631e2fc21fe578, type: 3}
-  m_Name: ONE
+  m_Script: {fileID: 11500000, guid: 4d1e50687b33a3943be11dc515ccd8c8, type: 3}
+  m_Name: b_Task_7
   m_EditorClassIdentifier: 
-  _myStation: 1
-  _sendOutputToStation: 2
-  _tasks:
-  - {fileID: 11400000, guid: 7a77ddd76a93f6044bcfd8104ea1ec65, type: 2}
+  _finalItemID: 0d000000
+  _requiredItemIDs: 0d000000
+  isKittingStation: 0

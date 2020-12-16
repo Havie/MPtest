@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 977898da102ecb5469631e2fc21fe578, type: 3}
-  m_Name: p_ONE
+  m_Name: pull_2
   m_EditorClassIdentifier: 
-  _myStation: 1
-  _sendOutputToStation: 2
-  _myStationName: One
+  _myStation: 2
+  _sendOutputToStation: 3
+  _myStationName: Two
   _tasks:
-  - {fileID: 11400000, guid: 9dbdfb891504d6344977f14e47f554e2, type: 2}
+  - {fileID: 11400000, guid: 9281f66f72b2f924cb704826fa5e72d6, type: 2}
