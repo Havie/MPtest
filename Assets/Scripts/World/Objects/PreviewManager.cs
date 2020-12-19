@@ -70,7 +70,7 @@ public static class PreviewManager
             var overallQuality = item.GetComponent<OverallQuality>();
             if(overallQuality)
             {
-                foreach (var quality in overallQuality._qualities)
+                foreach (var quality in overallQuality.Qualities)
                 {
                     qualities.Add(quality);
                 }
@@ -89,7 +89,7 @@ public static class PreviewManager
         {
             foreach (var q in qualities)
             {
-                finalQuality.ReadOutQuality(q); //how is this not null/missing if we destroyed obj above?
+                finalQuality.ReadOutQuality(q);
             }
         }
 
