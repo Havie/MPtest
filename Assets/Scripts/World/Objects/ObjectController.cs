@@ -72,7 +72,7 @@ public class ObjectController : MonoBehaviour
         ToggleRB(true); ///turn off physics 
         SetUpHighlightComponent();
         DetermineHandLocation();
-        _rotateAroundAxis= DetermineRotationAccess();
+        _rotateAroundAxis = DetermineRotationAccess();
 
     }
 
@@ -252,7 +252,7 @@ public class ObjectController : MonoBehaviour
 
         foreach (var mr in _childrenMeshRenderers)
         {
-             mr.enabled = true;
+            mr.enabled = true;
             Material m = mr.material;
             Color color = m.color;
             color.a = opacity;
@@ -440,7 +440,7 @@ public class ObjectController : MonoBehaviour
     public void SetResetOnNextChange()
     {
         _resetOnChange = true;
-       // Debug.DrawRay(_collider.bounds.min, -Vector3.forward, Color.red, 1);
+        // Debug.DrawRay(_collider.bounds.min, -Vector3.forward, Color.red, 1);
     }
     public void ResetPosition()
     {
@@ -453,7 +453,7 @@ public class ObjectController : MonoBehaviour
 
 
         var mpos = transform.position;
-        transform.position = new Vector3(mpos.x,0, mpos.z);
+        transform.position = new Vector3(mpos.x, 0, mpos.z);
     }
 
     public void ResetHittingTable()
@@ -494,6 +494,21 @@ public class ObjectController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Table"))
+            _hittingTable = false;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Table"))
+        {
+            _hittingTable = true;
+            _lastGoodYAboveTable = this.transform.position.y;
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Table"))
             _hittingTable = false;
     }
 

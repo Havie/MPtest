@@ -55,16 +55,17 @@ public class InInventory : UIInventoryManager
     private int DetermineWorkStationBatchSize()
     {
         WorkStationManager wm = UIManager.instance._workstationManager;
-        Debug.Log($"Initial WM ={wm}");
         int BATCHSIZE = GameManager.instance._batchSize;
         //if (BATCHSIZE == 1)
         //    TurnOffScrollBars();
         WorkStation myWS = GameManager.instance._workStation;
+
         return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
 
     protected virtual int ParseItems(WorkStationManager wm, WorkStation myWS, bool AddToSlotOnFind)
     {
+
         int count = 0;
         int[] stationSequence = getProperSequence(wm, myWS);
         var stationList = wm.GetStationList();

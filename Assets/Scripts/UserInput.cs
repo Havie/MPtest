@@ -84,7 +84,6 @@ public class UserInput : MonoBehaviour
     }
 
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if(Input.GetMouseButtonDown(1))
@@ -344,8 +343,10 @@ public class UserInput : MonoBehaviour
                     else
                     {
                         ///show a preview of just the icon floating around
-                        _lastSlot = slot; ///this being here might mess some logic up for last use
-                        ShowDummyPreviewSlot();
+                        if (slot != _lastSlot && _lastSlot != null)
+                            _lastSlot.UndoPreview();
+                        _lastSlot = slot;
+                         ShowDummyPreviewSlot();
                     }
                 }
                 else

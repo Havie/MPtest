@@ -44,7 +44,7 @@ public class UIInventorySlot : MonoBehaviour
     {
         RequiredID = itemID;
         //Set transparent icon 
-        AssignSprite(RequiredID,true);
+        AssignSpriteByID(RequiredID,true);
     }
     public bool GetInUse() => _inUse;
     public bool PreviewSlot(Sprite img)
@@ -52,7 +52,7 @@ public class UIInventorySlot : MonoBehaviour
         bool retVal = true;
         if (!_inUse && RequiredID == -1)
         {
-            _myIcon.sprite = img;
+            AssignSprite(img);
         }
         else if (!_inUse && RequiredID != -1)
         {
@@ -86,25 +86,24 @@ public class UIInventorySlot : MonoBehaviour
         _itemID = -1;
         if (RequiredID != -1)
         {
-            AssignSprite(RequiredID, true);
+            AssignSpriteByID(RequiredID, true);
         }
         else
         {
-            _myIcon.sprite = _defaultIcon;
+            AssignSprite(_defaultIcon);
         }
     }
 
     public void UndoPreview()
     {
-       // Debug.Log($"UndoPreview {this.gameObject.name} #items {_numItemsStored} , {_myIcon.sprite}");
 
         if (_numItemsStored > 0)
         {
             SetNormal();
             if (RequiredID != -1)
-                AssignSprite(RequiredID, false);
+                AssignSpriteByID(RequiredID, false);
             else
-                AssignSprite(_itemID, false);
+                AssignSpriteByID(_itemID, false);
         }
         else
         {
@@ -116,11 +115,14 @@ public class UIInventorySlot : MonoBehaviour
     public void RemoveItem()
     {
         --_numItemsStored;
+        //if (gameObject.name.Contains("#1"))
+        //    Debug.Log($"Removed Item for {this.gameObject.name} , new total={_numItemsStored}");
         if (_numItemsStored <= 0)
         {
+           
             if (RequiredID != -1)
             {
-                AssignSprite(RequiredID, true);
+                AssignSpriteByID(RequiredID, true);
                 _itemID = -1;
                 _inUse = false;
                 SetNormal();
@@ -130,21 +132,31 @@ public class UIInventorySlot : MonoBehaviour
         }
     }
 
-    private void AssignSprite(int id, bool transparent)
+    private void AssignSpriteByID(int id, bool transparent)
     {
 
-        //Debug.Log($"{this.gameObject.name} AssignSprite {id} , {transparent}");
         var bo = BuildableObject.Instance;
         Sprite img = bo.GetSpriteByID(id);
 
-        if (_myIcon)
-            _myIcon.sprite = img;
+        //if (gameObject.name.Contains("#1"))
+        //    Debug.Log($"{this.gameObject.name} AssignSprite {id} ={img.name}, {transparent} ");
+
+        AssignSprite(img);
 
        
         if(transparent)
             _myIcon.color = _TRANSPARENT;
         else
             _myIcon.color = _VISIBLE;
+    }
+
+    private void AssignSprite(Sprite img)
+    {
+        if (_myIcon)
+            _myIcon.sprite = img;
+
+       // Debug.Log($"{this.gameObject.name} AssigndSprite = <color=green>{img.name}</color>");
+
     }
     /**Assigns an img to the child sprite of this object, and keeps track of its id */
     public bool AssignItem(int id, int count)
@@ -156,7 +168,7 @@ public class UIInventorySlot : MonoBehaviour
             if (_isOutSlot && id != RequiredID)
                return false;
 
-            AssignSprite(id, false);
+            AssignSpriteByID(id, false);
 
              _itemID = id;
             _numItemsStored = count;
