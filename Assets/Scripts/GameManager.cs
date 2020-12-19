@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
     public void AssignWorkStation(WorkStation station)
     {
         _workStation = station;
+        Debug.Log("assigned WS " + station);
     }
 
     ///Things are reliant on batchsize

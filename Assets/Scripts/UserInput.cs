@@ -84,7 +84,6 @@ public class UserInput : MonoBehaviour
     }
 
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if(Input.GetMouseButtonDown(1))
@@ -205,16 +204,20 @@ public class UserInput : MonoBehaviour
             {
                 _pressTimeCURR += Time.deltaTime;
 
-                ///cap our transparency to 0.5f
-                float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
+                if (_pressTimeCURR > _pressTimeMAX / 10) ///dont show this instantly 10%filled
+                {
+                    ///Show the UI wheel for our TouchPhase 
+                    UIManager.instance.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX,
+                         new Vector3(_inputPos.x, _inputPos.y, _inputPos.z)
+                         );
 
-                changeVal = Mathf.Lerp(1, changeVal, 0.5f);
+                    ///Cap our mats transparency fade to 0.5f
+                    float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
+                    changeVal = Mathf.Lerp(1, changeVal, 0.5f);
+                    _currentSelection.ChangeMaterialColor(changeVal);
 
-                _currentSelection.ChangeMaterialColor(changeVal);
-                UIManager.instance.ShowTouchDisplay(
-                    _pressTimeCURR, _pressTimeMAX,
-                    new Vector3(_inputPos.x, _inputPos.y, _inputPos.z));
-                //Vibration.Vibrate(100); ///No haptic feedback on WiFi version of TabS5E :(
+                    //Vibration.Vibrate(100); ///No haptic feedback on WiFi version of TabS5E :(
+                }
             }
             else
             {
@@ -237,8 +240,9 @@ public class UserInput : MonoBehaviour
                     _objStartPos = _currentSelection.transform.position;
                     _objStartRot = _currentSelection.transform.rotation;
 
-                    //only if on table
-                    if (_currentSelection.OnTable())
+                    ///only if on table
+                   // if (_currentSelection.SetOnTable())  
+                     if (_currentSelection._hittingTable)
                         ResetObjectOrigin(zCoord);
 
                     HandManager.PickUpItem(_currentSelection); //might have moved to the wrong spot
@@ -339,11 +343,13 @@ public class UserInput : MonoBehaviour
                     else
                     {
                         ///show a preview of just the icon floating around
-                        _lastSlot = slot; ///this being here might mess some logic up for last use
-                        ShowDummyPreviewSlot();
+                        if (slot != _lastSlot && _lastSlot != null)
+                            _lastSlot.UndoPreview();
+                        _lastSlot = slot;
+                         ShowDummyPreviewSlot();
                     }
                 }
-                else if (_lastSlot)
+                else
                     ResetObjectAndSlot();
 
                 if (PreviewManager._inPreview)
@@ -382,6 +388,15 @@ public class UserInput : MonoBehaviour
                             ///If the item is dropped in a deadzone, reset it to a safe place
                             _currentSelection.transform.position = GetCurrentWorldLocBasedOnPos(dz.GetSafePosition);
                         }
+                        else
+                        {
+                            ///Check were not below the table
+                            if (_currentSelection._hittingTable)
+                                _currentSelection.SetResetOnNextChange();
+
+                               // Debug.Log($"curr: {_currentSelection.transform.position.y} vs table {_tableHeight}");
+
+                        }
                     }
                     _currentSelection.ChangeAppearanceNormal();
                     // HandManager.DropItem(_currentSelection);
@@ -396,8 +411,6 @@ public class UserInput : MonoBehaviour
 
         return false;
     }
-
-
 
     public bool CheckUI()
     {
@@ -425,7 +438,7 @@ public class UserInput : MonoBehaviour
                     _objStartRot = Quaternion.identity;
                     _justPulledOutOfUI = true;
                     _state = eState.DISPLACEMENT;
-                    _currentSelection.ChangeAppearanceHidden(true);
+                    _currentSelection.ChangeAppearanceHidden(true); ///spawn it invisible till were not hovering over UI
                 }
                 else
                     Debug.LogWarning("This happened?1");

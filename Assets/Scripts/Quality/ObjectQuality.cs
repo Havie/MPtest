@@ -19,7 +19,7 @@ public class ObjectQuality : MonoBehaviour
 
     public int MaxQuality => _qualityStep._requiredActions;
     public int ID => _qualityStep.Identifier;
-    public int CurrentQuality => _currentActions;
+    public int CurrentQuality => _currentActions <= MaxQuality ? _currentActions : 0 ;
     public QualityStep QualityStep => _qualityStep;
 
 
@@ -39,6 +39,11 @@ public class ObjectQuality : MonoBehaviour
         _qualityStep = qs;
         AssignCurrentActions(currentActions);
         _isDummy = true;
+    }
+    public void CloneQuality(ObjectQuality toCopy)
+    {
+        Debug.Log($"{this.gameObject.name} copying {toCopy}");
+        AssignCurrentActions(toCopy.CurrentQuality);
     }
 
     /// used between item creations to carry data

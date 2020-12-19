@@ -22,7 +22,8 @@ public class ObjectController : MonoBehaviour
     ///Components
     private Rigidbody _rb;
     private Collider _collider;
-    private bool _hittingTable;
+    public bool _hittingTable { get; private set; }
+    private float _lastGoodYAboveTable;
     private bool _isSubObject;
     [HideInInspector]
     public ObjectController _parent;
@@ -71,7 +72,7 @@ public class ObjectController : MonoBehaviour
         ToggleRB(true); ///turn off physics 
         SetUpHighlightComponent();
         DetermineHandLocation();
-        _rotateAroundAxis= DetermineRotationAccess();
+        _rotateAroundAxis = DetermineRotationAccess();
 
     }
 
@@ -104,6 +105,7 @@ public class ObjectController : MonoBehaviour
                 UIManager.instance.UpdateHandLocation(_handIndex, _handLocation.position);
             }
         }
+
     }
 
     private void DetermineHandLocation()
@@ -250,7 +252,7 @@ public class ObjectController : MonoBehaviour
 
         foreach (var mr in _childrenMeshRenderers)
         {
-             mr.enabled = true;
+            mr.enabled = true;
             Material m = mr.material;
             Color color = m.color;
             color.a = opacity;
@@ -290,12 +292,10 @@ public class ObjectController : MonoBehaviour
 
         ChangeMaterialColor(1f);
         TrySetChildren(1f);
-        //ToggleCollider(true);
 
-        //foreach (var mr in _childrenMeshRenderers)
-        //    mr.GetComponent<ObjectController>().ChangeAppearanceNormal();
 
-        //Debug.Log($"{this.gameObject.name} heard change normal");
+        if (_resetOnChange)
+            ResetPosition();
     }
 
     public void ChangeAppearancePreview()
@@ -430,9 +430,30 @@ public class ObjectController : MonoBehaviour
             _collider.isTrigger = cond;
     }
 
-    public bool OnTable()
+    public bool SetOnTable()
     {
         return _rb.useGravity == true;
+    }
+
+
+    private bool _resetOnChange;
+    public void SetResetOnNextChange()
+    {
+        _resetOnChange = true;
+        // Debug.DrawRay(_collider.bounds.min, -Vector3.forward, Color.red, 1);
+    }
+    public void ResetPosition()
+    {
+        ///fck all this somethings off w the scaling , just set it to 0.
+        //var tableY = -0.455f;
+        //var bonusAmnt = 0.02f;
+        //var min = _collider.bounds.min;
+        //var diffBelowTable = min.y - tableY;  /// add cuz both negative 
+        //Debug.LogWarning($"min.y={min.y} and diff={diffBelowTable}   oldy= {mpos.y} newy= {mpos.y + Mathf.Abs(diffBelowTable)}  ....... my scale= {this.transform.localScale}");
+
+
+        var mpos = transform.position;
+        transform.position = new Vector3(mpos.x, 0, mpos.z);
     }
 
     public void ResetHittingTable()
@@ -466,12 +487,28 @@ public class ObjectController : MonoBehaviour
         if (other.tag.Equals("Table"))
         {
             _hittingTable = true;
+            _lastGoodYAboveTable = this.transform.position.y;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Table"))
+            _hittingTable = false;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Table"))
+        {
+            _hittingTable = true;
+            _lastGoodYAboveTable = this.transform.position.y;
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Table"))
             _hittingTable = false;
     }
 
