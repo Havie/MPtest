@@ -348,7 +348,7 @@ TextureImporter:
       name: UI_hand
       rect:
         serializedVersion: 2
-        x: 384
+        x: 385
         y: 192
         width: 48
         height: 64
