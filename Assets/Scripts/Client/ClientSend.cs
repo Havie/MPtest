@@ -51,14 +51,19 @@ public class ClientSend : MonoBehaviour
             ///Who am I sending it to? (station/ClientID?)
             packet.Write(toStationID);
             ///How many qualities to parse in a for loop
-            //packet.Write(qualities.Count);
-            //Debug.Log($"ClientSend QualityCount={qualities.Count}");
-            //for (int i = 0; i< qualities.Count; ++i)
-            //{
-            //    ObjectQuality q = qualities[i];
-            //    packet.Write(q.ID);
-            //    packet.Write(q.CurrentQuality);
-            //}
+            packet.Write(qualities.Count);
+            Debug.Log($"ClientSend QualityCount={qualities.Count}");
+            string info = "";
+            for (int i = 0; i < qualities.Count; ++i)
+            {
+                ObjectQuality q = qualities[i];
+                packet.Write(q.ID);
+                packet.Write(q.CurrentQuality);
+
+                info += $" send:({q.ID},{q.CurrentQuality}) ";
+            }
+
+            UIManager.instance.DebugLog(info);
 
             SendTCPData(packet);
 

@@ -57,15 +57,19 @@ public class sServerHandle
 
         List<int> qualities = new List<int>();
 
-        //var count = packet.ReadInt();
-        //Debug.Log($"ServerHandle QualityCount={count}");
-        /////Reconstruct the Object Quality data
-        //for (int i = 0; i < count; ++i)
-        //{
-        //    qualities.Add(packet.ReadInt()); ///quality ID
-        //    qualities.Add( packet.ReadInt()); ///quality Count
+        var count = packet.ReadInt();
+        Debug.Log($"ServerHandle QualityCount={count}");
+        string info = "";
+        ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var curAction = packet.ReadInt();
+            qualities.Add(id); ///quality ID
+            qualities.Add(curAction); ///quality Count
 
-        //}
+            info += $" server pack :({id},{curAction}) ";
+        }
 
         foreach (sClient c in sServer._clients.Values)
         {
@@ -76,6 +80,7 @@ public class sServerHandle
                 c.SendItem(itemLvl, qualities);
             }
 
+            Debug.Log(info);
 
         }
 

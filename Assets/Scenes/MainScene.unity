@@ -1643,7 +1643,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _colorHand1: {r: 0.96862745, g: 0.98039216, b: 0.17254902, a: 0.98039216}
   _colorHand2: {r: 0.9254902, g: 0.6683839, b: 0, a: 0.98039216}
-  _qualityPresets: []
+  _qualityPresets:
+  - {fileID: 11400000, guid: 7ac19d165e93f054ca66f5149f476b56, type: 2}
+  - {fileID: 11400000, guid: f20ac148d2cbb6c4997131d8f6639d63, type: 2}
+  - {fileID: 11400000, guid: a0699ff84486cec46837025cba7665aa, type: 2}
+  - {fileID: 11400000, guid: 00f3ba17a0cb1154daeca77c2816bb59, type: 2}
   DebugItemsOnSpawn: 0
 --- !u!4 &383828560
 Transform:

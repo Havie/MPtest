@@ -44,13 +44,17 @@ public class ClientHandle : MonoBehaviour
 
         List<ObjectQuality> qualities = new List<ObjectQuality>();
 
+        var count = packet.ReadInt()/2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
+        UIManager.instance.DebugLog($"ClientHandle Count={count}");
+
         ///Reconstruct the Object Quality data
-        //for (int i = 0; i < packet.ReadInt(); ++i)
-        //{
-        //    var id = packet.ReadInt();
-        //    var count = packet.ReadInt();
-        //    qualities.Add(BuildableObject.Instance.BuildTempQualities(id, count));
-        //}
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var currQ = packet.ReadInt();
+            qualities.Add(BuildableObject.Instance.BuildTempQualities(id, currQ));
+            Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
+        }
 
 
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
