@@ -194,9 +194,9 @@ public class sClient
     }
 
    
-    public void SendItem(int itemId)
+    public void SendItem(int itemId, List<int> qualityData)
     {
-        sServerSend.SendItem(_id, itemId);
+        sServerSend.SendItem(_id, itemId, qualityData);
     }
 
 

@@ -367,7 +367,7 @@ public class UserInput : MonoBehaviour
                 {
                     //Debug.Log($"FOUND UI SLOT {slot.name}");
                     slot.SetNormal();
-                    assigned = slot.AssignItem((int)_currentSelection._myID, 1);
+                    assigned = slot.AssignItem(_currentSelection, 1);
                     if (assigned)
                         Destroy(_currentSelection.gameObject);
                 }
@@ -412,6 +412,8 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
+
+
     public bool CheckUI()
     {
         if (InputDown())
@@ -423,11 +425,12 @@ public class UserInput : MonoBehaviour
                 //Debug.LogWarning($"Slot found= {slot.name}");
                 int itemID = slot.GetItemID();
                 // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
+                var qualityList = RebuildQualities(slot.Qualities);
                 slot.RemoveItem();
                 Vector3 slotLoc = slot.transform.position;
                 slotLoc.z = _tmpZfix;
                 float zCoord = _mainCamera.WorldToScreenPoint(slotLoc).z;
-                var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord)).GetComponent<ObjectController>();
+                var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(zCoord), qualityList).GetComponent<ObjectController>();
                 _currentSelection = obj;
                 HandManager.PickUpItem(_currentSelection);
                 //Debug.Log($"OBJ spawn loc={obj.transform.position}");
@@ -453,6 +456,17 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
+    private List<ObjectQuality> RebuildQualities(List<ObjectQuality> toCopy)
+    {
+        List<ObjectQuality> newList = new List<ObjectQuality>();
+        if (toCopy != null)
+        {
+            foreach (var q in toCopy)
+                newList.Add(q);
+        }
+
+        return newList;
+    }
 
     private void ShowDummyPreviewSlot()
     {
@@ -709,7 +723,7 @@ public class UserInput : MonoBehaviour
     {
 
         var tmp = _mainCamera.WorldToScreenPoint(new Vector3(0, 0, _tmpZfix));
-        var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(tmp.z)).GetComponent<ObjectController>();
+        var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(tmp.z), null).GetComponent<ObjectController>();
 
         if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
         {

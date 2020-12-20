@@ -55,15 +55,32 @@ public class sServerHandle
         int stationID = packet.ReadInt();
         Debug.Log("The stationID Read was : " + stationID);
 
+        List<int> qualities = new List<int>();
+
+        var count = packet.ReadInt();
+        Debug.Log($"ServerHandle QualityCount={count}");
+        string info = "";
+        ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var curAction = packet.ReadInt();
+            qualities.Add(id); ///quality ID
+            qualities.Add(curAction); ///quality Count
+
+            info += $" server pack :({id},{curAction}) ";
+        }
+
         foreach (sClient c in sServer._clients.Values)
         {
             //if client workstation ID matches stationID 
             if(c._workStation == stationID)
             {
                 //Send the item to their inventory:
-                c.SendItem(itemLvl);
+                c.SendItem(itemLvl, qualities);
             }
 
+            Debug.Log(info);
 
         }
 

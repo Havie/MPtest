@@ -111,9 +111,10 @@ public static class sServer
             }
             if (!_iAmHost) /// we dont want to process data , we might even want to close our UDP here but idk how
             {
-                _udpListener.Close();
+                //_udpListener.Close(); ///Results in Error:CanNot access disposed of object
                 return;
             }
+           
 
             using (sPacket packet = new sPacket(data))
             {
@@ -144,7 +145,8 @@ public static class sServer
         }
         catch (Exception e)
         {
-            Debug.Log($"Error receiving UDP data : {e}");
+            ///Cant debug to UI on this thread
+            Debug.LogError($"Error receiving UDP data : {e}");
         }
     }
 
@@ -159,7 +161,8 @@ public static class sServer
         }
         catch (Exception e)
         {
-            Debug.Log($"Error Sending UDP data to :{clientEndPoint}  exception: {e}");
+            ///Cant debug to UI on this thread
+            Debug.LogError($"Error Sending UDP data to :{clientEndPoint}  exception: {e}");
         }
 
     }

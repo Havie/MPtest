@@ -164,7 +164,7 @@ public class UIManager : MonoBehaviour
 
     public void BeginLevel(int itemLevel)
     {
-        Debug.Log("called BeginLevel");
+        //Debug.Log("called BeginLevel");
         //Setup the proper UI for our workStation
         WorkStation ws = GameManager.instance._workStation;
 

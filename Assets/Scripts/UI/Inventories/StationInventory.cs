@@ -210,7 +210,7 @@ public class StationInventory : UIInventoryManager
         {
             if (!slot.GetInUse())
             {
-                slot.AssignItem(itemID, int.MaxValue);
+                slot.AssignItem(itemID, int.MaxValue, null);
                 return;
             }
                
@@ -219,7 +219,7 @@ public class StationInventory : UIInventoryManager
         {
             if (!slot.GetInUse())
             {
-                slot.AssignItem(itemID, int.MaxValue);
+                slot.AssignItem(itemID, int.MaxValue, null);
                 return;
             }
                
@@ -227,7 +227,7 @@ public class StationInventory : UIInventoryManager
         //fell thru so we are full
         Debug.Log("we fell thru");
         UIInventorySlot nSlot = CreateNewSlot();
-        nSlot.AssignItem(itemID, int.MaxValue);
+        nSlot.AssignItem(itemID, int.MaxValue, null);
         _extraSlots.Add(nSlot);
     }
 

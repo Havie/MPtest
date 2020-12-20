@@ -63,13 +63,13 @@ public class GameManager : MonoBehaviour
     private void MobileSetUp()
     {
         _isMobileMode = Application.isMobilePlatform;
-        if (_isMobileMode)
-        {
-            Screen.orientation = ScreenOrientation.LandscapeRight;
-            Screen.autorotateToPortrait = false;
-            Screen.autorotateToLandscapeRight = false;
-            Screen.autorotateToPortraitUpsideDown = false;
-        }
+        //if (_isMobileMode)  ///let the build settings dictate
+        //{
+        //    Screen.orientation = ScreenOrientation.Landscape;
+        //    Screen.autorotateToPortrait = false;
+        //    Screen.autorotateToLandscapeRight = true;
+        //    Screen.autorotateToPortraitUpsideDown = false;
+        //}
     }
     private void AutomaticChecks()
     {
@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
     public void AssignWorkStation(WorkStation station)
     {
         _workStation = station;
-        Debug.Log("assigned WS " + station);
+       UIManager.instance.DebugLog($"assigned WS color=green>{station}</color>");
     }
 
     ///Things are reliant on batchsize
@@ -104,8 +104,7 @@ public class GameManager : MonoBehaviour
     ///We need to base auto send off batch
     private void ValidateAutoSend()
     {
-        if (_batchSize == 1)
-            _autoSend = true;
+        AutomaticChecks();
     }
 
     public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
@@ -113,9 +112,11 @@ public class GameManager : MonoBehaviour
     public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
     public void SetInventoryKitting(UIKitting inv) { _invKITTING = inv; }
 
-    #region Setters for Host Changes
+    #region Setters for Host Changes 
+    /// These Are from Button VerifyInput Events and from ClientHandle
     public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
-    public void BatchChanged(IntWrapper val) { ValidateBatchSize(val._value); }
+    public void BatchChanged(IntWrapper val) { ValidateBatchSize(val._value); } ///from button Events
+    public void BatchChanged(int val) { ValidateBatchSize(val); } ///from ClientHandle
     public void AutoSendChanged(bool cond) { _autoSend = cond; ValidateAutoSend(); }
     public void AddChaoticChanged(bool cond) { _addChaotic = cond; }
     public void IsStackableChanged(bool cond) { _isStackable = cond; }
