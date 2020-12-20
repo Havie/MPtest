@@ -412,17 +412,7 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
-    private List<ObjectQuality> RebuildQualities(List<ObjectQuality> toCopy)
-    {
-        List<ObjectQuality> newList = new List<ObjectQuality>();
-        if(toCopy!=null)
-        {
-            foreach (var q in toCopy)
-                newList.Add(q);
-        }
 
-        return newList;
-    }
 
     public bool CheckUI()
     {
@@ -466,6 +456,17 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
+    private List<ObjectQuality> RebuildQualities(List<ObjectQuality> toCopy)
+    {
+        List<ObjectQuality> newList = new List<ObjectQuality>();
+        if (toCopy != null)
+        {
+            foreach (var q in toCopy)
+                newList.Add(q);
+        }
+
+        return newList;
+    }
 
     private void ShowDummyPreviewSlot()
     {

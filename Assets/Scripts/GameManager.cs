@@ -63,13 +63,13 @@ public class GameManager : MonoBehaviour
     private void MobileSetUp()
     {
         _isMobileMode = Application.isMobilePlatform;
-        if (_isMobileMode)
-        {
-            Screen.orientation = ScreenOrientation.LandscapeRight;
-            Screen.autorotateToPortrait = false;
-            Screen.autorotateToLandscapeRight = false;
-            Screen.autorotateToPortraitUpsideDown = false;
-        }
+        //if (_isMobileMode)  ///let the build settings dictate
+        //{
+        //    Screen.orientation = ScreenOrientation.Landscape;
+        //    Screen.autorotateToPortrait = false;
+        //    Screen.autorotateToLandscapeRight = true;
+        //    Screen.autorotateToPortraitUpsideDown = false;
+        //}
     }
     private void AutomaticChecks()
     {
