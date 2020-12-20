@@ -367,7 +367,7 @@ public class UserInput : MonoBehaviour
                 {
                     //Debug.Log($"FOUND UI SLOT {slot.name}");
                     slot.SetNormal();
-                    assigned = slot.AssignItem((int)_currentSelection._myID, 1);
+                    assigned = slot.AssignItem(_currentSelection, 1);
                     if (assigned)
                         Destroy(_currentSelection.gameObject);
                 }

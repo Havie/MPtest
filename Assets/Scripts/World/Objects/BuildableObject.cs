@@ -9,11 +9,12 @@ public class BuildableObject : MonoBehaviour
     public Color _colorHand1;
     public Color _colorHand2;
 
+    public QualityStep[] _qualityPresets;
 
     private ObjectManager _manager;
 
     //These should be connected to something else like the workstation IDs
-    public ObjectManager.eItemID _mID; ///pretty much unused atm?
+
 
     private List<GameObject> _objects;
 
@@ -31,31 +32,8 @@ public class BuildableObject : MonoBehaviour
         _objects = new List<GameObject>();
     }
 
-    #region localWork
-    /** TMP: Used at start to mimick setting starting workstationID Eventually nothing should be in scene */
-    public void SetItemID(int id)
-    {
-        //range check TODO ?
-
-        _mID = (ObjectManager.eItemID)id;
-
-        SpawnObject((int)_mID);
-    }
-    /**Used to advance construction of workspace objects */
-    public void AddComponent()
-    {
-        ++_mID;
-        SpawnObject((int)_mID);
-    }
-
-
-    #endregion
     #region globalWork
-    /** Gets it based on current ID */
-    public Sprite GetCurrentSprite()
-    {
-        return _manager.GetSprite((int)_mID);
-    }
+
     /** Gets it from the Manager */
     public Sprite GetSpriteByID(int id)
     {
@@ -92,6 +70,14 @@ public class BuildableObject : MonoBehaviour
             FPSCounter.Instance.ProfileAnObject(_currentObj);
 
         return _currentObj;
+    }
+
+    public ObjectQuality BuildTempQualities(int id, int currAction)
+    {
+        var qs = this.transform.gameObject.AddComponent<ObjectQuality>();
+        qs.InitalizeAsDummy(_qualityPresets[id + 1] ,currAction);
+
+        return qs;
     }
 
     public void DestroyObject(GameObject obj)

@@ -144,7 +144,8 @@ public static class sServer
         }
         catch (Exception e)
         {
-            Debug.Log($"Error receiving UDP data : {e}");
+            ///Cant debug to UI on this thread
+            Debug.LogError($"Error receiving UDP data : {e}");
         }
     }
 
@@ -159,7 +160,8 @@ public static class sServer
         }
         catch (Exception e)
         {
-            Debug.Log($"Error Sending UDP data to :{clientEndPoint}  exception: {e}");
+            ///Cant debug to UI on this thread
+            Debug.LogError($"Error Sending UDP data to :{clientEndPoint}  exception: {e}");
         }
 
     }

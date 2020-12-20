@@ -60,7 +60,7 @@ public class OverallQuality : MonoBehaviour
     /**Update our current quality */
     public void ReadOutQuality(ObjectQuality pastObject)
     {
-        Debug.Log($"We aer reading out : {pastObject} its not null? {pastObject.ID}, {pastObject.CurrentQuality}/{pastObject.MaxQuality}");
+        Debug.Log($"We are reading out : {pastObject} its not null? {pastObject.ID}, {pastObject.CurrentQuality}/{pastObject.MaxQuality}");
 
         foreach (var item in _qualities)
         {
