@@ -9,13 +9,12 @@ public class BuildableObject : MonoBehaviour
     public Color _colorHand1;
     public Color _colorHand2;
 
+    public QualityStep[] _qualityPresets;
 
     private ObjectManager _manager;
 
     //These should be connected to something else like the workstation IDs
-    public ObjectManager.eItemID _mID; ///pretty much unused atm?
 
-    private List<GameObject> _objects;
 
     public bool DebugItemsOnSpawn;
 
@@ -28,34 +27,11 @@ public class BuildableObject : MonoBehaviour
 
         _manager = Resources.Load<ObjectManager>("ObjectManager");
 
-        _objects = new List<GameObject>();
+
     }
 
-    #region localWork
-    /** TMP: Used at start to mimick setting starting workstationID Eventually nothing should be in scene */
-    public void SetItemID(int id)
-    {
-        //range check TODO ?
-
-        _mID = (ObjectManager.eItemID)id;
-
-        SpawnObject((int)_mID);
-    }
-    /**Used to advance construction of workspace objects */
-    public void AddComponent()
-    {
-        ++_mID;
-        SpawnObject((int)_mID);
-    }
-
-
-    #endregion
     #region globalWork
-    /** Gets it based on current ID */
-    public Sprite GetCurrentSprite()
-    {
-        return _manager.GetSprite((int)_mID);
-    }
+
     /** Gets it from the Manager */
     public Sprite GetSpriteByID(int id)
     {
@@ -73,25 +49,50 @@ public class BuildableObject : MonoBehaviour
     }
     public GameObject SpawnObject(int itemID)
     {
-        return SpawnObject( itemID, Vector3.zero);
+        return SpawnObject( itemID, Vector3.zero, null);
     }
-     public GameObject SpawnObject(int itemID, Vector3 pos)
+     public GameObject SpawnObject(int itemID, Vector3 pos, List<ObjectQuality> qualities)
     {
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
         //GetNextObj
         //var _objStartPos = new Vector3(pos.x, pos.y, UserInput.Instance._tmpZfix);
-        GameObject _currentObj = GameObject.Instantiate<GameObject>
+        GameObject newObj = GameObject.Instantiate<GameObject>
             (_manager.GetObject(itemID), pos, Quaternion.identity);
-        _currentObj.transform.Rotate(Vector3.left, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
-        _currentObj.transform.SetParent(this.transform);
+        newObj.transform.Rotate(Vector3.left, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
+        newObj.transform.SetParent(this.transform);
 
-        _objects.Add(_currentObj);
 
+        if (qualities != null && qualities.Count > 0)
+        {
+            var overallQuality = newObj.GetComponent<OverallQuality>();
+            if (overallQuality)
+            {
+                foreach (var q in qualities)
+                {
+                    overallQuality.ReadOutQuality(q);
+                    Destroy(q);
+                    Debug.Log("Copied and removed A quality");
+                }
+            }
+            else
+                Debug.LogWarning($"Somehow theres qualities associated w a prefab without an OverallQualityManager {newObj.name}");
+        }
+        else
+            Debug.Log($"Qualities passed in was null or count 0");
 
         if(DebugItemsOnSpawn)
-            FPSCounter.Instance.ProfileAnObject(_currentObj);
+            FPSCounter.Instance.ProfileAnObject(newObj);
 
-        return _currentObj;
+        return newObj;
+    }
+
+    public ObjectQuality BuildTempQualities(int id, int currAction)
+    {
+        var qs = this.transform.gameObject.AddComponent<ObjectQuality>();
+        Debug.Log("id=" + id);
+        qs.InitalizeAsDummy(_qualityPresets[id-1] ,currAction);
+
+        return qs;
     }
 
     public void DestroyObject(GameObject obj)

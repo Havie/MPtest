@@ -38,6 +38,7 @@ public class WorkStationManager : ScriptableObject
     /**Called from UI asset confirm workstation button  */
     public int ConfirmStation(Dropdown dropdown)
     {
+        UIManager.instance.DebugLog($" <color=red>my ws name is : {this.name} </color>");
         int wsID = dropdown.value;
         WorkStation ws = _workStations[wsID];
         GameManager.instance.AssignWorkStation(ws);

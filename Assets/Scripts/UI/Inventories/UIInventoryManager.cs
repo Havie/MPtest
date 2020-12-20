@@ -264,7 +264,7 @@ public class UIInventoryManager : MonoBehaviour
     }
 
     /**Used by IN-inventory with no specific slot in mind */
-    public void AddItemToSlot(int itemID, bool makeRequired)
+    public void AddItemToSlot(int itemID, List<ObjectQuality> qualities, bool makeRequired)
     {
         //if(_inventoryType==eInvType.OUT)
         // Debug.Log($"Adding Item to slot {itemID}");
@@ -273,30 +273,30 @@ public class UIInventoryManager : MonoBehaviour
         {
             foreach (UIInventorySlot slot in _slots)
             {
-                if (TryToAdd(slot, itemID, makeRequired))
+                if (TryToAdd(slot, itemID, qualities, makeRequired))
                     return;
             }
             foreach (UIInventorySlot slot in _extraSlots)
             {
-                if (TryToAdd(slot, itemID, makeRequired))
+                if (TryToAdd(slot, itemID, qualities, makeRequired))
                     return;
             }
             //fell thru so we are full
-            Debug.Log("we fell thru ..creating new slot");
+            Debug.Log($"we fell thru ..creating new slot q valid={qualities ==null}");
             UIInventorySlot nSlot = CreateNewSlot();
-            nSlot.AssignItem(itemID, 1);
+            nSlot.AssignItem(itemID, 1, qualities);
             _extraSlots.Add(nSlot);
             ++_INVENTORYSIZE;
             SetSizeOfContentArea(); ///adjust scrollable area
         }
         else
         {
-            AddChaotic(itemID, makeRequired);
+            AddChaotic(itemID, qualities, makeRequired);
 
         }
     }
 
-    protected void AddChaotic(int itemID, bool makeRequired)
+    protected void AddChaotic(int itemID, List<ObjectQuality> qualities, bool makeRequired)
     {
         List<UIInventorySlot> _available = new List<UIInventorySlot>();
         //Search through our initial slots and save any that can accept this itemID
@@ -343,7 +343,7 @@ public class UIInventoryManager : MonoBehaviour
             if (makeRequired)
                 _available[UnityEngine.Random.Range(0, _available.Count - 1)].SetRequiredID(itemID);
             else
-                _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1);
+                _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1, qualities );
         }
         else //create an additional slot to add to 
         {
@@ -351,14 +351,14 @@ public class UIInventoryManager : MonoBehaviour
             if (makeRequired)
                 nSlot.SetRequiredID(itemID);
             else
-                nSlot.AssignItem(itemID, 1);
+                nSlot.AssignItem(itemID, 1, qualities);
 
             _extraSlots.Add(nSlot);
 
         }
     }
 
-    protected bool TryToAdd(UIInventorySlot slot, int itemID, bool makeRequired)
+    protected bool TryToAdd(UIInventorySlot slot, int itemID, List<ObjectQuality> qualities, bool makeRequired)
     {
         if (!slot.GetInUse())
         {
@@ -376,14 +376,14 @@ public class UIInventoryManager : MonoBehaviour
                 {
                     if (slot.RequiredID == itemID)
                     {
-                        slot.AssignItem(itemID, 1);
+                        slot.AssignItem(itemID, 1, qualities);
                         return true;
                     }
                    
                 }
                 else
                 {
-                    slot.AssignItem(itemID, 1);
+                    slot.AssignItem(itemID, 1, qualities);
                     return true;
                 }
             }

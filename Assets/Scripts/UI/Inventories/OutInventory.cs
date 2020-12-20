@@ -75,7 +75,7 @@ public class OutInventory : UIInventoryManager
                 foreach (var item in t._finalItemID)
                 {
                     // Debug.LogError($" Making {item} required");
-                    AddItemToSlot((int)item, true);
+                    AddItemToSlot((int)item,null, true);
                 }
             }
 
@@ -111,7 +111,7 @@ public class OutInventory : UIInventoryManager
                                         {
                                             for (int j = 0; j < BATCHSIZE; j++)
                                             {
-                                                AddItemToSlot((int)item, true);
+                                                AddItemToSlot((int)item,null, true);
                                             }
                                             // Debug.LogWarning($" (1)...Task::{t} adding item:{item} #{itemId}");
                                         }
@@ -132,7 +132,7 @@ public class OutInventory : UIInventoryManager
                                     {
                                         for (int j = 0; j < BATCHSIZE; j++)
                                         {
-                                            AddItemToSlot((int)item, true);
+                                            AddItemToSlot((int)item,null, true);
                                         }
                                         // Debug.LogWarning($" (2)...Task::{t} adding item:{item} #{itemId}");
                                     }
@@ -153,7 +153,7 @@ public class OutInventory : UIInventoryManager
                                 if (AddToSlot)
                                     for (int j = 0; j < BATCHSIZE; j++)
                                     {
-                                        AddItemToSlot((int)item, true);
+                                        AddItemToSlot((int)item,null, true);
                                     }
 
                             }

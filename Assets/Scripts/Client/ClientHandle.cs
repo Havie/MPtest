@@ -19,8 +19,8 @@ public class ClientHandle : MonoBehaviour
 
 
         GameManager.instance._orderFrequency = packet.ReadInt();
-        GameManager.instance._batchSize = packet.ReadInt();
-        GameManager.instance._autoSend = packet.ReadBool();
+        GameManager.instance.BatchChanged(packet.ReadInt());
+        GameManager.instance.AutoSendChanged(packet.ReadBool());
         GameManager.instance._addChaotic = packet.ReadBool();
         GameManager.instance._isStackable = packet.ReadBool();
         GameManager.instance._workStationArrangement = packet.ReadBool();
@@ -40,11 +40,28 @@ public class ClientHandle : MonoBehaviour
     {
         int itemLvl = packet.ReadInt(); //get rid of the first btye data?
 
+
+
+        List<ObjectQuality> qualities = new List<ObjectQuality>();
+
+        var count = packet.ReadInt()/2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
+        UIManager.instance.DebugLog($"ClientHandle Count={count}");
+
+        ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var currQ = packet.ReadInt();
+            qualities.Add(BuildableObject.Instance.BuildTempQualities(id, currQ));
+            Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
+        }
+
+
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
         UIManager.instance.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
-        GameManager.instance._invIN.AddItemToSlot(itemLvl, false);
+        GameManager.instance._invIN.AddItemToSlot(itemLvl, qualities,  false);
 
     }
 

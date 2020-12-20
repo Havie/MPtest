@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1e50687b33a3943be11dc515ccd8c8, type: 3}
   m_Name: Pull_Task_2
   m_EditorClassIdentifier: 
-  _finalItemID: 0f000000
+  _finalItemID: 13000000
   _requiredItemIDs: 03000000
   isKittingStation: 0

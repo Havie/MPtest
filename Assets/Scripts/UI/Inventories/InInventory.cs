@@ -28,17 +28,7 @@ public class InInventory : UIInventoryManager
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
     }
 
-    private void Update()
-    {
-        //Testing
-        if (_inventoryType == eInvType.IN && Input.GetKeyDown(KeyCode.A))
-        {
-            foreach (var s in _slots)
-                s.AssignItem(1, 1);
 
-            AddItemToSlot(2, false);
-        }
-    }
 
     private void GetGameManagerData()
     {
@@ -80,13 +70,13 @@ public class InInventory : UIInventoryManager
             {
                 WorkStation ws = stationList[startingIndex - 1];
                 Task lastTask = ws._tasks[ws._tasks.Count - 1];
-                Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
+               // Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
                 count += lastTask._finalItemID.Count;
                 if(AddToSlotOnFind)
                 {
                     foreach (var item in lastTask._finalItemID)
                     {
-                        AddItemToSlot((int)item, false);
+                        AddItemToSlot((int)item, null,  false);
                     }
                 }
             }
@@ -131,7 +121,7 @@ public class InInventory : UIInventoryManager
                 foreach (var item in listItems)
                 {
                     for (int j = 0; j < BATCHSIZE; j++)
-                        AddItemToSlot((int)item, false);
+                        AddItemToSlot((int)item,null, false);
                 }
             }
             count += listItems.Count;

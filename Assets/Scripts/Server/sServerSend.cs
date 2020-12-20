@@ -113,11 +113,24 @@ public class sServerSend
 
     }
 
-    public static void SendItem(int toClient, int itemID)
+    public static void SendItem(int toClient, int itemID, List<int> qualityData)
     {
         using (sPacket packet = new sPacket((int)ServerPackets.item))
         {
             packet.Write(itemID);
+            if (qualityData != null)
+            {
+                packet.Write(qualityData.Count);
+                ///pass along the quality Data
+                for (int i = 0; i < qualityData.Count; ++i)
+                {
+                    packet.Write(qualityData[i]);
+                }
+            }
+            else
+                packet.Write(0);
+
+          
 
             SendTCPData(toClient, packet);
 
