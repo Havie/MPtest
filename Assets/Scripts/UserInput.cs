@@ -198,9 +198,11 @@ public class UserInput : MonoBehaviour
     {
         if (InputDown() && _currentSelection)
         {
+
             ///if no movement increment time 
             float dis = Vector3.Distance(_inputPos, _lastPos);
-            if (dis < _holdLeniency)
+            var objWhereMouseIs = CheckForObjectAtLoc(_inputPos); ///Prevent bug simon found
+            if (dis < _holdLeniency && objWhereMouseIs==_currentSelection)
             {
                 _pressTimeCURR += Time.deltaTime;
 
@@ -223,6 +225,7 @@ public class UserInput : MonoBehaviour
             {
                 _pressTimeCURR = 0;
                 UIManager.instance.HideTouchDisplay();
+                _currentSelection.ChangeMaterialColor(1);
             }
 
             ///if holding down do displacement
