@@ -261,7 +261,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pressTimeCURR: 0
-  _pressTimeMAX: 0.75
   _holdLeniency: 1.5
   _table: {fileID: 7473564167400551205}
   _Raycaster: {fileID: 5394208262448427698}
@@ -3916,6 +3915,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hands
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868493068313396964, guid: 96e18ea220abbe34b902fa900e2b9098,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1868493068313396967, guid: 96e18ea220abbe34b902fa900e2b9098,
         type: 3}
