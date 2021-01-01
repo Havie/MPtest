@@ -23,11 +23,12 @@ public static class PreviewManager
         if (UserInput.Instance._state != UserInput.eState.DISPLACEMENT)
             return; /// would feel cleaner to cache on the object, but extra work
 
-        Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID}");
+        Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID} , controller={controller} otherController={otherController}");
 
         ///disable both items mesh renderers
         controller.ChangeAppearanceHidden(true);
         otherController.ChangeAppearanceHidden(true);
+
         ///Store for later to undo
         _previewedItems.Add(controller);
         _previewedItems.Add(otherController);

@@ -56,8 +56,12 @@ public class BuildableObject : MonoBehaviour
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
         //GetNextObj
         //var _objStartPos = new Vector3(pos.x, pos.y, UserInput.Instance._tmpZfix);
+        var prefab = _manager.GetObject(itemID);
+        if (!prefab)
+            return null; ///Prevent any NPEs
+
         GameObject newObj = GameObject.Instantiate<GameObject>
-            (_manager.GetObject(itemID), pos, Quaternion.identity);
+            (prefab, pos, prefab.transform.rotation);
         newObj.transform.Rotate(Vector3.left, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
         newObj.transform.SetParent(this.transform);
 

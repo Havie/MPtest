@@ -212,7 +212,6 @@ public class UserInput : MonoBehaviour
                          new Vector3(_inputPos.x, _inputPos.y, _inputPos.z)
                          );
 
-                    Debug.Log($"PressTimeMax {_pressTimeMAX}");
 
                     ///Cap our mats transparency fade to 0.5f
                     float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
@@ -353,13 +352,10 @@ public class UserInput : MonoBehaviour
                          ShowDummyPreviewSlot();
                     }
                 }
+                else if (PreviewManager._inPreview)
+                    _state = eState.PREVIEWCONSTRUCTION; ///dont want to reset the Object while in preview or it wont be hidden
                 else
                     ResetObjectAndSlot();
-
-                if (PreviewManager._inPreview)
-                {
-                    _state = eState.PREVIEWCONSTRUCTION;
-                }
             }
         }
         else ///Input UP

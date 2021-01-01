@@ -284,6 +284,7 @@ public class ObjectController : MonoBehaviour
     }
     public void ChangeAppearanceNormal()
     {
+       // Debug.Log($"Setting {this.gameObject.name} normal ");
         this.transform.localScale = _startSize;
         if (_handLocation)
             UIManager.instance.ChangeHandSize(_handIndex, false);
@@ -305,11 +306,13 @@ public class ObjectController : MonoBehaviour
     }
     public void ChangeAppearanceHidden(bool cond)
     {
+       // Debug.Log($"Setting {this.gameObject.name} hidden = {!cond}");
         _meshRenderer.enabled = !cond;
         /// i have to do this for all children as well 
         if (_parent == null && _childrenMeshRenderers != null)
             foreach (var mr in _childrenMeshRenderers)
                 mr.enabled = !cond;
+
     }
 
 
