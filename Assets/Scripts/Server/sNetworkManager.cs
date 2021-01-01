@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//https://www.yougetsignal.com/tools/open-ports/
+
 public class sNetworkManager : MonoBehaviour
 {
     public static sNetworkManager instance { get; private set; }
