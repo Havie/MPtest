@@ -105,7 +105,7 @@ public class eItemIDPropertyDrawer : PropertyDrawer
     private void CallBack(ObjectManager.eItemID eItem, SerializedProperty property)
     {
         property.serializedObject.Update();
-        Debug.Log($"Trying to set {(int)eItem} : {eItem}");
+        //Debug.Log($"Trying to set {(int)eItem} : {eItem}");
         property.enumValueIndex = (int)eItem- _enumOffset; ///WARNING: FOR SOME REASON HAVE TO -1 OR ALL VALS IN CLASSES ARE OFF BY 1 DESPITE READING PROPER ASSIGNMENT..NO IDEA?
         property.serializedObject.ApplyModifiedProperties();
 
