@@ -60,7 +60,7 @@ public class OverallQuality : MonoBehaviour
     /**Update our current quality */
     public void ReadOutQuality(ObjectQuality pastObject)
     {
-        Debug.Log($"We are reading out : {pastObject} its not null? {pastObject.ID}, {pastObject.CurrentQuality}/{pastObject.MaxQuality}");
+        //Debug.Log($"We are reading out : {pastObject} its not null? {pastObject.ID}, {pastObject.CurrentQuality}/{pastObject.MaxQuality}");
 
         foreach (var item in _qualities)
         {
@@ -74,7 +74,8 @@ public class OverallQuality : MonoBehaviour
             }
         }
 
-        Debug.LogWarning($"Couldnt find {pastObject.QualityStep } #{pastObject.ID} on new item {this.gameObject.name}'s children");
+        ///This if fine, just a warning, it will keep track of it on the base obj
+       // Debug.LogWarning($"Couldnt find {pastObject.QualityStep } #{pastObject.ID} on new item {this.gameObject.name}'s children");
 
         ///We never found a match so assume you can no longer perform this actions ,
         /// spoof the preview manager by adding this dummy to our list so it keeps getting passed along
