@@ -15,6 +15,11 @@ public class UIKitting : MonoBehaviour
     private int _yOffset = -39;  ///-65
     private int _xOffset = 16;   ///0
 
+    private ComponentList _componentList;
+    List<int> _usedIndicies = new List<int>();
+
+
+
     private void Awake()
     {
         //Get rid of our test button incase it gets renabled on accident cuz I keep doingthis
@@ -30,8 +35,11 @@ public class UIKitting : MonoBehaviour
         GameManager.instance.SetInventoryKitting(this);
         if (_bORDERPREFAB == null)
             _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder");
-       _ORDERFREQUENCY = GameManager.instance._orderFrequency;
+
+        _ORDERFREQUENCY = GameManager.instance._orderFrequency;
+        _componentList = GameManager.instance._componentList;
     }
+
 
     public void Update()
     {
@@ -45,24 +53,82 @@ public class UIKitting : MonoBehaviour
     }
 
     /**Kittings "Final ItemIDs should be the final item(s) that go to shipping */
+
+    private int PickAnItemIDFromFinalTask()
+    {
+        var manager = GameManager.instance.CurrentWorkStationManager;
+        var list = manager.GetStationList();
+        var lastStation = list[list.Count-1];
+        var lastTaskList = lastStation._tasks;
+        var lastTask = lastTaskList[lastTaskList.Count-1];
+        var finalItemList = lastTask._finalItemID;
+        var finalItem = finalItemList[Random.Range(0, finalItemList.Count)];
+
+        return (int)finalItem;
+    }
+
     private void SendInNewOrder()
     {
         _timeToOrder = 0;
+        _usedIndicies.Clear();
+
+        var finalItemId = PickAnItemIDFromFinalTask();
+        List<ObjectManager.eItemID> componentsNeeded = _componentList.GetComponentListByItemID(finalItemId);
+        int size = componentsNeeded.Count;
+        ObjectManager.eItemID[] componentOrder = new ObjectManager.eItemID[size];
+       
+        foreach (var item in componentsNeeded)
+        {
+            componentOrder[GetUnusedIndex(size)] =item;
+        }
+
+        // printOrderList(componentOrder);
+
+        PartDropper.Instance.SendInOrder(componentOrder);
+        AddOrder(finalItemId);
+    }
+
+    private int GetUnusedIndex(int size)
+    {
+        int index = Random.Range(0, size);
+        if (_usedIndicies.Contains(index))
+            return GetUnusedIndex(size);
+        else
+        {
+            _usedIndicies.Add(index);
+            return index;
+        }
+    }
+
+    void printOrderList(ObjectManager.eItemID[] componentOrder)
+    {
+        string s = "";
+        for (int i =0; i< componentOrder.Length; ++i)
+        {
+            s += $"#{i} = ItemID:{componentOrder[i]} , ";
+        }
+
+        Debug.LogWarning($"NEW LIST: {s}");
+    }
+
+
+    private void GetRandomItemIDFromKitting()
+    {
         var workStation = GameManager.instance._workStation;
         //Get the kitting task (should be only task)
-        foreach(Task t in workStation._tasks)
+        foreach (Task t in workStation._tasks)
         {
-            if(t.isKittingStation)
+            if (t.isKittingStation)
             {
                 //Remove the count-1 when we get sprites for every type
-               int rng= Random.Range(0, t._finalItemID.Count);
-               int itemid= (int)t._finalItemID[rng];
-               //Debug.Log($"rng={rng} from max of {t._finalItemID.Count } , thus final itemID={itemid}");
-               AddOrder(itemid);
+                int rng = Random.Range(0, t._finalItemID.Count);
+                int itemid = (int)t._finalItemID[rng];
+                //Debug.Log($"rng={rng} from max of {t._finalItemID.Count } , thus final itemID={itemid}");
+                AddOrder(itemid);
             }
         }
-      
     }
+
 
     public void AddOrder(int itemID)
     {
@@ -82,7 +148,7 @@ public class UIKitting : MonoBehaviour
     {
         //Debug.Log(_orderList.Count +" size  , Remove order with ItemID : " + itemID);
         /* for (int i = _orderList.Count-1; i >0 ; i--)*/
-        for (int i =0; i < this.transform.childCount ; i++)
+        for (int i = 0; i < this.transform.childCount; i++)
         {
             var child = this.transform.GetChild(i);
             var order = child.GetComponent<OrderButton>();
@@ -113,7 +179,7 @@ public class UIKitting : MonoBehaviour
 
     private Vector3 FindPosition(int index)
     {
-        return new Vector3(16, _startingY + (_yOffset *index), 0);
+        return new Vector3(16, _startingY + (_yOffset * index), 0);
     }
 
     private void ButtonDestroyedCallback(OrderButton orderButton)
