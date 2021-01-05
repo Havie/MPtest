@@ -38,6 +38,8 @@ public class UIKitting : MonoBehaviour
 
         _ORDERFREQUENCY = GameManager.instance._orderFrequency;
         _componentList = GameManager.instance._componentList;
+
+        SendInNewOrder();
     }
 
 

@@ -7,7 +7,8 @@ public class PartDropper : MonoBehaviour
     public static PartDropper Instance;
 
     ///Exposed for inspector debugging
-    [SerializeField] List<ObjectManager.eItemID[]> _partOrders = new List<ObjectManager.eItemID[]>();
+    //[SerializeField]
+    List<ObjectManager.eItemID[]> _partOrders = new List<ObjectManager.eItemID[]>();
     float _dropDelay = 0;
     bool _routineIsRunning = false;
 
@@ -48,9 +49,8 @@ public class PartDropper : MonoBehaviour
     {
         _routineIsRunning = true;
         int count = componentOrder.Length;
-        _dropDelay = _ORDERFREQUENCY/((float)count) ;
-        Debug.Log($"The Drop Delay is :{_dropDelay}  becuz {_ORDERFREQUENCY} / {(float)count} ");
-        yield return new WaitForEndOfFrame();
+        _dropDelay = _ORDERFREQUENCY/((float)count) /5 ;
+       // Debug.Log($"The Drop Delay is :{_dropDelay}  becuz {_ORDERFREQUENCY} / {(float)count} ");
 
         for (int i = 0; i < count; i++)
         {
