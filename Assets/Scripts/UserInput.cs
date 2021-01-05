@@ -378,7 +378,7 @@ public class UserInput : MonoBehaviour
                     {
                         _currentSelection.transform.position = _objStartPos;
                         _currentSelection.transform.rotation = _objStartRot;
-
+                        UIManager.instance.ShowPreviewInvSlot(false, _inputPos, null);
                     }
                     else 
                     {
@@ -406,6 +406,7 @@ public class UserInput : MonoBehaviour
             }
 
             _justPulledOutOfUI = false;
+
             _state = eState.FREE;
         }
 

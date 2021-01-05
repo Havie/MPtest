@@ -218,6 +218,7 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+
     #region ActionsfromButtons
     public void ConnectToServer()
     {
