@@ -17,8 +17,8 @@ public class ObjectManager : ScriptableObject
         RectwTopYellowMissingBotBolt, RectwTopPurplePlugBotBolt, RectwTopPurplePlugMissingBotBolt, YellowPurplePlug, PinkwPurplePlug, IGNORE
     };
 
-    [SerializeField] List<Sprite> _sprites;
-    [SerializeField] List<GameObject> _objects;
+    [SerializeField] List<Sprite> _sprites = default;
+    [SerializeField] List<GameObject> _objects = default;
 
     public bool IsBasicItem(eItemID item)
     {

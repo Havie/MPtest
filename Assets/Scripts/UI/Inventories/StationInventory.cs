@@ -25,8 +25,6 @@ public class StationInventory : UIInventoryManager
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
     }
 
-
-
     private void GetGameManagerData()
     {
         _INVENTORYSIZE = DetermineWorkStationBatchSize();
@@ -93,7 +91,7 @@ public class StationInventory : UIInventoryManager
                                 seenItems.Add(itemId);
                                 ++count;
                                 //Debug.Log($"Kitting_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
-                                if(addAsInfiniteItem)
+                                if (addAsInfiniteItem)
                                 {
                                     AssignInfiniteItem(itemId);
                                 }
@@ -111,7 +109,7 @@ public class StationInventory : UIInventoryManager
             {
                 foreach (var item in task._requiredItemIDs)
                 {
-                    if (BuildableObject.Instance.IsBasicItem(item)) 
+                    if (BuildableObject.Instance.IsBasicItem(item))
                     {
                         int itemId = (int)item;
                         if (!seenItems.Contains(itemId))
@@ -136,7 +134,8 @@ public class StationInventory : UIInventoryManager
     /**Generates the Inventory with correct dimensions based on Game Settings. */
     private void GenInventory()
     {
-        if (NotStackableAndNotKitting())
+        //if (NotStackableAndNotKitting())
+        if (NotStackableOrKitting())
             return;
 
         _slots = new UIInventorySlot[_INVENTORYSIZE];
@@ -174,6 +173,8 @@ public class StationInventory : UIInventoryManager
         ParseItemList(wm, myWS, true);
     }
 
+
+    /// <summary> Kitting used to get a station inv before change to make items drop in </summary>
     private bool NotStackableAndNotKitting()
     {
         if (_inventoryType == eInvType.STATION && !_STACKABLE)
@@ -190,6 +191,28 @@ public class StationInventory : UIInventoryManager
         return false;
     }
 
+    /// <summary> Kitting no longer gets a station inv since items drop in now </summary>
+    private bool NotStackableOrKitting()
+    {
+        if (!_STACKABLE)
+        {
+            Destroy(this.gameObject); //good enough for now might need to go higher to parents
+            return true;
+        }
+        else if (_inventoryType == eInvType.STATION)
+        {
+            var ws = GameManager.instance._workStation;
+            if (ws.isKittingStation())
+            {
+                Destroy(this.gameObject); //good enough for now might need to go higher to parents
+                return true;
+            }
+        }
+        UIManager.instance.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
+        return false;
+    }
+
+
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected override void SetSizeOfContentArea()
     {
@@ -201,7 +224,7 @@ public class StationInventory : UIInventoryManager
         // fix for a really weird issue with off center inv
         //this.transform.localPosition = new Vector3(this.transform.localPosition.x / 2, this.transform.localPosition.y, this.transform.localPosition.z);
         ///*Note since bSlots are anchored to top corner for IN/OUT, when they come in for station things get weird, thus the Station content pane is offset to fix this
-    
+
     }
 
     private void AssignInfiniteItem(int itemID)
@@ -213,7 +236,7 @@ public class StationInventory : UIInventoryManager
                 slot.AssignItem(itemID, int.MaxValue, null);
                 return;
             }
-               
+
         }
         foreach (UIInventorySlot slot in _extraSlots)
         {
@@ -222,7 +245,7 @@ public class StationInventory : UIInventoryManager
                 slot.AssignItem(itemID, int.MaxValue, null);
                 return;
             }
-               
+
         }
         //fell thru so we are full
         Debug.Log("we fell thru");
@@ -230,9 +253,6 @@ public class StationInventory : UIInventoryManager
         nSlot.AssignItem(itemID, int.MaxValue, null);
         _extraSlots.Add(nSlot);
     }
-
-
-
 
 
     #endregion

@@ -120,7 +120,7 @@ public class UIKitting : MonoBehaviour
         //Get the kitting task (should be only task)
         foreach (Task t in workStation._tasks)
         {
-            if (t.isKittingStation)
+            if (t._stationType==Task.eStationType.Kitting)
             {
                 //Remove the count-1 when we get sprites for every type
                 int rng = Random.Range(0, t._finalItemID.Count);
@@ -137,13 +137,17 @@ public class UIKitting : MonoBehaviour
         var bOrder = GameObject.Instantiate(_bORDERPREFAB);
         OrderButton ob = bOrder.GetComponent<OrderButton>();
         //Debug.Log("assign item with ID:" + itemID);
-        ob.SetOrder(itemID);
+        ob.SetOrder(itemID, GetEstimatedDeliveryTime());
         _orderList.Add(ob);
         bOrder.transform.SetParent(this.transform);
         bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
         bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
 
         //Get data based off of the incoming value
+    }
+    private float GetEstimatedDeliveryTime()
+    {
+        return Time.time + 600;  ///10min 
     }
 
     public void RemoveOrder(int itemID)
