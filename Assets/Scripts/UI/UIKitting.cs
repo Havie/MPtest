@@ -13,7 +13,7 @@ public class UIKitting : MonoBehaviour
     private List<OrderButton> _orderList = new List<OrderButton>();
     private int _startingY = 350;
     private int _yOffset = -39;  ///-65
-    private int _xOffset = 16;   ///0
+   // private int _xOffset = 16;   ///0
 
     private ComponentList _componentList;
     List<int> _usedIndicies = new List<int>();

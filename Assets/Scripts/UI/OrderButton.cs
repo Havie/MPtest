@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class OrderButton : MonoBehaviour
 {
-    [SerializeField] Text _text;
-    [SerializeField] Image _img;
-    [SerializeField] ColorManager _cm;
+    [SerializeField] Text _text = default;
+    [SerializeField] Image _img = default;
+    [SerializeField] ColorManager _cm = default;
 
     private int _itemID;
 

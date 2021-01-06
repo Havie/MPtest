@@ -264,7 +264,6 @@ MonoBehaviour:
   _holdLeniency: 1.5
   _table: {fileID: 7473564167400551205}
   _Raycaster: {fileID: 5394208262448427698}
-  _RaycasterWorld: {fileID: 1000704286}
   _tmpZfix: -9
 --- !u!4 &112527775
 Transform:

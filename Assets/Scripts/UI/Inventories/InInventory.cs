@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class InInventory : UIInventoryManager
 {
     #region InitalSetup
+    [SerializeField] int maxItemsPerRow =4;
+    
     private void Start()
     {
         if (_bSlotPREFAB == null)
@@ -164,11 +166,11 @@ public class InInventory : UIInventoryManager
 
         ///Determine layout
         _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > 4 && _inventoryType != eInvType.STATION)
-            _xMaxPerRow = (_INVENTORYSIZE / 4) + 1;
+        if (_INVENTORYSIZE > maxItemsPerRow && _inventoryType != eInvType.STATION)
+            _xMaxPerRow = (_INVENTORYSIZE / maxItemsPerRow) + 1;
 
-        if (_xMaxPerRow > 4)
-            _xMaxPerRow = 4;
+        if (_xMaxPerRow > maxItemsPerRow)
+            _xMaxPerRow = maxItemsPerRow;
 
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
