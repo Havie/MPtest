@@ -17,9 +17,8 @@ public class UserInput : MonoBehaviour
 
     [HideInInspector]  //testing purposes
     public float _pressTimeCURR = 0;
-    [HideInInspector]
-    public float _pressTimeMAX = 0.75f; ///was 1.2f
-    [HideInInspector]
+    private float _pressTimeMAX = 0.55f; ///was 1.2f
+    [HideInInspector] ///NB: these are still serialized, need to make private to change 
     public float _holdLeniency = 1.5f;
     private Vector3 _inputPos; ///current input loc
     private Vector3 _lastPos; ///prior input loc
@@ -198,9 +197,11 @@ public class UserInput : MonoBehaviour
     {
         if (InputDown() && _currentSelection)
         {
+
             ///if no movement increment time 
             float dis = Vector3.Distance(_inputPos, _lastPos);
-            if (dis < _holdLeniency)
+            var objWhereMouseIs = CheckForObjectAtLoc(_inputPos); ///Prevent bug simon found
+            if (dis < _holdLeniency && objWhereMouseIs==_currentSelection)
             {
                 _pressTimeCURR += Time.deltaTime;
 
@@ -210,6 +211,7 @@ public class UserInput : MonoBehaviour
                     UIManager.instance.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX,
                          new Vector3(_inputPos.x, _inputPos.y, _inputPos.z)
                          );
+
 
                     ///Cap our mats transparency fade to 0.5f
                     float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
@@ -223,6 +225,7 @@ public class UserInput : MonoBehaviour
             {
                 _pressTimeCURR = 0;
                 UIManager.instance.HideTouchDisplay();
+                _currentSelection.ChangeMaterialColor(1);
             }
 
             ///if holding down do displacement
@@ -349,13 +352,10 @@ public class UserInput : MonoBehaviour
                          ShowDummyPreviewSlot();
                     }
                 }
+                else if (PreviewManager._inPreview)
+                    _state = eState.PREVIEWCONSTRUCTION; ///dont want to reset the Object while in preview or it wont be hidden
                 else
                     ResetObjectAndSlot();
-
-                if (PreviewManager._inPreview)
-                {
-                    _state = eState.PREVIEWCONSTRUCTION;
-                }
             }
         }
         else ///Input UP
@@ -378,7 +378,7 @@ public class UserInput : MonoBehaviour
                     {
                         _currentSelection.transform.position = _objStartPos;
                         _currentSelection.transform.rotation = _objStartRot;
-
+                        UIManager.instance.ShowPreviewInvSlot(false, _inputPos, null);
                     }
                     else 
                     {
@@ -406,6 +406,7 @@ public class UserInput : MonoBehaviour
             }
 
             _justPulledOutOfUI = false;
+
             _state = eState.FREE;
         }
 

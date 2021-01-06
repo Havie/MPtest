@@ -32,7 +32,7 @@ public class ObjectManager : ScriptableObject
 
     public GameObject GetObject(int level)
     {
-        if (level >= _objects.Count-1 || level<0)
+        if (level > _objects.Count-1 || level<0)
             Debug.LogWarning($"levelID {level}  greater than max count {_objects.Count} . Will error ");
         return _objects[level];
     }

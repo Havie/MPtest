@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class PreviewManager 
+public static class PreviewManager
 {
-    
+
     private static List<ObjectController> _previewedItems = new List<ObjectController>();
     private static GameObject _previewItem;
     public static bool _inPreview { get; private set; }
@@ -14,7 +14,7 @@ public static class PreviewManager
 
     public static void ShowPreview(ObjectController controller, ObjectController otherController, int createdID)
     {
-        if(_inPreview)
+        if (_inPreview)
         {
             Debug.LogWarning("trying to preview again too fast ??");
             return;
@@ -23,23 +23,50 @@ public static class PreviewManager
         if (UserInput.Instance._state != UserInput.eState.DISPLACEMENT)
             return; /// would feel cleaner to cache on the object, but extra work
 
-        Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID}");
+        Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID} , controller={controller} otherController={otherController}");
 
         ///disable both items mesh renderers
         controller.ChangeAppearanceHidden(true);
         otherController.ChangeAppearanceHidden(true);
+
         ///Store for later to undo
         _previewedItems.Add(controller);
         _previewedItems.Add(otherController);
-          //Spawn a new obj via CreatedID and set opacity to preview 
+        //Spawn a new obj via CreatedID and set opacity to preview 
         //Debug.LogError("createdid=" + createdID);
         var obj = BuildableObject.Instance.SpawnObject(createdID);
-        obj.GetComponent<ObjectController>().ChangeAppearancePreview();
         ///Set its orientation to match its female parent
         obj.transform.position = controller.gameObject.transform.position;
         obj.transform.rotation = controller.gameObject.transform.rotation;
+        var newController = obj.GetComponent<ObjectController>();
+        newController.ChangeAppearancePreview();
+        FixRotationOnPreviewItem(newController);
         _previewItem = obj;
-         _inPreview = true;
+        _inPreview = true;
+    }
+
+    private static void FixRotationOnPreviewItem(ObjectController newItem)
+    {
+        foreach(var newQuality in newItem.GetComponentsInChildren<ObjectQuality>())
+        {
+            if(newQuality.QualityStep._qualityAction == QualityAction.eActionType.ROTATE)
+            {
+                ///check if this QualityStep Exists on either of the previewItems
+                foreach (var controller in _previewedItems)
+                {
+                    foreach (var existingQuality in controller.GetComponentsInChildren<ObjectQuality>())
+                    {
+                        if (existingQuality.QualityStep == newQuality.QualityStep)
+                        {
+                            ///Transfer the rotation:
+                            var oldRot = existingQuality.transform.rotation;
+                            newQuality.transform.rotation = oldRot;
+                            //Debug.Log($"Trans old {existingQuality.gameObject} to new {newQuality.gameObject}");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static void UndoPreview()
@@ -68,7 +95,7 @@ public static class PreviewManager
         foreach (var item in _previewedItems)
         {
             var overallQuality = item.GetComponent<OverallQuality>();
-            if(overallQuality)
+            if (overallQuality)
             {
                 foreach (var quality in overallQuality.Qualities)
                 {
@@ -84,8 +111,8 @@ public static class PreviewManager
         oc.ChangeAppearanceNormal();
         HandManager.PickUpItem(oc);
         ///Update our overall quality, passing the data to the next object 
-        var finalQuality =_previewItem.GetComponent<OverallQuality>();
-        if(finalQuality)
+        var finalQuality = _previewItem.GetComponent<OverallQuality>();
+        if (finalQuality)
         {
             foreach (var q in qualities)
             {
@@ -103,5 +130,5 @@ public static class PreviewManager
         _previewItem = null;
         _inPreview = false;
     }
-  
+
 }

@@ -9,9 +9,12 @@ public class BuildableObject : MonoBehaviour
     public Color _colorHand1;
     public Color _colorHand2;
 
+    [SerializeField] Transform _spawnPoint;
+
     public QualityStep[] _qualityPresets;
 
     private ObjectManager _manager;
+
 
     //These should be connected to something else like the workstation IDs
 
@@ -22,7 +25,7 @@ public class BuildableObject : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;
-        else if(Instance!=this)
+        else if (Instance != this)
             Destroy(this);
 
         _manager = Resources.Load<ObjectManager>("ObjectManager");
@@ -49,15 +52,19 @@ public class BuildableObject : MonoBehaviour
     }
     public GameObject SpawnObject(int itemID)
     {
-        return SpawnObject( itemID, Vector3.zero, null);
+        return SpawnObject(itemID, Vector3.zero, null);
     }
-     public GameObject SpawnObject(int itemID, Vector3 pos, List<ObjectQuality> qualities)
+    public GameObject SpawnObject(int itemID, Vector3 pos, List<ObjectQuality> qualities)
     {
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
         //GetNextObj
         //var _objStartPos = new Vector3(pos.x, pos.y, UserInput.Instance._tmpZfix);
+        var prefab = _manager.GetObject(itemID);
+        if (!prefab)
+            return null; ///Prevent any NPEs
+
         GameObject newObj = GameObject.Instantiate<GameObject>
-            (_manager.GetObject(itemID), pos, Quaternion.identity);
+            (prefab, pos, prefab.transform.rotation);
         newObj.transform.Rotate(Vector3.left, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
         newObj.transform.SetParent(this.transform);
 
@@ -80,7 +87,7 @@ public class BuildableObject : MonoBehaviour
         else
             Debug.Log($"Qualities passed in was null or count 0");
 
-        if(DebugItemsOnSpawn)
+        if (DebugItemsOnSpawn)
             FPSCounter.Instance.ProfileAnObject(newObj);
 
         return newObj;
@@ -90,7 +97,7 @@ public class BuildableObject : MonoBehaviour
     {
         var qs = this.transform.gameObject.AddComponent<ObjectQuality>();
         Debug.Log("id=" + id);
-        qs.InitalizeAsDummy(_qualityPresets[id-1] ,currAction);
+        qs.InitalizeAsDummy(_qualityPresets[id - 1], currAction);
 
         return qs;
     }
@@ -99,5 +106,47 @@ public class BuildableObject : MonoBehaviour
     {
         Destroy(obj);
     }
+
+    public GameObject DropItemInWorld(int itemID)
+    {
+        var prefab = _manager.GetObject(itemID);
+        if (!prefab || !_spawnPoint)
+            return null; ///Prevent any NPEs
+
+
+        GameObject newObj = GameObject.Instantiate<GameObject>
+          (prefab, GetRandomPos(_spawnPoint.position), prefab.transform.rotation);
+
+        newObj.transform.Rotate(GetRandomPos(newObj.transform.position), 0f); ///was 10f to add tilt toward camera but removed when picking up off table
+        newObj.transform.SetParent(this.transform);
+
+        var controller = newObj.GetComponent<ObjectController>();
+        if (controller)
+            controller.ToggleRB(false); ///turn on physics 
+
+        if (DebugItemsOnSpawn)
+            FPSCounter.Instance.ProfileAnObject(newObj);
+
+        return newObj;
+    }
+
+    private Vector3 GetRandomPos(Vector3 near)
+    {
+        float x = Random.Range(near.x - 0.75f, near.x + 0.75f);
+        float y = Random.Range(near.y - 1, near.y + 1);
+        float z = Random.Range(near.z - 0.25f, near.z );
+
+        return new Vector3(x, y, z);
+    }
+
+
+
+    //void Update()
+    //{
+    //    if (Input.GetMouseButtonDown(1))
+    //    {
+    //        DropItemInWorld(Random.Range(1,5));
+    //    }
+    //}
     #endregion
 }
