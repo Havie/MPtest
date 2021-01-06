@@ -8,7 +8,7 @@ public class FPSCounter : MonoBehaviour
 {
     public static FPSCounter Instance;
 
-    [SerializeField] Text guiText;
+    [SerializeField] Text guiText = default;
 
     public float updateInterval = 0.5F;
 

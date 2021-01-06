@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d1e50687b33a3943be11dc515ccd8c8, type: 3}
-  m_Name: b_Task_8
+  m_Script: {fileID: 11500000, guid: 0de61a358ec94764295a7acd3c064dac, type: 3}
+  m_Name: ColorManager
   m_EditorClassIdentifier: 
-  _finalItemID: 0d000000
-  _requiredItemIDs: 0d000000
-  isKittingStation: 0
+  _cBlack: {r: 0, g: 0, b: 0, a: 1}
+  _cGood: {r: 0.7411765, g: 1, b: 0.5882353, a: 1}
+  _cLow: {r: 1, g: 0.92156863, b: 0.39215687, a: 1}
+  _cBad: {r: 1, g: 0.46666667, b: 0.46666667, a: 1}

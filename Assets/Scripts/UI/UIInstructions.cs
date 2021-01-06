@@ -7,7 +7,7 @@ using UnityEngine;
 public class UIInstructions : MonoBehaviour
 {
 
-    [SerializeField] Animator _controller;
+    [SerializeField] Animator _controller = default;
 
     private bool _isOnTable = true;
     private bool _isAnimating;

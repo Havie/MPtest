@@ -31,7 +31,7 @@ public class WorkStation : ScriptableObject
     {
         foreach(Task t in _tasks)
         {
-            if (t.isKittingStation)
+            if (t._stationType==Task.eStationType.Kitting)
             {
                 if (_tasks.Count > 1)
                     Debug.LogWarning($"{_stationName} is a kitting station with more than 1 task, shouldn't happen");

@@ -7,8 +7,8 @@ public class InSocket : Socket
 {
     [Range(-0.5f, 0.5f)]
     [SerializeField] private float _attachmentSensitivity = 0;
-    [SerializeField] ObjectManager.eItemID[] _requiredAttachmentID;
-    [SerializeField] ObjectManager.eItemID[] _createdID;
+    [SerializeField] ObjectManager.eItemID[] _requiredAttachmentID = default;
+    [SerializeField] ObjectManager.eItemID[] _createdID = default;
 
 
     public enum test { opONE, opTWO }

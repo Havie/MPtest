@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UIInventoryManager _invSTATION;
     [HideInInspector] public UIKitting _invKITTING;
     public ComponentList _componentList;
-    [SerializeField] WorkStationManager _batchWorkStationManager;
-    [SerializeField] WorkStationManager _pullWorkStationManager;
+    [SerializeField] WorkStationManager _batchWorkStationManager = default;
+    [SerializeField] WorkStationManager _pullWorkStationManager = default;
 
     public WorkStationManager CurrentWorkStationManager { get; private set; }
 

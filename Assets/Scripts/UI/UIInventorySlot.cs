@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIInventorySlot : MonoBehaviour
 {
-    [SerializeField] Image _myIcon;
+    [SerializeField] Image _myIcon = default;
     private Sprite _defaultIcon;
     private UIInventoryManager _manager;
     private bool _autoSend = false; //Only for OutINV, set by InventoryManager
@@ -230,8 +230,8 @@ public class UIInventorySlot : MonoBehaviour
             else
                 _qualities.Clear();
 
-            if (qualities != null)
-                DebugQualityIn();
+            //if (qualities != null)
+            //    DebugQualityIn();
             //else
             //    UIManager.instance.DebugLog("Qualities Read was Null");
 

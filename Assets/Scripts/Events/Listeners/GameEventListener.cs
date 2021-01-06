@@ -15,7 +15,7 @@ public abstract class GameEventListener<T, E, UER> : MonoBehaviour,
     [SerializeField]protected E _gameEvent;
     public E Event { get { return _gameEvent; } set { _gameEvent = value; } }
 
-    [SerializeField] UER _unityEventResponse;
+    [SerializeField] UER _unityEventResponse = default;
 
     public void OnEnable()
     {

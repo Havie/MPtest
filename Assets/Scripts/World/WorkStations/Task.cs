@@ -7,15 +7,20 @@ using UnityEngine;
 public class Task : ScriptableObject
 {
 
-    //output
+    ///output
     [SerializeField]
     public List<ObjectManager.eItemID> _finalItemID;
 
-    //required items 
+    ///input 
     [SerializeField]
     public List<ObjectManager.eItemID> _requiredItemIDs;
 
-    //Ui info 
+    ///Ui info 
+    //[SerializeField]
+    //public bool isKittingStation; // might need to be an enum?
+
+    ///For UI setup
+    public enum eStationType { Normal, Kitting, QA, Shipping}
     [SerializeField]
-    public bool isKittingStation; // might need to be an enum?
+    public eStationType _stationType;
 }

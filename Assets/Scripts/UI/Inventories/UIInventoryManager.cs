@@ -16,8 +16,8 @@ public class UIInventoryManager : MonoBehaviour
     protected bool _ADDCHAOTIC;
     #endregion
     protected GameObject _bSlotPREFAB;
-    [SerializeField] GameObject _scrollBarVert;   
-    [SerializeField] GameObject _scrollBarHoriz;
+    [SerializeField] GameObject _scrollBarVert = default;   
+    [SerializeField] GameObject _scrollBarHoriz = default;
     public enum eInvType { IN, OUT, STATION };
     protected eInvType _inventoryType;
     protected Button _optionalSendButton;

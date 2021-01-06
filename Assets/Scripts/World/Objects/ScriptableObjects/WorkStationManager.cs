@@ -7,7 +7,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "WorkStationManager", menuName = "WorkStationManager")]
 public class WorkStationManager : ScriptableObject
 {
-    [SerializeField] List<WorkStation> _workStations;
+    [SerializeField] List<WorkStation> _workStations = default;
 
 
 
