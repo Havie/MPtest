@@ -9,7 +9,7 @@ public class BuildableObject : MonoBehaviour
     public Color _colorHand1;
     public Color _colorHand2;
 
-    [SerializeField] Transform _spawnPoint;
+    [SerializeField] Transform _spawnPoint = default;
 
     public QualityStep[] _qualityPresets;
 

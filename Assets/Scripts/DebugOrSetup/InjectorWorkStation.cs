@@ -8,7 +8,7 @@ public class InjectorWorkStation : MonoBehaviour
      WorkStationManager _workStationManager;
     [SerializeField] bool _testSceneInjection = false;
     [SerializeField] int _stationToInject = 1; //Change this to a enum drop down
-    [SerializeField] ObjectManager.eItemID _itemToInject;
+    [SerializeField] ObjectManager.eItemID _itemToInject = default;
 
 
     private List<WorkStation> _workStations;

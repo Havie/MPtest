@@ -25,17 +25,15 @@ public class UserInput : MonoBehaviour
     private Vector3 _mOffset; ///distance between obj in world and camera
     private UIInventorySlot _lastSlot;
 
-    [SerializeField] Transform _table;
-    private float _tableHeight = -0.45f;
-    private bool _justPulledOutOfUI;
+    [SerializeField] Transform _table = default;
+    //private float _tableHeight = -0.45f;
+    //private bool _justPulledOutOfUI= default;
 
     private Vector3 _objStartPos;
     private Quaternion _objStartRot;
     //UI
-    [SerializeField] GraphicRaycaster _Raycaster;
-    [SerializeField] GraphicRaycaster _RaycasterWorld;
+    [SerializeField] GraphicRaycaster _Raycaster = default;
     PointerEventData _PointerEventData;
-    PointerEventData _pointerEventDataWorld;
     EventSystem _EventSystem;
 
     //Actions
@@ -65,8 +63,8 @@ public class UserInput : MonoBehaviour
                 UIManager.instance.DebugLogWarning("Table not set up with tag for UserInput Awake");
         }
 
-        if (_table)
-            _tableHeight = _table.position.y;
+        //if (_table)
+        //    _tableHeight = _table.position.y;
 
     }
     void Start()
@@ -405,7 +403,7 @@ public class UserInput : MonoBehaviour
                 }
             }
 
-            _justPulledOutOfUI = false;
+           // _justPulledOutOfUI = false;
 
             _state = eState.FREE;
         }
@@ -440,7 +438,7 @@ public class UserInput : MonoBehaviour
                     _mOffset = Vector3.zero; /// it spawns here so no difference
                     _objStartPos = new Vector3(0, 0, _tmpZfix);
                     _objStartRot = Quaternion.identity;
-                    _justPulledOutOfUI = true;
+                    //_justPulledOutOfUI = true;
                     _state = eState.DISPLACEMENT;
                     _currentSelection.ChangeAppearanceHidden(true); ///spawn it invisible till were not hovering over UI
                 }

@@ -264,7 +264,6 @@ MonoBehaviour:
   _holdLeniency: 1.5
   _table: {fileID: 7473564167400551205}
   _Raycaster: {fileID: 5394208262448427698}
-  _RaycasterWorld: {fileID: 1000704286}
   _tmpZfix: -9
 --- !u!4 &112527775
 Transform:
@@ -5699,6 +5698,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5394208262448427697}
     m_Modifications:
+    - target: {fileID: 2555038399510213954, guid: 063599d9c9a33444ebf0cafeeead5b90,
+        type: 3}
+      propertyPath: _cm
+      value: 
+      objectReference: {fileID: 11400000, guid: 80335eb468e386944a4cce67d6646965,
+        type: 2}
     - target: {fileID: 2555038399510213955, guid: 063599d9c9a33444ebf0cafeeead5b90,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5963,6 +5968,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1347643145946090013, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1443492469655011897, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -5986,6 +5996,11 @@ PrefabInstance:
     - target: {fileID: 1443492469655011897, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2193211765261485724, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7395023057439007252, guid: ca58c9199303b3b43ba590d24a08378e,

@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIHostMenu : MonoBehaviour
 {
     [Header("Project Assets")]
-    [SerializeField] GameObject _NetworkManagerPREFAB;
+    [SerializeField] GameObject _NetworkManagerPREFAB= default;
 
     [Header("Scene Components")]
     public GameObject _connectionObjects;

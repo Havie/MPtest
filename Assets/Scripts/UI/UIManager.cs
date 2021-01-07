@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
     public Text _debugText;
     public int _maxTextSize = 350;
 
+
     #region Init
     private void Awake()
     {

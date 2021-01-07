@@ -11,9 +11,7 @@ public class Timer : MonoBehaviour
     private float _time = 90;
     private int _tLow = 60;
     private int _tBad =10;
-    [SerializeField] Color _cGood;
-    [SerializeField] Color _cLow;
-    [SerializeField] Color _cBad;
+    [SerializeField] ColorManager _cm = default;
 
 
     private bool test=true;
@@ -26,7 +24,9 @@ public class Timer : MonoBehaviour
 
     private void Start()
     {
-        _text.color = _cGood;
+
+        if(_cm)
+            _text.color = _cm.Good;
         UpdateTime(_time);
        
     }
@@ -69,17 +69,17 @@ public class Timer : MonoBehaviour
 
     private void CheckTimeColor()
     {
-        if (_time < 0)
+        if (_time < 0 || !_cm)
         {
             return;
         }
         else if (_time < _tBad)
         {
-            _text.color = _cBad;
+            _text.color = _cm.Bad;
         }
         else if (_time < _tLow)
         {
-            _text.color = _cLow;
+            _text.color = _cm.Low;
         }
     }
 
