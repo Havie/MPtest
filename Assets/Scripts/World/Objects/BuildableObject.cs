@@ -56,6 +56,9 @@ public class BuildableObject : MonoBehaviour
     }
     public GameObject SpawnObject(int itemID, Vector3 pos, List<ObjectQuality> qualities)
     {
+        if (itemID == -1)
+            Debug.Break();
+
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
         //GetNextObj
         //var _objStartPos = new Vector3(pos.x, pos.y, UserInput.Instance._tmpZfix);

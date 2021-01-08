@@ -11,6 +11,8 @@ public static class PreviewManager
 
     private static bool _inMiddleOfClear = false;
 
+    private static GameObject _switchOGParent;
+
 
     public static void ShowPreview(ObjectController controller, ObjectController otherController, int createdID)
     {
@@ -42,7 +44,48 @@ public static class PreviewManager
         newController.ChangeAppearancePreview();
         FixRotationOnPreviewItem(newController);
         _previewItem = obj;
+        CheckForSwitch();
         _inPreview = true;
+    }
+
+    private static void CheckForSwitch()
+    {
+        if (!_inPreview)
+        {
+            foreach (var item in _previewedItems)
+            {
+                Switch s = item.GetComponentInChildren<Switch>();
+                if (s != null)
+                {
+                    var transform = s.transform;
+                    Vector3 localPos = transform.localPosition;
+                    Quaternion localRot =transform.localRotation;
+                    transform.parent = _previewItem.transform;
+                    transform.localPosition = localPos;
+                    transform.localRotation = localRot;
+                    s.ShowInPreview();
+                    _switchOGParent = item.gameObject;
+                    return;
+                }
+
+            }
+        }
+        else ///switch back via UndoPreview
+        {
+            Switch s = _previewItem.GetComponentInChildren<Switch>();
+            if (s != null)
+            {
+                var transform = s.transform;
+                Vector3 localPos = transform.localPosition;
+                Quaternion localRot = transform.localRotation;
+                s.transform.parent = _switchOGParent.transform;
+                transform.localPosition = localPos;
+                transform.localRotation = localRot;
+                s.ShowNormal();
+                _switchOGParent = null;
+
+            }
+        }
     }
 
     private static void FixRotationOnPreviewItem(ObjectController newItem)
@@ -75,6 +118,7 @@ public static class PreviewManager
         {
             item.ChangeAppearanceNormal();
         }
+        CheckForSwitch();
         BuildableObject.Instance.DestroyObject(_previewItem);
         ResetSelf();
     }
