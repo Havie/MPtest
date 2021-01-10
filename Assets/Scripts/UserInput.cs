@@ -268,6 +268,7 @@ public class UserInput : MonoBehaviour
             {
                 TryPerformAction(QualityAction.eActionType.ROTATE);
                 TryPerformAction(QualityAction.eActionType.TAP);
+                CheckForSwitch();
                 CancelHighLightPreview();
 
                 UIManager.instance.HideTouchDisplay();
@@ -717,6 +718,17 @@ public class UserInput : MonoBehaviour
     }
     #endregion
 
+    private void CheckForSwitch()
+    {
+        if(_currentSelection)
+        {
+            var s = _currentSelection.GetComponent<Switch>();
+            if(s)
+            {
+                s.OnPress();
+            }
+        }
+    }
 
     public void InjectItem(int itemID)
     {
