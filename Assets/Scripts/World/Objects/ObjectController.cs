@@ -47,7 +47,7 @@ public class ObjectController : MonoBehaviour
         _meshRenderer = this.GetComponent<MeshRenderer>();
         _rb = this.gameObject.AddComponent<Rigidbody>();
         _collider = this.gameObject.GetComponent<Collider>();
-        _isSubObject = this.GetComponent<OverallQuality>() == null;
+        _isSubObject = this.GetComponent<QualityOverall>() == null;
 
         if (transform.parent == null)
         {

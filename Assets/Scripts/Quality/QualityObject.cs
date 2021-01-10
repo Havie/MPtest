@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(ObjectController))]
-public class ObjectQuality : MonoBehaviour
+public class QualityObject : MonoBehaviour
 {
     protected static GameObject _qualityVFXPREFAB;
     private ParticleSystem _vfx;
@@ -40,7 +40,7 @@ public class ObjectQuality : MonoBehaviour
         AssignCurrentActions(currentActions);
         _isDummy = true;
     }
-    public void CloneQuality(ObjectQuality toCopy)
+    public void CloneQuality(QualityObject toCopy)
     {
         Debug.Log($"{this.gameObject.name} copying {toCopy}");
         AssignCurrentActions(toCopy.CurrentQuality);
@@ -122,15 +122,21 @@ public class ObjectQuality : MonoBehaviour
     }
     private void PerformEffect()
     {
-        ///do any VFX 
-        if (_vfx == null)
+        if (VFXManager.Instance)
         {
-            _vfx = GameObject.Instantiate<GameObject>(_qualityVFXPREFAB, this.transform).GetComponent<ParticleSystem>();
+           
+            VFXManager.Instance.PerformEffect(_qualityVFXPREFAB, this.transform);
         }
-        else
-        {
-            _vfx.Play();
-        }
+
+        /////do any VFX 
+        //if (_vfx == null)
+        //{
+        //    _vfx = GameObject.Instantiate<GameObject>(_qualityVFXPREFAB, this.transform).GetComponent<ParticleSystem>();
+        //}
+        //else
+        //{
+        //    _vfx.Play();
+        //}
     }
 
     private void IncreaseQuality()
@@ -146,16 +152,16 @@ public class ObjectQuality : MonoBehaviour
 
     #region Custom Inspector Settings
     /// Will hide the _requiredRotationThreshold if we aren't doing a rotation action
-    [CustomEditor(typeof(ObjectQuality))]
+    [CustomEditor(typeof(QualityObject))]
     public class ObjectQualityEditor : Editor
     {
         //[SerializedProperty]
-        [SerializeField] ObjectQuality _objQ;
+        [SerializeField] QualityObject _objQ;
         SerializedProperty QualityStep;
         private void OnEnable()
         {
-            _objQ = target as ObjectQuality;
-            QualityStep = serializedObject.FindProperty(nameof(ObjectQuality._qualityStep));
+            _objQ = target as QualityObject;
+            QualityStep = serializedObject.FindProperty(nameof(QualityObject._qualityStep));
         }
 
         public override void OnInspectorGUI()

@@ -226,7 +226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1d68c1baf5f34478705cd617a2be89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _qualities: []
   _lastKnownQuality: 0
   _currentQuality: 0
   _maxQuality: 0
@@ -366,7 +365,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5222815996537300939}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2502416b5711884c96ce6b5cf47d4eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 80690e74389771d49bc5b048e200a141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _qualityStep: {fileID: 11400000, guid: 00f3ba17a0cb1154daeca77c2816bb59, type: 2}
@@ -381,6 +380,9 @@ GameObject:
   - component: {fileID: 6844505840420055034}
   - component: {fileID: 6757956236640868025}
   - component: {fileID: 7531802553715185551}
+  - component: {fileID: 7630211235048845531}
+  - component: {fileID: 1152899507987714363}
+  - component: {fileID: 4693039597685740426}
   m_Layer: 0
   m_Name: obj2
   m_TagString: Untagged
@@ -449,6 +451,51 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &7630211235048845531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097000017966943772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a85beb1089a064d8d801eae5192895, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _myID: 0
+  _rotateAroundAxis: 0
+  _canFollow: 1
+  _parent: {fileID: 0}
+  _handLocation: {fileID: 0}
+  _handIndex: 1
+  HandPreviewingMode: 0
+--- !u!114 &1152899507987714363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097000017966943772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80690e74389771d49bc5b048e200a141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _qualityStep: {fileID: 11400000, guid: 7ac19d165e93f054ca66f5149f476b56, type: 2}
+--- !u!65 &4693039597685740426
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097000017966943772}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.04136752, y: 0.041367516, z: 0.21043825}
+  m_Center: {x: 0, y: -0.00000009778887, z: -0.0018822439}
 --- !u!1 &8161113639952859741
 GameObject:
   m_ObjectHideFlags: 0

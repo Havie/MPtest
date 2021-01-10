@@ -13,9 +13,9 @@ public class UIInventorySlot : MonoBehaviour
     int _itemID = -1;
     public bool _inUse;
     int _numItemsStored = 0;
-    List<ObjectQuality> _qualities = new List<ObjectQuality>();
+    List<QualityObject> _qualities = new List<QualityObject>();
 
-    public List<ObjectQuality> Qualities => _qualities;
+    public List<QualityObject> Qualities => _qualities;
     public int RequiredID { get; private set; } = -1;
 
     private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
@@ -201,10 +201,10 @@ public class UIInventorySlot : MonoBehaviour
         int id = (int)oc._myID;
 
         ///Get Object Quality from controller
-        OverallQuality overallQuality = oc.GetComponent<OverallQuality>();
+        QualityOverall overallQuality = oc.GetComponent<QualityOverall>();
         if (overallQuality != null)
         {
-            List<ObjectQuality> qualities = overallQuality.Qualities;
+            List<QualityObject> qualities = overallQuality.Qualities;
 
             return AssignItem(id, count, qualities);
         }
@@ -213,7 +213,7 @@ public class UIInventorySlot : MonoBehaviour
         return false;
     }
 
-    public bool AssignItem(int id, int count, List<ObjectQuality> qualities)
+    public bool AssignItem(int id, int count, List<QualityObject> qualities)
     {
         if (!_inUse)
         {

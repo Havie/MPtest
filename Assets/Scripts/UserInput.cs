@@ -455,9 +455,9 @@ public class UserInput : MonoBehaviour
         return false;
     }
 
-    private List<ObjectQuality> RebuildQualities(List<ObjectQuality> toCopy)
+    private List<QualityObject> RebuildQualities(List<QualityObject> toCopy)
     {
-        List<ObjectQuality> newList = new List<ObjectQuality>();
+        List<QualityObject> newList = new List<QualityObject>();
         if (toCopy != null)
         {
             foreach (var q in toCopy)
@@ -686,7 +686,7 @@ public class UserInput : MonoBehaviour
     #region QualityActions
     private bool TryPerformAction(QualityAction.eActionType type)
     {
-        var objectQuality = _currentSelection.GetComponent<ObjectQuality>();
+        var objectQuality = _currentSelection.GetComponent<QualityObject>();
         if (objectQuality != null)
         {
             QualityAction action = new QualityAction(type, _inputPos, _rotationAmount);

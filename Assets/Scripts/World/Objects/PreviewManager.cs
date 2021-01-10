@@ -90,14 +90,14 @@ public static class PreviewManager
 
     private static void FixRotationOnPreviewItem(ObjectController newItem)
     {
-        foreach(var newQuality in newItem.GetComponentsInChildren<ObjectQuality>())
+        foreach(var newQuality in newItem.GetComponentsInChildren<QualityObject>())
         {
             if(newQuality.QualityStep._qualityAction == QualityAction.eActionType.ROTATE)
             {
                 ///check if this QualityStep Exists on either of the previewItems
                 foreach (var controller in _previewedItems)
                 {
-                    foreach (var existingQuality in controller.GetComponentsInChildren<ObjectQuality>())
+                    foreach (var existingQuality in controller.GetComponentsInChildren<QualityObject>())
                     {
                         if (existingQuality.QualityStep == newQuality.QualityStep)
                         {
@@ -134,11 +134,11 @@ public static class PreviewManager
         }
         _inMiddleOfClear = true;
 
-        List<ObjectQuality> qualities = new List<ObjectQuality>();
+        List<QualityObject> qualities = new List<QualityObject>();
 
         foreach (var item in _previewedItems)
         {
-            var overallQuality = item.GetComponent<OverallQuality>();
+            var overallQuality = item.GetComponent<QualityOverall>();
             if (overallQuality)
             {
                 foreach (var quality in overallQuality.Qualities)
@@ -155,7 +155,7 @@ public static class PreviewManager
         oc.ChangeAppearanceNormal();
         HandManager.PickUpItem(oc);
         ///Update our overall quality, passing the data to the next object 
-        var finalQuality = _previewItem.GetComponent<OverallQuality>();
+        var finalQuality = _previewItem.GetComponent<QualityOverall>();
         if (finalQuality)
         {
             foreach (var q in qualities)

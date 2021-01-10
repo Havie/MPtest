@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Switch : MonoBehaviour
+public class Switch : MonoBehaviour, IInteractable
 {
 
     [SerializeField] GameObject _switch;
@@ -26,15 +26,41 @@ public class Switch : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
-            Press();
+            OnPress();
     }
 
-    public void Press()
+    public void OnPress()
     {
         _on = !On;
         ToggleChildren(On);
+        PlayVFX(CheckQualityConditions(On));
 
     }
+
+    private bool CheckQualityConditions(bool On)
+    {
+        if (On)
+        {
+            QualityOverall quality = this.GetComponentInParent<QualityOverall>();
+            ObjectController oc = quality.GetComponent<ObjectController>();
+            if (oc._myID == ObjectManager.eItemID.finalPower)
+            {
+                if (QualityChecker.CheckFinalQuality(quality))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    void PlayVFX(bool cond)
+    {
+        Debug.Log("Play VFX=" + cond);
+    }
+
+
 
     private void ToggleChildren(bool cond)
     {
