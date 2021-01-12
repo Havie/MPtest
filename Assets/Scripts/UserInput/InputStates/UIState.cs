@@ -50,9 +50,9 @@ public class UIState : InputState
                 float zCoord = _brain._mainCamera.WorldToScreenPoint(slotLoc).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(zCoord), qualityList).GetComponent<ObjectController>();
                 _brain._currentSelection = obj;
-                HandManager.PickUpItem(_brain._currentSelection);
+                HandManager.PickUpItem(_brain._currentSelection as ObjectController);
                 //Debug.Log($"OBJ spawn loc={obj.transform.position}");
-                if (_brain._currentSelection)
+                if (_brain._currentSelection!=null)
                 {
                     _brain._mOffset = Vector3.zero; /// it spawns here so no difference
                     _brain._objStartPos = new Vector3(0, 0, _brain._tmpZfix);

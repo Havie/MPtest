@@ -42,7 +42,7 @@ public class FreeState : InputState
             _brain._lastPos = _brain._inputPos;
             _brain._currentSelection = _brain.CheckForObjectAtLoc(_brain._lastPos);
             _brain._pressTimeCURR = 0;
-            if (_brain._currentSelection) ///if you get an obj do rotation
+            if (_brain._currentSelection!=null) ///if you get an obj do rotation
             {
                 // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
 

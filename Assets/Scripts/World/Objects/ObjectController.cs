@@ -1,9 +1,10 @@
 ﻿using HighlightPlus;
 using System.Collections.Generic;
 using UnityEditor;
+
 using UnityEngine;
 
-public class ObjectController : MonoBehaviour
+public class ObjectController : MonoBehaviour, IInteractable
 {
 
     public ObjectManager.eItemID _myID;
@@ -521,6 +522,53 @@ public class ObjectController : MonoBehaviour
             Destroy(_handLocation.gameObject);
         _handLocation = null;
     }
+
+
+
+    #region INTERFACE
+    public GameObject GetGameObject() => gameObject;
+
+    public Transform GetParent() => this.transform.parent;
+
+    public Transform Transform() => this.transform;
+    public void OnInteract()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void HandleInteractionTime(float time)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnFollowInput(Vector3 worldPos)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public Vector2 OnRotate(Vector3 dot) {  return DoRotation(dot); }
+
+    public bool OutOfBounds()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    bool IInteractable.IsPickedUp()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    bool IInteractable.IsHighlighted()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SetHandPreviewingMode(bool cond)
+    {
+        throw new System.NotImplementedException();
+    }
+    #endregion
+
 
 
 #if UNITY_EDITOR

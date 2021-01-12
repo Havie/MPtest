@@ -36,10 +36,10 @@ public class PreviewConstructionState : InputState
 
         if (_brain.InputDown())
         {
-            if (_brain._currentSelection)
+            if (_brain._currentSelection!=null)
             {
-                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(_brain._currentSelection.transform);
-                _brain._currentSelection.Follow(worldLoc + _brain._mOffset);
+                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(_brain._currentSelection.GetGameObject().transform);
+                _brain._currentSelection.OnFollowInput(worldLoc + _brain._mOffset);
             }
 
             if (!PreviewManager._inPreview)
@@ -47,7 +47,7 @@ public class PreviewConstructionState : InputState
         }
         else //Input UP
         {
-            if (_brain._currentSelection)
+            if (_brain._currentSelection!=null)
             {
                 if (PreviewManager._inPreview)
                     PreviewManager.ConfirmCreation();

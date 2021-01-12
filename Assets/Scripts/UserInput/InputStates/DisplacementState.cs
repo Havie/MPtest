@@ -39,27 +39,32 @@ public class DisplacementState : InputState
         UIInventorySlot slot = _brain.RayCastForInvSlot();
         if (_brain.InputDown())
         {
-            if (_brain._currentSelection)
+            if (_brain._currentSelection != null)
             {
-                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(_brain._currentSelection.transform);
-                _brain._currentSelection.Follow(worldLoc + _brain._mOffset);
+                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(_brain._currentSelection.GetGameObject().transform);
+                _brain._currentSelection.OnFollowInput(worldLoc + _brain._mOffset);
 
                 if (slot != null) ///we are hovering over a slot 
                 {
                     if (!slot.GetInUse())
                     {
-                        ///The slot can accept this item
-                        if (slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)_brain._currentSelection._myID)))
+                        ObjectController oc = _brain._currentSelection as ObjectController;
+                        if (oc)
                         {
-                            _brain._currentSelection.ChangeAppearanceHidden(true);
-                            UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
-                        }
-                        else ///the slot can not accept this item so continue to show the dummy preview
-                            ShowDummyPreviewSlot();
+                            ///The slot can accept this item
+                            if (slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)oc._myID)))
+                            {
+                                _brain._currentSelection.ChangeAppearanceHidden(true);
+                                UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
+                            }
+                            else ///the slot can not accept this item so continue to show the dummy preview
+                                ShowDummyPreviewSlot();
 
-                        if (slot != _brain._lastSlot && _brain._lastSlot != null)
-                            _brain._lastSlot.UndoPreview();
-                        _brain._lastSlot = slot;
+                            if (slot != _brain._lastSlot && _brain._lastSlot != null)
+                                _brain._lastSlot.UndoPreview();
+                            _brain._lastSlot = slot;
+
+                        }///Might be the wrong place to close this bracket
                     }
                     else
                     {
@@ -73,19 +78,19 @@ public class DisplacementState : InputState
                 else if (PreviewManager._inPreview)
                     _brain.SwitchState(_brain._previewState); ///dont want to reset the Object while in preview or it wont be hidden
                 else
-                   ResetObjectAndSlot();
+                    ResetObjectAndSlot();
             }
         }
         else ///Input UP
         {
-            if (_brain._currentSelection)
+            if (_brain._currentSelection != null)
             {
                 bool assigned = false;
                 if (slot != null)
                 {
                     //Debug.Log($"FOUND UI SLOT {slot.name}");
                     slot.SetNormal();
-                    assigned = slot.AssignItem(_brain._currentSelection, 1);
+                    assigned = slot.AssignItem(_brain._currentSelection as ObjectController, 1); ///TODO verify this somehow
                     if (assigned)
                         _brain.Destroy(_brain._currentSelection);
                 }
@@ -94,8 +99,8 @@ public class DisplacementState : InputState
                     ///put it back to where we picked it up 
                     if (slot) // we tried dropping in incompatible slot
                     {
-                        _brain._currentSelection.transform.position = _brain._objStartPos;
-                        _brain._currentSelection.transform.rotation = _brain._objStartRot;
+                        _brain._currentSelection.GetGameObject().transform.position = _brain._objStartPos;
+                        _brain._currentSelection.GetGameObject().transform.rotation = _brain._objStartRot;
                         UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
                     }
                     else
@@ -104,19 +109,19 @@ public class DisplacementState : InputState
                         if (dz)
                         {
                             ///If the item is dropped in a deadzone, reset it to a safe place
-                            _brain._currentSelection.transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition);
+                            _brain._currentSelection.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition);
                         }
                         else
                         {
                             ///Check were not below the table
-                            if (_brain._currentSelection._hittingTable)
+                            if (_brain._currentSelection.OutOfBounds())
                                 _brain._currentSelection.SetResetOnNextChange();
 
                             // Debug.Log($"curr: {_currentSelection.transform.position.y} vs table {_tableHeight}");
 
                         }
                     }
-                    _brain._currentSelection.ChangeAppearanceNormal();
+                    _brain._currentSelection.ChangeAppearanceNormal(); ///ToDo abstract this somehow
                     // HandManager.DropItem(_currentSelection);
                     //Really weird Fix to prevent raycast bug
                     _brain.FixRayCastBug();
@@ -135,14 +140,18 @@ public class DisplacementState : InputState
 
     private void ShowDummyPreviewSlot()
     {
-        Sprite img = BuildableObject.Instance.GetSpriteByID((int)_brain._currentSelection._myID);
-        _brain._currentSelection.ChangeAppearanceHidden(true);
-        UIManager.instance.ShowPreviewInvSlot(true, _brain._inputPos, img);
+        ObjectController oc = _brain._currentSelection as ObjectController;
+        if (oc)
+        {
+            Sprite img = BuildableObject.Instance.GetSpriteByID((int)oc._myID);
+            _brain._currentSelection.ChangeAppearanceHidden(true);
+            UIManager.instance.ShowPreviewInvSlot(true, _brain._inputPos, img);
+        }
     }
 
     private void ResetObjectAndSlot()
     {
-        if (_brain._currentSelection)
+        if (_brain._currentSelection != null)
         {
             _brain._currentSelection.ChangeAppearanceHidden(false);
         }

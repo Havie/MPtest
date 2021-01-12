@@ -11,7 +11,7 @@ public class UserInput : MonoBehaviour
     public bool _IsMobileMode { get; private set; }
     public Camera _mainCamera { get; private set; }
 
-    public ObjectController _currentSelection;
+    public IInteractable _currentSelection;
 
     [HideInInspector]  //testing purposes
     public float _pressTimeCURR = 0;
@@ -147,10 +147,10 @@ public class UserInput : MonoBehaviour
         }
     }
 
-    public void Destroy(ObjectController oc)
+    public void Destroy(IInteractable oc)
     {
         if(oc!=null)
-            Destroy(oc.gameObject);
+            Destroy(oc.GetGameObject());
     }
 
 
@@ -167,14 +167,14 @@ public class UserInput : MonoBehaviour
     }
     public Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo)
     {
-        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(_currentSelection.transform.position);
+        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(_currentSelection.GetGameObject().transform.position);
         float zCoord = screenPtObj.z;
         ///gets the world loc based on transform and gives it the z depth from the obj
         var v3= _mainCamera.ScreenToWorldPoint(
             new Vector3(safePlaceToGo.position.x, safePlaceToGo.position.y, zCoord)
             );
 
-        v3.z = _currentSelection.transform.position.z;
+        v3.z = _currentSelection.GetGameObject().transform.position.z;
         return v3;
     }
 
@@ -188,14 +188,14 @@ public class UserInput : MonoBehaviour
         return _mainCamera.WorldToScreenPoint(pos);
     }
 
-    public ObjectController CheckForObjectAtLoc(Vector3 pos)
+    public IInteractable CheckForObjectAtLoc(Vector3 pos)
     {
         var ray = _mainCamera.ScreenPointToRay(pos);
         Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
             //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
-            return (hit.transform.gameObject.GetComponent<ObjectController>());
+            return (hit.transform.gameObject.GetComponent<IInteractable>());
         }
         /* else
          {
@@ -218,9 +218,9 @@ public class UserInput : MonoBehaviour
     /**This is a really weird fix I found to prevent the raycast from missing the box */
     public void FixRayCastBug()
     {
-        if (_currentSelection)
+        if (_currentSelection!=null)
         {
-            var box = _currentSelection.GetComponent<Collider>();
+            var box = _currentSelection.GetGameObject().GetComponent<Collider>();
             box.enabled = false;
             _currentSelection = null;
             box.enabled = true;
@@ -304,7 +304,7 @@ public class UserInput : MonoBehaviour
     #region QualityActions
     public bool TryPerformAction(QualityAction.eActionType type)
     {
-        var objectQuality = _currentSelection.GetComponent<QualityObject>();
+        var objectQuality = _currentSelection.GetGameObject().GetComponent<QualityObject>();
         if (objectQuality != null)
         {
             QualityAction action = new QualityAction(type, _inputPos, _rotationAmount);
@@ -337,13 +337,14 @@ public class UserInput : MonoBehaviour
 
     public void CheckForSwitch()
     {
-        if(_currentSelection)
+        if(_currentSelection!=null)
         {
-            var s = _currentSelection.GetComponent<Switch>();
-            if(s)
-            {
-                s.OnPress();
-            }
+            //var s = _currentSelection.GetComponent<Switch>();
+            //if(s)
+            //{
+            //    s.OnInteract();
+            //}
+            _currentSelection.OnInteract();
         }
     }
 
@@ -355,19 +356,19 @@ public class UserInput : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
         {
-            _currentSelection = obj;
-            HandManager.PickUpItem(_currentSelection);
+            _currentSelection = obj.GetComponent<IInteractable>();
+            HandManager.PickUpItem(_currentSelection.GetGameObject().GetComponent<ObjectController>());
             Debug.Log($"OBJ spawn loc={obj.transform.position}");
-            if (_currentSelection)
+            if (_currentSelection!=null)
             {
-                _currentSelection.ChangeAppearanceMoving();
+                _currentSelection.OnFollowInput(_inputPos);
                 //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                 _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
                 SwitchState(_displacementState);
                 _objStartPos = new Vector3(0, 0, _tmpZfix);
                 _objStartRot = Quaternion.identity;
 
-                Debug.Log($"Final loc={_currentSelection.transform.position}");
+                //Debug.Log($"Final loc={_currentSelection.transform.position}");
             }
         }
 

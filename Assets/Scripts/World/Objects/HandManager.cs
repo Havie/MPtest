@@ -72,6 +72,12 @@ public static class HandManager
    
     public static void StartToHandleIntensityChange(ObjectController potentialItemToBePickedUp)
     {
+        if (potentialItemToBePickedUp == null)
+        {
+            Debug.LogWarning("Incoming item is null, todo change to IInteractble");
+            return;
+        }
+
         ///start to fade in next item to be picked up
         var currentIntensity = potentialItemToBePickedUp.GetHighlightIntensity();
         potentialItemToBePickedUp.ChangeHighlightAmount(currentIntensity + _intensityChange);
