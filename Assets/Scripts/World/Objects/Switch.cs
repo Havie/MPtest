@@ -5,8 +5,8 @@ using UnityEngine;
 public class Switch : MonoBehaviour, IInteractable
 {
 
-    [SerializeField] GameObject _switch;
-    [SerializeField] GameObject _switchFlipped;
+    [SerializeField] GameObject _switch= default;
+    [SerializeField] GameObject _switchFlipped = default;
 
 
 
