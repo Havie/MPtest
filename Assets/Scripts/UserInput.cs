@@ -168,7 +168,7 @@ public class UserInput : MonoBehaviour
             }
             else ///if u get UI do UI 
             {
-                var slot = RayCastForInvSlot();
+                UIInventorySlot slot = RayCastForInvSlot();
                 if (slot != null)
                 {
                     if (slot.GetInUse())
@@ -178,7 +178,7 @@ public class UserInput : MonoBehaviour
                 }
                 else
                 {
-                   var instructions= RayCastForInstructions();
+                   UIInstructions instructions= RayCastForInstructions();
                     if (instructions)
                         instructions.InstructionsClicked();
                 }
