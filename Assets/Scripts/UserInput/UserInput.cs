@@ -8,8 +8,6 @@ public class UserInput : MonoBehaviour
 {
     public static UserInput Instance { get; private set; }
 
-    public enum eState { FREE, ROTATION, DISPLACEMENT, UI, PREVIEWCONSTRUCTION };
-    public eState _state { get; private set; }
     public bool _IsMobileMode { get; private set; }
     public Camera _mainCamera { get; private set; }
 
@@ -365,7 +363,7 @@ public class UserInput : MonoBehaviour
                 _currentSelection.ChangeAppearanceMoving();
                 //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                 _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
-                _state = eState.DISPLACEMENT;
+                SwitchState(_displacementState);
                 _objStartPos = new Vector3(0, 0, _tmpZfix);
                 _objStartRot = Quaternion.identity;
 
