@@ -359,16 +359,20 @@ public class UserInput : MonoBehaviour
             _currentSelection = obj.GetComponent<IInteractable>();
             HandManager.PickUpItem(_currentSelection.GetGameObject().GetComponent<ObjectController>());
             Debug.Log($"OBJ spawn loc={obj.transform.position}");
-            if (_currentSelection!=null)
+            if (_currentSelection != null)
             {
-                _currentSelection.OnFollowInput(_inputPos);
-                //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
-                _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
-                SwitchState(_displacementState);
-                _objStartPos = new Vector3(0, 0, _tmpZfix);
-                _objStartRot = Quaternion.identity;
+                IMoveable moveableObject = _currentSelection as IMoveable;
+                if (moveableObject!=null)
+                {
+                    moveableObject.OnFollowInput(_inputPos);
+                    //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+                    _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
+                    SwitchState(_displacementState);
+                    _objStartPos = new Vector3(0, 0, _tmpZfix);
+                    _objStartRot = Quaternion.identity;
 
-                //Debug.Log($"Final loc={_currentSelection.transform.position}");
+                    //Debug.Log($"Final loc={_currentSelection.transform.position}");
+                }
             }
         }
 

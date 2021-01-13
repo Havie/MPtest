@@ -36,17 +36,29 @@ public class VFXManager : MonoBehaviour
         {
             if (_vfxMap.TryGetValue(prefab, out ParticleSystem vfx))
             {
-                vfx.Stop();
-                vfx.transform.parent = location;
-                vfx.transform.localPosition = Vector3.zero;
-                vfx.Play();
-                if (_toBeStopped.Contains(vfx))
+                if (vfx != null)
                 {
-                    _toBeStopped = RemoveFromQueue(vfx);
-                    _toBeStopped.Enqueue(vfx);
+                    vfx.Stop();
+                    vfx.transform.parent = location;
+                    vfx.transform.localPosition = Vector3.zero;
+                    vfx.Play();
+                    if (_toBeStopped.Contains(vfx))
+                    {
+                        _toBeStopped = RemoveFromQueue(vfx);
+                        _toBeStopped.Enqueue(vfx);
+                    }
+                    else
+                        _toBeStopped.Enqueue(vfx);
                 }
                 else
-                    _toBeStopped.Enqueue(vfx);
+                {
+                    _vfxMap.Remove(prefab);
+                    PerformEffect(prefab, location);
+                    if (_toBeStopped.Contains(vfx))
+                    {
+                        _toBeStopped = RemoveFromQueue(vfx);
+                    }
+                }
             }
             else
             {

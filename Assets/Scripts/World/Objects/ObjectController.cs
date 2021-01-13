@@ -4,7 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class ObjectController : MonoBehaviour, IInteractable
+public class ObjectController : MonoBehaviour, IMoveable
 {
 
     public ObjectManager.eItemID _myID;
@@ -318,10 +318,10 @@ public class ObjectController : MonoBehaviour, IInteractable
 
 
     #region Highlight Outline
-    public bool IsPickedUp => _pickedUp;
-    public bool IsHighlighted { get; private set; }
-    [HideInInspector]
-    public bool HandPreviewingMode = false;
+    public bool IsPickedUp() => _pickedUp;
+    private bool _isHighlighted;
+    public bool IsHighlighted() => _isHighlighted;
+    public bool HandPreviewingMode { get; private set; }
 
     public void SetHighlighted(bool cond)
     {
@@ -334,7 +334,7 @@ public class ObjectController : MonoBehaviour, IInteractable
             item.Highlight(cond);
         }
 
-        IsHighlighted = cond;
+        _isHighlighted = cond;
     }
     public void PickedUp(int handIndex)
     {
@@ -533,39 +533,29 @@ public class ObjectController : MonoBehaviour, IInteractable
     public Transform Transform() => this.transform;
     public void OnInteract()
     {
-        throw new System.NotImplementedException();
+        ///Nothing really happens we click this object?
     }
 
     public void HandleInteractionTime(float time)
     {
-        throw new System.NotImplementedException();
+        ChangeHighlightAmount(time);
     }
 
     public void OnFollowInput(Vector3 worldPos)
     {
-        throw new System.NotImplementedException();
+        Follow(worldPos);
     }
 
     public Vector2 OnRotate(Vector3 dot) {  return DoRotation(dot); }
 
     public bool OutOfBounds()
     {
-        throw new System.NotImplementedException();
-    }
-
-    bool IInteractable.IsPickedUp()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    bool IInteractable.IsHighlighted()
-    {
-        throw new System.NotImplementedException();
+        return _hittingTable;
     }
 
     public void SetHandPreviewingMode(bool cond)
     {
-        throw new System.NotImplementedException();
+        HandPreviewingMode = cond;
     }
     #endregion
 

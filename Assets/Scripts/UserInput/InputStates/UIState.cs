@@ -59,7 +59,9 @@ public class UIState : InputState
                     _brain._objStartRot = Quaternion.identity;
                     //_justPulledOutOfUI = true;
                     _brain.SwitchState(_brain._displacementState);
-                    _brain._currentSelection.ChangeAppearanceHidden(true); ///spawn it invisible till were not hovering over UI
+                    IMoveable moveableObject = _brain._currentSelection as IMoveable;
+                    if(moveableObject!=null)
+                        moveableObject.ChangeAppearanceHidden(true); ///spawn it invisible till were not hovering over UI
                 }
                 else
                     Debug.LogWarning("This happened?1");

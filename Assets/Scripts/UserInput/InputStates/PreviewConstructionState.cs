@@ -33,13 +33,14 @@ public class PreviewConstructionState : InputState
 
     public bool CheckPreviewConstruction()
     {
+        IMoveable moveableObject = _brain._currentSelection as IMoveable;
 
         if (_brain.InputDown())
         {
-            if (_brain._currentSelection!=null)
+            if (moveableObject != null)
             {
-                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(_brain._currentSelection.GetGameObject().transform);
-                _brain._currentSelection.OnFollowInput(worldLoc + _brain._mOffset);
+                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.GetGameObject().transform);
+                moveableObject.OnFollowInput(worldLoc + _brain._mOffset);
             }
 
             if (!PreviewManager._inPreview)
@@ -47,7 +48,7 @@ public class PreviewConstructionState : InputState
         }
         else //Input UP
         {
-            if (_brain._currentSelection!=null)
+            if (moveableObject != null)
             {
                 if (PreviewManager._inPreview)
                     PreviewManager.ConfirmCreation();

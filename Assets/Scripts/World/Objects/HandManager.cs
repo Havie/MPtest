@@ -55,11 +55,11 @@ public static class HandManager
         if (_handArray[1])
         {
             _handArray[1].PickedUp(2);
-            _handArray[1].HandPreviewingMode = false;
+            _handArray[1].SetHandPreviewingMode(false);
         }
 
         _handArray[0].PickedUp(1);
-        item.HandPreviewingMode = false;
+        item.SetHandPreviewingMode(false);
 
         item.ToggleRB(true);
 
@@ -143,16 +143,16 @@ public static class HandManager
         _previewingAChange = cond;
         if (CountPickedUpItems() == 1)
         {
-            _handArray[0].HandPreviewingMode = cond;
+            _handArray[0].SetHandPreviewingMode(cond);
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
             _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
 
         }
         else if (CountPickedUpItems() == 2)
         {
-            _handArray[0].HandPreviewingMode = cond;
+            _handArray[0].SetHandPreviewingMode(cond);
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
-            _handArray[1].HandPreviewingMode = cond;
+            _handArray[1].SetHandPreviewingMode(cond);
             _handArray[1].ChangeHighlightAmount(_outlineIntensity);
             _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
         }
@@ -169,7 +169,7 @@ public static class HandManager
             item.ToggleRB(false);
             item.PutDown();
            // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
-            item.HandPreviewingMode = false;
+            item.SetHandPreviewingMode(false);
             if (_handArray[0] == item)
             {
                 ///shift other item over to slot 0
