@@ -33,7 +33,7 @@ public class PreviewConstructionState : InputState
 
     public bool CheckPreviewConstruction()
     {
-        IMoveable moveableObject = _brain._currentSelection as IMoveable;
+        IConstructable moveableObject = _brain._currentSelection as IConstructable;
 
         if (_brain.InputDown())
         {

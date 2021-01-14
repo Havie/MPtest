@@ -194,7 +194,7 @@ public class UserInput : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
-            //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
+            //Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
             return (hit.transform.gameObject.GetComponent<IInteractable>());
         }
         /* else
@@ -269,7 +269,7 @@ public class UserInput : MonoBehaviour
     public UIInstructions RayCastForInstructions()
     {
         var ray = _mainCamera.ScreenPointToRay(_inputPos);
-        Debug.DrawRay(ray.origin, ray.direction * 1350, Color.green, 5);
+       // Debug.DrawRay(ray.origin, ray.direction * 1350, Color.green, 5);
         if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
             //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
@@ -335,18 +335,7 @@ public class UserInput : MonoBehaviour
     }
     #endregion
 
-    public void CheckForSwitch()
-    {
-        if(_currentSelection!=null)
-        {
-            //var s = _currentSelection.GetComponent<Switch>();
-            //if(s)
-            //{
-            //    s.OnInteract();
-            //}
-            _currentSelection.OnInteract();
-        }
-    }
+
 
     public void InjectItem(int itemID)
     {

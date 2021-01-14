@@ -79,13 +79,15 @@ public class RotationState : InputState
                 UIManager.instance.HideTouchDisplay();
 
                 _brain._currentSelection = _brain.CheckForObjectAtLoc(_inputPos);
-                _brain._currentSelection = _brain.FindAbsoluteParent(_brain._currentSelection as ObjectController);
+                IConstructable constructable = _brain._currentSelection as IConstructable;
+                if(constructable!=null)
+                    _brain._currentSelection = _brain.FindAbsoluteParent(_brain._currentSelection as ObjectController);
                 moveableObject = _brain._currentSelection as IMoveable;
                 if (moveableObject != null)
                 {
 
                     moveableObject.ChangeAppearanceMoving(); ///TODO abstract to handle inside interface
-                    Transform transform = moveableObject.GetGameObject().transform;
+                    Transform transform = moveableObject.Transform();
                     float zCoord = _brain._mainCamera.WorldToScreenPoint(transform.position).z;
                     _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
                     _brain._objStartPos = transform.position;
@@ -97,8 +99,10 @@ public class RotationState : InputState
                     if (moveableObject.OutOfBounds())
                         ResetObjectOrigin(moveableObject, zCoord);
 
+                    moveableObject.AllowFollow(); ///Might mess up objectCntroller
                     HandManager.PickUpItem(_brain._currentSelection as ObjectController); //might have moved to the wrong spot
                 }
+
                 _brain.SwitchState(_brain._displacementState);
             }
             else ///Do rotation
@@ -119,7 +123,7 @@ public class RotationState : InputState
             {
                 _brain.TryPerformAction(QualityAction.eActionType.ROTATE);
                 _brain.TryPerformAction(QualityAction.eActionType.TAP);
-                _brain.CheckForSwitch();
+                _brain._currentSelection.OnInteract();
                 if (moveableObject != null)
                     CancelHighLightPreview(moveableObject);
 
@@ -156,7 +160,9 @@ public class RotationState : InputState
 
     private void CancelHighLightPreview(IMoveable moveableObject)
     {
-        moveableObject.SetHandPreviewingMode(false);
+        IConstructable constructable = moveableObject as IConstructable; ///This is a mess
+        if(constructable!=null)
+            constructable.SetHandPreviewingMode(false);
 
         if (moveableObject.IsPickedUp())
             return;
@@ -186,7 +192,7 @@ public class RotationState : InputState
             trans.position = _brain._objStartPos;
             trans.rotation = _brain._objStartRot;
             ///Start moving the object
-            moveableObject.ResetHittingTable(); // so we can pick it up again
+            moveableObject.AllowFollow(); /// so we can pick it up again
             _brain.SwitchState(_brain._displacementState); ///I switched this down 1 line incase things break
         }
         else

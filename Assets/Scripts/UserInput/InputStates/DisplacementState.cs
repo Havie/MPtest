@@ -55,11 +55,15 @@ public class DisplacementState : InputState
                             ///The slot can accept this item
                             if (slot.PreviewSlot(BuildableObject.Instance.GetSpriteByID((int)oc._myID)))
                             {
-                                moveableObject.ChangeAppearanceHidden(true);
-                                UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
+                                IConstructable constructable = moveableObject as IConstructable;
+                                if (constructable != null)
+                                {
+                                    constructable.ChangeAppearanceHidden(true);
+                                    UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
+                                }
                             }
                             else ///the slot can not accept this item so continue to show the dummy preview
-                                ShowDummyPreviewSlot(moveableObject);
+                                ShowDummyPreviewSlot(moveableObject as IConstructable);
 
                             if (slot != _brain._lastSlot && _brain._lastSlot != null)
                                 _brain._lastSlot.UndoPreview();
@@ -73,13 +77,13 @@ public class DisplacementState : InputState
                         if (slot != _brain._lastSlot && _brain._lastSlot != null)
                             _brain._lastSlot.UndoPreview();
                         _brain._lastSlot = slot;
-                        ShowDummyPreviewSlot(moveableObject);
+                        ShowDummyPreviewSlot(moveableObject as IConstructable);
                     }
                 }
                 else if (PreviewManager._inPreview)
                     _brain.SwitchState(_brain._previewState); ///dont want to reset the Object while in preview or it wont be hidden
                 else
-                    ResetObjectAndSlot(moveableObject);
+                    ResetObjectAndSlot(moveableObject as IConstructable);
             }
         }
         else ///Input UP
@@ -140,7 +144,7 @@ public class DisplacementState : InputState
 
 
 
-    private void ShowDummyPreviewSlot(IMoveable moveableObject)
+    private void ShowDummyPreviewSlot(IConstructable moveableObject)
     {
         ObjectController oc = moveableObject as ObjectController;
         if (oc)
@@ -151,7 +155,7 @@ public class DisplacementState : InputState
         }
     }
 
-    private void ResetObjectAndSlot(IMoveable moveableObject)
+    private void ResetObjectAndSlot(IConstructable moveableObject)
     {
         if (moveableObject != null)
         {

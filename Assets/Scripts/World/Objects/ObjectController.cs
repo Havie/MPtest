@@ -4,7 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class ObjectController : MonoBehaviour, IMoveable
+public class ObjectController : MonoBehaviour, IConstructable
 {
 
     public ObjectManager.eItemID _myID;
@@ -556,6 +556,11 @@ public class ObjectController : MonoBehaviour, IMoveable
     public void SetHandPreviewingMode(bool cond)
     {
         HandPreviewingMode = cond;
+    }
+
+    public void AllowFollow()
+    {
+        ResetHittingTable();
     }
     #endregion
 

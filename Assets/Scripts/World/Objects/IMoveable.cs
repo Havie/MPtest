@@ -8,20 +8,20 @@ public interface IMoveable : IInteractable
 
     Vector2 OnRotate(Vector3 dot);
 
+    void AllowFollow();
+
     bool OutOfBounds();
 
+    void SetResetOnNextChange();
+
+    void ResetPosition();
+
     bool IsPickedUp();
-
-    ///Probably need to be on a new class:
-
-    void SetHandPreviewingMode(bool cond);
 
     void ChangeAppearanceMoving();
 
     void ChangeAppearanceNormal();
 
-    void ChangeAppearanceHidden(bool cond);
-    void ResetHittingTable();
 
-    void SetResetOnNextChange();
+
 }

@@ -12,8 +12,10 @@ public interface IInteractable
 
     void OnInteract();
 
-    void HandleInteractionTime(float time);
 
+
+
+    void HandleInteractionTime(float time);
 
     bool IsHighlighted();
 
