@@ -4,15 +4,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UserInput : MonoBehaviour
-{
-    public static UserInput Instance { get; private set; }
+
+///Might want to try to make this non-mono and cleanup/remove some dependencies from other classes 
+///Could move the Awake/Start Functions into the constructor-they arent doing much
+
+public class UserInputManager : MonoBehaviour
+{ 
+    public static UserInputManager Instance { get; private set; }
 
 
-
-    [HideInInspector] ///NB: these are still serialized, need to make private to change 
     private float _pressTimeMAX = 0.55f; ///was 1.2f
-    [HideInInspector] ///NB: these are still serialized, need to make private to change 
     private float _holdLeniency = 1.5f;
 
     ///Set From InputHandler
@@ -25,8 +26,6 @@ public class UserInput : MonoBehaviour
     public Vector3 _mOffset; ///distance between obj in world and camera
     public Vector3 _objStartPos;
     public Quaternion _objStartRot;
-
-
 
 
     //UI
@@ -48,7 +47,10 @@ public class UserInput : MonoBehaviour
     #endregion
 
 
-
+    /************************************************************************************************************************/
+    //         Init
+    /************************************************************************************************************************/
+    #region
     private void Awake()
     {
         if (Instance == null)
@@ -73,9 +75,9 @@ public class UserInput : MonoBehaviour
     }
     void Start()
     {
-        //Fetch the Event System from the Scene
+        ///Fetch the Event System from the Scene
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
-        //Set up the new Pointer Event
+        ///Set up the new Pointer Event
         _PointerEventData = new PointerEventData(_EventSystem);
 
         _mainCamera = Camera.main;
@@ -86,6 +88,26 @@ public class UserInput : MonoBehaviour
         _currentState = _freeState;
     }
 
+    #endregion
+
+    /************************************************************************************************************************/
+    //        RunTime
+    /************************************************************************************************************************/
+    #region RunTime
+    public void SetInputDown(bool cond, Vector3 position)
+    {
+        _inputPos = position;
+        _inputIsDown = cond;
+    }
+
+    void Update()
+    {
+        if (_currentState != null)
+            _currentState.Execute(_inputIsDown, _inputPos);
+    }
+
+
+    public IInteractable CurrentSelection => _currentState.CurrentSelection;
     public void SwitchState(InputState nextState, IInteractable currentSelection)
     {
         if (_currentState == null || _currentState.CanExitState(nextState))
@@ -97,21 +119,6 @@ public class UserInput : MonoBehaviour
 
     }
 
-    void Update()
-    {
-
-        if (_currentState != null)
-            _currentState.Execute(_inputIsDown, _inputPos);
-
-    }
-
-    public void SetInputDown(bool cond, Vector3 position)
-    {
-        _inputPos = position;
-        _inputIsDown = cond;
-    }
-
-    public IInteractable CurrentSelection => _currentState.CurrentSelection;
 
     public void Destroy(IInteractable oc)
     {
@@ -119,6 +126,7 @@ public class UserInput : MonoBehaviour
             Destroy(oc.GetGameObject());
     }
 
+    #endregion 
     /************************************************************************************************************************/
     //          HELPERS FOR STATES
     /************************************************************************************************************************/
@@ -228,8 +236,6 @@ public class UserInput : MonoBehaviour
 
 
     #endregion
-
-
 
     /************************************************************************************************************************/
     //         CHEATING / INJECTOR

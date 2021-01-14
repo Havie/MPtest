@@ -92,7 +92,7 @@ public static class HandManager
         var currentColor = firstItemInHand.GetHighLightColor();
         var orangeColor = BuildableObject.Instance._colorHand2;
         firstItemInHand.ChangeHighLightColor(Color.Lerp(currentColor, orangeColor, 0.05f));
-        ///Basing this off of the pickup times from UserInput doesnt look as good, the colors are too close
+        ///Basing this off of the pickup times from UserInputManagerdoesnt look as good, the colors are too close
         /// so the change happens to fast, might as well just use 0.05f constant as it looks visually appealing
         // (UserInput.Instance._pressTimeCURR/UserInput.Instance._pressTimeMAX)/2));
 

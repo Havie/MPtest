@@ -7,7 +7,7 @@ public class InputHandler : MonoBehaviour
     private bool _IsMobileMode;
     private Vector3 _inputPos; ///current input loc
 
-    private UserInput _userInput;
+    private UserInputManager _userInput;
 
 
     void Awake()
@@ -17,7 +17,7 @@ public class InputHandler : MonoBehaviour
 
     void Start()
     {
-        _userInput = UserInput.Instance;
+        _userInput = UserInputManager.Instance;
     }
 
 

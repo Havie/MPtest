@@ -22,8 +22,8 @@ public static class PreviewManager
             return;
         }
 
-        ///Hack , should abstract this into the UserInput Class
-        if (UserInput.Instance._currentState != UserInput.Instance._displacementState)
+        ///Hack , should abstract this into the UserInputManagerClass
+        if (UserInputManager.Instance._currentState != UserInputManager.Instance._displacementState)
             return; /// would feel cleaner to cache on the object, but extra work
 
         Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID} , controller={controller} otherController={otherController}");

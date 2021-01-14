@@ -11,7 +11,7 @@ public class RotationState : InputState
     Vector3 _lastPos; ///prior input loc
     bool _cacheInitalPos;
 
-    public RotationState(UserInput input, float holdLeniency, float pressTimeMAX)
+    public RotationState(UserInputManager input, float holdLeniency, float pressTimeMAX)
     {
         _brain = input;
         _holdLeniency = holdLeniency;

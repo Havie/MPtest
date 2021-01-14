@@ -5,7 +5,7 @@ using UnityEngine;
 public class FreeState : InputState
 {
 
-    public FreeState (UserInput input)
+    public FreeState (UserInputManager input)
     {
         _brain = input;
     }

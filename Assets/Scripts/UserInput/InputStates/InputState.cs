@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class InputState 
 {
-    public UserInput Brain => _brain;
-    protected UserInput _brain;
+    public UserInputManager Brain => _brain;
+    protected UserInputManager _brain;
 
     public IInteractable CurrentSelection => _currentSelection;
     protected IInteractable _currentSelection;

@@ -279,7 +279,7 @@ public class UIManager : MonoBehaviour
     {
         Button hand = index == 1 ? _hand1 : _hand2;
 
-        Vector3 screenLoc = UserInput.Instance.WorldToScreenPoint(worldLoc);
+        Vector3 screenLoc = UserInputManager.Instance.WorldToScreenPoint(worldLoc);
         if (hand)
             hand.transform.position = screenLoc;
 

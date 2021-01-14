@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIState : InputState
 {
-    public UIState(UserInput input)
+    public UIState(UserInputManager input)
     {
         _brain = input;
     }

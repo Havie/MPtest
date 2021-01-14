@@ -7,7 +7,7 @@ public class DisplacementState : InputState
 
     private UIInventorySlot _lastSlot;
 
-    public DisplacementState(UserInput input)
+    public DisplacementState(UserInputManager input)
     {
         _brain = input;
     }

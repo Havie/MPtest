@@ -205,7 +205,7 @@ public class ObjectController : MonoBehaviour, IConstructable
             retVal.x = dot / _dampening;
             ///***RetVal will be wrong not sure how to handle rotation values on both axes, dont think this should ever happen
             return retVal; ///return 0 to be safe were not getting confusing #s out
-                           ///Could return a vector3 instead and have userInput keep track of it there
+                           ///Could return a vector3 instead and have UserInputManagerkeep track of it there
         }
         else ///NONE
             return Vector2.zero;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PreviewConstructionState : InputState
 {
-    public PreviewConstructionState(UserInput input)
+    public PreviewConstructionState(UserInputManager input)
     {
         _brain = input;
     }
