@@ -38,9 +38,8 @@ public class FreeState : InputState
     {
         if (inputDown)
         {
-            _brain._lastPos = pos;
 
-            _currentSelection = _brain.CheckForObjectAtLoc(_brain._lastPos);
+            _currentSelection = _brain.CheckForObjectAtLoc(pos);
            //_brain._pressTimeCURR = 0;
             if (_currentSelection!=null) ///if you get an obj do rotation
             {

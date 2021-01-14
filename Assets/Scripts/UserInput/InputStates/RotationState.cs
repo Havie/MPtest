@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class RotationState : InputState
 {
-    public float _pressTimeCURR = 0;
-    public float _pressTimeMAX = 0.55f; ///was 1.2f
-    public float _holdLeniency = 1.5f;
+    float _pressTimeCURR = 0;
+    float _pressTimeMAX = 0.55f; ///was 1.2f
+    float _holdLeniency = 1.5f;
     Vector2 _rotationAmount;
+    Vector3 _lastPos; ///prior input loc
+    bool _cacheInitalPos;
+
     public RotationState(UserInput input, float holdLeniency, float pressTimeMAX)
     {
         _brain = input;
@@ -29,11 +32,17 @@ public class RotationState : InputState
         _currentSelection = currentSelection;
         _pressTimeCURR = 0;
         _rotationAmount = Vector2.zero;
+        _cacheInitalPos = true;
     }
 
     /************************************************************************************************************************/
     public override void Execute(bool inputDown, Vector3 pos)
     {
+        if (_cacheInitalPos)
+        {
+            _lastPos = pos;
+            _cacheInitalPos = false;
+        }
         CheckRotation(inputDown, pos);
     }
 
@@ -48,9 +57,8 @@ public class RotationState : InputState
         if (inputDown && moveableObject != null)
         {
 
-
             ///if no movement increment time 
-            float dis = Vector3.Distance(inputPos, _brain._lastPos);
+            float dis = Vector3.Distance(inputPos, _lastPos);
             var objWhereMouseIs = _brain.CheckForObjectAtLoc(inputPos); ///Prevent bug simon found
             if (dis < _holdLeniency && objWhereMouseIs == _currentSelection)
             {
@@ -88,7 +96,7 @@ public class RotationState : InputState
                 _currentSelection = _brain.CheckForObjectAtLoc(inputPos);
                 IConstructable constructable = _currentSelection as IConstructable;
 
-                if(constructable!=null)
+                if (constructable != null)
                     _currentSelection = FindAbsoluteParent(_currentSelection as ObjectController);
 
                 moveableObject = _currentSelection as IMoveable;
@@ -97,7 +105,7 @@ public class RotationState : InputState
 
                     moveableObject.ChangeAppearanceMoving(); ///TODO abstract to handle inside interface
                     Transform transform = moveableObject.Transform();
-                    float zCoord = _brain._mainCamera.WorldToScreenPoint(transform.position).z;
+                    float zCoord = _brain.WorldToScreenPoint(transform.position).z;
                     _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
                     _brain._objStartPos = transform.position;
                     _brain._objStartRot = transform.rotation;
@@ -114,12 +122,12 @@ public class RotationState : InputState
 
                 _brain.SwitchState(_brain._displacementState, _currentSelection);
             }
-            else ///Do rotation
+            else ///Do rotation = we're not holding
             {
                 ///Store rotation amount
-                Vector3 rotation = inputPos - _brain._lastPos;
+                Vector3 rotation = inputPos - _lastPos;
                 _rotationAmount += moveableObject.OnRotate(rotation);
-                _brain._lastPos = inputPos;
+                _lastPos = inputPos;
                 HandleHighlightPreview(moveableObject);
                 return true;
             }
@@ -170,7 +178,7 @@ public class RotationState : InputState
     private void CancelHighLightPreview(IMoveable moveableObject)
     {
         IConstructable constructable = moveableObject as IConstructable; ///This is a mess
-        if(constructable!=null)
+        if (constructable != null)
             constructable.SetHandPreviewingMode(false);
 
         if (moveableObject.IsPickedUp())
@@ -192,7 +200,7 @@ public class RotationState : InputState
         {
             moveableObject.ChangeAppearanceMoving();///TODO abstract to handle inside interface
             Vector3 mouseLocWorld = _brain.GetInputWorldPos(zCoord);
-            _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _brain._tmpZfix);
+            _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _tmpZfix);
             //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");
             _brain._objStartRot = Quaternion.identity;
             _brain._mOffset = Vector3.zero;

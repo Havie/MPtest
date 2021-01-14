@@ -7,10 +7,10 @@ public abstract class InputState
     public UserInput Brain => _brain;
     protected UserInput _brain;
 
-
     public IInteractable CurrentSelection => _currentSelection;
     protected IInteractable _currentSelection;
 
+    protected int _tmpZfix = -9;
 
     /************************************************************************************************************************/
 

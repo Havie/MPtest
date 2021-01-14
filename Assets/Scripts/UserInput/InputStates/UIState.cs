@@ -46,8 +46,8 @@ public class UIState : InputState
                 var qualityList = RebuildQualities(slot.Qualities);
                 slot.RemoveItem();
                 Vector3 slotLoc = slot.transform.position;
-                slotLoc.z = _brain._tmpZfix;
-                float zCoord = _brain._mainCamera.WorldToScreenPoint(slotLoc).z;
+                slotLoc.z = _tmpZfix;
+                float zCoord = _brain.WorldToScreenPoint(slotLoc).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(zCoord), qualityList).GetComponent<ObjectController>();
                 _currentSelection = obj;
                 HandManager.PickUpItem(_currentSelection as ObjectController);
@@ -55,7 +55,7 @@ public class UIState : InputState
                 if (_currentSelection!=null)
                 {
                     _brain._mOffset = Vector3.zero; /// it spawns here so no difference
-                    _brain._objStartPos = new Vector3(0, 0, _brain._tmpZfix);
+                    _brain._objStartPos = new Vector3(0, 0, _tmpZfix);
                     _brain._objStartRot = Quaternion.identity;
                     //_justPulledOutOfUI = true;
                     _brain.SwitchState(_brain._displacementState, _currentSelection);

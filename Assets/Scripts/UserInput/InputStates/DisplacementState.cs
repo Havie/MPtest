@@ -27,16 +27,16 @@ public class DisplacementState : InputState
     }
 
     /************************************************************************************************************************/
-    public override void Execute(bool inputDown, Vector3 pos)
+    public override void Execute(bool inputDown, Vector3 inputPos)
     {
-        CheckDisplacement(inputDown, pos);
+        CheckDisplacement(inputDown, inputPos);
     }
 
     /************************************************************************************************************************/
 
 
     /** Player is moving an object to or from inventory slot*/
-    private bool CheckDisplacement(bool inputDown, Vector3 pos)
+    private bool CheckDisplacement(bool inputDown, Vector3 inputPos)
     {
         IMoveable moveableObject = _currentSelection as IMoveable;
 
@@ -62,11 +62,11 @@ public class DisplacementState : InputState
                                 if (constructable != null)
                                 {
                                     constructable.ChangeAppearanceHidden(true);
-                                    UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
+                                    UIManager.instance.ShowPreviewInvSlot(false, inputPos, null);
                                 }
                             }
                             else ///the slot can not accept this item so continue to show the dummy preview
-                                ShowDummyPreviewSlot(moveableObject as IConstructable);
+                                ShowDummyPreviewSlot(moveableObject as IConstructable, inputPos);
 
                             if (slot != _lastSlot && _lastSlot != null)
                                 _lastSlot.UndoPreview();
@@ -82,13 +82,13 @@ public class DisplacementState : InputState
                             _lastSlot.UndoPreview();
 
                         _lastSlot = slot;
-                        ShowDummyPreviewSlot(moveableObject as IConstructable);
+                        ShowDummyPreviewSlot(moveableObject as IConstructable, inputPos);
                     }
                 }
                 else if (PreviewManager._inPreview)
                     _brain.SwitchState(_brain._previewState, _currentSelection); ///dont want to reset the Object while in preview or it wont be hidden
                 else
-                    ResetObjectAndSlot(moveableObject as IConstructable);
+                    ResetObjectAndSlot(moveableObject as IConstructable, inputPos);
             }
         }
         else ///Input UP
@@ -112,7 +112,7 @@ public class DisplacementState : InputState
                         var trans = moveableObject.GetGameObject().transform;
                         trans.position = _brain._objStartPos;
                         trans.rotation = _brain._objStartRot;
-                        UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
+                        UIManager.instance.ShowPreviewInvSlot(false, inputPos, null);
                     }
                     else
                     {
@@ -149,18 +149,18 @@ public class DisplacementState : InputState
 
 
 
-    private void ShowDummyPreviewSlot(IConstructable moveableObject)
+    private void ShowDummyPreviewSlot(IConstructable moveableObject, Vector3 inputPos)
     {
         ObjectController oc = moveableObject as ObjectController;
         if (oc)
         {
             Sprite img = BuildableObject.Instance.GetSpriteByID((int)oc._myID);
             moveableObject.ChangeAppearanceHidden(true);
-            UIManager.instance.ShowPreviewInvSlot(true, _brain._inputPos, img);
+            UIManager.instance.ShowPreviewInvSlot(true, inputPos, img);
         }
     }
 
-    private void ResetObjectAndSlot(IConstructable moveableObject)
+    private void ResetObjectAndSlot(IConstructable moveableObject, Vector3 inputPos)
     {
         if (moveableObject != null)
         {
@@ -172,7 +172,7 @@ public class DisplacementState : InputState
             _lastSlot = null;
         }
 
-        UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
+        UIManager.instance.ShowPreviewInvSlot(false, inputPos, null);
     }
 
     /**This is a really weird fix I found to prevent the raycast from missing the box */
