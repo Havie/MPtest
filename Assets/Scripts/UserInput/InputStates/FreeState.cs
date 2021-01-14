@@ -5,7 +5,6 @@ using UnityEngine;
 public class FreeState : InputState
 {
 
-
     public FreeState (UserInput input)
     {
         _brain = input;
@@ -20,34 +19,35 @@ public class FreeState : InputState
       
     }
 
-    public override void EnableState()
+    public override void EnableState(IInteractable currentSelection)
     {
-
+        _currentSelection = currentSelection;
     }
 
     /************************************************************************************************************************/
-    public override void Execute()
+    public override void Execute(bool inputDown, Vector3 pos)
     {
         /** Player is pressing to begin interaction with an obj or UI item */
-        CheckFree();
+        CheckFree(inputDown, pos);
     }
 
     /************************************************************************************************************************/
 
 
-    private bool CheckFree()
+    private bool CheckFree(bool inputDown, Vector3 pos)
     {
-        if (_brain.InputDown())
+        if (inputDown)
         {
-            _brain._lastPos = _brain._inputPos;
-            _brain._currentSelection = _brain.CheckForObjectAtLoc(_brain._lastPos);
-            _brain._pressTimeCURR = 0;
-            if (_brain._currentSelection!=null) ///if you get an obj do rotation
+            _brain._lastPos = pos;
+
+            _currentSelection = _brain.CheckForObjectAtLoc(_brain._lastPos);
+           //_brain._pressTimeCURR = 0;
+            if (_currentSelection!=null) ///if you get an obj do rotation
             {
                 // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
 
-                _brain._rotationAmount = Vector2.zero; ///reset our rotation amount before re-entering
-                _brain.SwitchState(_brain._rotationState);
+                //_rotationAmount = Vector2.zero; ///reset our rotation amount before re-entering
+                _brain.SwitchState(_brain._rotationState, _currentSelection);
 
             }
             else ///if u get UI do UI 
@@ -57,7 +57,7 @@ public class FreeState : InputState
                 {
                     if (slot.GetInUse())
                     {
-                        _brain.SwitchState(_brain._uiState);
+                        _brain.SwitchState(_brain._uiState, _currentSelection);
                     }
                 }
                 else

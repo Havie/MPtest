@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class RotationState : InputState
 {
-    public RotationState(UserInput input)
+    public float _pressTimeCURR = 0;
+    public float _pressTimeMAX = 0.55f; ///was 1.2f
+    public float _holdLeniency = 1.5f;
+    Vector2 _rotationAmount;
+    public RotationState(UserInput input, float holdLeniency, float pressTimeMAX)
     {
         _brain = input;
+        _holdLeniency = holdLeniency;
+        _pressTimeMAX = pressTimeMAX;
     }
 
     /************************************************************************************************************************/
@@ -18,48 +24,49 @@ public class RotationState : InputState
 
     }
 
-    public override void EnableState()
+    public override void EnableState(IInteractable currentSelection)
     {
-
+        _currentSelection = currentSelection;
+        _pressTimeCURR = 0;
+        _rotationAmount = Vector2.zero;
     }
 
     /************************************************************************************************************************/
-    public override void Execute()
+    public override void Execute(bool inputDown, Vector3 pos)
     {
-        CheckRotation();
+        CheckRotation(inputDown, pos);
     }
 
     /************************************************************************************************************************/
 
 
     /** Player is rotating the object in the scene or pressing and holding to begin displacement */
-    private bool CheckRotation()
+    private bool CheckRotation(bool inputDown, Vector3 inputPos)
     {
-        IMoveable moveableObject = _brain._currentSelection as IMoveable;
+        IMoveable moveableObject = _currentSelection as IMoveable;
 
-        if (_brain.InputDown() && moveableObject != null)
+        if (inputDown && moveableObject != null)
         {
-            var _inputPos = _brain._inputPos;
 
 
             ///if no movement increment time 
-            float dis = Vector3.Distance(_inputPos, _brain._lastPos);
-            var objWhereMouseIs = _brain.CheckForObjectAtLoc(_inputPos); ///Prevent bug simon found
-            if (dis < _brain._holdLeniency && objWhereMouseIs == _brain._currentSelection)
+            float dis = Vector3.Distance(inputPos, _brain._lastPos);
+            var objWhereMouseIs = _brain.CheckForObjectAtLoc(inputPos); ///Prevent bug simon found
+            if (dis < _holdLeniency && objWhereMouseIs == _currentSelection)
             {
-                _brain._pressTimeCURR += Time.deltaTime;
+                _pressTimeCURR += Time.deltaTime;
 
                 ///Try Show Pickup Wheel
-                if (_brain._pressTimeCURR > _brain._pressTimeMAX / 10) ///dont show this instantly 10%filled
+                if (_pressTimeCURR > _pressTimeMAX / 10) ///dont show this instantly 10%filled
                 {
                     ///Show the UI wheel for our TouchPhase 
-                    UIManager.instance.ShowTouchDisplay(_brain._pressTimeCURR, _brain._pressTimeMAX,
-                         new Vector3(_inputPos.x, _inputPos.y, _inputPos.z)
+                    UIManager.instance.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX,
+                         new Vector3(inputPos.x, inputPos.y, inputPos.z)
                          );
 
 
                     ///Cap our mats transparency fade to 0.5f
-                    float changeVal = (_brain._pressTimeMAX - _brain._pressTimeCURR) / _brain._pressTimeMAX;
+                    float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
                     changeVal = Mathf.Lerp(1, changeVal, 0.5f);
                     moveableObject.HandleInteractionTime(changeVal);
 
@@ -68,21 +75,23 @@ public class RotationState : InputState
             }
             else ///reset pickup timer
             {
-                _brain._pressTimeCURR = 0;
+                _pressTimeCURR = 0;
                 UIManager.instance.HideTouchDisplay();
                 moveableObject.HandleInteractionTime(1);
             }
 
             ///if holding down do displacement
-            if (_brain._pressTimeCURR >= _brain._pressTimeMAX)
+            if (_pressTimeCURR >= _pressTimeMAX)
             {
                 UIManager.instance.HideTouchDisplay();
 
-                _brain._currentSelection = _brain.CheckForObjectAtLoc(_inputPos);
-                IConstructable constructable = _brain._currentSelection as IConstructable;
+                _currentSelection = _brain.CheckForObjectAtLoc(inputPos);
+                IConstructable constructable = _currentSelection as IConstructable;
+
                 if(constructable!=null)
-                    _brain._currentSelection = _brain.FindAbsoluteParent(_brain._currentSelection as ObjectController);
-                moveableObject = _brain._currentSelection as IMoveable;
+                    _currentSelection = FindAbsoluteParent(_currentSelection as ObjectController);
+
+                moveableObject = _currentSelection as IMoveable;
                 if (moveableObject != null)
                 {
 
@@ -100,17 +109,17 @@ public class RotationState : InputState
                         ResetObjectOrigin(moveableObject, zCoord);
 
                     moveableObject.AllowFollow(); ///Might mess up objectCntroller
-                    HandManager.PickUpItem(_brain._currentSelection as ObjectController); //might have moved to the wrong spot
+                    HandManager.PickUpItem(_currentSelection as ObjectController); //might have moved to the wrong spot
                 }
 
-                _brain.SwitchState(_brain._displacementState);
+                _brain.SwitchState(_brain._displacementState, _currentSelection);
             }
             else ///Do rotation
             {
                 ///Store rotation amount
-                Vector3 rotation = _inputPos - _brain._lastPos;
-                _brain._rotationAmount += moveableObject.OnRotate(rotation);
-                _brain._lastPos = _inputPos;
+                Vector3 rotation = inputPos - _brain._lastPos;
+                _rotationAmount += moveableObject.OnRotate(rotation);
+                _brain._lastPos = inputPos;
                 HandleHighlightPreview(moveableObject);
                 return true;
             }
@@ -119,18 +128,18 @@ public class RotationState : InputState
         }
         else /// this input UP
         {
-            if (_brain._currentSelection != null)
+            if (_currentSelection != null)
             {
-                _brain.TryPerformAction(QualityAction.eActionType.ROTATE);
-                _brain.TryPerformAction(QualityAction.eActionType.TAP);
-                _brain._currentSelection.OnInteract();
+                TryPerformAction(QualityAction.eActionType.ROTATE, inputPos, _rotationAmount);
+                TryPerformAction(QualityAction.eActionType.TAP, inputPos, _rotationAmount);
+                _currentSelection.OnInteract();
                 if (moveableObject != null)
                     CancelHighLightPreview(moveableObject);
 
                 UIManager.instance.HideTouchDisplay();
-                _brain._currentSelection.HandleInteractionTime(1);
+                _currentSelection.HandleInteractionTime(1);
             }
-            _brain.SwitchState(_brain._freeState);
+            _brain.SwitchState(_brain._freeState, _currentSelection);
         }
 
         return false;
@@ -193,12 +202,46 @@ public class RotationState : InputState
             trans.rotation = _brain._objStartRot;
             ///Start moving the object
             moveableObject.AllowFollow(); /// so we can pick it up again
-            _brain.SwitchState(_brain._displacementState); ///I switched this down 1 line incase things break
+            _brain.SwitchState(_brain._displacementState, _currentSelection); ///I switched this down 1 line incase things break
         }
         else
             Debug.LogWarning("This happened?1");
     }
 
 
+
+    #region QualityActions
+    public bool TryPerformAction(QualityAction.eActionType type, Vector3 inputPos, Vector2 rotationAmount)
+    {
+        var objectQuality = _currentSelection.GetGameObject().GetComponent<QualityObject>();
+        if (objectQuality != null)
+        {
+            QualityAction action = new QualityAction(type, inputPos, rotationAmount);
+            if (objectQuality.PerformAction(action))
+                return true;
+        }
+
+        return false;
+    }
+
+    public ObjectController FindAbsoluteParent(ObjectController startingObj)
+    {
+        if (startingObj == null)
+        {
+            Debug.LogWarning($"Somehow we are passing ina  null startingObj???");
+            return null;
+        }
+
+        ObjectController parent = startingObj._parent;
+        ObjectController child = startingObj;
+        while (parent != null)
+        {
+            child = parent;
+            parent = child._parent;
+        }
+
+        return child;
+    }
+    #endregion
 
 }

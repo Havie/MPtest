@@ -93,7 +93,7 @@ public class InSocket : Socket
         bool valid = false;
 
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
-        if (UserInput.Instance._currentSelection != Controller && requiredAttachmentID == (int)socket.Controller._myID)
+        if (UserInput.Instance.CurrentSelection as ObjectController != Controller && requiredAttachmentID == (int)socket.Controller._myID)
         {
             //check the angles of attachment
             Vector3 dir = socket.transform.position - this.transform.position;

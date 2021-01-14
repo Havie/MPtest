@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class DisplacementState : InputState
 {
+
+    private UIInventorySlot _lastSlot;
+
     public DisplacementState(UserInput input)
     {
         _brain = input;
@@ -18,31 +21,31 @@ public class DisplacementState : InputState
 
     }
 
-    public override void EnableState()
+    public override void EnableState(IInteractable currentSelection)
     {
-
+        _currentSelection = currentSelection;
     }
 
     /************************************************************************************************************************/
-    public override void Execute()
+    public override void Execute(bool inputDown, Vector3 pos)
     {
-        CheckDisplacement();
+        CheckDisplacement(inputDown, pos);
     }
 
     /************************************************************************************************************************/
 
 
     /** Player is moving an object to or from inventory slot*/
-    private bool CheckDisplacement()
+    private bool CheckDisplacement(bool inputDown, Vector3 pos)
     {
-        IMoveable moveableObject = _brain._currentSelection as IMoveable;
+        IMoveable moveableObject = _currentSelection as IMoveable;
 
         UIInventorySlot slot = _brain.RayCastForInvSlot();
-        if (_brain.InputDown())
+        if (inputDown)
         {
             if (moveableObject != null)
             {
-                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.GetGameObject().transform);
+                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.Transform());
                 moveableObject.OnFollowInput(worldLoc + _brain._mOffset);
 
                 if (slot != null) ///we are hovering over a slot 
@@ -65,23 +68,25 @@ public class DisplacementState : InputState
                             else ///the slot can not accept this item so continue to show the dummy preview
                                 ShowDummyPreviewSlot(moveableObject as IConstructable);
 
-                            if (slot != _brain._lastSlot && _brain._lastSlot != null)
-                                _brain._lastSlot.UndoPreview();
-                            _brain._lastSlot = slot;
+                            if (slot != _lastSlot && _lastSlot != null)
+                                _lastSlot.UndoPreview();
+
+                            _lastSlot = slot;
 
                         }///Might be the wrong place to close this bracket
                     }
                     else
                     {
                         ///show a preview of just the icon floating around
-                        if (slot != _brain._lastSlot && _brain._lastSlot != null)
-                            _brain._lastSlot.UndoPreview();
-                        _brain._lastSlot = slot;
+                        if (slot != _lastSlot && _lastSlot != null)
+                            _lastSlot.UndoPreview();
+
+                        _lastSlot = slot;
                         ShowDummyPreviewSlot(moveableObject as IConstructable);
                     }
                 }
                 else if (PreviewManager._inPreview)
-                    _brain.SwitchState(_brain._previewState); ///dont want to reset the Object while in preview or it wont be hidden
+                    _brain.SwitchState(_brain._previewState, _currentSelection); ///dont want to reset the Object while in preview or it wont be hidden
                 else
                     ResetObjectAndSlot(moveableObject as IConstructable);
             }
@@ -115,7 +120,7 @@ public class DisplacementState : InputState
                         if (dz)
                         {
                             ///If the item is dropped in a deadzone, reset it to a safe place
-                            moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition);
+                            moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition, _currentSelection);
                         }
                         else
                         {
@@ -130,13 +135,13 @@ public class DisplacementState : InputState
                     moveableObject.ChangeAppearanceNormal(); ///ToDo abstract this somehow
                     // HandManager.DropItem(_currentSelection);
                     //Really weird Fix to prevent raycast bug
-                    _brain.FixRayCastBug();
+                    FixRayCastBug();
                 }
             }
 
             // _justPulledOutOfUI = false;
 
-            _brain.SwitchState(_brain._freeState);
+            _brain.SwitchState(_brain._freeState, _currentSelection);
         }
 
         return false;
@@ -161,12 +166,25 @@ public class DisplacementState : InputState
         {
             moveableObject.ChangeAppearanceHidden(false);
         }
-        if (_brain._lastSlot)
+        if (_lastSlot)
         {
-            _brain._lastSlot.UndoPreview();
-            _brain._lastSlot = null;
+            _lastSlot.UndoPreview();
+            _lastSlot = null;
         }
 
         UIManager.instance.ShowPreviewInvSlot(false, _brain._inputPos, null);
     }
+
+    /**This is a really weird fix I found to prevent the raycast from missing the box */
+    public void FixRayCastBug()
+    {
+        if (_currentSelection != null)
+        {
+            var box = _currentSelection.GetGameObject().GetComponent<Collider>();
+            box.enabled = false;
+            _currentSelection = null;
+            box.enabled = true;
+        }
+    }
+
 }

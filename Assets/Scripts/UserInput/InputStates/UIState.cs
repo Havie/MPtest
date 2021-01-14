@@ -18,23 +18,23 @@ public class UIState : InputState
 
     }
 
-    public override void EnableState()
+    public override void EnableState(IInteractable currentSelection)
     {
-
+        _currentSelection = currentSelection;
     }
 
     /************************************************************************************************************************/
-    public override void Execute()
+    public override void Execute(bool inputDown, Vector3 pos)
     {
-        CheckUI();
+        CheckUI(inputDown, pos);
     }
 
 
     /************************************************************************************************************************/
 
-    private bool CheckUI()
+    private bool CheckUI(bool inputDown, Vector3 pos)
     {
-        if (_brain .InputDown())
+        if (inputDown)
         {
             ///If found slot in use spawn obj and go to displacement 
             var slot = _brain.RayCastForInvSlot();
@@ -49,17 +49,17 @@ public class UIState : InputState
                 slotLoc.z = _brain._tmpZfix;
                 float zCoord = _brain._mainCamera.WorldToScreenPoint(slotLoc).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(zCoord), qualityList).GetComponent<ObjectController>();
-                _brain._currentSelection = obj;
-                HandManager.PickUpItem(_brain._currentSelection as ObjectController);
+                _currentSelection = obj;
+                HandManager.PickUpItem(_currentSelection as ObjectController);
                 //Debug.Log($"OBJ spawn loc={obj.transform.position}");
-                if (_brain._currentSelection!=null)
+                if (_currentSelection!=null)
                 {
                     _brain._mOffset = Vector3.zero; /// it spawns here so no difference
                     _brain._objStartPos = new Vector3(0, 0, _brain._tmpZfix);
                     _brain._objStartRot = Quaternion.identity;
                     //_justPulledOutOfUI = true;
-                    _brain.SwitchState(_brain._displacementState);
-                    IConstructable moveableObject = _brain._currentSelection as IConstructable;
+                    _brain.SwitchState(_brain._displacementState, _currentSelection);
+                    IConstructable moveableObject = _currentSelection as IConstructable;
                     if(moveableObject!=null)
                         moveableObject.ChangeAppearanceHidden(true); ///spawn it invisible till were not hovering over UI
                 }
@@ -71,7 +71,7 @@ public class UIState : InputState
                 Debug.LogWarning("This happened?2");
         }
         else
-            _brain.SwitchState(_brain._freeState);
+            _brain.SwitchState(_brain._freeState, _currentSelection);
 
         return false;
     }

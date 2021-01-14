@@ -18,24 +18,24 @@ public class PreviewConstructionState : InputState
 
     }
 
-    public override void EnableState()
+    public override void EnableState(IInteractable currentSelection)
     {
-
+        _currentSelection = currentSelection;
     }
 
     /************************************************************************************************************************/
-    public override void Execute()
+    public override void Execute(bool inputDown, Vector3 pos)
     {
-        CheckPreviewConstruction();
+        CheckPreviewConstruction(inputDown, pos);
     }
     /************************************************************************************************************************/
 
 
-    public bool CheckPreviewConstruction()
+    public bool CheckPreviewConstruction(bool inputDown, Vector3 pos)
     {
-        IConstructable moveableObject = _brain._currentSelection as IConstructable;
+        IConstructable moveableObject = _currentSelection as IConstructable;
 
-        if (_brain.InputDown())
+        if (inputDown)
         {
             if (moveableObject != null)
             {
@@ -44,7 +44,7 @@ public class PreviewConstructionState : InputState
             }
 
             if (!PreviewManager._inPreview)
-                _brain.SwitchState(_brain._displacementState);
+                _brain.SwitchState(_brain._displacementState, _currentSelection);
         }
         else //Input UP
         {
@@ -53,9 +53,9 @@ public class PreviewConstructionState : InputState
                 if (PreviewManager._inPreview)
                     PreviewManager.ConfirmCreation();
 
-                _brain._currentSelection = null;
+                _currentSelection = null;
             }
-            _brain.SwitchState(_brain._freeState);
+            _brain.SwitchState(_brain._freeState, _currentSelection);
         }
         return false;
     }

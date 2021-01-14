@@ -4,10 +4,30 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    public bool _IsMobileMode { get; private set; }
-    public Vector3 _inputPos; ///current input loc
+    private bool _IsMobileMode;
+    private Vector3 _inputPos; ///current input loc
 
-    public bool InputDown()
+    private UserInput _userInput;
+
+
+    void Awake()
+    {
+        _IsMobileMode = Application.isMobilePlatform;
+    }
+
+    void Start()
+    {
+        _userInput = UserInput.Instance;
+    }
+
+
+    void Update()
+    {
+        if (_userInput)
+            _userInput.SetInputDown(CheckInput(), _inputPos);
+    }
+
+    public bool CheckInput()
     {
         if (!_IsMobileMode)
         {

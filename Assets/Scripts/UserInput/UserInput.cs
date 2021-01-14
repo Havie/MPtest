@@ -11,17 +11,17 @@ public class UserInput : MonoBehaviour
     public bool _IsMobileMode { get; private set; }
     public Camera _mainCamera { get; private set; }
 
-    public IInteractable _currentSelection;
 
     [HideInInspector]  //testing purposes
-    public float _pressTimeCURR = 0;
-    public float _pressTimeMAX = 0.55f; ///was 1.2f
+    private float _pressTimeCURR = 0;
+    private float _pressTimeMAX = 0.55f; ///was 1.2f
     [HideInInspector] ///NB: these are still serialized, need to make private to change 
-    public float _holdLeniency = 1.5f;
+    private float _holdLeniency = 1.5f;
+    private bool _inputIsDown;
     public Vector3 _inputPos; ///current input loc
     public Vector3 _lastPos; ///prior input loc
     public Vector3 _mOffset; ///distance between obj in world and camera
-    public UIInventorySlot _lastSlot;
+
 
     public Transform _table = default;
     //private float _tableHeight = -0.45f;
@@ -35,7 +35,7 @@ public class UserInput : MonoBehaviour
     EventSystem _EventSystem;
 
     //Actions
-    public Vector2 _rotationAmount;
+    private Vector2 _rotationAmount; ///Remove
 
     [HideInInspector]
     public int _tmpZfix = -9;
@@ -60,10 +60,7 @@ public class UserInput : MonoBehaviour
         else if (Instance != this)
             Destroy(this);
 
-        _IsMobileMode = Application.isMobilePlatform;
 
-        if (_IsMobileMode)
-            _holdLeniency = 5f; ///Touch controls too sensitive
 
         if (_table == null)
         {
@@ -84,7 +81,7 @@ public class UserInput : MonoBehaviour
     void CreateStates()
     {
         _freeState = new FreeState(this);
-        _rotationState = new RotationState(this);
+        _rotationState = new RotationState(this, _holdLeniency, _pressTimeMAX);
         _displacementState = new DisplacementState(this);
         _uiState = new UIState(this);
         _previewState = new PreviewConstructionState(this);
@@ -95,7 +92,7 @@ public class UserInput : MonoBehaviour
         _EventSystem = GameObject.FindObjectOfType<EventSystem>();
         //Set up the new Pointer Event
         _PointerEventData = new PointerEventData(_EventSystem);
-       
+
         _mainCamera = Camera.main;
 
         if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
@@ -104,52 +101,36 @@ public class UserInput : MonoBehaviour
         _currentState = _freeState;
     }
 
-    public void SwitchState(InputState nextState)
+    public void SwitchState(InputState nextState, IInteractable currentSelection)
     {
-        if(_currentState==null || _currentState.CanExitState(nextState))
+        if (_currentState == null || _currentState.CanExitState(nextState))
         {
             _currentState.DisableState();
             _currentState = nextState;
-            _currentState.EnableState();
-        }    
-        
+            _currentState.EnableState(currentSelection);
+        }
+
     }
 
     void Update()
     {
 
         if (_currentState != null)
-            _currentState.Execute();
+            _currentState.Execute(_inputIsDown, _inputPos);
 
     }
 
-    public bool InputDown()
+    public void SetInputDown(bool cond, Vector3 position)
     {
-        if (!_IsMobileMode)
-        {
-            _inputPos = Input.mousePosition;
-            return Input.GetMouseButton(0);
-        }
-        else
-        {
-            if (Input.touchCount > 0)
-            {
-                Touch touch = Input.GetTouch(0);
-                bool touching = touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled;
-                _inputPos = touch.position;
-                return touching;
-            }
-            else
-            {
-                _inputPos = Vector3.zero; /// will this work?
-                return false;
-            }
-        }
+        _inputPos = position;
+        _inputIsDown = cond;
     }
+
+    public IInteractable CurrentSelection => _currentState.CurrentSelection;
 
     public void Destroy(IInteractable oc)
     {
-        if(oc!=null)
+        if (oc != null)
             Destroy(oc.GetGameObject());
     }
 
@@ -165,16 +146,16 @@ public class UserInput : MonoBehaviour
         Vector3 worldLocInput = GetInputWorldPos(zCoord);
         return new Vector3(worldLocInput.x, worldLocInput.y, currSelectionTransform.position.z);
     }
-    public Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo)
+    public Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo, IInteractable currentSelection)
     {
-        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(_currentSelection.GetGameObject().transform.position);
+        Vector3 screenPtObj = _mainCamera.WorldToScreenPoint(currentSelection.Transform().position);
         float zCoord = screenPtObj.z;
         ///gets the world loc based on transform and gives it the z depth from the obj
-        var v3= _mainCamera.ScreenToWorldPoint(
+        var v3 = _mainCamera.ScreenToWorldPoint(
             new Vector3(safePlaceToGo.position.x, safePlaceToGo.position.y, zCoord)
             );
 
-        v3.z = _currentSelection.GetGameObject().transform.position.z;
+        v3.z = currentSelection.Transform().position.z;
         return v3;
     }
 
@@ -215,17 +196,7 @@ public class UserInput : MonoBehaviour
 
     }
 
-    /**This is a really weird fix I found to prevent the raycast from missing the box */
-    public void FixRayCastBug()
-    {
-        if (_currentSelection!=null)
-        {
-            var box = _currentSelection.GetGameObject().GetComponent<Collider>();
-            box.enabled = false;
-            _currentSelection = null;
-            box.enabled = true;
-        }
-    }
+
 
     public bool CheckRayCastForUI(Vector3 pos)
     {
@@ -269,7 +240,7 @@ public class UserInput : MonoBehaviour
     public UIInstructions RayCastForInstructions()
     {
         var ray = _mainCamera.ScreenPointToRay(_inputPos);
-       // Debug.DrawRay(ray.origin, ray.direction * 1350, Color.green, 5);
+        // Debug.DrawRay(ray.origin, ray.direction * 1350, Color.green, 5);
         if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
             //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
@@ -301,39 +272,7 @@ public class UserInput : MonoBehaviour
         return null;
     }
 
-    #region QualityActions
-    public bool TryPerformAction(QualityAction.eActionType type)
-    {
-        var objectQuality = _currentSelection.GetGameObject().GetComponent<QualityObject>();
-        if (objectQuality != null)
-        {
-            QualityAction action = new QualityAction(type, _inputPos, _rotationAmount);
-            if (objectQuality.PerformAction(action))
-                return true;
-        }
 
-        return false;
-    }
-
-    public ObjectController FindAbsoluteParent(ObjectController startingObj)
-    {
-        if (startingObj == null)
-        {
-            Debug.LogWarning($"Somehow we are passing ina  null startingObj???");
-            return null;
-        }
-
-        ObjectController parent = startingObj._parent;
-        ObjectController child = startingObj;
-        while (parent != null)
-        {
-            child = parent;
-            parent = child._parent;
-        }
-
-        return child;
-    }
-    #endregion
 
 
 
@@ -345,18 +284,18 @@ public class UserInput : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
         {
-            _currentSelection = obj.GetComponent<IInteractable>();
-            HandManager.PickUpItem(_currentSelection.GetGameObject().GetComponent<ObjectController>());
+            IInteractable currentSelection = obj.GetComponent<IInteractable>();
+            HandManager.PickUpItem(currentSelection.GetGameObject().GetComponent<ObjectController>());
             Debug.Log($"OBJ spawn loc={obj.transform.position}");
-            if (_currentSelection != null)
+            if (currentSelection != null)
             {
-                IMoveable moveableObject = _currentSelection as IMoveable;
-                if (moveableObject!=null)
+                IMoveable moveableObject = currentSelection as IMoveable;
+                if (moveableObject != null)
                 {
                     moveableObject.OnFollowInput(_inputPos);
                     //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
                     _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
-                    SwitchState(_displacementState);
+                    SwitchState(_displacementState, currentSelection);
                     _objStartPos = new Vector3(0, 0, _tmpZfix);
                     _objStartRot = Quaternion.identity;
 

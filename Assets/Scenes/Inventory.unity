@@ -240,6 +240,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 112527775}
+  - component: {fileID: 112527776}
   - component: {fileID: 112527774}
   m_Layer: 0
   m_Name: UserInputManager
@@ -260,18 +261,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e6e600a93e60a4c9c6899adbeed8c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pressTimeCURR: 0
-  _pressTimeMAX: 0.55
-  _holdLeniency: 1.5
   _inputPos: {x: 0, y: 0, z: 0}
   _lastPos: {x: 0, y: 0, z: 0}
   _mOffset: {x: 0, y: 0, z: 0}
-  _lastSlot: {fileID: 0}
   _table: {fileID: 7473564167400551205}
   _objStartPos: {x: 0, y: 0, z: 0}
   _objStartRot: {x: 0, y: 0, z: 0, w: 0}
   _Raycaster: {fileID: 5394208262448427698}
-  _rotationAmount: {x: 0, y: 0}
   _tmpZfix: -9
 --- !u!4 &112527775
 Transform:
@@ -287,6 +283,18 @@ Transform:
   m_Father: {fileID: 1141904581}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &112527776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112527773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1587b68807d7f0c48b796ade9f0d34fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &116364967 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2706234840424314809, guid: 3594cbb3bfbadb644b71f7640dc7036c,
