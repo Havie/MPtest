@@ -4,7 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class ObjectController : MonoBehaviour, IConstructable
+public class ObjectController : MonoBehaviour, IConstructable, IHighlightable
 {
 
     public ObjectManager.eItemID _myID;
@@ -136,24 +136,48 @@ public class ObjectController : MonoBehaviour, IConstructable
     /************************************************************************************************************************/
 
 
-    public void ToggleRB(bool cond)
+
+
+    public void PickedUp(int handIndex)
     {
-        if (_rb)  ///This gets kind of weird with the subobjects
-        {
-            _rb.isKinematic = cond;
-            _rb.useGravity = !cond;
-        }
-        if (_collider)
-            _collider.isTrigger = cond;
+        ToggleRB(false);
+        SetHighlighted(true);
+
+        //HandManager.OrderChanged += UpdateHand;
+        _pickedUp = true;
+        _handIndex = handIndex;
+        ChangeHighLightColor(handIndex);
+        // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
+    }
+    public void PutDown()
+    {
+        ToggleRB(true);
+        SetHighlighted(false);
+        //HandManager.OrderChanged -= UpdateHand;
+        _pickedUp = false;
     }
 
+    /************************************************************************************************************************/
 
-    #region Highlight Outline
 
-    ///From states mainly:
+    #region INTERFACE
+
+    ///IInteractable
+    public GameObject GetGameObject() => gameObject;
+    public Transform GetParent() => this.transform.parent;
+    public Transform Transform() => this.transform;
+    public void OnInteract()
+    {
+        ///Nothing really happens we click this object?
+    }
+    public void HandleInteractionTime(float time)
+    {
+        ChangeHighlightAmount(time);
+    }
+
+    ///IHighlightable
     private bool _isHighlighted;
     public bool IsHighlighted() => _isHighlighted;
-
     public void SetHighlighted(bool cond)
     {
         if (_highlightTrigger)
@@ -167,26 +191,19 @@ public class ObjectController : MonoBehaviour, IConstructable
 
         _isHighlighted = cond;
     }
-
-
-
-    ///HandMAnager
-    public void PickedUp(int handIndex)
+    public void ChangeHighlightAmount(float intensity)
     {
-        SetHighlighted(true);
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            effect.outline = intensity;
 
-        //HandManager.OrderChanged += UpdateHand;
-        _pickedUp = true;
-        _handIndex = handIndex;
-        ChangeHighLightColor(handIndex);
-        // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
-    }
-    public void PutDown()
-    {
-        SetHighlighted(false);
-
-        //HandManager.OrderChanged -= UpdateHand;
-        _pickedUp = false;
+            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
+            foreach (var item in childrenEffects)
+            {
+                item.outline = intensity;
+            }
+        }
     }
     public float GetHighlightIntensity()
     {
@@ -206,25 +223,6 @@ public class ObjectController : MonoBehaviour, IConstructable
         }
         return Color.white;
     }
-    public void ChangeHighlightAmount(float intensity)
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            effect.outline = intensity;
-
-            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
-            foreach (var item in childrenEffects)
-            {
-                item.outline = intensity;
-            }
-        }
-    }
-    private void ChangeHighLightColor(int handIndex)
-    {
-        Color color = handIndex == 1 ? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
-        ChangeHighLightColor(color);
-    }
     public void ChangeHighLightColor(Color color)
     {
         if (_highlightTrigger)
@@ -239,24 +237,36 @@ public class ObjectController : MonoBehaviour, IConstructable
             }
         }
     }
-    #endregion
-
-
-    #region INTERFACE
-
-    ///IInteractable
-    public GameObject GetGameObject() => gameObject;
-    public Transform GetParent() => this.transform.parent;
-    public Transform Transform() => this.transform;
-    public void OnInteract()
+    public void HandleHighlightPreview()
     {
-        ///Nothing really happens we click this object?
-    }
-    public void HandleInteractionTime(float time)
-    {
-        ChangeHighlightAmount(time);
-    }
+        ///if its a current item being held in hand , return
+        if (IsPickedUp())
+            return;
 
+        ///if its not highlighting turn it on 
+        if (!IsHighlighted())
+        {
+            SetHighlighted(true);
+            ChangeHighlightAmount(0);
+        }
+
+        ///TODO make this take in an Interface?
+        HandManager.StartToHandleIntensityChange(this);
+
+    }
+    public void CancelHighLightPreview()
+    {
+        SetHandPreviewingMode(false);
+
+        if (IsPickedUp())
+            return;
+
+        HandManager.CancelIntensityChangePreview();
+
+        if (IsHighlighted())
+            SetHighlighted(false);
+
+    }
 
     ///IMoveable
     public void OnFollowInput(Vector3 worldPos)
@@ -407,7 +417,11 @@ public class ObjectController : MonoBehaviour, IConstructable
             mr.material = m;
         }
     }
-
+    private void ChangeHighLightColor(int handIndex)
+    {
+        Color color = handIndex == 1 ? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
+        ChangeHighLightColor(color);
+    }
     private void ResetHittingTable() { _hittingTable = false; }
 
     private void TrySetChildren(float opacity)
@@ -531,7 +545,16 @@ public class ObjectController : MonoBehaviour, IConstructable
     }
 
 
-
+    private void ToggleRB(bool cond)
+    {
+        if (_rb)  ///This gets kind of weird with the subobjects
+        {
+            _rb.isKinematic = cond;
+            _rb.useGravity = !cond;
+        }
+        if (_collider)
+            _collider.isTrigger = cond;
+    }
 
 
 

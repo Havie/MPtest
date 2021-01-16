@@ -160,35 +160,18 @@ public class RotationState : InputState
     private void HandleHighlightPreview(IMoveable moveableObject)
     {
         ///if its a current item being held in hand , return
-        if (moveableObject.IsPickedUp())
-            return;
+        IHighlightable highlightableObj = moveableObject as IHighlightable;
+        if (highlightableObj != null)
+            highlightableObj.HandleHighlightPreview();
 
-        ///if its not highlighting turn it on 
-        if (!moveableObject.IsHighlighted())
-        {
-            moveableObject.SetHighlighted(true);
-            moveableObject.ChangeHighlightAmount(0);
-        }
-
-        ///TODO make this take in IInteractable
-        HandManager.StartToHandleIntensityChange(moveableObject as ObjectController);
 
     }
 
     private void CancelHighLightPreview(IMoveable moveableObject)
     {
-        IConstructable constructable = moveableObject as IConstructable; ///This is a mess
-        if (constructable != null)
-            constructable.SetHandPreviewingMode(false);
-
-        if (moveableObject.IsPickedUp())
-            return;
-
-        HandManager.CancelIntensityChangePreview();
-
-        if (moveableObject.IsHighlighted())
-            moveableObject.SetHighlighted(false);
-
+        IHighlightable highlightableObj = moveableObject as IHighlightable;
+        if (highlightableObj != null)
+            highlightableObj.CancelHighLightPreview();
 
     }
 

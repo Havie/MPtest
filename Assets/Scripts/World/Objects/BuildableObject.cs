@@ -125,7 +125,7 @@ public class BuildableObject : MonoBehaviour
 
         var controller = newObj.GetComponent<ObjectController>();
         if (controller)
-            controller.ToggleRB(false); ///turn on physics 
+            controller.PutDown(); ///turn on physics 
 
         if (DebugItemsOnSpawn)
             FPSCounter.Instance.ProfileAnObject(newObj);
