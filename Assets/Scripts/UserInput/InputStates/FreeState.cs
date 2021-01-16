@@ -44,10 +44,7 @@ public class FreeState : InputState
             if (_currentSelection!=null) ///if you get an obj do rotation
             {
                 // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
-
-                //_rotationAmount = Vector2.zero; ///reset our rotation amount before re-entering
                 _brain.SwitchState(_brain._rotationState, _currentSelection);
-
             }
             else ///if u get UI do UI 
             {
@@ -58,13 +55,6 @@ public class FreeState : InputState
                     {
                         _brain.SwitchState(_brain._uiState, _currentSelection);
                     }
-                }
-                else
-                {
-                    ///TODO get these under the interactable umbrella
-                    UIInstructions instructions = _brain.RayCastForInstructions();
-                    if (instructions)
-                        instructions.InstructionsClicked();
                 }
             }
 

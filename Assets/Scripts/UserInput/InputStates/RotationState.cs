@@ -181,7 +181,7 @@ public class RotationState : InputState
         ///Reset the object to have the right orientation for construction when picked back up
         if (moveableObject != null)
         {
-            moveableObject.ChangeAppearanceMoving();///TODO abstract to handle inside interface
+            moveableObject.ChangeAppearanceMoving();///TODO abstract to handle inside interface, why is this even here?
             Vector3 mouseLocWorld = _brain.GetInputWorldPos(zCoord);
             _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _tmpZfix);
             //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");

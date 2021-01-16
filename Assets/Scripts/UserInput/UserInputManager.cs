@@ -106,7 +106,7 @@ public class UserInputManager : MonoBehaviour
             _currentState.Execute(_inputIsDown, _inputPos);
     }
 
-
+    /************************************************************************************************************************/
     public IInteractable CurrentSelection => _currentState.CurrentSelection;
     public void SwitchState(InputState nextState, IInteractable currentSelection)
     {
@@ -118,8 +118,6 @@ public class UserInputManager : MonoBehaviour
         }
 
     }
-
-
     public void Destroy(IInteractable oc)
     {
         if (oc != null)
@@ -130,11 +128,8 @@ public class UserInputManager : MonoBehaviour
     /************************************************************************************************************************/
     //          HELPERS FOR STATES
     /************************************************************************************************************************/
-
     #region StateHelpers
-
     public Vector3 WorldToScreenPoint(Vector3 pos) { return _mainCamera.WorldToScreenPoint(pos); }
-
     public Vector3 GetCurrentWorldLocBasedOnMouse(Transform currSelectionTransform)
     {
         //Debug.Log($"(1) {_inputPos.x},{_inputPos.y}");
@@ -177,7 +172,6 @@ public class UserInputManager : MonoBehaviour
 
     }
 
-
     public UIInventorySlot RayCastForInvSlot()
     {
         //Set the Pointer Event Position to that of the mouse position
@@ -195,18 +189,6 @@ public class UserInputManager : MonoBehaviour
             UIInventorySlot slot = result.gameObject.transform.GetComponent<UIInventorySlot>();
             if (slot)
                 return slot;
-        }
-
-        return null;
-    }
-    public UIInstructions RayCastForInstructions()
-    {
-        var ray = _mainCamera.ScreenPointToRay(_inputPos);
-        // Debug.DrawRay(ray.origin, ray.direction * 1350, Color.green, 5);
-        if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
-        {
-            //Debug.Log($"Raycast hit:" + (hit.transform.gameObject.GetComponent<ObjectController>()));
-            return (hit.transform.gameObject.GetComponent<UIInstructions>());
         }
 
         return null;
@@ -234,13 +216,10 @@ public class UserInputManager : MonoBehaviour
         return null;
     }
 
-
     #endregion
-
     /************************************************************************************************************************/
     //         CHEATING / INJECTOR
     /************************************************************************************************************************/
-
     public void InjectItem(int itemID)
     {
 

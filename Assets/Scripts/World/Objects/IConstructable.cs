@@ -10,4 +10,6 @@ public interface IConstructable : IMoveable
     void ChangeAppearanceHidden(bool cond);
 
     void ChangeAppearancePreview();
+
+    IConstructable FindAbsoluteParent();
 }

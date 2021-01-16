@@ -357,7 +357,10 @@ public class ObjectController : MonoBehaviour, IConstructable, IHighlightable
         ChangeMaterialColor(0.5f);
         TrySetChildren(0.5f);
     }
-
+    public IConstructable FindAbsoluteParent()
+    {
+         return _parent == null ?this :  _parent.FindAbsoluteParent();
+    }
     #endregion
 
 

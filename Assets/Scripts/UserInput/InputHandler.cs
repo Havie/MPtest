@@ -9,6 +9,7 @@ public class InputHandler : MonoBehaviour
 
     private UserInputManager _userInput;
 
+    /************************************************************************************************************************/
 
     void Awake()
     {
@@ -19,7 +20,7 @@ public class InputHandler : MonoBehaviour
     {
         _userInput = UserInputManager.Instance;
     }
-
+    /************************************************************************************************************************/
 
     void Update()
     {
@@ -50,5 +51,6 @@ public class InputHandler : MonoBehaviour
             }
         }
     }
+    /************************************************************************************************************************/
 
 }
