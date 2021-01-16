@@ -24,7 +24,47 @@ public class DisplacementState : InputState
     public override void EnableState(IInteractable currentSelection)
     {
         _currentSelection = currentSelection;
+        var moveableObject = _currentSelection as IMoveable;
+        if (moveableObject != null)
+        {
+
+            moveableObject.ChangeAppearanceMoving(); ///TODO abstract to handle inside interface
+            Transform transform = moveableObject.Transform();
+            float zCoord = _brain.WorldToScreenPoint(transform.position).z;
+            _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
+            _brain._objStartPos = transform.position;
+            _brain._objStartRot = transform.rotation;
+
+            ///only if on table
+            // if (_currentSelection.SetOnTable())  
+            // if (_brain._currentSelection._hittingTable)
+            if (moveableObject.OutOfBounds())
+                ResetObjectOrigin(moveableObject, zCoord);
+
+            moveableObject.OnBeginFollow(); ///Might mess up objectCntroller
+            //HandManager.PickUpItem(_currentSelection as ObjectController); //might have moved to the wrong spot
+        }
     }
+    private void ResetObjectOrigin(IMoveable moveableObject, float zCoord)
+    {
+        ///Reset the object to have the right orientation for construction when picked back up
+        if (moveableObject != null)
+        {
+            Vector3 mouseLocWorld = _brain.GetInputWorldPos(zCoord);
+            _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _tmpZfix);
+            //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");
+            _brain._objStartRot = Quaternion.identity;
+            _brain._mOffset = Vector3.zero;
+            ///new
+            var trans = moveableObject.GetGameObject().transform;
+            trans.position = _brain._objStartPos;
+            trans.rotation = _brain._objStartRot;
+            ///Start moving the object
+        }
+        else
+            Debug.LogWarning("This happened?1");
+    }
+
 
     /************************************************************************************************************************/
     public override void Execute(bool inputDown, Vector3 inputPos)

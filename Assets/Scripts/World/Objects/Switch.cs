@@ -113,66 +113,7 @@ public class Switch : MonoBehaviour, IInteractable
 
     public void HandleInteractionTime(float time)
     {
-        throw new System.NotImplementedException();
+
     }
 
-    public void OnFollowInput(Vector3 worldPos)
-    {
-       ///DO nothing?
-    }
-
-    public Vector2 OnRotate(Vector3 dot)
-    {
-        return Vector2.zero;
-    }
-
-    public bool OutOfBounds() => false;
-
-    public bool IsPickedUp() => false;
-
-
-    public bool IsHighlighted() 
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void SetHighlighted(bool cond)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void ChangeHighlightAmount(float amnt)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void SetHandPreviewingMode(bool cond)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void ChangeAppearanceMoving()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void ChangeAppearanceNormal()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void ChangeAppearanceHidden(bool cond)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void ResetHittingTable()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void SetResetOnNextChange()
-    {
-        throw new System.NotImplementedException();
-    }
 }

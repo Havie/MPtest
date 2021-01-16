@@ -223,30 +223,30 @@ public class UserInputManager : MonoBehaviour
     public void InjectItem(int itemID)
     {
 
-        var tmp = _mainCamera.WorldToScreenPoint(new Vector3(0, 0, -9));
-        var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(tmp.z), null).GetComponent<ObjectController>();
+        //var tmp = _mainCamera.WorldToScreenPoint(new Vector3(0, 0, -9));
+        //var obj = BuildableObject.Instance.SpawnObject(itemID, GetInputWorldPos(tmp.z), null).GetComponent<ObjectController>();
 
-        if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
-        {
-            IInteractable currentSelection = obj.GetComponent<IInteractable>();
-            HandManager.PickUpItem(currentSelection.GetGameObject().GetComponent<ObjectController>());
-            Debug.Log($"OBJ spawn loc={obj.transform.position}");
-            if (currentSelection != null)
-            {
-                IMoveable moveableObject = currentSelection as IMoveable;
-                if (moveableObject != null)
-                {
-                    moveableObject.OnFollowInput(_inputPos);
-                    //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
-                    _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
-                    SwitchState(_displacementState, currentSelection);
-                    _objStartPos = new Vector3(0, 0, -9);
-                    _objStartRot = Quaternion.identity;
+        //if (Input.GetMouseButtonDown(0)) //if we wana pick it up , seems t get stuck on rotation but ok
+        //{
+        //    IInteractable currentSelection = obj.GetComponent<IInteractable>();
+        //    HandManager.PickUpItem(currentSelection.GetGameObject().GetComponent<ObjectController>());
+        //    Debug.Log($"OBJ spawn loc={obj.transform.position}");
+        //    if (currentSelection != null)
+        //    {
+        //        IMoveable moveableObject = currentSelection as IMoveable;
+        //        if (moveableObject != null)
+        //        {
+        //            moveableObject.OnFollowInput(_inputPos);
+        //            //_mOffset = _currentSelection.transform.position - GetInputWorldPos(zCoord);
+        //            _mOffset = Vector3.zero; ///same thing as above because it spawns here so no difference
+        //            SwitchState(_displacementState, currentSelection);
+        //            _objStartPos = new Vector3(0, 0, -9);
+        //            _objStartRot = Quaternion.identity;
 
-                    //Debug.Log($"Final loc={_currentSelection.transform.position}");
-                }
-            }
-        }
+        //            //Debug.Log($"Final loc={_currentSelection.transform.position}");
+        //        }
+        //    }
+        //}
 
 
     }

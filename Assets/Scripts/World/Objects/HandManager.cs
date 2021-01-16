@@ -30,7 +30,7 @@ public static class HandManager
         _handArray[1] = _handArray[0];
         _handArray[0] = item;
 
-        if (_handArray[1])
+        if (_handArray[1]!=null)
         {
             _handArray[1].PickedUp(2);
             _handArray[1].SetHandPreviewingMode(false);

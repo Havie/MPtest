@@ -50,18 +50,20 @@ public class UIState : InputState
                 float zCoord = _brain.WorldToScreenPoint(slotLoc).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(zCoord), qualityList).GetComponent<ObjectController>();
                 _currentSelection = obj;
-                HandManager.PickUpItem(_currentSelection as ObjectController);
+                //HandManager.PickUpItem(_currentSelection as ObjectController); ///Abstraced now when displacement calls OnBeginFollow()
                 //Debug.Log($"OBJ spawn loc={obj.transform.position}");
                 if (_currentSelection!=null)
                 {
                     _brain._mOffset = Vector3.zero; /// it spawns here so no difference
                     _brain._objStartPos = new Vector3(0, 0, _tmpZfix);
                     _brain._objStartRot = Quaternion.identity;
-                    //_justPulledOutOfUI = true;
-                    _brain.SwitchState(_brain._displacementState, _currentSelection);
+
                     IConstructable moveableObject = _currentSelection as IConstructable;
-                    if(moveableObject!=null)
+                    if (moveableObject != null)
                         moveableObject.ChangeAppearanceHidden(true); ///spawn it invisible till were not hovering over UI
+
+                    _brain.SwitchState(_brain._displacementState, _currentSelection);
+
                 }
                 else
                     Debug.LogWarning("This happened?1");

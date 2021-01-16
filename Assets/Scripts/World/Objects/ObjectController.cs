@@ -4,7 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class ObjectController : MonoBehaviour, IConstructable, IHighlightable
+public class ObjectController : MonoBehaviour, IConstructable
 {
 
     public ObjectManager.eItemID _myID;
@@ -269,12 +269,16 @@ public class ObjectController : MonoBehaviour, IConstructable, IHighlightable
     }
 
     ///IMoveable
-    public void OnFollowInput(Vector3 worldPos)
-    {
-        Follow(worldPos);
-    }
+    public void OnFollowInput(Vector3 worldPos){Follow(worldPos);}
     public Vector2 OnRotate(Vector3 dot) { return DoRotation(dot); }
-    public void AllowFollow() { ResetHittingTable(); }
+    public void OnBeginFollow()
+    {
+        ChangeAppearanceMoving();
+        ResetHittingTable();
+        HandManager.PickUpItem(this);
+    }
+    
+    public void OnEndFollow() { ChangeAppearanceNormal(); }
     public bool OutOfBounds()
     {
         return _hittingTable;
@@ -299,6 +303,8 @@ public class ObjectController : MonoBehaviour, IConstructable, IHighlightable
         transform.position = new Vector3(mpos.x, 0, mpos.z);
     }
     public bool IsPickedUp() => _pickedUp;
+   
+    ///Trying to phase these out of interface:
     public void ChangeAppearanceMoving()
     {
         Vector3 smaller = new Vector3

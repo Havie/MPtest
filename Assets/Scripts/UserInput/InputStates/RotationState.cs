@@ -68,11 +68,8 @@ public class RotationState : InputState
                 if (_pressTimeCURR > _pressTimeMAX / 10) ///dont show this instantly 10%filled
                 {
                     ///Show the UI wheel for our TouchPhase 
-                    UIManager.instance.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX,
-                         new Vector3(inputPos.x, inputPos.y, inputPos.z)
-                         );
-
-
+                    UIManager.instance.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX, inputPos);
+    
                     ///Cap our mats transparency fade to 0.5f
                     float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
                     changeVal = Mathf.Lerp(1, changeVal, 0.5f);
@@ -93,32 +90,12 @@ public class RotationState : InputState
             {
                 UIManager.instance.HideTouchDisplay();
 
+                ///Have to do this here because OnEnableState does have inputPos
                 _currentSelection = _brain.CheckForObjectAtLoc(inputPos);
                 IConstructable constructable = _currentSelection as IConstructable;
 
                 if (constructable != null)
                     _currentSelection = FindAbsoluteParent(_currentSelection as ObjectController);
-
-                moveableObject = _currentSelection as IMoveable;
-                if (moveableObject != null)
-                {
-
-                    moveableObject.ChangeAppearanceMoving(); ///TODO abstract to handle inside interface
-                    Transform transform = moveableObject.Transform();
-                    float zCoord = _brain.WorldToScreenPoint(transform.position).z;
-                    _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
-                    _brain._objStartPos = transform.position;
-                    _brain._objStartRot = transform.rotation;
-
-                    ///only if on table
-                    // if (_currentSelection.SetOnTable())  
-                    // if (_brain._currentSelection._hittingTable)
-                    if (moveableObject.OutOfBounds())
-                        ResetObjectOrigin(moveableObject, zCoord);
-
-                    moveableObject.AllowFollow(); ///Might mess up objectCntroller
-                    HandManager.PickUpItem(_currentSelection as ObjectController); //might have moved to the wrong spot
-                }
 
                 _brain.SwitchState(_brain._displacementState, _currentSelection);
             }
@@ -173,30 +150,6 @@ public class RotationState : InputState
         if (highlightableObj != null)
             highlightableObj.CancelHighLightPreview();
 
-    }
-
-
-    private void ResetObjectOrigin(IMoveable moveableObject, float zCoord)
-    {
-        ///Reset the object to have the right orientation for construction when picked back up
-        if (moveableObject != null)
-        {
-            moveableObject.ChangeAppearanceMoving();///TODO abstract to handle inside interface, why is this even here?
-            Vector3 mouseLocWorld = _brain.GetInputWorldPos(zCoord);
-            _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _tmpZfix);
-            //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");
-            _brain._objStartRot = Quaternion.identity;
-            _brain._mOffset = Vector3.zero;
-            ///new
-            var trans = moveableObject.GetGameObject().transform;
-            trans.position = _brain._objStartPos;
-            trans.rotation = _brain._objStartRot;
-            ///Start moving the object
-            moveableObject.AllowFollow(); /// so we can pick it up again
-            _brain.SwitchState(_brain._displacementState, _currentSelection); ///I switched this down 1 line incase things break
-        }
-        else
-            Debug.LogWarning("This happened?1");
     }
 
 

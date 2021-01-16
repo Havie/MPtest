@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IMoveable : IInteractable
+public interface IMoveable : IInteractable, IHighlightable
 {
     void OnFollowInput(Vector3 worldPos);
 
     Vector2 OnRotate(Vector3 dot);
 
-    void AllowFollow();
+    void OnBeginFollow();
+    void OnEndFollow();
 
     bool OutOfBounds();
 

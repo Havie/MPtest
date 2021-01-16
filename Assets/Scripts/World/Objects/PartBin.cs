@@ -59,9 +59,14 @@ public class PartBin : MonoBehaviour, IMoveable
         var mpos = transform.position;
         transform.position = new Vector3(mpos.x, mpos.y, mpos.z); ///Will have to change to be left/right scene bounds
     }
-    public void AllowFollow()
+    public void OnBeginFollow()
     {
         _canFollow = true;
+    }
+
+    public void OnEndFollow()
+    {
+        _canFollow = false; /// not sure
     }
 
 
@@ -96,10 +101,36 @@ public class PartBin : MonoBehaviour, IMoveable
     }
 
 
-
     public bool IsPickedUp()
     {
         return false;
+    }
+
+
+    ///IHighlightable
+    public float GetHighlightIntensity()
+    {
+        return 0;
+    }
+
+    public Color GetHighLightColor()
+    {
+        return Color.white;
+    }
+
+    public void ChangeHighLightColor(Color color)
+    {
+        
+    }
+
+    public void HandleHighlightPreview()
+    {
+       
+    }
+
+    public void CancelHighLightPreview()
+    {
+        
     }
 
 
