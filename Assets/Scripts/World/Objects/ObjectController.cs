@@ -140,7 +140,7 @@ public class ObjectController : MonoBehaviour, IConstructable, IHighlightable
 
     public void PickedUp(int handIndex)
     {
-        ToggleRB(false);
+        ToggleRB(true);
         SetHighlighted(true);
 
         //HandManager.OrderChanged += UpdateHand;
@@ -151,7 +151,7 @@ public class ObjectController : MonoBehaviour, IConstructable, IHighlightable
     }
     public void PutDown()
     {
-        ToggleRB(true);
+        ToggleRB(false);
         SetHighlighted(false);
         //HandManager.OrderChanged -= UpdateHand;
         _pickedUp = false;

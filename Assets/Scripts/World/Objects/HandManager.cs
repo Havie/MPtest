@@ -39,8 +39,6 @@ public static class HandManager
         _handArray[0].PickedUp(1);
         item.SetHandPreviewingMode(false);
 
-        item.ToggleRB(true);
-
 
         CheckHandPositions();
         CancelIntensityChangePreview();
@@ -190,7 +188,6 @@ public static class HandManager
     {
         if (item)
         {
-            item.ToggleRB(false);
             item.PutDown();
            // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
             item.SetHandPreviewingMode(false);
