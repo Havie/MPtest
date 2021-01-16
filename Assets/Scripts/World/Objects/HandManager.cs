@@ -16,30 +16,8 @@ public static class HandManager
     private static bool _previewingAChange = false;
     private static float _previewTime;
 
+    /************************************************************************************************************************/
 
-    public static int CountPickedUpItems()
-    {
-        int count = 0;
-        for (int i = 0; i < _handSize; i++)
-        {
-            var item = _handArray[i];
-            if (item != null)
-                ++count;
-        }
-        return count;
-    }
-
-    public static bool HandContains(ObjectController newItem)
-    {
-        for (int i = 0; i < _handSize; i++)
-        {
-            var item = _handArray[i];
-            if (item == newItem)
-              return true;
-        }
-
-        return false;
-    }
 
     public static void PickUpItem(ObjectController item)
     {
@@ -69,7 +47,6 @@ public static class HandManager
     }
 
 
-   
     public static void StartToHandleIntensityChange(ObjectController potentialItemToBePickedUp)
     {
         if (potentialItemToBePickedUp == null)
@@ -129,13 +106,61 @@ public static class HandManager
     }
 
 
-
     public static void CancelIntensityChangePreview()
     {
         if (CountPickedUpItems()==0)
             return;
         if(_previewingAChange)
             SetHandPreviewMode(false);
+    }
+
+  
+    /// <summary> If object is about to be deleted use this instead </summary>
+    public static void RemoveDeletedItem(ObjectController item)
+    {
+        if (item)
+        {
+            item.PutDown();
+            // if (_handArray[0] == item)
+            {
+                ///Seems we just need to remove everything when we make a new object now
+                _handArray[0] = null;
+                _handArray[1] = null;
+            }
+            //else if (_handArray[1] == item)
+            //{
+            //    _handArray[1] = null;
+            //}
+
+            CheckHandPositions();
+        }
+    }
+
+    /************************************************************************************************************************/
+
+
+    private static int CountPickedUpItems()
+    {
+        int count = 0;
+        for (int i = 0; i < _handSize; i++)
+        {
+            var item = _handArray[i];
+            if (item != null)
+                ++count;
+        }
+        return count;
+    }
+
+    private static bool HandContains(ObjectController newItem)
+    {
+        for (int i = 0; i < _handSize; i++)
+        {
+            var item = _handArray[i];
+            if (item == newItem)
+                return true;
+        }
+
+        return false;
     }
 
     private static void SetHandPreviewMode(bool cond)
@@ -161,8 +186,7 @@ public static class HandManager
 
     }
 
-
-    public static void DropItem(ObjectController item)
+    private static void DropItem(ObjectController item)
     {
         if (item)
         {
@@ -189,40 +213,7 @@ public static class HandManager
 
     }
 
-
-    /// <summary>
-    /// If object is about to be deleted use this instead 
-    /// </summary>
-    /// <param name="item"></param>
-    public static void RemoveDeletedItem(ObjectController item)
-    {
-        if (item)
-        {
-            item.PutDown();
-           // if (_handArray[0] == item)
-            {
-              ///Seems we just need to remove everything when we make a new object now
-                _handArray[0] = null;
-                _handArray[1] = null;
-            }
-            //else if (_handArray[1] == item)
-            //{
-            //    _handArray[1] = null;
-            //}
-
-            CheckHandPositions();
-        }
-    }
-
-
-
-    public static void PrintQueue()
-    {
-        string q = $"Hand[0] = { _handArray[0]} , Hand[1] = { _handArray[1]} ";
-        Debug.LogWarning(q);
-    }
-
-    public static void CheckHandPositions()
+    private static void CheckHandPositions()
     {
         if (CountPickedUpItems() < 2)
             UIManager.instance.ResetHand(2);
@@ -230,7 +221,11 @@ public static class HandManager
             UIManager.instance.ResetHand(1);
     }
 
-
+    private static void PrintQueue()
+    {
+        string q = $"Hand[0] = { _handArray[0]} , Hand[1] = { _handArray[1]} ";
+        Debug.LogWarning(q);
+    }
 
 
 }

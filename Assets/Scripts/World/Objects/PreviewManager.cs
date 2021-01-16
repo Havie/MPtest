@@ -49,6 +49,69 @@ public static class PreviewManager
         _inPreview = true;
     }
 
+
+    public static void ConfirmCreation()
+    {
+        //Debug.Log("....called Confirm Creation ");
+
+        if (_inMiddleOfClear)
+        {
+            Debug.LogWarning("trying to ConfirmCreation again too fast ??");
+            return;
+        }
+        _inMiddleOfClear = true;
+
+        List<QualityObject> qualities = new List<QualityObject>();
+
+        foreach (var item in _previewedItems)
+        {
+            var overallQuality = item.GetComponent<QualityOverall>();
+            if (overallQuality)
+            {
+                foreach (var quality in overallQuality.Qualities)
+                {
+                    qualities.Add(quality);
+                }
+            }
+
+            HandManager.RemoveDeletedItem(item);
+            // HandManager.PrintQueue();
+            BuildableObject.Instance.DestroyObject(item.gameObject);
+        }
+        var oc = _previewItem.GetComponent<ObjectController>();
+        oc.ChangeAppearanceNormal();
+        HandManager.PickUpItem(oc);
+        ///Update our overall quality, passing the data to the next object 
+        var finalQuality = _previewItem.GetComponent<QualityOverall>();
+        if (finalQuality)
+        {
+            foreach (var q in qualities)
+            {
+                finalQuality.ReadOutQuality(q);
+            }
+        }
+
+        ResetSelf();
+        _inMiddleOfClear = false;
+    }
+
+    public static void UndoPreview()
+    {
+        foreach (var item in _previewedItems)
+        {
+            item.ChangeAppearanceNormal();
+        }
+        CheckForSwitch();
+        BuildableObject.Instance.DestroyObject(_previewItem);
+        ResetSelf();
+    }
+
+
+    /************************************************************************************************************************/
+    // Private/Helpers
+    /************************************************************************************************************************/
+
+
     private static void CheckForSwitch()
     {
         if (!_inPreview)
@@ -111,62 +174,6 @@ public static class PreviewManager
                 }
             }
         }
-    }
-
-    public static void UndoPreview()
-    {
-        foreach (var item in _previewedItems)
-        {
-            item.ChangeAppearanceNormal();
-        }
-        CheckForSwitch();
-        BuildableObject.Instance.DestroyObject(_previewItem);
-        ResetSelf();
-    }
-
-    public static void ConfirmCreation()
-    {
-        //Debug.Log("....called Confirm Creation ");
-
-        if (_inMiddleOfClear)
-        {
-            Debug.LogWarning("trying to ConfirmCreation again too fast ??");
-            return;
-        }
-        _inMiddleOfClear = true;
-
-        List<QualityObject> qualities = new List<QualityObject>();
-
-        foreach (var item in _previewedItems)
-        {
-            var overallQuality = item.GetComponent<QualityOverall>();
-            if (overallQuality)
-            {
-                foreach (var quality in overallQuality.Qualities)
-                {
-                    qualities.Add(quality);
-                }
-            }
-
-            HandManager.RemoveDeletedItem(item);
-            // HandManager.PrintQueue();
-            BuildableObject.Instance.DestroyObject(item.gameObject);
-        }
-        var oc = _previewItem.GetComponent<ObjectController>();
-        oc.ChangeAppearanceNormal();
-        HandManager.PickUpItem(oc);
-        ///Update our overall quality, passing the data to the next object 
-        var finalQuality = _previewItem.GetComponent<QualityOverall>();
-        if (finalQuality)
-        {
-            foreach (var q in qualities)
-            {
-                finalQuality.ReadOutQuality(q);
-            }
-        }
-
-        ResetSelf();
-        _inMiddleOfClear = false;
     }
 
     private static void ResetSelf()

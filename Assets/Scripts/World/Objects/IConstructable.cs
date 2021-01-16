@@ -8,8 +8,6 @@ public interface IConstructable : IMoveable
     void SetHandPreviewingMode(bool cond);
 
     void ChangeAppearanceHidden(bool cond);
-   
-    
 
-
+    void ChangeAppearancePreview();
 }
