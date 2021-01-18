@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIInventorySlot : MonoBehaviour , IAssignable
+
+public class UIBucketManagement : MonoBehaviour, IAssignable
 {
     [SerializeField] Image _myIcon = default;
     private Sprite _defaultIcon;
-    private UIInventoryManager _manager;
-    private bool _autoSend = false; //Only for OutINV, set by InventoryManager
-    private bool _isOutSlot;
+
+    private bool _autoSend = true;
+
     int _itemID = -1;
     public bool _inUse;
-    int _numItemsStored = 0;
+
     List<QualityObject> _qualities = new List<QualityObject>();
 
     public List<QualityObject> Qualities => _qualities;
-    public int RequiredID { get; private set; } = -1;
 
     private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
@@ -28,27 +28,14 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
 
     /************************************************************************************************************************/
 
-    private void Awake() { _defaultIcon = _myIcon.sprite;}
+    private void Awake() 
+    { 
+        _defaultIcon = _myIcon.sprite;
+        _NORMAL = transform.localScale;
+        _LARGER = _NORMAL * 1.45f;
+        _SMALLER = _NORMAL * 0.5f;
+    }
     /************************************************************************************************************************/
-
-    public void SetManager(UIInventoryManager manager) { _manager = manager; }
-    public void SetAutomatic(bool cond)
-    {
-        _autoSend = cond;
-        _isOutSlot = true; // only OUT-INV calls this method so safe to assume
-    }
-    public bool RequiresCertainID()
-    {
-        return RequiredID != -1;
-    }
-    public void SetRequiredID(int itemID)
-    {
-        RequiredID = itemID;
-        //Set transparent icon 
-        AssignSpriteByID(RequiredID, true);
-    }
-
-    public int GetItemID() => _itemID;
 
 
     #region Interface
@@ -56,20 +43,10 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
     public bool PreviewSlot(Sprite img)
     {
         bool retVal = true;
-        if (!_inUse && RequiredID == -1)
+         if (!_inUse)
         {
             AssignSprite(img);
-        }
-        else if (!_inUse && RequiredID != -1)
-        {
-            //Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
-            if (BuildableObject.Instance.GetSpriteByID(RequiredID) != img)
-            {
-                _myIcon.color = _INVALID;
-                retVal = false;
-            }
-            else
-                _myIcon.color = _VISIBLE;
+            _myIcon.color = _VISIBLE;
         }
         else
         {
@@ -77,49 +54,27 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
             _myIcon.color = _INVALID;
             retVal = false;
         }
-        if(_manager)
-            _manager.SetImportant(this.gameObject);
+
         SetLarger();
         return retVal;
     }
     public void UndoPreview()
     {
-
-        if (_numItemsStored > 0)
-        {
-            SetNormal();
-            if (RequiredID != -1)
-                AssignSpriteByID(RequiredID, false);
-            else
-                AssignSpriteByID(_itemID, false);
-        }
-        else
-        {
-            RestoreDefault();
-        }
-
+        RestoreDefault();
     }
     public void RemoveItem()
     {
-        --_numItemsStored;
-        //if (gameObject.name.Contains("#1"))
-        //    Debug.Log($"Removed Item for {this.gameObject.name} , new total={_numItemsStored}");
-        if (_numItemsStored <= 0)
-        {
-            _qualities.Clear();
-            if (RequiredID != -1)
-            {
-                AssignSpriteByID(RequiredID, true);
-                _itemID = -1;
-                _inUse = false;
-                SetNormal();
-            }
-            else
-                RestoreDefault();
-        }
+        RestoreDefault();
     }
+
     public bool AssignItem(ObjectController oc, int count)
     {
+        if(oc==null)
+        {
+            ///The displacement state will try assigning the bucket as an ObjectController to itself
+            return false; 
+        }
+
         /// get ID from controller
         int id = (int)oc._myID;
 
@@ -137,13 +92,9 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
     }
     public bool AssignItem(int id, int count, List<QualityObject> qualities)
     {
+        Debug.Log($"ASsign Item in BUCKET!");
         if (!_inUse)
         {
-            if (_isOutSlot && id != RequiredID)
-            {
-                Debug.Log($"{id} does not match {RequiredID}");
-                return false;
-            }
             AssignSpriteByID(id, false);
 
             ///Might have to clone it, but lets see if we can store it
@@ -158,21 +109,15 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
             //    UIManager.instance.DebugLog("Qualities Read was Null");
 
             _itemID = id;
-            _numItemsStored = count;
             _inUse = true;
             if (_autoSend)
             {
-                if (count > 1)
-                    Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
-                SendData(); // out only
-            }
-            else if (_isOutSlot) //non pull send
-            {
-                TellManager();
+                TellManager(); 
+                RestoreDefault();
             }
 
-            ///Try encapsulating this here:
-            SetNormal();
+
+
             return true;
         }
         return false;
@@ -223,37 +168,6 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
         // Debug.Log($"{this.gameObject.name} AssigndSprite = <color=green>{img.name}</color>");
 
     }
-    /**DEPRECEATED */
-    private bool AssignItem(int id, int count) ///Need to make this priv and re-direct old calls
-    {
-        //if (this.gameObject.name.Contains("tation"))
-        //   Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + "  , autosend="+_autoSend + " , _inUse="+ _inUse + " , _isOutSlot=" + _isOutSlot + " , _requiredID=" + _requiredID) ;
-        if (!_inUse)
-        {
-            if (_isOutSlot && id != RequiredID)
-                return false;
-
-            AssignSpriteByID(id, false);
-
-            _itemID = id;
-            _numItemsStored = count;
-            _inUse = true;
-            if (_autoSend)
-            {
-                if (count > 1)
-                    Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
-                SendData(); // out only
-            }
-            else if (_isOutSlot) //non pull send
-            {
-                TellManager();
-            }
-
-            return true;
-        }
-
-        return false;
-    }
 
 
 
@@ -272,22 +186,14 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
 
     private void TellManager()
     {
-        _manager.CheckIfBatchIsReady();
+
     }
     private void RestoreDefault()
     {
         SetNormal();
         _inUse = false;
-        _numItemsStored = 0;
         _itemID = -1;
-        if (RequiredID != -1)
-        {
-            AssignSpriteByID(RequiredID, true);
-        }
-        else
-        {
-            AssignSprite(_defaultIcon);
-        }
+        AssignSprite(_defaultIcon);
     }
     private void SetLarger()
     {
@@ -296,7 +202,7 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
     private void SetNormal() ///Shud get this private and abstracted
     {
         this.transform.localScale = _NORMAL;
-    } 
+    }
 
     public void SetSmaller()
     {

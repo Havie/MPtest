@@ -37,8 +37,8 @@ public class UIState : InputState
         if (inputDown)
         {
             ///If found slot in use spawn obj and go to displacement 
-            var slot = _brain.RayCastForInvSlot();
-            if (slot)
+            var slot = _brain.RayCastForInvSlot() as UIInventorySlot;
+            if (slot!=null)
             {
                 //Debug.LogWarning($"Slot found= {slot.name}");
                 int itemID = slot.GetItemID();

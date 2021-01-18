@@ -5,7 +5,7 @@ using UnityEngine;
 public class DisplacementState : InputState
 {
 
-    private UIInventorySlot _lastSlot;
+    private IAssignable _lastSlot;
 
     public DisplacementState(UserInputManager input)
     {
@@ -80,7 +80,7 @@ public class DisplacementState : InputState
     {
         IMoveable moveableObject = _currentSelection as IMoveable;
 
-        UIInventorySlot slot = _brain.RayCastForInvSlot();
+        IAssignable slot = _brain.RayCastForInvSlot();
         if (inputDown)
         {
             if (moveableObject != null)
@@ -139,7 +139,7 @@ public class DisplacementState : InputState
                 if (slot != null)
                 {
                     //Debug.Log($"FOUND UI SLOT {slot.name}");
-                    slot.SetNormal();
+                    //slot.SetNormal();
                     assigned = slot.AssignItem(moveableObject as ObjectController, 1); ///TODO verify this somehow
                     if (assigned)
                         _brain.Destroy(moveableObject);
@@ -147,7 +147,7 @@ public class DisplacementState : InputState
                 if (!assigned)
                 {
                     ///put it back to where we picked it up 
-                    if (slot) // we tried dropping in incompatible slot
+                    if (slot!=null) // we tried dropping in incompatible slot
                     {
                         var trans = moveableObject.GetGameObject().transform;
                         trans.position = _brain._objStartPos;
@@ -206,7 +206,7 @@ public class DisplacementState : InputState
         {
             moveableObject.ChangeAppearanceHidden(false);
         }
-        if (_lastSlot)
+        if (_lastSlot!=null)
         {
             _lastSlot.UndoPreview();
             _lastSlot = null;

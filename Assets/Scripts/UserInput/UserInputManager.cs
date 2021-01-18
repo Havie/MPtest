@@ -172,7 +172,7 @@ public class UserInputManager : MonoBehaviour
 
     }
 
-    public UIInventorySlot RayCastForInvSlot()
+    public IAssignable RayCastForInvSlot()
     {
         //Set the Pointer Event Position to that of the mouse position
         _PointerEventData.position = Input.mousePosition; ///Seems to work for touch input too, idk how
@@ -186,10 +186,9 @@ public class UserInputManager : MonoBehaviour
         foreach (RaycastResult result in results)
         {
             //Debug.Log("hit =" + result.gameObject);
-            UIInventorySlot slot = result.gameObject.transform.GetComponent<UIInventorySlot>();
-            if (slot)
-                Debug.Log($"raycasted: {slot.gameObject.name}");
-            if (slot)
+            IAssignable slot = result.gameObject.transform.GetComponent<IAssignable>();
+
+            if (slot!=null)
                 return slot;
         }
 

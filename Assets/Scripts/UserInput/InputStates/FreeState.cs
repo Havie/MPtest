@@ -48,7 +48,7 @@ public class FreeState : InputState
             }
             else ///if u get UI do UI 
             {
-                UIInventorySlot slot = _brain.RayCastForInvSlot();
+                IAssignable slot = _brain.RayCastForInvSlot();
                 if (slot != null)
                 {
                     if (slot.GetInUse())
