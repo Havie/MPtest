@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IMoveable : IInteractable, IHighlightable
+public interface IMoveable :  IHighlightable
 {
     void OnFollowInput(Vector3 worldPos);
 
