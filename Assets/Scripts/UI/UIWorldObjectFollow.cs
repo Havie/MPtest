@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIBucketFollow : MonoBehaviour
+public class UIWorldObjectFollow : MonoBehaviour
 {
     [SerializeField] Transform _worldObjectToFollow;
     [SerializeField] UserInputManager _inputManager;
