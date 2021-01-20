@@ -15,7 +15,7 @@ public class UIInstructions : MonoBehaviour
 
     public void InstructionsClicked()
     {
-        //Debug.Log("Instructions Clicked");
+        Debug.Log($"Instructions Clicked _isAnimating={_isAnimating}");
         if (_isAnimating)
             return;
 
@@ -44,7 +44,7 @@ public class UIInstructions : MonoBehaviour
     IEnumerator AnimationFinished()
     {
         var time =_controller.GetCurrentAnimatorStateInfo(0).length;
-        Debug.Log("time is :" + time);
+        //Debug.Log("time is :" + time);
         yield return new WaitForSeconds(time);
         _isAnimating = false;
     }
