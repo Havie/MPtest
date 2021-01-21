@@ -54,8 +54,11 @@ public class BuildableObject : MonoBehaviour
     {
         return SpawnObject(itemID, Vector3.zero, null);
     }
-    public GameObject SpawnObject(int itemID, Vector3 pos, List<ObjectQuality> qualities)
+    public GameObject SpawnObject(int itemID, Vector3 pos, List<QualityObject> qualities)
     {
+        if (itemID == -1)
+            Debug.Break();
+
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
         //GetNextObj
         //var _objStartPos = new Vector3(pos.x, pos.y, UserInput.Instance._tmpZfix);
@@ -71,7 +74,7 @@ public class BuildableObject : MonoBehaviour
 
         if (qualities != null && qualities.Count > 0)
         {
-            var overallQuality = newObj.GetComponent<OverallQuality>();
+            var overallQuality = newObj.GetComponent<QualityOverall>();
             if (overallQuality)
             {
                 foreach (var q in qualities)
@@ -93,9 +96,9 @@ public class BuildableObject : MonoBehaviour
         return newObj;
     }
 
-    public ObjectQuality BuildTempQualities(int id, int currAction)
+    public QualityObject BuildTempQualities(int id, int currAction)
     {
-        var qs = this.transform.gameObject.AddComponent<ObjectQuality>();
+        var qs = this.transform.gameObject.AddComponent<QualityObject>();
         Debug.Log("id=" + id);
         qs.InitalizeAsDummy(_qualityPresets[id - 1], currAction);
 
@@ -122,7 +125,7 @@ public class BuildableObject : MonoBehaviour
 
         var controller = newObj.GetComponent<ObjectController>();
         if (controller)
-            controller.ToggleRB(false); ///turn on physics 
+            controller.PutDown(); ///turn on physics 
 
         if (DebugItemsOnSpawn)
             FPSCounter.Instance.ProfileAnObject(newObj);

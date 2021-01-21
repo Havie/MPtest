@@ -42,7 +42,7 @@ public class ClientHandle : MonoBehaviour
 
 
 
-        List<ObjectQuality> qualities = new List<ObjectQuality>();
+        List<QualityObject> qualities = new List<QualityObject>();
 
         var count = packet.ReadInt()/2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
         UIManager.instance.DebugLog($"ClientHandle Count={count}");

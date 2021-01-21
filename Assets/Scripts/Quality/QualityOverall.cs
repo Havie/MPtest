@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class OverallQuality : MonoBehaviour
+public class QualityOverall : MonoBehaviour
 {
-    private List<ObjectQuality> _qualities = new List<ObjectQuality>();
-    public List<ObjectQuality> Qualities => _qualities;
+    private List<QualityObject> _qualities = new List<QualityObject>();
+    public List<QualityObject> Qualities => _qualities;
 
     [SerializeField] float _lastKnownQuality; ///TMP for read outs in UI
     [SerializeField] int _currentQuality =0; /// Serialize for read outs in UI
@@ -22,10 +22,10 @@ public class OverallQuality : MonoBehaviour
 
     }
 
-    private List<ObjectQuality> FindQualities()
+    private List<QualityObject> FindQualities()
     {
-        var qs = new List<ObjectQuality>();
-        foreach (ObjectQuality q in this.GetComponentsInChildren<ObjectQuality>())
+        var qs = new List<QualityObject>();
+        foreach (QualityObject q in this.GetComponentsInChildren<QualityObject>())
             qs.Add(q);
         return qs;
     }
@@ -58,7 +58,7 @@ public class OverallQuality : MonoBehaviour
     }
 
     /**Update our current quality */
-    public void ReadOutQuality(ObjectQuality pastObject)
+    public void ReadOutQuality(QualityObject pastObject)
     {
         //Debug.Log($"We are reading out : {pastObject} its not null? {pastObject.ID}, {pastObject.CurrentQuality}/{pastObject.MaxQuality}");
 
@@ -85,16 +85,16 @@ public class OverallQuality : MonoBehaviour
 
     /** Have to add a new instance as its getting destroyed on last OBJ*/
     /** An example of this would be the blue bolts are only available on the first prefabs */
-    private void AddAsNewQuality(ObjectQuality pastObject)
+    private void AddAsNewQuality(QualityObject pastObject)
     {
-        var qs = this.transform.gameObject.AddComponent<ObjectQuality>();
+        var qs = this.transform.gameObject.AddComponent<QualityObject>();
         qs.InitalizeAsDummy(pastObject.QualityStep, pastObject.CurrentQuality);
         _qualities.Add(qs);
     }
 
-    public ObjectQuality FindObjectQualityOfType(int id)
+    public QualityObject FindObjectQualityOfType(int id)
     {
-        foreach(ObjectQuality q in this.GetComponentsInChildren<ObjectQuality>())
+        foreach(QualityObject q in this.GetComponentsInChildren<QualityObject>())
         {
             if (q.ID == id)
                 return q;

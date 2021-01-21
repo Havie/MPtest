@@ -1,9 +1,10 @@
 ﻿using HighlightPlus;
 using System.Collections.Generic;
 using UnityEditor;
+
 using UnityEngine;
 
-public class ObjectController : MonoBehaviour
+public class ObjectController : MonoBehaviour, IConstructable
 {
 
     public ObjectManager.eItemID _myID;
@@ -37,17 +38,15 @@ public class ObjectController : MonoBehaviour
     private float _handStartZ;
 
 
-
-
+    /************************************************************************************************************************/
+    #region Init
     private void Awake()
     {
-
-
         _startSize = this.transform.localScale;
         _meshRenderer = this.GetComponent<MeshRenderer>();
         _rb = this.gameObject.AddComponent<Rigidbody>();
         _collider = this.gameObject.GetComponent<Collider>();
-        _isSubObject = this.GetComponent<OverallQuality>() == null;
+        _isSubObject = this.GetComponent<QualityOverall>() == null;
 
         if (transform.parent == null)
         {
@@ -86,26 +85,12 @@ public class ObjectController : MonoBehaviour
 
     }
 
-
     private eRotationAxis DetermineRotationAccess()
     {
         if (_parent != null && (_myID == ObjectManager.eItemID.PinkTop || _myID == ObjectManager.eItemID.RedBot))
             return eRotationAxis.XAXIS;
         else
             return eRotationAxis.YAXIS;
-    }
-
-    private void Update()
-    {
-        if (_handLocation)
-        {
-            _handLocation.position = this.transform.position + _handOffset;
-            if (_pickedUp && !HandPreviewingMode)
-            {
-                UIManager.instance.UpdateHandLocation(_handIndex, _handLocation.position);
-            }
-        }
-
     }
 
     private void DetermineHandLocation()
@@ -134,8 +119,338 @@ public class ObjectController : MonoBehaviour
             _handStartZ = (this.transform.position + _handOffset).z;
         }
     }
+    #endregion
+    /************************************************************************************************************************/
+    private void Update()
+    {
+        if (_handLocation)
+        {
+            _handLocation.position = this.transform.position + _handOffset;
+            if (_pickedUp && !HandPreviewingMode)
+            {
+                UIManager.instance.UpdateHandLocation(_handIndex, _handLocation.position);
+            }
+        }
 
-    public Vector2 DoRotation(Vector3 dir)
+    }
+    /************************************************************************************************************************/
+
+
+
+
+    public void PickedUp(int handIndex)
+    {
+        ToggleRB(true);
+        SetHighlighted(true);
+
+        //HandManager.OrderChanged += UpdateHand;
+        _pickedUp = true;
+        _handIndex = handIndex;
+        ChangeHighLightColor(handIndex);
+        // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
+    }
+    public void PutDown()
+    {
+        ToggleRB(false);
+        SetHighlighted(false);
+        //HandManager.OrderChanged -= UpdateHand;
+        _pickedUp = false;
+    }
+
+    /************************************************************************************************************************/
+
+
+    #region INTERFACE
+
+    ///IInteractable
+    public GameObject GetGameObject() => gameObject;
+    public Transform GetParent() => this.transform.parent;
+    public Transform Transform() => this.transform;
+    public void OnInteract()
+    {
+        ///Nothing really happens we click this object?
+    }
+    public void HandleInteractionTime(float time)
+    {
+        ChangeHighlightAmount(time);
+    }
+
+    ///IHighlightable
+    private bool _isHighlighted;
+    public bool IsHighlighted() => _isHighlighted;
+    public void SetHighlighted(bool cond)
+    {
+        if (_highlightTrigger)
+            _highlightTrigger.Highlight(cond);
+
+        var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
+        foreach (var item in childrenHighlights)
+        {
+            item.Highlight(cond);
+        }
+
+        _isHighlighted = cond;
+    }
+    public void ChangeHighlightAmount(float intensity)
+    {
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            effect.outline = intensity;
+
+            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
+            foreach (var item in childrenEffects)
+            {
+                item.outline = intensity;
+            }
+        }
+    }
+    public float GetHighlightIntensity()
+    {
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            return effect.outline;
+        }
+        return 0;
+    }
+    public Color GetHighLightColor()
+    {
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            return effect.outlineColor;
+        }
+        return Color.white;
+    }
+    public void ChangeHighLightColor(Color color)
+    {
+        if (_highlightTrigger)
+        {
+            var effect = this.GetComponent<HighlightEffect>();
+            effect.outlineColor = color;
+
+            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
+            foreach (var item in childrenEffects)
+            {
+                item.outlineColor = color;
+            }
+        }
+    }
+    public void HandleHighlightPreview()
+    {
+        ///if its a current item being held in hand , return
+        if (IsPickedUp())
+            return;
+
+        ///if its not highlighting turn it on 
+        if (!IsHighlighted())
+        {
+            SetHighlighted(true);
+            ChangeHighlightAmount(0);
+        }
+
+        ///TODO make this take in an Interface?
+        HandManager.StartToHandleIntensityChange(this);
+
+    }
+    public void CancelHighLightPreview()
+    {
+        SetHandPreviewingMode(false);
+
+        if (IsPickedUp())
+            return;
+
+        HandManager.CancelIntensityChangePreview();
+
+        if (IsHighlighted())
+            SetHighlighted(false);
+
+    }
+
+    ///IMoveable
+    public void OnFollowInput(Vector3 worldPos){Follow(worldPos);}
+    public Vector2 OnRotate(Vector3 dot) { return DoRotation(dot); }
+    public void OnBeginFollow()
+    {
+        ChangeAppearanceMoving();
+        ResetHittingTable();
+        HandManager.PickUpItem(this);
+    }
+    
+    public void OnEndFollow() { ChangeAppearanceNormal(); }
+    public bool OutOfBounds()
+    {
+        return _hittingTable;
+    }
+    private bool _resetOnChange;
+    public void SetResetOnNextChange()
+    {
+        _resetOnChange = true;
+        // Debug.DrawRay(_collider.bounds.min, -Vector3.forward, Color.red, 1);
+    }
+    public void ResetPosition()
+    {
+        ///fck all this somethings off w the scaling , just set it to 0.
+        //var tableY = -0.455f;
+        //var bonusAmnt = 0.02f;
+        //var min = _collider.bounds.min;
+        //var diffBelowTable = min.y - tableY;  /// add cuz both negative 
+        //Debug.LogWarning($"min.y={min.y} and diff={diffBelowTable}   oldy= {mpos.y} newy= {mpos.y + Mathf.Abs(diffBelowTable)}  ....... my scale= {this.transform.localScale}");
+
+
+        var mpos = transform.position;
+        transform.position = new Vector3(mpos.x, 0, mpos.z);
+    }
+    public bool IsPickedUp() => _pickedUp;
+   
+    ///Trying to phase these out of interface:
+    public void ChangeAppearanceMoving()
+    {
+        Vector3 smaller = new Vector3
+            (0.75f * this.transform.localScale.x,
+            0.75f * this.transform.localScale.y,
+            0.75f * this.transform.localScale.z);
+
+        this.transform.localScale = smaller;
+
+        if (_handLocation)
+            UIManager.instance.ChangeHandSize(_handIndex, true);
+
+        ChangeMaterialColor(0.5f);
+
+        TrySetChildren(0.5f);
+
+        // ToggleCollider(false);
+
+        //Debug.Log($"{this.gameObject.name} heard change moving");
+
+    }
+    public void ChangeAppearanceNormal()
+    {
+        // Debug.Log($"Setting {this.gameObject.name} normal ");
+        this.transform.localScale = _startSize;
+        if (_handLocation)
+            UIManager.instance.ChangeHandSize(_handIndex, false);
+
+        _meshRenderer.enabled = true;
+
+        ChangeMaterialColor(1f);
+        TrySetChildren(1f);
+
+
+        if (_resetOnChange)
+            ResetPosition();
+    }
+
+
+
+    ///IConstructable
+    private bool HandPreviewingMode;
+    public void SetHandPreviewingMode(bool cond) { HandPreviewingMode = cond; }
+    public void ChangeAppearanceHidden(bool cond)
+    {
+        // Debug.Log($"Setting {this.gameObject.name} hidden = {!cond}");
+        _meshRenderer.enabled = !cond;
+        /// i have to do this for all children as well 
+        if (_parent == null && _childrenMeshRenderers != null)
+            foreach (var mr in _childrenMeshRenderers)
+                mr.enabled = !cond;
+
+    }
+    public void ChangeAppearancePreview()
+    {
+        ChangeMaterialColor(0.5f);
+        TrySetChildren(0.5f);
+    }
+    public IConstructable FindAbsoluteParent()
+    {
+         return _parent == null ?this :  _parent.FindAbsoluteParent();
+    }
+    #endregion
+
+
+    /************************************************************************************************************************/
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.Equals("Table"))
+        {
+            _hittingTable = true;
+            _lastGoodYAboveTable = this.transform.position.y;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.Equals("Table"))
+            _hittingTable = false;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Table"))
+        {
+            _hittingTable = true;
+            _lastGoodYAboveTable = this.transform.position.y;
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Table"))
+            _hittingTable = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (_handLocation)
+            Destroy(_handLocation.gameObject);
+        _handLocation = null;
+    }
+    /************************************************************************************************************************/
+
+    ///METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
+    private void ChangeMaterialColor(float opacity) { ChangeMaterialColor(_meshRenderer, opacity); }
+
+    private void ChangeMaterialColor(MeshRenderer mr, float opacity)
+    {
+        if (opacity > 1)
+            Debug.LogWarning("Setting opacity > 1. Needs to be 0.0 - 1.0f");
+
+        if (mr)
+        {
+            Material m = mr.material;
+            Color color = m.color;
+            color.a = opacity;
+            m.color = color;
+            mr.material = m;
+        }
+    }
+    private void ChangeHighLightColor(int handIndex)
+    {
+        Color color = handIndex == 1 ? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
+        ChangeHighLightColor(color);
+    }
+    private void ResetHittingTable() { _hittingTable = false; }
+
+    private void TrySetChildren(float opacity)
+    {
+        if (_parent != null)
+            return; /// we are a child so our parent will handle this
+
+
+        foreach (var mr in _childrenMeshRenderers)
+        {
+            mr.enabled = true;
+            Material m = mr.material;
+            Color color = m.color;
+            color.a = opacity;
+            m.color = color;
+            mr.material = m;
+        }
+    }
+
+    protected Vector2 DoRotation(Vector3 dir)
     {
 
         float dot;
@@ -204,7 +519,7 @@ public class ObjectController : MonoBehaviour
             retVal.x = dot / _dampening;
             ///***RetVal will be wrong not sure how to handle rotation values on both axes, dont think this should ever happen
             return retVal; ///return 0 to be safe were not getting confusing #s out
-                           ///Could return a vector3 instead and have userInput keep track of it there
+                           ///Could return a vector3 instead and have UserInputManagerkeep track of it there
         }
         else ///NONE
             return Vector2.zero;
@@ -213,7 +528,7 @@ public class ObjectController : MonoBehaviour
         //return dot / _dampening;
     }
 
-    public void Follow(Vector3 loc)
+    protected void Follow(Vector3 loc)
     {
         if (_canFollow)
         {
@@ -238,174 +553,25 @@ public class ObjectController : MonoBehaviour
             UIManager.instance.DebugLogWarning("No Parent for this object and follow set to false, prefab possibly set wrong");
     }
 
-    private void ToggleCollider(bool cond)
+
+    private void ToggleRB(bool cond)
     {
-        //good for testing to turn off print statements in socket collisions
-        this.GetComponent<Collider>().enabled = cond;
-    }
-
-    private void TrySetChildren(float opacity)
-    {
-        if (_parent != null)
-            return; /// we are a child so our parent will handle this
-
-
-        foreach (var mr in _childrenMeshRenderers)
+        if (_rb)  ///This gets kind of weird with the subobjects
         {
-            mr.enabled = true;
-            Material m = mr.material;
-            Color color = m.color;
-            color.a = opacity;
-            m.color = color;
-            mr.material = m;
+            _rb.isKinematic = cond;
+            _rb.useGravity = !cond;
         }
-    }
-
-    public void ChangeAppearanceMoving()
-    {
-        Vector3 smaller = new Vector3
-            (0.75f * this.transform.localScale.x,
-            0.75f * this.transform.localScale.y,
-            0.75f * this.transform.localScale.z);
-
-        this.transform.localScale = smaller;
-
-        if (_handLocation)
-            UIManager.instance.ChangeHandSize(_handIndex, true);
-
-        ChangeMaterialColor(0.5f);
-
-        TrySetChildren(0.5f);
-
-        // ToggleCollider(false);
-
-        //Debug.Log($"{this.gameObject.name} heard change moving");
-
-    }
-    public void ChangeAppearanceNormal()
-    {
-       // Debug.Log($"Setting {this.gameObject.name} normal ");
-        this.transform.localScale = _startSize;
-        if (_handLocation)
-            UIManager.instance.ChangeHandSize(_handIndex, false);
-
-        _meshRenderer.enabled = true;
-
-        ChangeMaterialColor(1f);
-        TrySetChildren(1f);
-
-
-        if (_resetOnChange)
-            ResetPosition();
-    }
-
-    public void ChangeAppearancePreview()
-    {
-        ChangeMaterialColor(0.5f);
-        TrySetChildren(0.5f);
-    }
-    public void ChangeAppearanceHidden(bool cond)
-    {
-       // Debug.Log($"Setting {this.gameObject.name} hidden = {!cond}");
-        _meshRenderer.enabled = !cond;
-        /// i have to do this for all children as well 
-        if (_parent == null && _childrenMeshRenderers != null)
-            foreach (var mr in _childrenMeshRenderers)
-                mr.enabled = !cond;
-
+        if (_collider)
+            _collider.isTrigger = cond;
     }
 
 
-    #region Highlight Outline
-    public bool IsPickedUp => _pickedUp;
-    public bool IsHighlighted { get; private set; }
-    [HideInInspector]
-    public bool HandPreviewingMode = false;
 
-    public void SetHighlighted(bool cond)
+    /************************************************************************************************************************/
+    ///UNUSED??
+    private bool SetOnTable()
     {
-        if (_highlightTrigger)
-            _highlightTrigger.Highlight(cond);
-
-        var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
-        foreach (var item in childrenHighlights)
-        {
-            item.Highlight(cond);
-        }
-
-        IsHighlighted = cond;
-    }
-    public void PickedUp(int handIndex)
-    {
-        SetHighlighted(true);
-
-        //HandManager.OrderChanged += UpdateHand;
-        _pickedUp = true;
-        _handIndex = handIndex;
-        ChangeHighLightColor(handIndex);
-        // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
-    }
-
-    public void ChangeHighLightColor(int handIndex)
-    {
-        Color color = handIndex == 1 ? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
-        ChangeHighLightColor(color);
-    }
-
-    public void ChangeHighlightAmount(float intensity)
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            effect.outline = intensity;
-
-            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
-            foreach (var item in childrenEffects)
-            {
-                item.outline = intensity;
-            }
-        }
-    }
-    public void ChangeHighLightColor(Color color)
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            effect.outlineColor = color;
-
-            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
-            foreach (var item in childrenEffects)
-            {
-                item.outlineColor = color;
-            }
-        }
-    }
-
-    public Color GetHighLightColor()
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            return effect.outlineColor;
-        }
-        return Color.white;
-    }
-
-    public float GetHighlightIntensity()
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            return effect.outline;
-        }
-        return 0;
-    }
-    public void PutDown()
-    {
-        SetHighlighted(false);
-
-        //HandManager.OrderChanged -= UpdateHand;
-        _pickedUp = false;
+        return _rb.useGravity == true;
     }
     private void UpdateHand(Queue<ObjectController> queue)
     {
@@ -421,106 +587,16 @@ public class ObjectController : MonoBehaviour
             }
         }
     }
-    #endregion
-    public void ToggleRB(bool cond)
-    {
-        if (_rb)  ///This gets kind of weird with the subobjects
-        {
-            _rb.isKinematic = cond;
-            _rb.useGravity = !cond;
-        }
-        if (_collider)
-            _collider.isTrigger = cond;
-    }
 
-    public bool SetOnTable()
+    private void ToggleCollider(bool cond)
     {
-        return _rb.useGravity == true;
+        //good for testing to turn off print statements in socket collisions
+        this.GetComponent<Collider>().enabled = cond;
     }
 
 
-    private bool _resetOnChange;
-    public void SetResetOnNextChange()
-    {
-        _resetOnChange = true;
-        // Debug.DrawRay(_collider.bounds.min, -Vector3.forward, Color.red, 1);
-    }
-    public void ResetPosition()
-    {
-        ///fck all this somethings off w the scaling , just set it to 0.
-        //var tableY = -0.455f;
-        //var bonusAmnt = 0.02f;
-        //var min = _collider.bounds.min;
-        //var diffBelowTable = min.y - tableY;  /// add cuz both negative 
-        //Debug.LogWarning($"min.y={min.y} and diff={diffBelowTable}   oldy= {mpos.y} newy= {mpos.y + Mathf.Abs(diffBelowTable)}  ....... my scale= {this.transform.localScale}");
+    /************************************************************************************************************************/
 
-
-        var mpos = transform.position;
-        transform.position = new Vector3(mpos.x, 0, mpos.z);
-    }
-
-    public void ResetHittingTable()
-    {
-        _hittingTable = false;
-    }
-
-    ///METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
-    public void ChangeMaterialColor(float opacity)
-    {
-        ChangeMaterialColor(_meshRenderer, opacity);
-
-    }
-
-    private void ChangeMaterialColor(MeshRenderer mr, float opacity)
-    {
-        if (opacity > 1)
-            Debug.LogWarning("Setting opacity > 1. Needs to be 0.0 - 1.0f");
-
-        if (mr)
-        {
-            Material m = mr.material;
-            Color color = m.color;
-            color.a = opacity;
-            m.color = color;
-            mr.material = m;
-        }
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag.Equals("Table"))
-        {
-            _hittingTable = true;
-            _lastGoodYAboveTable = this.transform.position.y;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag.Equals("Table"))
-            _hittingTable = false;
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.tag.Equals("Table"))
-        {
-            _hittingTable = true;
-            _lastGoodYAboveTable = this.transform.position.y;
-        }
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject.tag.Equals("Table"))
-            _hittingTable = false;
-    }
-
-    private void OnDestroy()
-    {
-        if (_handLocation)
-            Destroy(_handLocation.gameObject);
-        _handLocation = null;
-    }
 
 
 #if UNITY_EDITOR

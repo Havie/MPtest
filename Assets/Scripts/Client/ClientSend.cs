@@ -42,7 +42,7 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void SendItem(int itemLVL, List<ObjectQuality> qualities, int toStationID)
+    public static void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
     {
         UIManager.instance.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
@@ -56,7 +56,7 @@ public class ClientSend : MonoBehaviour
             string info = "";
             for (int i = 0; i < qualities.Count; ++i)
             {
-                ObjectQuality q = qualities[i];
+                QualityObject q = qualities[i];
                 packet.Write(q.ID);
                 packet.Write(q.CurrentQuality);
 

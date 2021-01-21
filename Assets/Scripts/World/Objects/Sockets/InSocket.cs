@@ -43,7 +43,7 @@ public class InSocket : Socket
                 int requiredAttachmentID = (int)_requiredAttachmentID[i];
                 if (socket && CheckConditions(socket, requiredAttachmentID))
                 {
-                    //Debug.Log($"match for  {_controller.gameObject}:{this.gameObject.name}:{_controller._myID}  and {socket._controller.gameObject}:{socket}{socket._controller._myID}");
+                   // Debug.Log($"match for  {socket.gameObject}:{this.gameObject.name} and {socket.gameObject}:{socket}");
                     PreviewManager.ShowPreview(Controller, socket.Controller, (int)_createdID[i]);
                 }
                 /* else if (socket)  ///for debugging to get more info 
@@ -93,12 +93,12 @@ public class InSocket : Socket
         bool valid = false;
 
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
-        if (UserInput.Instance._currentSelection != Controller && requiredAttachmentID == (int)socket.Controller._myID)
+        if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller && requiredAttachmentID == (int)socket.Controller._myID)
         {
             //check the angles of attachment
             Vector3 dir = socket.transform.position - this.transform.position;
             float angle = Vector3.Dot(this.transform.forward.normalized, dir.normalized);
-            //Debug.Log($"angle={angle} for {requiredAttachmentID}   and inprev= {PreviewManager._inPreview}");
+            //Debug.Log($"angle={angle} for {requiredAttachmentID} ?> {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
                 if (angle > _attachmentSensitivity) // 1 is perfect match 

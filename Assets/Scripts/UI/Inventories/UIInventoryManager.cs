@@ -264,7 +264,7 @@ public class UIInventoryManager : MonoBehaviour
     }
 
     /**Used by IN-inventory with no specific slot in mind */
-    public void AddItemToSlot(int itemID, List<ObjectQuality> qualities, bool makeRequired)
+    public void AddItemToSlot(int itemID, List<QualityObject> qualities, bool makeRequired)
     {
         //if(_inventoryType==eInvType.OUT)
         // Debug.Log($"Adding Item to slot {itemID}");
@@ -296,7 +296,7 @@ public class UIInventoryManager : MonoBehaviour
         }
     }
 
-    protected void AddChaotic(int itemID, List<ObjectQuality> qualities, bool makeRequired)
+    protected void AddChaotic(int itemID, List<QualityObject> qualities, bool makeRequired)
     {
         List<UIInventorySlot> _available = new List<UIInventorySlot>();
         //Search through our initial slots and save any that can accept this itemID
@@ -358,7 +358,7 @@ public class UIInventoryManager : MonoBehaviour
         }
     }
 
-    protected bool TryToAdd(UIInventorySlot slot, int itemID, List<ObjectQuality> qualities, bool makeRequired)
+    protected bool TryToAdd(UIInventorySlot slot, int itemID, List<QualityObject> qualities, bool makeRequired)
     {
         if (!slot.GetInUse())
         {

@@ -14,7 +14,7 @@ public class Timer : MonoBehaviour
     [SerializeField] ColorManager _cm = default;
 
 
-    private bool test=true;
+    private bool test=false;
 
     private void Awake()
     {
@@ -42,7 +42,7 @@ public class Timer : MonoBehaviour
         }
         else
         {
-            _text.text=UserInput.Instance._pressTimeCURR.ToString();
+           // _text.text=UserInput.Instance._pressTimeCURR.ToString();
         }
     }
 

@@ -16,30 +16,8 @@ public static class HandManager
     private static bool _previewingAChange = false;
     private static float _previewTime;
 
+    /************************************************************************************************************************/
 
-    public static int CountPickedUpItems()
-    {
-        int count = 0;
-        for (int i = 0; i < _handSize; i++)
-        {
-            var item = _handArray[i];
-            if (item != null)
-                ++count;
-        }
-        return count;
-    }
-
-    public static bool HandContains(ObjectController newItem)
-    {
-        for (int i = 0; i < _handSize; i++)
-        {
-            var item = _handArray[i];
-            if (item == newItem)
-              return true;
-        }
-
-        return false;
-    }
 
     public static void PickUpItem(ObjectController item)
     {
@@ -52,16 +30,14 @@ public static class HandManager
         _handArray[1] = _handArray[0];
         _handArray[0] = item;
 
-        if (_handArray[1])
+        if (_handArray[1]!=null)
         {
             _handArray[1].PickedUp(2);
-            _handArray[1].HandPreviewingMode = false;
+            _handArray[1].SetHandPreviewingMode(false);
         }
 
         _handArray[0].PickedUp(1);
-        item.HandPreviewingMode = false;
-
-        item.ToggleRB(true);
+        item.SetHandPreviewingMode(false);
 
 
         CheckHandPositions();
@@ -69,9 +45,14 @@ public static class HandManager
     }
 
 
-   
     public static void StartToHandleIntensityChange(ObjectController potentialItemToBePickedUp)
     {
+        if (potentialItemToBePickedUp == null)
+        {
+            Debug.LogWarning("Incoming item is null, todo change to IInteractble");
+            return;
+        }
+
         ///start to fade in next item to be picked up
         var currentIntensity = potentialItemToBePickedUp.GetHighlightIntensity();
         potentialItemToBePickedUp.ChangeHighlightAmount(currentIntensity + _intensityChange);
@@ -86,7 +67,7 @@ public static class HandManager
         var currentColor = firstItemInHand.GetHighLightColor();
         var orangeColor = BuildableObject.Instance._colorHand2;
         firstItemInHand.ChangeHighLightColor(Color.Lerp(currentColor, orangeColor, 0.05f));
-        ///Basing this off of the pickup times from UserInput doesnt look as good, the colors are too close
+        ///Basing this off of the pickup times from UserInputManagerdoesnt look as good, the colors are too close
         /// so the change happens to fast, might as well just use 0.05f constant as it looks visually appealing
         // (UserInput.Instance._pressTimeCURR/UserInput.Instance._pressTimeMAX)/2));
 
@@ -123,7 +104,6 @@ public static class HandManager
     }
 
 
-
     public static void CancelIntensityChangePreview()
     {
         if (CountPickedUpItems()==0)
@@ -132,21 +112,70 @@ public static class HandManager
             SetHandPreviewMode(false);
     }
 
+  
+    /// <summary> If object is about to be deleted use this instead </summary>
+    public static void RemoveDeletedItem(ObjectController item)
+    {
+        if (item)
+        {
+            item.PutDown();
+            // if (_handArray[0] == item)
+            {
+                ///Seems we just need to remove everything when we make a new object now
+                _handArray[0] = null;
+                _handArray[1] = null;
+            }
+            //else if (_handArray[1] == item)
+            //{
+            //    _handArray[1] = null;
+            //}
+
+            CheckHandPositions();
+        }
+    }
+
+    /************************************************************************************************************************/
+
+
+    private static int CountPickedUpItems()
+    {
+        int count = 0;
+        for (int i = 0; i < _handSize; i++)
+        {
+            var item = _handArray[i];
+            if (item != null)
+                ++count;
+        }
+        return count;
+    }
+
+    private static bool HandContains(ObjectController newItem)
+    {
+        for (int i = 0; i < _handSize; i++)
+        {
+            var item = _handArray[i];
+            if (item == newItem)
+                return true;
+        }
+
+        return false;
+    }
+
     private static void SetHandPreviewMode(bool cond)
     {
         _previewingAChange = cond;
         if (CountPickedUpItems() == 1)
         {
-            _handArray[0].HandPreviewingMode = cond;
+            _handArray[0].SetHandPreviewingMode(cond);
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
             _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
 
         }
         else if (CountPickedUpItems() == 2)
         {
-            _handArray[0].HandPreviewingMode = cond;
+            _handArray[0].SetHandPreviewingMode(cond);
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
-            _handArray[1].HandPreviewingMode = cond;
+            _handArray[1].SetHandPreviewingMode(cond);
             _handArray[1].ChangeHighlightAmount(_outlineIntensity);
             _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
         }
@@ -155,15 +184,13 @@ public static class HandManager
 
     }
 
-
-    public static void DropItem(ObjectController item)
+    private static void DropItem(ObjectController item)
     {
         if (item)
         {
-            item.ToggleRB(false);
             item.PutDown();
            // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
-            item.HandPreviewingMode = false;
+            item.SetHandPreviewingMode(false);
             if (_handArray[0] == item)
             {
                 ///shift other item over to slot 0
@@ -183,40 +210,7 @@ public static class HandManager
 
     }
 
-
-    /// <summary>
-    /// If object is about to be deleted use this instead 
-    /// </summary>
-    /// <param name="item"></param>
-    public static void RemoveDeletedItem(ObjectController item)
-    {
-        if (item)
-        {
-            item.PutDown();
-           // if (_handArray[0] == item)
-            {
-              ///Seems we just need to remove everything when we make a new object now
-                _handArray[0] = null;
-                _handArray[1] = null;
-            }
-            //else if (_handArray[1] == item)
-            //{
-            //    _handArray[1] = null;
-            //}
-
-            CheckHandPositions();
-        }
-    }
-
-
-
-    public static void PrintQueue()
-    {
-        string q = $"Hand[0] = { _handArray[0]} , Hand[1] = { _handArray[1]} ";
-        Debug.LogWarning(q);
-    }
-
-    public static void CheckHandPositions()
+    private static void CheckHandPositions()
     {
         if (CountPickedUpItems() < 2)
             UIManager.instance.ResetHand(2);
@@ -224,7 +218,11 @@ public static class HandManager
             UIManager.instance.ResetHand(1);
     }
 
-
+    private static void PrintQueue()
+    {
+        string q = $"Hand[0] = { _handArray[0]} , Hand[1] = { _handArray[1]} ";
+        Debug.LogWarning(q);
+    }
 
 
 }

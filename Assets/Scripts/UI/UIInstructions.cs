@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(BoxCollider))]
-public class UIInstructions : MonoBehaviour
+public class UIInstructions : MonoBehaviour, IInteractable
 {
 
     [SerializeField] Animator _controller = default;
@@ -47,5 +47,23 @@ public class UIInstructions : MonoBehaviour
         //Debug.Log("time is :" + time);
         yield return new WaitForSeconds(time);
         _isAnimating = false;
+    }
+
+    public GameObject GetGameObject() => gameObject;
+
+
+    public Transform GetParent() => transform.parent;
+
+
+    public Transform Transform() => transform;
+
+    public void OnInteract()
+    {
+        InstructionsClicked();
+    }
+
+    public void HandleInteractionTime(float time)
+    {
+       ///Not Neeeded?
     }
 }
