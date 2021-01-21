@@ -3236,7 +3236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 2
+  _stationToInject: 4
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -3425,7 +3425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orderFrequency: 15
-  _batchSize: 1
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
