@@ -129,7 +129,7 @@ public class UserInputManager : MonoBehaviour
     //          HELPERS FOR STATES
     /************************************************************************************************************************/
     #region StateHelpers
-    public Vector3 WorldToScreenPoint(Vector3 pos) { return _mainCamera.WorldToScreenPoint(pos); }
+    public Vector3 WorldToScreenPoint(Vector3 pos) { return _mainCamera.WorldToScreenPoint(pos); } 
     public Vector3 GetCurrentWorldLocBasedOnMouse(Transform currSelectionTransform)
     {
         //Debug.Log($"(1) {_inputPos.x},{_inputPos.y}");
@@ -155,6 +155,7 @@ public class UserInputManager : MonoBehaviour
 
     public Vector3 GetInputWorldPos(float zLoc)
     {
+        Debug.Log($" based on zLoc={zLoc} Think we shud spawn at : {_mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc))}");
         return _mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc));
     }
 

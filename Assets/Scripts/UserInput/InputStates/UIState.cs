@@ -46,7 +46,7 @@ public class UIState : InputState
                 var qualityList = RebuildQualities(slot.Qualities);
                 slot.RemoveItem();
                 Vector3 slotLoc = slot.transform.position;
-                slotLoc.z = _tmpZfix;
+                slotLoc.z = _tmpZfix;  ///I think this is the problem: putting a slot a an arbitary 3d loc is wrong for screenSpace?
                 float zCoord = _brain.WorldToScreenPoint(slotLoc).z;
                 var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(zCoord), qualityList).GetComponent<ObjectController>();
                 _currentSelection = obj;
