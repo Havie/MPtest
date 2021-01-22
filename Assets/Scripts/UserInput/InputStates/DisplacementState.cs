@@ -32,6 +32,7 @@ public class DisplacementState : InputState
             Transform transform = moveableObject.Transform();
             float zCoord = _brain.WorldToScreenPoint(transform.position).z;
             _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
+            Debug.LogWarning($" (1st) _mOffset= <color=red> {_brain._mOffset} </color>");
             _brain._objStartPos = transform.position;
             _brain._objStartRot = transform.rotation;
 
@@ -39,7 +40,7 @@ public class DisplacementState : InputState
             // if (_currentSelection.SetOnTable())  
             // if (_brain._currentSelection._hittingTable)
             if (moveableObject.OutOfBounds())
-                ResetObjectOrigin(moveableObject, zCoord);
+                ResetObjectOrigin(moveableObject, _zDepth); ///zCoord
 
             moveableObject.OnBeginFollow(); ///Might mess up objectCntroller
             //HandManager.PickUpItem(_currentSelection as ObjectController); //might have moved to the wrong spot
@@ -51,9 +52,8 @@ public class DisplacementState : InputState
         if (moveableObject != null)
         {
             Vector3 mouseLocWorld = _brain.GetInputWorldPos(zCoord);
-            _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _tmpZfix);
-            //Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_objStartPos}   _currentSelection.transform.position={_currentSelection.transform.position}");
-            _brain._objStartRot = Quaternion.identity;
+            _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _zDepth);
+            Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_brain._objStartPos} ");
             _brain._mOffset = Vector3.zero;
             ///new
             var trans = moveableObject.GetGameObject().transform;
@@ -85,8 +85,12 @@ public class DisplacementState : InputState
         {
             if (moveableObject != null)
             {
-                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.Transform());
-                moveableObject.OnFollowInput(worldLoc + _brain._mOffset);
+                //Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.Transform());
+
+               Vector3 worldLoc = _brain.GetInputWorldPos(_zDepth);
+
+                moveableObject.OnFollowInput(worldLoc + _brain._mOffset); //+ _brain._mOffset
+                //Debug.Log($" {worldLoc} + _mOffset={_brain._mOffset}  = {(worldLoc + _brain._mOffset)}");
 
                 if (slot != null) ///we are hovering over a slot 
                 {

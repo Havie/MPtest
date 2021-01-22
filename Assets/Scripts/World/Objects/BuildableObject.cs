@@ -87,8 +87,7 @@ public class BuildableObject : MonoBehaviour
             else
                 Debug.LogWarning($"Somehow theres qualities associated w a prefab without an OverallQualityManager {newObj.name}");
         }
-        else
-            Debug.Log($"Qualities passed in was null or count 0");
+
 
         if (DebugItemsOnSpawn)
             FPSCounter.Instance.ProfileAnObject(newObj);

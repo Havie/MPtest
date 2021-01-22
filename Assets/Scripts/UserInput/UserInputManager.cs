@@ -129,7 +129,8 @@ public class UserInputManager : MonoBehaviour
     //          HELPERS FOR STATES
     /************************************************************************************************************************/
     #region StateHelpers
-    public Vector3 WorldToScreenPoint(Vector3 pos) { return _mainCamera.WorldToScreenPoint(pos); } 
+    public Vector3 WorldToScreenPoint(Vector3 pos) { return _mainCamera.WorldToScreenPoint(pos); }
+    public Vector3 ScreenToWorldPoint(Vector3 pos) { return _mainCamera.ScreenToWorldPoint(pos); }
     public Vector3 GetCurrentWorldLocBasedOnMouse(Transform currSelectionTransform)
     {
         //Debug.Log($"(1) {_inputPos.x},{_inputPos.y}");
@@ -138,6 +139,7 @@ public class UserInputManager : MonoBehaviour
         float zCoord = screenPtObj.z;
         ///gets the world loc based on inputpos and gives it the z depth from the obj
         Vector3 worldLocInput = GetInputWorldPos(zCoord);
+        Debug.Log($" {(currSelectionTransform).position} Thinks ScreenSpace:zCoord is : <color=yellow> {zCoord} </color> which becomes :<color=Green> {worldLocInput} </color>");
         return new Vector3(worldLocInput.x, worldLocInput.y, currSelectionTransform.position.z);
     }
     public Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo, IInteractable currentSelection)
@@ -155,8 +157,8 @@ public class UserInputManager : MonoBehaviour
 
     public Vector3 GetInputWorldPos(float zLoc)
     {
-        Debug.Log($" based on zLoc={zLoc} Think we shud spawn at : {_mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc))}");
-        return _mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc));
+        //Debug.Log($" based on zLoc={zLoc} Think we shud spawn at : {_mainCamera.ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc))}");
+        return ScreenToWorldPoint(new Vector3(_inputPos.x, _inputPos.y, zLoc));
     }
 
     public IInteractable CheckForObjectAtLoc(Vector3 pos)
@@ -165,7 +167,7 @@ public class UserInputManager : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
-            Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
+           // Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
             return (hit.transform.gameObject.GetComponent<IInteractable>());
         }
 

@@ -10,7 +10,7 @@ public abstract class InputState
     public IInteractable CurrentSelection => _currentSelection;
     protected IInteractable _currentSelection;
 
-    protected int _tmpZfix = -9;
+    protected float _zDepth = 1; //-9f;
 
     /************************************************************************************************************************/
 
