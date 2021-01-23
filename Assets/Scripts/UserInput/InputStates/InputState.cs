@@ -10,7 +10,7 @@ public abstract class InputState
     public IInteractable CurrentSelection => _currentSelection;
     protected IInteractable _currentSelection;
 
-    protected float _zDepth = 1; //-9f;
+    protected float _zDepth => -SceneDepthInitalizer.Instance.PartDisFromCam; // 1; //-9f;
 
     /************************************************************************************************************************/
 

@@ -9,6 +9,8 @@ public  class SceneDepthInitalizer : MonoBehaviour
     [SerializeField] Transform _controllerDepth;
     [SerializeField] Transform _binDepth;
 
+
+    public float PartDisFromCam { get; private set; }
     public float DepthOfParts { get; private set; }
     public float DepthOfBins { get; private set; }
 
@@ -31,11 +33,14 @@ public  class SceneDepthInitalizer : MonoBehaviour
     }
 
 
-
     private void RegisterDepthObjectController(Transform controller)
     {
-        float disFromCam = _mainCamera.transform.position.z - controller.position.z;
-        DepthOfParts = _mainCamera.transform.position.z - disFromCam;
+        FigureOutzDepthDiffernce(controller);
+         DepthOfParts = _mainCamera.transform.position.z - PartDisFromCam;
+    }
+    private void FigureOutzDepthDiffernce(Transform controller)
+    {
+        PartDisFromCam = _mainCamera.transform.position.z - controller.position.z;
     }
 
     private void RegisterDepthPartBin(Transform bin)
