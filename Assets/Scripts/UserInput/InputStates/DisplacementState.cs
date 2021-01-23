@@ -32,7 +32,7 @@ public class DisplacementState : InputState
             Transform transform = moveableObject.Transform();
             float zCoord = _brain.WorldToScreenPoint(transform.position).z;
             _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
-            Debug.LogWarning($" (1st) _mOffset= <color=red> {_brain._mOffset} </color>");
+            //Debug.LogWarning($" (1st) _mOffset= <color=red> {_brain._mOffset} </color>");
             _brain._objStartPos = transform.position;
             _brain._objStartRot = transform.rotation;
 
@@ -87,9 +87,9 @@ public class DisplacementState : InputState
             {
                 //Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.Transform());
 
-               Vector3 worldLoc = _brain.GetInputWorldPos(_zDepth);
-
-                moveableObject.OnFollowInput(worldLoc + _brain._mOffset); //+ _brain._mOffset
+                Vector3 worldLoc = _brain.GetInputWorldPos(_zDepth);
+                worldLoc.z = moveableObject.DesiredSceneDepth();
+                moveableObject.OnFollowInput(worldLoc); //+ _brain._mOffset
                 //Debug.Log($" {worldLoc} + _mOffset={_brain._mOffset}  = {(worldLoc + _brain._mOffset)}");
 
                 if (slot != null) ///we are hovering over a slot 
@@ -151,7 +151,7 @@ public class DisplacementState : InputState
                 if (!assigned)
                 {
                     ///put it back to where we picked it up 
-                    if (slot!=null) // we tried dropping in incompatible slot
+                    if (slot != null) // we tried dropping in incompatible slot
                     {
                         var trans = moveableObject.GetGameObject().transform;
                         trans.position = _brain._objStartPos;
@@ -210,7 +210,7 @@ public class DisplacementState : InputState
         {
             moveableObject.ChangeAppearanceHidden(false);
         }
-        if (_lastSlot!=null)
+        if (_lastSlot != null)
         {
             _lastSlot.UndoPreview();
             _lastSlot = null;

@@ -23,8 +23,11 @@ public class UserInputManager : MonoBehaviour
 
 
     ///Cant find a place for -shared between states, dont wana pass everytime
+    [HideInInspector]
     public Vector3 _mOffset; ///distance between obj in world and camera
+    [HideInInspector]
     public Vector3 _objStartPos;
+    [HideInInspector]
     public Quaternion _objStartRot;
 
 
@@ -33,7 +36,6 @@ public class UserInputManager : MonoBehaviour
     PointerEventData _PointerEventData;
     EventSystem _EventSystem;
     private Camera _mainCamera;
-
 
 
     #region InputStates
@@ -61,12 +63,16 @@ public class UserInputManager : MonoBehaviour
         if (Application.isMobilePlatform)
             _holdLeniency = 5; ///Forgot what I had this set to
 
+        _mainCamera = Camera.main;
         CreateStates();
 
     }
 
     void CreateStates()
     {
+        ///This is going to need to be abstracted into the IMoveable interface:
+       
+
         _freeState = new FreeState(this);
         _rotationState = new RotationState(this, _holdLeniency, _pressTimeMAX);
         _displacementState = new DisplacementState(this);
@@ -80,7 +86,6 @@ public class UserInputManager : MonoBehaviour
         ///Set up the new Pointer Event
         _PointerEventData = new PointerEventData(_EventSystem);
 
-        _mainCamera = Camera.main;
 
         if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
             _Raycaster = UIManager.instance._inventoryCanvas.GetComponent<GraphicRaycaster>();
@@ -139,7 +144,7 @@ public class UserInputManager : MonoBehaviour
         float zCoord = screenPtObj.z;
         ///gets the world loc based on inputpos and gives it the z depth from the obj
         Vector3 worldLocInput = GetInputWorldPos(zCoord);
-        Debug.Log($" {(currSelectionTransform).position} Thinks ScreenSpace:zCoord is : <color=yellow> {zCoord} </color> which becomes :<color=Green> {worldLocInput} </color>");
+       // Debug.Log($" {(currSelectionTransform).position} Thinks ScreenSpace:zCoord is : <color=yellow> {zCoord} </color> which becomes :<color=Green> {worldLocInput} </color>");
         return new Vector3(worldLocInput.x, worldLocInput.y, currSelectionTransform.position.z);
     }
     public Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo, IInteractable currentSelection)

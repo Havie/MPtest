@@ -307,12 +307,12 @@ public class ObjectController : MonoBehaviour, IConstructable
     ///Trying to phase these out of interface:
     public void ChangeAppearanceMoving()
     {
-        //Vector3 smaller = new Vector3
-        //    (0.75f * this.transform.localScale.x,
-        //    0.75f * this.transform.localScale.y,
-        //    0.75f * this.transform.localScale.z);
+        Vector3 smaller = new Vector3
+            (0.75f * this.transform.localScale.x,
+            0.75f * this.transform.localScale.y,
+            0.75f * this.transform.localScale.z);
 
-        //this.transform.localScale = smaller;
+        this.transform.localScale = smaller;
 
         if (_handLocation)
             UIManager.instance.ChangeHandSize(_handIndex, true);
@@ -343,7 +343,7 @@ public class ObjectController : MonoBehaviour, IConstructable
             ResetPosition();
     }
 
-
+    public float DesiredSceneDepth() => SceneDepthInitalizer.Instance.DepthOfParts; //-9.253f;
 
     ///IConstructable
     private bool HandPreviewingMode;

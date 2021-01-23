@@ -56,7 +56,7 @@ public class UIState : InputState
                 ///when titled it makes the Zdepth wrong 
                 //float zCoord = _brain.WorldToScreenPoint(slotLoc).z;
 
-                Debug.Log($"Thinks slotLoc is : <color=yellow> {nv3}  </color>and when we change it to append {_zDepth}- we get : <color=orange>{_brain.WorldToScreenPoint(slotLoc)}</color>  ,, so finalzCoord =<color=red>{_zDepth}</color> , final result=<color=green>{_brain.GetInputWorldPos(_zDepth)}</color>");
+               // Debug.Log($"Thinks slotLoc is : <color=yellow> {nv3}  </color>and when we change it to append {_zDepth}- we get : <color=orange>{_brain.WorldToScreenPoint(slotLoc)}</color>  ,, so finalzCoord =<color=red>{_zDepth}</color> , final result=<color=green>{_brain.GetInputWorldPos(_zDepth)}</color>");
 
 
                 var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(_zDepth), qualityList).GetComponent<ObjectController>();
