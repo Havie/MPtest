@@ -12,7 +12,7 @@ public  class SceneDepthInitalizer : MonoBehaviour
     public float DepthOfParts { get; private set; }
     public float DepthOfBins { get; private set; }
 
-    Camera _mainCamera = Camera.main;
+    Camera _mainCamera;
 
     void Awake()
     {
