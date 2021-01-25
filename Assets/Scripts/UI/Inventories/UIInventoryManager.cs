@@ -453,5 +453,23 @@ public class UIInventoryManager : MonoBehaviour
             _optionalSendButton.interactable = false;
     }
 
+
+
+    public int MaxSlots()
+    {
+        return _slots.Length;
+    }
+
+    public int SlotsInUse()
+    {
+        int count = 0;
+        foreach (var item in _slots)
+        {
+            if (item._inUse)
+                ++count;
+        }
+
+        return count;
+    }
     #endregion
 }

@@ -28,11 +28,6 @@ public class OutInventory : UIInventoryManager
         GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
-        if (_inventoryType == eInvType.OUT)
-        {
-            Debug.Log($"(OUTstarted)SLOTS SIZE= +{_slots.Length}");
-        }
-
     }
 
 
