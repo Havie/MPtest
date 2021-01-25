@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+
 public class UIPartCountDisplay : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _text;
     [SerializeField] UIInventoryManager _manager;
 
-    void Awake()
-    {
+    [SerializeField] GameObject _optionalItemToShow;
 
-    }
+
 
     void LateUpdate()
     {
@@ -20,7 +20,26 @@ public class UIPartCountDisplay : MonoBehaviour
             if(_manager.IsInitalized)
             {
                 DisableText(false);
-                _text.text = $"{_manager.SlotsInUse()}/{_manager.MaxSlots()} ";
+
+                var current = _manager.SlotsInUse();
+                var max = _manager.MaxSlots();
+                if (current == max)
+                {
+                    _text.enabled = false;
+                    ///Show Send Button
+                    if (_optionalItemToShow)
+                        _optionalItemToShow.SetActive(true);
+
+                }
+                else
+                {
+                    _text.enabled = true;
+                    _text.text = $"{current}/{max}";
+                    ///Don't Show SendButton
+                    if (_optionalItemToShow)
+                     _optionalItemToShow.SetActive(false);
+ 
+                }
                 return;
             }
         }
