@@ -56,7 +56,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
             retVal = false;
         }
 
-        SetLarger();
+        //SetLarger();
         return retVal;
     }
     public void UndoPreview()
@@ -194,7 +194,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     }
     private void RestoreDefault()
     {
-        SetSmaller();
+        //SetSmaller();
         _inUse = false;
         _itemID = -1;
         AssignSprite(_defaultIcon);
