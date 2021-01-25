@@ -6,23 +6,19 @@ using UnityEngine.UI;
 public class StationInventory : UIInventoryManager
 {
     #region InitalSetup
-    private void Start()
+    protected override void Start()
     {
+        if (IsInitalized)
+            return;
+
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
-        //if (!_optionalSendButton)
-        //{
-        //    var go = GameObject.FindGameObjectWithTag("SendButton");
-        //    if (go != null)
-        //    {
-        //        _optionalSendButton = go.GetComponent<Button>();
-        //        _optionalSendButton.interactable = false;
-        //    }
-        //}
+
         _inventoryType = eInvType.STATION;
         GetGameManagerData();
         GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
+
     }
 
     private void GetGameManagerData()
@@ -139,6 +135,7 @@ public class StationInventory : UIInventoryManager
             return;
 
         _slots = new UIInventorySlot[_INVENTORYSIZE];
+        IsInitalized = true;
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
         //Determine layout

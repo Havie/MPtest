@@ -39,8 +39,11 @@ public class PreviewConstructionState : InputState
         {
             if (moveableObject != null)
             {
-                Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.GetGameObject().transform);
-                moveableObject.OnFollowInput(worldLoc + _brain._mOffset);
+                //Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.GetGameObject().transform);
+                //moveableObject.OnFollowInput(worldLoc + _brain._mOffset);
+                Vector3 worldLoc = _brain.GetInputWorldPos(_zDepth);
+                worldLoc.z = moveableObject.DesiredSceneDepth();
+                moveableObject.OnFollowInput(worldLoc);
             }
 
             if (!PreviewManager._inPreview)

@@ -85,6 +85,7 @@ public class PartBin : MonoBehaviour, IMoveable
        
     }
 
+    public float DesiredSceneDepth() => SceneDepthInitalizer.Instance.DepthOfBins;
 
     public void SetHighlighted(bool cond)
     {

@@ -343,7 +343,7 @@ public class ObjectController : MonoBehaviour, IConstructable
             ResetPosition();
     }
 
-
+    public float DesiredSceneDepth() => SceneDepthInitalizer.Instance.DepthOfParts; //-9.253f;
 
     ///IConstructable
     private bool HandPreviewingMode;

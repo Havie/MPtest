@@ -120,6 +120,9 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
     }
     public bool AssignItem(ObjectController oc, int count)
     {
+        if (oc == null)
+            return false;
+
         /// get ID from controller
         int id = (int)oc._myID;
 

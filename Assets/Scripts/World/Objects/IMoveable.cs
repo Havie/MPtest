@@ -24,5 +24,7 @@ public interface IMoveable :  IHighlightable
     void ChangeAppearanceNormal();
 
 
+    float DesiredSceneDepth();
+
 
 }

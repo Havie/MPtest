@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIBucketManagement : MonoBehaviour, IAssignable
 {
     [SerializeField] Image _myIcon = default;
+    [SerializeField] UIInventoryManager _inventory;
     private Sprite _defaultIcon;
 
     private bool _autoSend = true;
@@ -20,7 +21,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
     private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
-    private Vector3 _SMALLER = new Vector3(0.5f, 0.5f, 0.5f);
+    private Vector3 _SMALLER = new Vector3(0.25f, 0.25f, 0.25f);
 
     private Color _VISIBLE = new Color(255, 255, 255, 1);
     private Color _TRANSPARENT = new Color(255, 255, 255, 0.5f);
@@ -92,7 +93,8 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     }
     public bool AssignItem(int id, int count, List<QualityObject> qualities)
     {
-        Debug.Log($"ASsign Item in BUCKET!");
+        //Debug.Log($"ASsign Item in BUCKET! _autoSend={_autoSend}");
+
         if (!_inUse)
         {
             AssignSpriteByID(id, false);
@@ -112,7 +114,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
             _inUse = true;
             if (_autoSend)
             {
-                TellManager(); 
+                TellManager();
                 RestoreDefault();
             }
 
@@ -120,6 +122,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
             return true;
         }
+
         return false;
     }
     #endregion
@@ -186,11 +189,12 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
     private void TellManager()
     {
-
+        if (_inventory)
+            _inventory.AddItemToSlot(_itemID, _qualities, false);
     }
     private void RestoreDefault()
     {
-        SetNormal();
+        SetSmaller();
         _inUse = false;
         _itemID = -1;
         AssignSprite(_defaultIcon);

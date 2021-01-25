@@ -6,23 +6,28 @@ using UnityEngine.UI;
 public class OutInventory : UIInventoryManager
 {
     #region InitalSetup
-    private void Start()
+    protected override void Start()
     {
+        if (IsInitalized)
+            return;
+
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
         if (!_optionalSendButton)
         {
+            ///This doesnt work if gameobject is Disabled
             var go = GameObject.FindGameObjectWithTag("SendButton");
             if (go != null)
             {
                 _optionalSendButton = go.GetComponent<Button>();
-                _optionalSendButton.interactable = false;
             }
         }
+        _optionalSendButton.interactable = false;
         _inventoryType = eInvType.OUT;
         GetGameManagerData();
         GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
+
     }
 
 
@@ -75,7 +80,7 @@ public class OutInventory : UIInventoryManager
                 foreach (var item in t._finalItemID)
                 {
                     // Debug.LogError($" Making {item} required");
-                    AddItemToSlot((int)item,null, true);
+                    AddItemToSlot((int)item, null, true);
                 }
             }
 
@@ -111,7 +116,7 @@ public class OutInventory : UIInventoryManager
                                         {
                                             for (int j = 0; j < BATCHSIZE; j++)
                                             {
-                                                AddItemToSlot((int)item,null, true);
+                                                AddItemToSlot((int)item, null, true);
                                             }
                                             // Debug.LogWarning($" (1)...Task::{t} adding item:{item} #{itemId}");
                                         }
@@ -132,7 +137,7 @@ public class OutInventory : UIInventoryManager
                                     {
                                         for (int j = 0; j < BATCHSIZE; j++)
                                         {
-                                            AddItemToSlot((int)item,null, true);
+                                            AddItemToSlot((int)item, null, true);
                                         }
                                         // Debug.LogWarning($" (2)...Task::{t} adding item:{item} #{itemId}");
                                     }
@@ -153,7 +158,7 @@ public class OutInventory : UIInventoryManager
                                 if (AddToSlot)
                                     for (int j = 0; j < BATCHSIZE; j++)
                                     {
-                                        AddItemToSlot((int)item,null, true);
+                                        AddItemToSlot((int)item, null, true);
                                     }
 
                             }
@@ -180,6 +185,7 @@ public class OutInventory : UIInventoryManager
     private void GenInventory()
     {
         _slots = new UIInventorySlot[_INVENTORYSIZE];
+        IsInitalized = true;
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
         //Determine layout
@@ -219,8 +225,6 @@ public class OutInventory : UIInventoryManager
     }
 
 
-
-
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected override void SetSizeOfContentArea()
     {
@@ -231,14 +235,14 @@ public class OutInventory : UIInventoryManager
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
             rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding * 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding)  + (_cellPadding)));
+            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding * 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding)));
 
-       //OLD
+        //OLD
         // rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding) + (_cellPadding)));
 
 
         //Debug.Log($"(out) _INVENTORYSIZ={_INVENTORYSIZE} / _xMaxPerRow={_xMaxPerRow}  =  {((_INVENTORYSIZE / _xMaxPerRow) + 1)}");
-    
+
     }
 
 

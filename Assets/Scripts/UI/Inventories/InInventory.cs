@@ -7,9 +7,12 @@ public class InInventory : UIInventoryManager
 {
     #region InitalSetup
     [SerializeField] int maxItemsPerRow =4;
-    
-    private void Start()
+
+    protected override void Start()
     {
+        if (IsInitalized)
+            return;
+
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
         if (!_optionalSendButton)
@@ -27,7 +30,8 @@ public class InInventory : UIInventoryManager
             UIManager.instance.HideInInventory();
         else
             GenInventory();
-        //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
+
+
     }
 
 
@@ -162,6 +166,8 @@ public class InInventory : UIInventoryManager
     {
 
         _slots = new UIInventorySlot[_INVENTORYSIZE];
+        IsInitalized = true;
+
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
         ///Determine layout
