@@ -72,7 +72,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     {
         if(oc==null)
         {
-            ///The displacement state will try assigning the bucket as an ObjectController to itself
+            ///The displacement state will try assigning the bucket cast as an ObjectController to itself
             return false; 
         }
 
