@@ -453,8 +453,6 @@ public class UIInventoryManager : MonoBehaviour
             _optionalSendButton.interactable = false;
     }
 
-
-
     public int MaxSlots()
     {
         return _slots.Length;

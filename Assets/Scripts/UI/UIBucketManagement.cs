@@ -56,7 +56,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
             retVal = false;
         }
 
-        SetLarger();
+        //SetLarger();
         return retVal;
     }
     public void UndoPreview()
@@ -72,7 +72,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     {
         if(oc==null)
         {
-            ///The displacement state will try assigning the bucket as an ObjectController to itself
+            ///The displacement state will try assigning the bucket cast as an ObjectController to itself
             return false; 
         }
 
@@ -194,7 +194,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     }
     private void RestoreDefault()
     {
-        SetSmaller();
+        //SetSmaller();
         _inUse = false;
         _itemID = -1;
         AssignSprite(_defaultIcon);
