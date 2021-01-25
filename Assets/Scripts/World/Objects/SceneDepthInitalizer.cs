@@ -35,10 +35,10 @@ public  class SceneDepthInitalizer : MonoBehaviour
 
     private void RegisterDepthObjectController(Transform controller)
     {
-        FigureOutzDepthDiffernce(controller);
+        FigureOutzDepthDifference(controller);
          DepthOfParts = _mainCamera.transform.position.z - PartDisFromCam;
     }
-    private void FigureOutzDepthDiffernce(Transform controller)
+    private void FigureOutzDepthDifference(Transform controller)
     {
         PartDisFromCam = _mainCamera.transform.position.z - controller.position.z;
     }

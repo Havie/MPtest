@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIBucketManagement : MonoBehaviour, IAssignable
 {
     [SerializeField] Image _myIcon = default;
+    [SerializeField] UIInventoryManager _inventory;
     private Sprite _defaultIcon;
 
     private bool _autoSend = true;
@@ -92,7 +93,8 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     }
     public bool AssignItem(int id, int count, List<QualityObject> qualities)
     {
-        Debug.Log($"ASsign Item in BUCKET!");
+        //Debug.Log($"ASsign Item in BUCKET! _autoSend={_autoSend}");
+
         if (!_inUse)
         {
             AssignSpriteByID(id, false);
@@ -112,7 +114,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
             _inUse = true;
             if (_autoSend)
             {
-                TellManager(); 
+                TellManager();
                 RestoreDefault();
             }
 
@@ -120,6 +122,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
             return true;
         }
+
         return false;
     }
     #endregion
@@ -186,7 +189,8 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
     private void TellManager()
     {
-
+        if (_inventory)
+            _inventory.AddItemToSlot(_itemID, _qualities, false);
     }
     private void RestoreDefault()
     {
