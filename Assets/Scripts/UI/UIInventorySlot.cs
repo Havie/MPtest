@@ -197,6 +197,19 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
         //else
         // Debug.LogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
     }
+    
+    public List<QualityObject> RebuildQualities()
+    {
+        List<QualityObject> newList = new List<QualityObject>();
+        if (Qualities != null)
+        {
+            foreach (var q in Qualities)
+                newList.Add(q);
+        }
+
+        return newList;
+    }
+
 
     /************************************************************************************************************************/
 
@@ -257,7 +270,6 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
 
         return false;
     }
-
 
 
     private void DebugQualityIn()

@@ -105,7 +105,7 @@ public class InSocket : Socket
                     valid = true;
                 else
                 {
-                    Debug.Log($"The angle did not match for {requiredAttachmentID}");
+                    //Debug.Log($"The angle did not match for {requiredAttachmentID}");
                 }
             }
             else  //OnTriggerExit
