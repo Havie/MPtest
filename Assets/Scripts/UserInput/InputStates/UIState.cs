@@ -43,7 +43,7 @@ public class UIState : InputState
                 //Debug.LogWarning($"Slot found= {slot.name}");
                 int itemID = slot.GetItemID();
                 // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
-                var qualityList = RebuildQualities(slot.Qualities);
+                var qualityList = slot.RebuildQualities();
                 slot.RemoveItem();
                 Vector3 slotLoc = slot.transform.position; ///This world space val where the canvas is wayyy off in no where land
 
@@ -92,15 +92,5 @@ public class UIState : InputState
 
     /************************************************************************************************************************/
 
-    public List<QualityObject> RebuildQualities(List<QualityObject> toCopy)
-    {
-        List<QualityObject> newList = new List<QualityObject>();
-        if (toCopy != null)
-        {
-            foreach (var q in toCopy)
-                newList.Add(q);
-        }
 
-        return newList;
-    }
 }

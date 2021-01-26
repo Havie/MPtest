@@ -469,5 +469,24 @@ public class UIInventoryManager : MonoBehaviour
 
         return count;
     }
+   
+    public List<UIInventorySlot> GetAllSlotsInUse()
+    {
+        if (!IsInitalized)
+            Start();
+        List<UIInventorySlot> retList = new List<UIInventorySlot>();
+        foreach (var item in _slots)
+        {
+            if (item.GetInUse())
+                retList.Add(item);
+        }
+        foreach (var item in _extraSlots)
+        {
+            if (item.GetInUse())
+                retList.Add(item);
+        }
+        return retList;
+    }
+    
     #endregion
 }

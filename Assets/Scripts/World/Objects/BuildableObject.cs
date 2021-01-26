@@ -54,6 +54,7 @@ public class BuildableObject : MonoBehaviour
     {
         return SpawnObject(itemID, Vector3.zero, null);
     }
+
     public GameObject SpawnObject(int itemID, Vector3 pos, List<QualityObject> qualities)
     {
         if (itemID == -1)
@@ -131,12 +132,46 @@ public class BuildableObject : MonoBehaviour
 
         return newObj;
     }
+    public GameObject DropItemInWorld(int itemID, List<QualityObject> qualities)
+    {
+        var prefab = _manager.GetObject(itemID);
+        if (!prefab || !_spawnPoint)
+            return null; ///Prevent any NPEs
+
+        GameObject newObj = GameObject.Instantiate<GameObject>
+            (prefab, GetRandomPos(_spawnPoint.position), prefab.transform.rotation);
+
+        newObj.transform.Rotate(GetRandomPos(newObj.transform.position), 0f); ///was 10f to add tilt toward camera but removed when picking up off table
+        newObj.transform.SetParent(this.transform);
+
+        var controller = newObj.GetComponent<ObjectController>();
+        if (controller)
+            controller.PutDown(); ///turn on physics 
+
+        if (qualities != null && qualities.Count > 0)
+        {
+            var overallQuality = newObj.GetComponent<QualityOverall>();
+            if (overallQuality)
+            {
+                foreach (var q in qualities)
+                {
+                    overallQuality.ReadOutQuality(q);
+                    Destroy(q);
+                    Debug.Log("Copied and removed A quality");
+                }
+            }
+            else
+                Debug.LogWarning($"Somehow theres qualities associated w a prefab without an OverallQualityManager {newObj.name}");
+        }
+
+        return newObj;
+    }
 
     private Vector3 GetRandomPos(Vector3 near)
     {
         float x = Random.Range(near.x - 0.75f, near.x + 0.75f);
         float y = Random.Range(near.y - 1, near.y + 1);
-        float z = Random.Range(near.z - 0.25f, near.z );
+        float z = Random.Range(near.z - 0.25f, near.z);
 
         return new Vector3(x, y, z);
     }

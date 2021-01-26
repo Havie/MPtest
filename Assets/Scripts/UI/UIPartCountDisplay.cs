@@ -12,40 +12,74 @@ public class UIPartCountDisplay : MonoBehaviour
     [SerializeField] GameObject _optionalItemToShow;
 
 
+    [SerializeField] bool showIfFull = false;
 
     void LateUpdate()
     {
-        if(_text && _manager)
+        if(_manager)
         {
             if(_manager.IsInitalized)
             {
                 DisableText(false);
 
-                var current = _manager.SlotsInUse();
-                var max = _manager.MaxSlots();
-                if (current == max)
-                {
-                    _text.enabled = false;
-                    ///Show Send Button
-                    if (_optionalItemToShow)
-                        _optionalItemToShow.SetActive(true);
+                int current = _manager.SlotsInUse();
+                int max = _manager.MaxSlots();
 
-                }
+                if (showIfFull)
+                    ShowIfFull(current, max);
                 else
-                {
-                    _text.enabled = true;
-                    _text.text = $"{current}/{max}";
-                    ///Don't Show SendButton
-                    if (_optionalItemToShow)
-                     _optionalItemToShow.SetActive(false);
- 
-                }
+                    ShowDefault(current, max);
+
                 return;
             }
         }
 
         DisableText(true);
     }
+
+    public void ShowIfFull(int current, int max)
+    {
+        if (current != 0)
+        {
+            DisableText(true);
+            ///Show Button
+            if (_optionalItemToShow)
+                _optionalItemToShow.SetActive(true);
+
+        }
+        else
+        {
+            if (_text)
+                _text.text = $"{current}/{max}";
+
+            ///Don't Show Button
+            if (_optionalItemToShow)
+                _optionalItemToShow.SetActive(false);
+
+        }
+    }
+
+    public void ShowDefault(int current, int max)
+    {
+        if (current == max)
+        {
+            DisableText(true);
+            ///Show Send Button
+            if (_optionalItemToShow)
+                _optionalItemToShow.SetActive(true);
+
+        }
+        else
+        {
+            if (_text)
+                _text.text = $"{current}/{max}";
+            ///Don't Show SendButton
+            if (_optionalItemToShow)
+                _optionalItemToShow.SetActive(false);
+
+        }
+    }
+
 
     void DisableText(bool cond)
     {

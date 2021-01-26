@@ -59,4 +59,21 @@ public class PartDropper : MonoBehaviour
         }
         _routineIsRunning = false;
     }
+
+
+    public void DropPartsOnDemand(List<UIInventorySlot> inUseSlots)
+    {
+        if (inUseSlots == null || inUseSlots.Count == 0)
+            return;
+
+        foreach (UIInventorySlot slot  in inUseSlots)
+        {
+            int itemID = slot.GetItemID();
+            var qualityList = slot.RebuildQualities();
+            slot.RemoveItem();
+            BuildableObject.Instance.DropItemInWorld(itemID, qualityList);
+        }
+
+    }
+
 }
