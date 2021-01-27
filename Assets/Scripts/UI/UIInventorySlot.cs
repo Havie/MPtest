@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIInventorySlot : MonoBehaviour , IAssignable
+public class UIInventorySlot : MonoBehaviour, IAssignable
 {
     [SerializeField] Image _myIcon = default;
+    [SerializeField] GameObject _greenCheckmark = default;
     private Sprite _defaultIcon;
     private UIInventoryManager _manager;
     private bool _autoSend = false; //Only for OutINV, set by InventoryManager
@@ -28,7 +29,7 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
 
     /************************************************************************************************************************/
 
-    private void Awake() { _defaultIcon = _myIcon.sprite;}
+    private void Awake() { _defaultIcon = _myIcon.sprite; }
     /************************************************************************************************************************/
 
     public void SetManager(UIInventoryManager manager) { _manager = manager; }
@@ -47,7 +48,6 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
         //Set transparent icon 
         AssignSpriteByID(RequiredID, true);
     }
-
     public int GetItemID() => _itemID;
 
 
@@ -77,7 +77,7 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
             _myIcon.color = _INVALID;
             retVal = false;
         }
-        if(_manager)
+        if (_manager)
             _manager.SetImportant(this.gameObject);
         SetLarger();
         return retVal;
@@ -113,6 +113,10 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
                 _itemID = -1;
                 _inUse = false;
                 SetNormal();
+
+                if (_greenCheckmark != null)
+                    _greenCheckmark.SetActive(false);
+
             }
             else
                 RestoreDefault();
@@ -146,6 +150,11 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
             {
                 Debug.Log($"{id} does not match {RequiredID}");
                 return false;
+            }
+            else if (_isOutSlot && id == RequiredID)
+            {
+                if (_greenCheckmark != null)
+                    _greenCheckmark.SetActive(true);
             }
             AssignSpriteByID(id, false);
 
@@ -197,7 +206,7 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
         //else
         // Debug.LogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
     }
-    
+
     public List<QualityObject> RebuildQualities()
     {
         List<QualityObject> newList = new List<QualityObject>();
@@ -311,7 +320,7 @@ public class UIInventorySlot : MonoBehaviour , IAssignable
     private void SetNormal() ///Shud get this private and abstracted
     {
         this.transform.localScale = _NORMAL;
-    } 
+    }
 
     public void SetSmaller()
     {
