@@ -37,6 +37,7 @@ public class ObjectController : MonoBehaviour, IConstructable
     private Vector3 _handOffset;
     private float _handStartZ;
 
+    private Switch _switch;
 
     /************************************************************************************************************************/
     #region Init
@@ -47,7 +48,7 @@ public class ObjectController : MonoBehaviour, IConstructable
         _rb = this.gameObject.AddComponent<Rigidbody>();
         _collider = this.gameObject.GetComponent<Collider>();
         _isSubObject = this.GetComponent<QualityOverall>() == null;
-
+        _switch = this.GetComponentInChildren<Switch>();
         if (transform.parent == null)
         {
             _canFollow = true;
@@ -321,9 +322,12 @@ public class ObjectController : MonoBehaviour, IConstructable
 
         TrySetChildren(0.5f);
 
+        if (_switch)
+            _switch.ShowInPreview();
+
         // ToggleCollider(false);
 
-        //Debug.Log($"{this.gameObject.name} heard change moving");
+            //Debug.Log($"{this.gameObject.name} heard change moving");
 
     }
     public void ChangeAppearanceNormal()
@@ -337,12 +341,12 @@ public class ObjectController : MonoBehaviour, IConstructable
 
         ChangeMaterialColor(1f);
         TrySetChildren(1f);
-
+        if (_switch)
+            _switch.ShowNormal();
 
         if (_resetOnChange)
             ResetPosition();
     }
-
     public float DesiredSceneDepth() => SceneDepthInitalizer.Instance.DepthOfParts; //-9.253f;
 
     ///IConstructable
