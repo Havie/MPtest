@@ -6,7 +6,10 @@ using UnityEngine.UI;
 public class InInventory : UIInventoryManager
 {
     #region InitalSetup
-    [SerializeField] int maxItemsPerRow =4;
+
+    [Header("Specifications")]
+    [SerializeField] int _maxItemsPerRow = 4;
+    [SerializeField] int _maxColSize = 425;
 
     protected override void Start()
     {
@@ -15,13 +18,13 @@ public class InInventory : UIInventoryManager
 
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
-        if (!_optionalSendButton)
+        if (!_sendButton)
         {
             var go = GameObject.FindGameObjectWithTag("SendButton");
             if (go != null)
             {
-                _optionalSendButton = go.GetComponent<Button>();
-                _optionalSendButton.interactable = false;
+                _sendButton = go.GetComponent<Button>();
+                _sendButton.interactable = false;
             }
         }
         _inventoryType = eInvType.IN;
@@ -33,8 +36,6 @@ public class InInventory : UIInventoryManager
 
 
     }
-
-
 
     private void GetGameManagerData()
     {
@@ -67,22 +68,22 @@ public class InInventory : UIInventoryManager
         var stationList = wm.GetStationList();
         ///Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-       // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
+        // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
         int BATCHSIZE = GameManager.instance._batchSize;
         if (BATCHSIZE == 1)
         {
             ///look at the last tasks final items in the station before mine
-            if(startingIndex>1) /// no kitting on pull, so second station
+            if (startingIndex > 1) /// no kitting on pull, so second station
             {
                 WorkStation ws = stationList[startingIndex - 1];
                 Task lastTask = ws._tasks[ws._tasks.Count - 1];
-               // Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
+                // Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
                 count += lastTask._finalItemID.Count;
-                if(AddToSlotOnFind)
+                if (AddToSlotOnFind)
                 {
                     foreach (var item in lastTask._finalItemID)
                     {
-                        AddItemToSlot((int)item, null,  false);
+                        AddItemToSlot((int)item, null, false);
                     }
                 }
             }
@@ -90,7 +91,7 @@ public class InInventory : UIInventoryManager
         else  ///look at all final items for station before me , and the basic items from kitting[1]
         {
             var listItems = FindObjectsAtKittingStation(stationList[1]);
-           // Debug.Log("Staring index=+" + startingIndex);
+            // Debug.Log("Staring index=+" + startingIndex);
             ///foreach station between us and kitting, if listItem contains a requiredItem, remove it
             if (startingIndex > 2) //1 = kitting
             {
@@ -102,7 +103,7 @@ public class InInventory : UIInventoryManager
                         foreach (var item in t._requiredItemIDs)
                         {
                             int itemId = (int)item;
-                           // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
+                            // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                             if (listItems.Contains(itemId))
                                 listItems.Remove(itemId);
                         }
@@ -114,7 +115,7 @@ public class InInventory : UIInventoryManager
                             {
                                 int itemId = (int)item;
                                 listItems.Add(itemId);
-                               // Debug.Log($"_finalItems....Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
+                                // Debug.Log($"_finalItems....Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
 
                             }
                         }
@@ -127,13 +128,13 @@ public class InInventory : UIInventoryManager
                 foreach (var item in listItems)
                 {
                     for (int j = 0; j < BATCHSIZE; j++)
-                        AddItemToSlot((int)item,null, false);
+                        AddItemToSlot((int)item, null, false);
                 }
             }
             count += listItems.Count;
 
         }
-         //Debug.Log($"The # of INV items will be : {count}");
+        //Debug.Log($"The # of INV items will be : {count}");
         return count;
     }
 
@@ -172,11 +173,11 @@ public class InInventory : UIInventoryManager
 
         ///Determine layout
         _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > maxItemsPerRow && _inventoryType != eInvType.STATION)
-            _xMaxPerRow = (_INVENTORYSIZE / maxItemsPerRow) + 1;
+        if (_INVENTORYSIZE > _maxItemsPerRow && _inventoryType != eInvType.STATION)
+            _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
 
-        if (_xMaxPerRow > maxItemsPerRow)
-            _xMaxPerRow = maxItemsPerRow;
+        if (_xMaxPerRow > _maxItemsPerRow)
+            _xMaxPerRow = _maxItemsPerRow;
 
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
@@ -205,14 +206,31 @@ public class InInventory : UIInventoryManager
     {
         if (_xMaxPerRow == 0)
             return;
-        RectTransform rt = this.GetComponent<RectTransform>();
+
+        Vector2 size = Vector2.zero;
 
 
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
+            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding * 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding /2)));
+            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * 0), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding * 0)));
 
+
+        if (_content)
+            _content.ChangeRectTransform(size);
+
+        ///Recalibrate
+        if (size.y > _maxColSize)
+            size.y = _maxColSize;
+
+        if (_bg) ///Make sure this called before Mask
+            _bg.ChangeRectTransform(size);
+        if (_mask)
+            _mask.ChangeRectTransform(size);
+        if (_scrollbarVert)
+            _scrollbarVert.ChangeRectTransform(size);
+        if (_scrollbarHoriz)
+            _scrollbarHoriz.ChangeRectTransform(size);
 
         // Debug.Log($"(X:{(_xMaxPerRow * _cellPadding) + (_cellPadding / 2)} , Y: {((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding))} ) {_INVENTORYSIZE} / {_xMaxPerRow} = {(_INVENTORYSIZE / _xMaxPerRow)} Mod1:: {_INVENTORYSIZE-1 % _xMaxPerRow }");
     }

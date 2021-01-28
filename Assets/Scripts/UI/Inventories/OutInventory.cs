@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class OutInventory : UIInventoryManager
 {
+    [Header("Specifications")]
+    [SerializeField] int _maxItemsPerRow = 4;
+    [SerializeField] int _maxColSize = 425;
+
     #region InitalSetup
     protected override void Start()
     {
@@ -13,16 +17,15 @@ public class OutInventory : UIInventoryManager
 
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
-        if (!_optionalSendButton)
+        if (!_sendButton)
         {
-            ///This doesnt work if gameobject is Disabled
-            var go = GameObject.FindGameObjectWithTag("SendButton");
-            if (go != null)
+            if (_optionalSendButton)
             {
-                _optionalSendButton = go.GetComponent<Button>();
+                _sendButton = _optionalSendButton.GetComponent<Button>();
+                _sendButton.interactable = false;
             }
         }
-        _optionalSendButton.interactable = false;
+      
         _inventoryType = eInvType.OUT;
         GetGameManagerData();
         GenInventory();
@@ -52,7 +55,7 @@ public class OutInventory : UIInventoryManager
         ///if batch size =1 , then IN = # of produced Items at station
         if (BATCHSIZE == 1) ///assume batchsize=1 enabled stackable Inv and StationINV is turned on
         {
-            _optionalSendButton.gameObject.SetActive(false); ///turn off the send button
+            _sendButton.gameObject.SetActive(false); ///turn off the send button
            // TurnOffScrollBars();
         }
 
@@ -190,12 +193,11 @@ public class OutInventory : UIInventoryManager
 
         //Determine layout
         _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > 4)
-            _xMaxPerRow = (_INVENTORYSIZE / 4) + 1;
+        if (_INVENTORYSIZE > _maxItemsPerRow && _inventoryType != eInvType.STATION)
+            _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
 
-        if (_xMaxPerRow > 4)
-            _xMaxPerRow = 4;
-
+        if (_xMaxPerRow > _maxItemsPerRow)
+            _xMaxPerRow = _maxItemsPerRow;
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
         //Size matters for the vert/hori scrollbars
@@ -230,21 +232,50 @@ public class OutInventory : UIInventoryManager
     {
         if (_xMaxPerRow == 0)
             return;
-        RectTransform rt = this.GetComponent<RectTransform>();
+
+        Vector2 size = Vector2.zero;
+
 
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
+            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding * 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding)));
+            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * 0), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding *0)));
 
-        //OLD
-        // rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding) + (_cellPadding)));
+        //((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding /2))
 
+        // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
 
-        //Debug.Log($"(out) _INVENTORYSIZ={_INVENTORYSIZE} / _xMaxPerRow={_xMaxPerRow}  =  {((_INVENTORYSIZE / _xMaxPerRow) + 1)}");
+        if (_content)
+            _content.ChangeRectTransform(size);
 
+        ///Recalibrate
+        if (size.y > _maxColSize)
+            size.y = _maxColSize;
+
+        if (_bg) ///Make sure this called before Mask
+            _bg.ChangeRectTransform(size);
+        if (_mask)
+            _mask.ChangeRectTransform(size);
+        if (_scrollbarVert)
+            _scrollbarVert.ChangeRectTransform(size);
+        if (_scrollbarHoriz)
+            _scrollbarHoriz.ChangeRectTransform(size);
+        if (_optionalSendButton)
+            _optionalSendButton.ChangeRectTransform(size);
+        //if (_optionalSendButton)
+        //    _optionalSendButton.transform.position = FindBelowBG();
+
+            // Debug.Log($"(X:{(_xMaxPerRow * _cellPadding) + (_cellPadding / 2)} , Y: {((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding))} ) {_INVENTORYSIZE} / {_xMaxPerRow} = {(_INVENTORYSIZE / _xMaxPerRow)} Mod1:: {_INVENTORYSIZE-1 % _xMaxPerRow }");
     }
 
+    private Vector3 FindBelowBG()
+    {
+        RectTransform rt = _bg.GetComponent<RectTransform>();
+        Vector3 worldPosTop = rt.position;
+        worldPosTop.y = worldPosTop.y - rt.sizeDelta.y;
+
+        return worldPosTop;
+    }
 
 
     #endregion

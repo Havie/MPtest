@@ -23,12 +23,6 @@ public class Switch : MonoBehaviour, IInteractable
     }
 
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-            OnInteract();
-    }
-
     public void OnInteract()
     {
         _on = !On;
