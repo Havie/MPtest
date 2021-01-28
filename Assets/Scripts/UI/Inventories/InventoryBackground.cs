@@ -6,7 +6,8 @@ public class InventoryBackground : InventoryComponent
 {
 
     [SerializeField] RectTransform _optionalChildrenItems =default;
-    [SerializeField] Transform _optionalSendButton = default;
+    
+    //[SerializeField] Transform _optionalSendButton = default;
 
 
 
@@ -18,11 +19,13 @@ public class InventoryBackground : InventoryComponent
         if(_optionalChildrenItems)
             _optionalChildrenItems.sizeDelta = new Vector2(size.x, _optionalChildrenItems.sizeDelta.y);
 
-        if (_optionalSendButton)
-        {
+        ///If you child the button to this object, and set its pivot on rectTrans to be bottom right,
+        ///it will do this automatically:
+        //if (_optionalSendButton)
+        //{
 
-            _optionalSendButton.localPosition = transform.localPosition  - new Vector3(0, size.y, 0);
-        }
+        //    _optionalSendButton.localPosition = transform.localPosition  - new Vector3(0, size.y, 0);
+        //}
     }
 
     public Vector2 GetRectSize() => _rt.sizeDelta;
