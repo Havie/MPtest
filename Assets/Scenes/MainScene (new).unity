@@ -3356,7 +3356,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1316100031}
+      - m_Target: {fileID: 0}
         m_MethodName: ConfirmWorkStation
         m_Mode: 1
         m_Arguments:
@@ -4454,7 +4454,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1316100030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc5033f48b3ee5640a21b6a1643e95e1, type: 3}
+  m_Script: {fileID: 11500000, guid: be6fd3cc857c3b44289c0495e088c82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _networkingCanvas: {fileID: 1148312936}
@@ -4467,15 +4467,7 @@ MonoBehaviour:
   _tmpConfirmWorkStation: {fileID: 863135810}
   _tmpObjectPREFAB: {fileID: 6467200454433006771, guid: de4b9158f6dbe6440b5579dd5847acaa,
     type: 3}
-  _workstationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
-    type: 2}
-  _inventoryCanvas: {fileID: 0}
-  _normalInventory: {fileID: 0}
-  _kittingInventory: {fileID: 0}
-  _hand1: {fileID: 0}
-  _hand2: {fileID: 0}
-  _touchPhaseDisplay: {fileID: 0}
-  _previewSlot: {fileID: 0}
+  _workstationManager: {fileID: 0}
 --- !u!4 &1316100032
 Transform:
   m_ObjectHideFlags: 0
@@ -4650,7 +4642,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1316100031}
+      - m_Target: {fileID: 0}
         m_MethodName: ConnectToServer
         m_Mode: 1
         m_Arguments:
@@ -8971,12 +8963,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1316100031}
+      objectReference: {fileID: 0}
     - target: {fileID: 6144399833289840544, guid: e01528de33351d44b9d69745be493a28,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1316100031}
+      objectReference: {fileID: 0}
     - target: {fileID: 6144399833443023759, guid: e01528de33351d44b9d69745be493a28,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9091,7 +9083,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1316100031}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e01528de33351d44b9d69745be493a28, type: 3}
 --- !u!23 &6431312822563875818
