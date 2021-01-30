@@ -5,10 +5,10 @@ using System.Linq;
 
 
 [DefaultExecutionOrder(-1000000)] ///load early to beat UIManager 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoSingleton<GameManager>
 {
     //singleton
-    public static GameManager instance { get; private set; }
+
 
     [Header("Game Modifiers")]
     #region Game Modifiers
@@ -42,13 +42,9 @@ public class GameManager : MonoBehaviour
 
 
     /**Singleton*/
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(this);
-
+        base.Awake();
         MobileSetUp();
         AutomaticChecks();
         DetermineCurrentWorkStation(); ///have to call on Awake for test scenes not run by networking UI
@@ -92,7 +88,7 @@ public class GameManager : MonoBehaviour
     public void AssignWorkStation(WorkStation station)
     {
         _workStation = station;
-       UIManager.instance.DebugLog($"assigned WS color=green>{station}</color>");
+       UIManager.DebugLog($"assigned WS <color=green>{station}</color>");
     }
 
     ///Things are reliant on batchsize
@@ -100,6 +96,7 @@ public class GameManager : MonoBehaviour
     {
         _batchSize = amnt;
         ValidateAutoSend();
+   
         DetermineCurrentWorkStation();
     }
     ///We need to base auto send off batch

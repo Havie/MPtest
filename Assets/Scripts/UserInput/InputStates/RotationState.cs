@@ -68,7 +68,7 @@ public class RotationState : InputState
                 if (_pressTimeCURR > _pressTimeMAX / 10) ///dont show this instantly 10%filled
                 {
                     ///Show the UI wheel for our TouchPhase 
-                    UIManager.instance.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX, inputPos);
+                    UIManager.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX, inputPos);
     
                     ///Cap our mats transparency fade to 0.5f
                     float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
@@ -81,14 +81,14 @@ public class RotationState : InputState
             else ///reset pickup timer
             {
                 _pressTimeCURR = 0;
-                UIManager.instance.HideTouchDisplay();
+                UIManager.HideTouchDisplay();
                 moveableObject.HandleInteractionTime(1);
             }
 
             ///if holding down do displacement
             if (_pressTimeCURR >= _pressTimeMAX)
             {
-                UIManager.instance.HideTouchDisplay();
+                UIManager.HideTouchDisplay();
 
                 ///Have to do this here because OnEnableState does have inputPos
                 _currentSelection = _brain.CheckForObjectAtLoc(inputPos);
@@ -121,7 +121,7 @@ public class RotationState : InputState
                 if (moveableObject != null)
                     CancelHighLightPreview(moveableObject);
 
-                UIManager.instance.HideTouchDisplay();
+                UIManager.HideTouchDisplay();
                 _currentSelection.HandleInteractionTime(1);
             }
             _brain.SwitchState(_brain._freeState, _currentSelection);

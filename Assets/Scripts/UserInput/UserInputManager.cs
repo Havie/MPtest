@@ -86,9 +86,9 @@ public class UserInputManager : MonoBehaviour
         ///Set up the new Pointer Event
         _PointerEventData = new PointerEventData(_EventSystem);
 
-
+        ///Might need the networking one from time to time?
         if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
-            _Raycaster = UIManager.instance._inventoryCanvas.GetComponent<GraphicRaycaster>();
+            _Raycaster = UIManagerGame.instance._inventoryCanvas.GetComponent<GraphicRaycaster>();
 
         _currentState = _freeState;
     }

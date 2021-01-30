@@ -129,7 +129,7 @@ public class ObjectController : MonoBehaviour, IConstructable
             _handLocation.position = this.transform.position + _handOffset;
             if (_pickedUp && !HandPreviewingMode)
             {
-                UIManager.instance.UpdateHandLocation(_handIndex, _handLocation.position);
+                UIManager.UpdateHandLocation(_handIndex, _handLocation.position);
             }
         }
 
@@ -316,7 +316,7 @@ public class ObjectController : MonoBehaviour, IConstructable
         this.transform.localScale = smaller;
 
         if (_handLocation)
-            UIManager.instance.ChangeHandSize(_handIndex, true);
+            UIManager.ChangeHandSize(_handIndex, true);
 
         ChangeMaterialColor(0.5f);
 
@@ -335,7 +335,7 @@ public class ObjectController : MonoBehaviour, IConstructable
         // Debug.Log($"Setting {this.gameObject.name} normal ");
         this.transform.localScale = _startSize;
         if (_handLocation)
-            UIManager.instance.ChangeHandSize(_handIndex, false);
+            UIManager.ChangeHandSize(_handIndex, false);
 
         _meshRenderer.enabled = true;
 
@@ -554,7 +554,7 @@ public class ObjectController : MonoBehaviour, IConstructable
             _parent.Follow(loc);
         }
         else
-            UIManager.instance.DebugLogWarning("No Parent for this object and follow set to false, prefab possibly set wrong");
+            UIManager.DebugLogWarning("No Parent for this object and follow set to false, prefab possibly set wrong");
     }
 
 

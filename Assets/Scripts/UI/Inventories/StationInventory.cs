@@ -24,9 +24,9 @@ public class StationInventory : UIInventoryManager
     private void GetGameManagerData()
     {
         _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        _STACKABLE = GameManager.instance._isStackable;
-        _ADDCHAOTIC = GameManager.instance._addChaotic;
-        GameManager.instance.SetInventoryStation(this);
+        _STACKABLE = GameManager.Instance._isStackable;
+        _ADDCHAOTIC = GameManager.Instance._addChaotic;
+        GameManager.Instance.SetInventoryStation(this);
     }
 
 
@@ -35,11 +35,11 @@ public class StationInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = UIManager.instance._workstationManager;
+        WorkStationManager wm =GameManager.Instance.CurrentWorkStationManager;
 
 
-        int BATCHSIZE = GameManager.instance._batchSize;
-        WorkStation myWS = GameManager.instance._workStation;
+        int BATCHSIZE = GameManager.Instance._batchSize;
+        WorkStation myWS = GameManager.Instance._workStation;
         int count = 0;
         //if batch size ==1 then just the required # of items at this station (pull)
         if (BATCHSIZE == 1)
@@ -152,8 +152,8 @@ public class StationInventory : UIInventoryManager
         //cache a conditions for forloop situations
         Dictionary<Task, int> seenTasks = new Dictionary<Task, int>(); //used By eInvType.STATION
         List<int> seenItems = new List<int>();
-        WorkStationManager wm = UIManager.instance._workstationManager;
-        WorkStation myWS = GameManager.instance._workStation;
+        WorkStationManager wm =GameManager.Instance.CurrentWorkStationManager;
+        WorkStation myWS = GameManager.Instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
         _prefix = "station_";
 
@@ -176,15 +176,15 @@ public class StationInventory : UIInventoryManager
     {
         if (_inventoryType == eInvType.STATION && !_STACKABLE)
         {
-            var ws = GameManager.instance._workStation;
+            var ws = GameManager.Instance._workStation;
             if (!ws.isKittingStation())
             {
                 Destroy(this.gameObject); //good enough for now might need to go higher to parents
-                UIManager.instance.DebugLogWarning($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
+                UIManager.DebugLogWarning($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
                 return true;
             }
         }
-        UIManager.instance.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
+        UIManager.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
         return false;
     }
 
@@ -198,14 +198,14 @@ public class StationInventory : UIInventoryManager
         }
         else if (_inventoryType == eInvType.STATION)
         {
-            var ws = GameManager.instance._workStation;
+            var ws = GameManager.Instance._workStation;
             if (ws.isKittingStation())
             {
                 Destroy(this.gameObject); //good enough for now might need to go higher to parents
                 return true;
             }
         }
-        UIManager.instance.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
+        UIManager.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
         return false;
     }
 

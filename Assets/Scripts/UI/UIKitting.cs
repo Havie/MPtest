@@ -8,7 +8,7 @@ public class UIKitting : MonoBehaviour
     private GameObject _bORDERPREFAB;
 
     private int _ORDERFREQUENCY;
-    private float _timeToOrder;
+    private float _timeToOrder = float.MaxValue;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
     private int _startingY = 350;
@@ -32,14 +32,13 @@ public class UIKitting : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.instance.SetInventoryKitting(this);
+        GameManager.Instance.SetInventoryKitting(this);
         if (_bORDERPREFAB == null)
             _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder");
 
-        _ORDERFREQUENCY = GameManager.instance._orderFrequency;
-        _componentList = GameManager.instance._componentList;
+        _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
+        _componentList = GameManager.Instance._componentList;
 
-        SendInNewOrder();
     }
 
 
@@ -85,7 +84,6 @@ public class UIKitting : MonoBehaviour
         }
 
         // printOrderList(componentOrder);
-
         PartDropper.Instance.SendInOrder(componentOrder);
         AddOrder(finalItemId);
     }

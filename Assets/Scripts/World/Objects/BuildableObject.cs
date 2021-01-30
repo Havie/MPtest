@@ -112,6 +112,7 @@ public class BuildableObject : MonoBehaviour
 
     public GameObject DropItemInWorld(int itemID)
     {
+       // Debug.Log($"Drop item ID: {itemID}");
         var prefab = _manager.GetObject(itemID);
         if (!prefab || !_spawnPoint)
             return null; ///Prevent any NPEs

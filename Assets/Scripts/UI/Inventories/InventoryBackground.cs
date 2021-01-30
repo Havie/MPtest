@@ -14,7 +14,10 @@ public class InventoryBackground : InventoryComponent
     public override void ChangeRectTransform(Vector2 size)
     {
         //Debug.Log("Changed BG size to " + size);
-        _rt.sizeDelta = size;
+        if (_rt)
+            _rt.sizeDelta = size;
+        else
+            Debug.Log($"<color=yellow> why is rt missing for </color> {this.gameObject.name}");
 
         if(_optionalChildrenItems)
             _optionalChildrenItems.sizeDelta = new Vector2(size.x, _optionalChildrenItems.sizeDelta.y);

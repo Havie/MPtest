@@ -83,7 +83,7 @@ public class FPSCounter : MonoBehaviour
     {
         var mat = go.GetComponent<MeshRenderer>().material;
         var t = mat.mainTexture;
-        UIManager.instance.DebugLog($"Tex:<color=green>{t.name}</color> using <color=orange>{Profiler.GetRuntimeMemorySizeLong(t)}</color> bytes");
+        UIManager.DebugLog($"Tex:<color=green>{t.name}</color> using <color=orange>{Profiler.GetRuntimeMemorySizeLong(t)}</color> bytes");
 
     }
 }

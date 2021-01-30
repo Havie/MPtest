@@ -22,7 +22,7 @@ public class PartDropper : MonoBehaviour
             Destroy(this);
     }
 
-    void OnEnable()
+    void Start()
     {
         _ORDERFREQUENCY = GameManager.instance._orderFrequency;
     }

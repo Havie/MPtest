@@ -15,7 +15,15 @@ public class InjectorWorkStation : MonoBehaviour
 
     void Start()
     {
-        _workStationManager = GameManager.instance.CurrentWorkStationManager;
+        if (UIManager.LoadedFromMenu)
+        {
+            _stationToInject = UIManager.StationToInject;
+            _testSceneInjection = true; ///This is really more mandatory now
+        }
+
+        //Debug.Log($"The scene injector thinks: <color=green>{_testSceneInjection}</color> vs  <color=red>{UIManager.LoadedFromMenu}</color> "); 
+
+        _workStationManager = GameManager.Instance.CurrentWorkStationManager;
         _workStations = _workStationManager.GetStationList();
         if (_testSceneInjection)
         {
@@ -34,8 +42,8 @@ public class InjectorWorkStation : MonoBehaviour
     {
         if (_workStations.Count > index)
         {
-            GameManager.instance.AssignWorkStation(_workStations[index]);
-            UIManager.instance.BeginLevel(_stationToInject); // random#?
+            GameManager.Instance.AssignWorkStation(_workStations[index]);
+            UIManager.BeginLevel(_stationToInject); // random#?
         }
     }
 

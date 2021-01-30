@@ -197,7 +197,7 @@ public class UIInventoryManager : MonoBehaviour
         RectTransform rt = this.GetComponent<RectTransform>();
 
 
-        if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
+        if (GameManager.Instance._batchSize == 1) ///turn off the pesky vert scroll bars
             rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
             rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) - (_cellPadding / 2)));
@@ -442,7 +442,7 @@ public class UIInventoryManager : MonoBehaviour
 
     public void SendBatch()
     {
-        Debug.Log("heared send batch");
+        Debug.Log($"heared send batch {this.gameObject.name} " );
         foreach (var slot in _slots)
         {
             slot.SendData();

@@ -97,7 +97,7 @@ public static class HandManager
             float weight = Vector3.Distance(ItemToBeDroppedNext.transform.position, potentialItemToBePickedUp.transform.position);
             Vector3 avgPoint = Vector3.Lerp(potentialItemToBePickedUp._handLocation.position, potentialItemToBePickedUp.transform.position, weight);
             Vector3 previewPos = Vector3.Lerp(ItemToBeDroppedNext._handLocation.position, avgPoint, _previewTime);
-            UIManager.instance.UpdateHandLocation(2, previewPos);
+            UIManager.UpdateHandLocation(2, previewPos);
         }
         _previewTime += Time.deltaTime;
 
@@ -213,9 +213,9 @@ public static class HandManager
     private static void CheckHandPositions()
     {
         if (CountPickedUpItems() < 2)
-            UIManager.instance.ResetHand(2);
+            UIManager.ResetHand(2);
         if (CountPickedUpItems() < 1)
-            UIManager.instance.ResetHand(1);
+            UIManager.ResetHand(1);
     }
 
     private static void PrintQueue()
