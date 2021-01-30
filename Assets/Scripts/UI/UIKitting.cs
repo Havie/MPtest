@@ -28,6 +28,7 @@ public class UIKitting : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(false);
             Destroy(transform.GetChild(0).gameObject);
         }
+        OnEnable();
     }
 
     private void OnEnable()
@@ -85,7 +86,7 @@ public class UIKitting : MonoBehaviour
         }
 
         // printOrderList(componentOrder);
-
+        Debug.Log("Kitting wants to send in new order:");
         PartDropper.Instance.SendInOrder(componentOrder);
         AddOrder(finalItemId);
     }
