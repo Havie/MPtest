@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 {
-
+    WorkStationManager _workstationManager;
 
     [Header("Networking Components")]
     public GameObject _networkingCanvas;
@@ -22,8 +22,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public GameObject _tmpObjectPREFAB;
 
 
-    [HideInInspector]
-    public WorkStationManager _workstationManager;
+
 
 
 
@@ -32,6 +31,8 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     private void Start()
     {
+        UIManager.RegisterNetworkManager(this);
+
         SetUpWorkStationDropDownMenu(); ///Will need to be called again when client, but for non network scene need a call here as well
 
         if (_loadingTxt && _tmpConfirmWorkStation && _workStationDropDown)
@@ -44,7 +45,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         else
             DebugLogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
 
-        if ( _networkingCanvas)
+        if (_networkingCanvas)
         {
             _networkingCanvas.SetActive(true);
         }
@@ -53,12 +54,15 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
         sServer.OnHostIpFound += DisableHostButton;
     }
-
+    private void OnDestroy()
+    {
+        UIManager.RegisterGameManager(null);
+    }
 
     private void SetUpWorkStationDropDownMenu()
     {
         //DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
-        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
+        _workstationManager = UIManager.GetWSManager();
 
         //Set up workstation selection
         if (_workstationManager != null && _workStationDropDown)
@@ -128,9 +132,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     public void BeginLevel(int itemLevel)
     {
-        Debug.Log($"<color=yellow> BeginLevel! </color>{itemLevel}");
-      
-
+        Debug.Log($"<color=yellow>  BeginLevel:Network </color>{itemLevel}");
         //Debug.Log("called BeginLevel");
         //Setup the proper UI for our workStation
         WorkStation ws = GameManager.Instance._workStation;
@@ -142,8 +144,10 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             _workStationDropDown.SetActive(false);
         }
 
-           if (_networkingCanvas)
+        if (_networkingCanvas)
             _networkingCanvas.SetActive(false);
+
+        UIManager.SetStationLevel(itemLevel);
 
     }
 

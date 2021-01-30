@@ -36,6 +36,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : Component
         else if (_instance != this as T)
         {
             Destroy(gameObject);
+            return;
         }
 
         if (transform.parent != null)

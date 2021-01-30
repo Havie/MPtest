@@ -9,9 +9,6 @@ using UnityEngine.UI;
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
 
-    [HideInInspector]
-    public WorkStationManager _workstationManager;
-
     [Header("Game Components")]
     public GameObject _inventoryCanvas;
     public GameObject _normalInventory;
@@ -28,8 +25,13 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     private void Start()
     {
-
+        UIManager.RegisterGameManager(this);
         ShowPreviewInvSlot(false, Vector3.zero, null);
+    }
+
+    private void OnDestroy()
+    {
+        UIManager.RegisterGameManager(null);
     }
 
     public void ShowPreviewInvSlot(bool cond, Vector3 pos, Sprite img)
@@ -49,7 +51,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     public void BeginLevel(int itemLevel)
     {
-        Debug.Log($"<color=yellow> BeginLevel! </color>GAME:{itemLevel}");
+        Debug.Log($"<color=green> BeginLevel:Game </color>GAME:{itemLevel}");
 
 
         //Debug.Log("called BeginLevel");
@@ -59,16 +61,10 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(true); ///when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
 
-
-
-
         // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");
         if (ws.isKittingStation())
             SwitchToKitting();
 
-        // (TMP) Spawn Object and allow me to rotate it 
-        // BuildableObject bo = GameObject.FindObjectOfType<BuildableObject>();
-        //bo.SetItemID(itemLevel);
 
 
     }

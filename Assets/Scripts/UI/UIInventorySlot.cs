@@ -167,7 +167,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             //if (qualities != null)
             //    DebugQualityIn();
             //else
-            //    UIManager.instance.DebugLog("Qualities Read was Null");
+            //    UIManager.DebugLog("Qualities Read was Null");
 
             _itemID = id;
             _numItemsStored = count;
@@ -198,7 +198,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         if (_inUse)//&& WorkStation._stationFlow.ContainsKey((int)myStation._myStation))
         {
             //int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
-            UIManager.instance.DebugLog($"(UIInventorySlot) sending: <color=green>{_itemID}</color> to Station: <color=blue>{(int)myStation._sendOutputToStation}</color>");
+            UIManager.DebugLog($"(UIInventorySlot) sending: <color=green>{_itemID}</color> to Station: <color=blue>{(int)myStation._sendOutputToStation}</color>");
             ClientSend.SendItem(_itemID, _qualities, (int)myStation._sendOutputToStation);
             CheckKitting();
             RemoveItem(); // should always call RestoreDefault;
@@ -289,7 +289,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         {
             foreach (var q in _qualities)
             {
-                UIManager.instance.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.CurrentQuality} </color>");
+                UIManager.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.CurrentQuality} </color>");
             }
         }
     }

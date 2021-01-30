@@ -88,7 +88,7 @@ public class UserInputManager : MonoBehaviour
 
 
         if (_Raycaster == null) ///when working between scenes sometimes i forget to set this
-            _Raycaster = UIManager.instance._inventoryCanvas.GetComponent<GraphicRaycaster>();
+            _Raycaster = UIManager.GetInventoryCanvas().GetComponent<GraphicRaycaster>();
 
         _currentState = _freeState;
     }

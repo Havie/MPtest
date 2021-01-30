@@ -106,7 +106,7 @@ public class DisplacementState : InputState
                                 if (constructable != null)
                                 {
                                     constructable.ChangeAppearanceHidden(true);
-                                    UIManager.instance.ShowPreviewInvSlot(false, inputPos, null);
+                                    UIManager.ShowPreviewInvSlot(false, inputPos, null);
                                 }
                             }
                             else ///the slot can not accept this item so continue to show the dummy preview
@@ -156,7 +156,7 @@ public class DisplacementState : InputState
                         var trans = moveableObject.GetGameObject().transform;
                         trans.position = _brain._objStartPos;
                         trans.rotation = _brain._objStartRot;
-                        UIManager.instance.ShowPreviewInvSlot(false, inputPos, null);
+                        UIManager.ShowPreviewInvSlot(false, inputPos, null);
                     }
                     else
                     {
@@ -200,7 +200,7 @@ public class DisplacementState : InputState
         {
             Sprite img = BuildableObject.Instance.GetSpriteByID((int)oc._myID);
             moveableObject.ChangeAppearanceHidden(true);
-            UIManager.instance.ShowPreviewInvSlot(true, inputPos, img);
+            UIManager.ShowPreviewInvSlot(true, inputPos, img);
         }
     }
 
@@ -216,7 +216,7 @@ public class DisplacementState : InputState
             _lastSlot = null;
         }
 
-        UIManager.instance.ShowPreviewInvSlot(false, inputPos, null);
+        UIManager.ShowPreviewInvSlot(false, inputPos, null);
     }
 
     /**This is a really weird fix I found to prevent the raycast from missing the box */

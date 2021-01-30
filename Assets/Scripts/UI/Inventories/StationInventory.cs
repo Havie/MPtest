@@ -35,7 +35,7 @@ public class StationInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = UIManager.Instance._workstationManager;
+        WorkStationManager wm = UIManager.GetWSManager();
 
 
         int BATCHSIZE = GameManager.Instance._batchSize;
@@ -152,7 +152,7 @@ public class StationInventory : UIInventoryManager
         //cache a conditions for forloop situations
         Dictionary<Task, int> seenTasks = new Dictionary<Task, int>(); //used By eInvType.STATION
         List<int> seenItems = new List<int>();
-        WorkStationManager wm = UIManager.Instance._workstationManager;
+        WorkStationManager wm = UIManager.GetWSManager();
         WorkStation myWS = GameManager.Instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
         _prefix = "station_";
@@ -180,11 +180,11 @@ public class StationInventory : UIInventoryManager
             if (!ws.isKittingStation())
             {
                 Destroy(this.gameObject); //good enough for now might need to go higher to parents
-                UIManager.Instance.DebugLogWarning($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
+                UIManager.DebugLogWarning($"{ws._stationName}  is kittingStation={ws.isKittingStation()} , and isSTACKABLE={_STACKABLE},  Destroying station inv (unused)");
                 return true;
             }
         }
-        UIManager.Instance.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
+        UIManager.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
         return false;
     }
 
@@ -205,7 +205,7 @@ public class StationInventory : UIInventoryManager
                 return true;
             }
         }
-        UIManager.Instance.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
+        UIManager.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
         return false;
     }
 

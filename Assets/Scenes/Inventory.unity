@@ -257,7 +257,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _inventory
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2602109608856965224}
     - target: {fileID: 2958992617734924399, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: _worldObjectToFollow
@@ -4411,7 +4411,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _inventory
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9017537107136777983}
     - target: {fileID: 2958992617734924399, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: _worldObjectToFollow
@@ -5005,7 +5005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testSceneInjection: 0
+  _testSceneInjection: 1
   _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2034715274
@@ -5271,7 +5271,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9d32f81524fa7149a87dc90d8623228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _workstationManager: {fileID: 0}
   _inventoryCanvas: {fileID: 5394208262448427709}
   _normalInventory: {fileID: 9028841948821380008}
   _kittingInventory: {fileID: 7402305291057293051}
@@ -6606,7 +6605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &5394208262450479613 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1868493067865084818, guid: 96e18ea220abbe34b902fa900e2b9098,
@@ -6677,12 +6676,12 @@ PrefabInstance:
     - target: {fileID: 4028654396539030994, guid: eeff0920a4208af41bad73c4ee6f0bd3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4028654396539030994, guid: eeff0920a4208af41bad73c4ee6f0bd3,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4028654397517864571, guid: eeff0920a4208af41bad73c4ee6f0bd3,
         type: 3}
@@ -7172,7 +7171,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7975,6 +7974,7 @@ GameObject:
   - component: {fileID: 6144399834545552307}
   - component: {fileID: 6144399834545552306}
   - component: {fileID: 6144399834545552301}
+  - component: {fileID: 6144399834545552302}
   m_Layer: 5
   m_Name: DebugCanvas
   m_TagString: Untagged
@@ -7999,6 +7999,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6144399834545552302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6144399834545552300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dcc067a3e3365c40ba8045cd69d3c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 0
+  _maxTextSize: 350
+  _debugText: {fileID: 6144399834289625889}
 --- !u!224 &6144399834545552304
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8897,7 +8912,7 @@ PrefabInstance:
     - target: {fileID: 2555038399607601572, guid: 063599d9c9a33444ebf0cafeeead5b90,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 063599d9c9a33444ebf0cafeeead5b90, type: 3}
@@ -9250,12 +9265,12 @@ PrefabInstance:
     - target: {fileID: 9009426060544765902, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9009426060544765902, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9009426060544765902, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}

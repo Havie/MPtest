@@ -52,7 +52,7 @@ public class UIHostMenu : MonoBehaviour
         ///Should put this in a coroutine, that runs this after saying "..Creating Room.."
         /// Because Client was connecting before sNetworkManager ran Start 
         ShowMenuOptions(false);
-        UIManager.Instance.ConnectToServer();
+        UIManager.ConnectToServer();
     }
 
     private void ShowMenuOptions(bool cond)
@@ -80,7 +80,7 @@ public class UIHostMenu : MonoBehaviour
         if (GameObject.FindObjectOfType<sNetworkManager>() == null && _NetworkManagerPREFAB != null)
         {
             var network=  GameObject.Instantiate(_NetworkManagerPREFAB);
-            network.transform.parent = UIManager.Instance.transform.parent;
+            //network.transform.parent = UIManager.Instance.transform.parent;
         }
     }
 }

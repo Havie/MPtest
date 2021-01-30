@@ -15,6 +15,6 @@ public class UIDeadZone : MonoBehaviour
         if (_safePlace)
             GetSafePosition = _safePlace.transform;
         else
-            UIManager.Instance.DebugLogWarning($"saFeplace not set up for {this.gameObject.transform.parent.gameObject.name}");
+            UIManager.DebugLogWarning($"saFeplace not set up for {this.gameObject.transform.parent.gameObject.name}");
     }
 }

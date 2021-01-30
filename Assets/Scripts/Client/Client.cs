@@ -43,7 +43,7 @@ public class Client : MonoSingleton<Client>
     private void UpdateHostIP(string address)
     {
         _ip = address;
-        UIManager.Instance.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
+        UIManager.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
         ///As Soon as we hear about the first host, Stop caring. (Might have to change later if we swap things, or host DC's)
         sServer.OnHostIpFound -= UpdateHostIP;
     }
@@ -99,7 +99,7 @@ public class Client : MonoSingleton<Client>
         yield return new WaitForSeconds(seconds);
         //Debug.LogWarning($"Connection comparison <color=green>{_isConnected}</color>  <color=blue>{_tcp._socket.Connected}</color>");
         _isConnected = _tcp._socket.Connected;
-        UIManager.Instance.Connected(_isConnected);
+        UIManager.Connected(_isConnected);
     }
 
     public class TCP
@@ -125,7 +125,7 @@ public class Client : MonoSingleton<Client>
 
             _receivedBuffer = new byte[_dataBufferSize];
             _socket.BeginConnect(instance._ip, instance._port, ConnectCallback, _socket);
-            UIManager.Instance.DebugLog($"trying to connect to..<color=orange>{instance._ip} </color> port: <color=orange>{instance._port}</color>");
+            UIManager.DebugLog($"trying to connect to..<color=orange>{instance._ip} </color> port: <color=orange>{instance._port}</color>");
 
         }
 

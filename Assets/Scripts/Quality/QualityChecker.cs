@@ -8,11 +8,11 @@ public static class QualityChecker
     {
        if( quality.GetPercent() > 80)
         {
-            UIManager.Instance.DebugLog($"The quality is : <color=green>{quality.GetPercent()}</color>%");
+            UIManager.DebugLog($"The quality is : <color=green>{quality.GetPercent()}</color>%");
             return true;
         }
        else
-            UIManager.Instance.DebugLog($"The quality is : <color=red>{quality.GetPercent()}</color>%");
+            UIManager.DebugLog($"The quality is : <color=red>{quality.GetPercent()}</color>%");
 
         return false;
     }

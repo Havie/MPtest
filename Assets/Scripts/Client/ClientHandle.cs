@@ -28,7 +28,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
        instance._HUDManagement = packet.ReadBool();
        instance._HostDefectPausing = packet.ReadBool();
 
-        UIManager.Instance.DebugLog("WE read GameManager VARS:");
+        UIManager.DebugLog("WE read GameManager VARS:");
 
         //give UDP the same port our tcp connection is using 
         Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
@@ -45,7 +45,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         List<QualityObject> qualities = new List<QualityObject>();
 
         var count = packet.ReadInt()/2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
-        UIManager.Instance.DebugLog($"ClientHandle Count={count}");
+        UIManager.DebugLog($"ClientHandle Count={count}");
 
         ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
@@ -58,7 +58,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
 
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
-        UIManager.Instance.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
+        UIManager.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
         GameManager.Instance._invIN.AddItemToSlot(itemLvl, qualities,  false);

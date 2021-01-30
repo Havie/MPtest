@@ -27,7 +27,7 @@ public static class sServer
         _udpListener = new UdpClient(sNetworkManager._defaultPort);
         _udpListener.EnableBroadcast = true;
         _udpListener.BeginReceive(UDPReceiveCallBack, null);
-        UIManager.Instance.DebugLog("Server..listening for hostIP");
+        UIManager.DebugLog("Server..listening for hostIP");
     }
     public static void BroadCastIP()
     {
@@ -54,11 +54,11 @@ public static class sServer
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
 
-        UIManager.Instance.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
+        UIManager.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
     }
 
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 
-    ///      game logic like UIManager.instance.DebugLog is not safe (and will sometimes crash without error and mess other things up)
+    ///      game logic like UIManager.DebugLog is not safe (and will sometimes crash without error and mess other things up)
     private static void TCPConnectCallback(IAsyncResult result)
     {
         try
@@ -67,7 +67,7 @@ public static class sServer
             _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
             Debug.Log($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color>");
             ///WARNING TRYING TO PRINT THIS TO THE WINDOW CRASHES WITH NO WARNINGS 
-            //UIManager.instance.DebugLog($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color> .");
+            //UIManager.DebugLog($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color> .");
 
             for (int i = 1; i <= _maxPlayers; ++i)
             {
@@ -103,7 +103,7 @@ public static class sServer
             {
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
-                    UIManager.Instance.DebugLogWarning($"Server Received a string IP: {receiveString}");
+                    UIManager.DebugLogWarning($"Server Received a string IP: {receiveString}");
                     OnHostIpFound(receiveString);
                 });
 

@@ -47,6 +47,7 @@ public class GameManager : MonoSingleton<GameManager>
         base.Awake();
         MobileSetUp();
         AutomaticChecks();
+        Debug.Log($"DET GS BatchSize <color=green> now </color>");
         DetermineCurrentWorkStation(); ///have to call on Awake for test scenes not run by networking UI
 
         //Test and see if this works for all scripts?
@@ -88,7 +89,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void AssignWorkStation(WorkStation station)
     {
         _workStation = station;
-       UIManager.Instance.DebugLog($"assigned WS color=green>{station}</color>");
+       UIManager.DebugLog($"assigned WS color=green>{station}</color>");
     }
 
     ///Things are reliant on batchsize
@@ -96,6 +97,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         _batchSize = amnt;
         ValidateAutoSend();
+   
         DetermineCurrentWorkStation();
     }
     ///We need to base auto send off batch

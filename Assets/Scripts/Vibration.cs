@@ -25,7 +25,7 @@ public static class Vibration
 
     public static void Vibrate(long milliseconds)
     {
-        //UIManager.instance.DebugLog($"Thinks were an android ={isAndroid()} ");
+        //UIManager.DebugLog($"Thinks were an android ={isAndroid()} ");
 
         if (isAndroid())
             vibrator.Call("vibrate", milliseconds);

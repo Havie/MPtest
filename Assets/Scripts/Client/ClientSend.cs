@@ -22,7 +22,7 @@ public class ClientSend : MonoBehaviour
         {
            // Debug.Log("THE ID Sent= " + Client.instance._myId  + " the string= " + UIManager.instance._usernameField);
             packet.Write(Client.instance._myId);
-            packet.Write(UIManager.Instance._usernameField.text);
+            packet.Write(UIManager.GetUserName());
             //TODO fix this and send it AFTER we've chosen a work station (hardcoded atm)
             packet.Write((int)GameManager.Instance._workStation._myStation);
 
@@ -44,7 +44,7 @@ public class ClientSend : MonoBehaviour
 
     public static void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
     {
-        UIManager.Instance.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
+        UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
         {
             packet.Write(itemLVL);
@@ -63,7 +63,7 @@ public class ClientSend : MonoBehaviour
                 info += $" send:({q.ID},{q.CurrentQuality}) ";
             }
 
-            UIManager.Instance.DebugLog(info);
+            UIManager.DebugLog(info);
 
             SendTCPData(packet);
 
