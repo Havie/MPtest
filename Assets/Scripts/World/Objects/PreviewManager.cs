@@ -22,7 +22,8 @@ public static class PreviewManager
             return;
         }
 
-        if (UserInput.Instance._state != UserInput.eState.DISPLACEMENT)
+        ///Hack , should abstract this into the UserInputManagerClass
+        if (UserInputManager.Instance._currentState != UserInputManager.Instance._displacementState)
             return; /// would feel cleaner to cache on the object, but extra work
 
         Debug.Log($"Show Preview heard for createID={createdID}:{(ObjectManager.eItemID)createdID} , controller={controller} otherController={otherController}");
@@ -44,84 +45,10 @@ public static class PreviewManager
         newController.ChangeAppearancePreview();
         FixRotationOnPreviewItem(newController);
         _previewItem = obj;
-        CheckForSwitch();
+       // CheckForSwitch();
         _inPreview = true;
     }
 
-    private static void CheckForSwitch()
-    {
-        if (!_inPreview)
-        {
-            foreach (var item in _previewedItems)
-            {
-                Switch s = item.GetComponentInChildren<Switch>();
-                if (s != null)
-                {
-                    var transform = s.transform;
-                    Vector3 localPos = transform.localPosition;
-                    Quaternion localRot =transform.localRotation;
-                    transform.parent = _previewItem.transform;
-                    transform.localPosition = localPos;
-                    transform.localRotation = localRot;
-                    s.ShowInPreview();
-                    _switchOGParent = item.gameObject;
-                    return;
-                }
-
-            }
-        }
-        else ///switch back via UndoPreview
-        {
-            Switch s = _previewItem.GetComponentInChildren<Switch>();
-            if (s != null)
-            {
-                var transform = s.transform;
-                Vector3 localPos = transform.localPosition;
-                Quaternion localRot = transform.localRotation;
-                s.transform.parent = _switchOGParent.transform;
-                transform.localPosition = localPos;
-                transform.localRotation = localRot;
-                s.ShowNormal();
-                _switchOGParent = null;
-
-            }
-        }
-    }
-
-    private static void FixRotationOnPreviewItem(ObjectController newItem)
-    {
-        foreach(var newQuality in newItem.GetComponentsInChildren<QualityObject>())
-        {
-            if(newQuality.QualityStep._qualityAction == QualityAction.eActionType.ROTATE)
-            {
-                ///check if this QualityStep Exists on either of the previewItems
-                foreach (var controller in _previewedItems)
-                {
-                    foreach (var existingQuality in controller.GetComponentsInChildren<QualityObject>())
-                    {
-                        if (existingQuality.QualityStep == newQuality.QualityStep)
-                        {
-                            ///Transfer the rotation:
-                            var oldRot = existingQuality.transform.rotation;
-                            newQuality.transform.rotation = oldRot;
-                            //Debug.Log($"Trans old {existingQuality.gameObject} to new {newQuality.gameObject}");
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static void UndoPreview()
-    {
-        foreach (var item in _previewedItems)
-        {
-            item.ChangeAppearanceNormal();
-        }
-        CheckForSwitch();
-        BuildableObject.Instance.DestroyObject(_previewItem);
-        ResetSelf();
-    }
 
     public static void ConfirmCreation()
     {
@@ -168,6 +95,48 @@ public static class PreviewManager
         _inMiddleOfClear = false;
     }
 
+    public static void UndoPreview()
+    {
+        foreach (var item in _previewedItems)
+        {
+            item.ChangeAppearanceNormal();
+        }
+        //CheckForSwitch();
+        BuildableObject.Instance.DestroyObject(_previewItem);
+        ResetSelf();
+    }
+
+
+    /************************************************************************************************************************/
+    // Private/Helpers
+    /************************************************************************************************************************/
+
+
+
+    private static void FixRotationOnPreviewItem(ObjectController newItem)
+    {
+        foreach(var newQuality in newItem.GetComponentsInChildren<QualityObject>())
+        {
+            if(newQuality.QualityStep._qualityAction == QualityAction.eActionType.ROTATE)
+            {
+                ///check if this QualityStep Exists on either of the previewItems
+                foreach (var controller in _previewedItems)
+                {
+                    foreach (var existingQuality in controller.GetComponentsInChildren<QualityObject>())
+                    {
+                        if (existingQuality.QualityStep == newQuality.QualityStep)
+                        {
+                            ///Transfer the rotation:
+                            var oldRot = existingQuality.transform.rotation;
+                            newQuality.transform.rotation = oldRot;
+                            //Debug.Log($"Trans old {existingQuality.gameObject} to new {newQuality.gameObject}");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private static void ResetSelf()
     {
         _previewedItems.Clear();
@@ -175,4 +144,48 @@ public static class PreviewManager
         _inPreview = false;
     }
 
+
+
+    ///This was to copyTheSwitch over, but going to put on each prefab now
+    /*
+    private static void CheckForSwitch()
+    {
+        if (!_inPreview)
+        {
+            foreach (var item in _previewedItems)
+            {
+                Switch s = item.GetComponentInChildren<Switch>();
+                if (s != null)
+                {
+                    var transform = s.transform;
+                    Vector3 localPos = transform.localPosition;
+                    Quaternion localRot = transform.localRotation;
+                    transform.parent = _previewItem.transform;
+                    transform.localPosition = localPos;
+                    transform.localRotation = localRot;
+                    s.ShowInPreview();
+                    _switchOGParent = item.gameObject;
+                    return;
+                }
+
+            }
+        }
+        else ///switch back via UndoPreview
+        {
+            Switch s = _previewItem.GetComponentInChildren<Switch>();
+            if (s != null)
+            {
+                var transform = s.transform;
+                Vector3 localPos = transform.localPosition;
+                Quaternion localRot = transform.localRotation;
+                s.transform.parent = _switchOGParent.transform;
+                transform.localPosition = localPos;
+                transform.localRotation = localRot;
+                s.ShowNormal();
+                _switchOGParent = null;
+
+            }
+        }
+    }
+    */
 }

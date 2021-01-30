@@ -10,17 +10,26 @@ using UnityEngine.UI;
 [DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
 public class UIInventoryManager : MonoBehaviour
 {
+    [Header("Components")]
+    [SerializeField] protected InventoryBackground _bg;
+    [SerializeField] protected InventoryMask _mask;
+    [SerializeField] protected InventoryContentArea _content;
+    [SerializeField] protected InventoryScrollbar _scrollbarVert;
+    [SerializeField] protected InventoryScrollbar _scrollbarHoriz;
+    [SerializeField] protected InventorySendButton _optionalSendButton;
+    protected Button _sendButton; 
+
     #region GameManager Parameters
     protected int _INVENTORYSIZE;
     protected bool _STACKABLE;
     protected bool _ADDCHAOTIC;
     #endregion
     protected GameObject _bSlotPREFAB;
-    [SerializeField] GameObject _scrollBarVert = default;   
-    [SerializeField] GameObject _scrollBarHoriz = default;
+    ///Dont think were using these anymore dynamically??
+    GameObject _scrollBarVert = default;
+    GameObject _scrollBarHoriz = default;
     public enum eInvType { IN, OUT, STATION };
     protected eInvType _inventoryType;
-    protected Button _optionalSendButton;
     protected UIInventorySlot[] _slots;
     protected List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
 
@@ -31,6 +40,14 @@ public class UIInventoryManager : MonoBehaviour
 
     protected string _prefix;
 
+    public bool IsInitalized { get; protected set; }
+
+
+    protected virtual void Start()
+    {
+
+    }
+
 
     #region Helper Initilization Methods for extended classes
     protected void PrintASequence(int[] sequence, string seqName)
@@ -40,10 +57,10 @@ public class UIInventoryManager : MonoBehaviour
         {
             p += $" , {sequence[i]}";
         }
-         //Debug.Log(seqName+ ": " + p);
+        //Debug.Log(seqName+ ": " + p);
     }
-   
-    
+
+
     /** This is kind of a mess, thinking of making a doubly linked list class at some point*/
     protected int[] getProperSequence(WorkStationManager wm, WorkStation myWS)
     {
@@ -238,7 +255,7 @@ public class UIInventoryManager : MonoBehaviour
 
         GameObject newButton = Instantiate(_bSlotPREFAB) as GameObject;
         newButton.SetActive(true);
-        newButton.transform.SetParent(this.transform, false);
+        newButton.transform.SetParent(_content.transform, false);
         newButton.transform.localPosition = new Vector3(location.x, location.y, 0);
         newButton.name = "bSlot_" + _prefix + " #" + slotSize;
         //Add slot component to our list
@@ -269,6 +286,10 @@ public class UIInventoryManager : MonoBehaviour
         //if(_inventoryType==eInvType.OUT)
         // Debug.Log($"Adding Item to slot {itemID}");
 
+
+        if (!IsInitalized)
+             Start();
+
         if (!_ADDCHAOTIC)
         {
             foreach (UIInventorySlot slot in _slots)
@@ -282,7 +303,7 @@ public class UIInventoryManager : MonoBehaviour
                     return;
             }
             //fell thru so we are full
-            Debug.Log($"we fell thru ..creating new slot q valid={qualities ==null}");
+            Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
             UIInventorySlot nSlot = CreateNewSlot();
             nSlot.AssignItem(itemID, 1, qualities);
             _extraSlots.Add(nSlot);
@@ -343,7 +364,7 @@ public class UIInventoryManager : MonoBehaviour
             if (makeRequired)
                 _available[UnityEngine.Random.Range(0, _available.Count - 1)].SetRequiredID(itemID);
             else
-                _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1, qualities );
+                _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1, qualities);
         }
         else //create an additional slot to add to 
         {
@@ -379,7 +400,7 @@ public class UIInventoryManager : MonoBehaviour
                         slot.AssignItem(itemID, 1, qualities);
                         return true;
                     }
-                   
+
                 }
                 else
                 {
@@ -400,21 +421,21 @@ public class UIInventoryManager : MonoBehaviour
     /** When an item gets assigned to the batch tell the manager*/
     public void CheckIfBatchIsReady()
     {
-       ///TMP off
-       /*
-        foreach (var slot in _slots)
-        {
-            if (!slot.GetInUse())
-            {
-                if (_optionalSendButton)
-                    _optionalSendButton.interactable = false;
-                return;
-            }
-        }
-       */
+        ///TMP off
+        /*
+         foreach (var slot in _slots)
+         {
+             if (!slot.GetInUse())
+             {
+                 if (_optionalSendButton)
+                     _optionalSendButton.interactable = false;
+                 return;
+             }
+         }
+        */
         //If all buttons hold the correct items , we can send
-        if (_optionalSendButton)
-            _optionalSendButton.interactable = true;
+        if (_sendButton)
+            _sendButton.interactable = true;
 
 
     }
@@ -426,9 +447,55 @@ public class UIInventoryManager : MonoBehaviour
         {
             slot.SendData();
         }
-        if (_optionalSendButton)
-            _optionalSendButton.interactable = false;
+
+        bool allowSendWrongItems = false;
+
+        if (allowSendWrongItems)
+        {
+            foreach (var slot in _extraSlots)
+            {
+                slot.SendData();
+            }
+        }
+
+        if (_sendButton)
+            _sendButton.interactable = false;
     }
 
+    public int MaxSlots()
+    {
+        return _slots.Length;
+    }
+
+    public int SlotsInUse()
+    {
+        int count = 0;
+        foreach (var item in _slots)
+        {
+            if (item._inUse)
+                ++count;
+        }
+
+        return count;
+    }
+   
+    public List<UIInventorySlot> GetAllSlotsInUse()
+    {
+        if (!IsInitalized)
+            Start();
+        List<UIInventorySlot> retList = new List<UIInventorySlot>();
+        foreach (var item in _slots)
+        {
+            if (item.GetInUse())
+                retList.Add(item);
+        }
+        foreach (var item in _extraSlots)
+        {
+            if (item.GetInUse())
+                retList.Add(item);
+        }
+        return retList;
+    }
+    
     #endregion
 }

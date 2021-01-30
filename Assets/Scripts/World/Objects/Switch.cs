@@ -5,8 +5,8 @@ using UnityEngine;
 public class Switch : MonoBehaviour, IInteractable
 {
 
-    [SerializeField] GameObject _switch;
-    [SerializeField] GameObject _switchFlipped;
+    [SerializeField] GameObject _switch= default;
+    [SerializeField] GameObject _switchFlipped = default;
 
 
 
@@ -23,13 +23,7 @@ public class Switch : MonoBehaviour, IInteractable
     }
 
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-            OnPress();
-    }
-
-    public void OnPress()
+    public void OnInteract()
     {
         _on = !On;
         ToggleChildren(On);
@@ -105,5 +99,15 @@ public class Switch : MonoBehaviour, IInteractable
         }
     }
 
+    public GameObject GetGameObject() => gameObject;
+
+    public Transform GetParent() => this.transform.parent;
+
+    public Transform Transform() => this.transform;
+
+    public void HandleInteractionTime(float time)
+    {
+
+    }
 
 }

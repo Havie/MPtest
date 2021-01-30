@@ -1,8 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
 
 public interface IInteractable 
 {
-    void OnPress();
+    GameObject GetGameObject();
+
+    Transform GetParent();
+
+    Transform Transform();
+
+
+    void OnInteract();
+
+    void HandleInteractionTime(float time);
+
+
 }

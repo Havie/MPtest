@@ -616,11 +616,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pressTimeCURR: 0
-  _pressTimeMAX: 0.75
   _holdLeniency: 1.5
   _table: {fileID: 0}
   _Raycaster: {fileID: 4003964225437147686}
-  _RaycasterWorld: {fileID: 0}
   _tmpZfix: -9
 --- !u!4 &112527775
 Transform:
@@ -1643,6 +1641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _colorHand1: {r: 0.96862745, g: 0.98039216, b: 0.17254902, a: 0.98039216}
   _colorHand2: {r: 0.9254902, g: 0.6683839, b: 0, a: 0.98039216}
+  _spawnPoint: {fileID: 0}
   _qualityPresets:
   - {fileID: 11400000, guid: 7ac19d165e93f054ca66f5149f476b56, type: 2}
   - {fileID: 11400000, guid: f20ac148d2cbb6c4997131d8f6639d63, type: 2}
@@ -6166,6 +6165,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9009426060544765902, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca58c9199303b3b43ba590d24a08378e, type: 3}
 --- !u!224 &1524058841 stripped
@@ -8740,6 +8744,7 @@ MonoBehaviour:
   _invOUT: {fileID: 0}
   _invSTATION: {fileID: 0}
   _invKITTING: {fileID: 0}
+  _componentList: {fileID: 0}
   _batchWorkStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
     type: 2}
   _pullWorkStationManager: {fileID: 11400000, guid: d1cb6a9cde483834ba58e689f501ea85,
@@ -9275,9 +9280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be7aac295a1160a4c896744edd103c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cGood: {r: 0.7398501, g: 1, b: 0.5896226, a: 1}
-  _cLow: {r: 1, g: 0.92089623, b: 0.3915094, a: 1}
-  _cBad: {r: 1, g: 0.4669811, b: 0.4669811, a: 1}
+  _cm: {fileID: 0}
 --- !u!1 &4003964224940110645
 GameObject:
   m_ObjectHideFlags: 0
