@@ -27,7 +27,7 @@ public static class sServer
         _udpListener = new UdpClient(sNetworkManager._defaultPort);
         _udpListener.EnableBroadcast = true;
         _udpListener.BeginReceive(UDPReceiveCallBack, null);
-        UIManager.instance.DebugLog("Server..listening for hostIP");
+        UIManager.Instance.DebugLog("Server..listening for hostIP");
     }
     public static void BroadCastIP()
     {
@@ -54,7 +54,7 @@ public static class sServer
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
 
-        UIManager.instance.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
+        UIManager.Instance.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
     }
 
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 
@@ -103,7 +103,7 @@ public static class sServer
             {
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
-                    UIManager.instance.DebugLogWarning($"Server Received a string IP: {receiveString}");
+                    UIManager.Instance.DebugLogWarning($"Server Received a string IP: {receiveString}");
                     OnHostIpFound(receiveString);
                 });
 

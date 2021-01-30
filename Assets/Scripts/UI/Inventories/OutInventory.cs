@@ -37,9 +37,9 @@ public class OutInventory : UIInventoryManager
     private void GetGameManagerData()
     {
         _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        _STACKABLE = GameManager.instance._isStackable;
-        _ADDCHAOTIC = GameManager.instance._addChaotic;
-        GameManager.instance.SetInventoryOut(this);
+        _STACKABLE = GameManager.Instance._isStackable;
+        _ADDCHAOTIC = GameManager.Instance._addChaotic;
+        GameManager.Instance.SetInventoryOut(this);
 
     }
 
@@ -49,9 +49,9 @@ public class OutInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = UIManager.instance._workstationManager;
-        int BATCHSIZE = GameManager.instance._batchSize;
-        WorkStation myWS = GameManager.instance._workStation;
+        WorkStationManager wm = UIManager.Instance._workstationManager;
+        int BATCHSIZE = GameManager.Instance._batchSize;
+        WorkStation myWS = GameManager.Instance._workStation;
         ///if batch size =1 , then IN = # of produced Items at station
         if (BATCHSIZE == 1) ///assume batchsize=1 enabled stackable Inv and StationINV is turned on
         {
@@ -71,7 +71,7 @@ public class OutInventory : UIInventoryManager
     private int ParseItems(WorkStationManager wm, WorkStation myWS, bool AddToSlot)
     {
         int count = 0;
-        int BATCHSIZE = GameManager.instance._batchSize;
+        int BATCHSIZE = GameManager.Instance._batchSize;
         //Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
         if (BATCHSIZE == 1) /// PULL SYSTEM
         {

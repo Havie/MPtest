@@ -5,9 +5,9 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 
-public class Client : MonoBehaviour
+public class Client : MonoSingleton<Client>
 {
-    public static Client instance;
+
     public static int _dataBufferSize = 4096;
 
     private string _ip =  "127.0.0.1"; // local host  //"192.168.1.19"
@@ -28,16 +28,6 @@ public class Client : MonoBehaviour
         Disconnect();
     }
 
-    private void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else if(instance!=this)
-         {
-            Debug.LogWarning("Duplicate Clients, destroying");
-            Destroy(this);
-         }
-    }
 
     private void Start()
     {
@@ -53,7 +43,7 @@ public class Client : MonoBehaviour
     private void UpdateHostIP(string address)
     {
         _ip = address;
-        UIManager.instance.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
+        UIManager.Instance.DebugLog("<color=purple>Client received broadcast </color> for new host address" + address);
         ///As Soon as we hear about the first host, Stop caring. (Might have to change later if we swap things, or host DC's)
         sServer.OnHostIpFound -= UpdateHostIP;
     }
@@ -109,7 +99,7 @@ public class Client : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         //Debug.LogWarning($"Connection comparison <color=green>{_isConnected}</color>  <color=blue>{_tcp._socket.Connected}</color>");
         _isConnected = _tcp._socket.Connected;
-        UIManager.instance.Connected(_isConnected);
+        UIManager.Instance.Connected(_isConnected);
     }
 
     public class TCP
@@ -135,7 +125,7 @@ public class Client : MonoBehaviour
 
             _receivedBuffer = new byte[_dataBufferSize];
             _socket.BeginConnect(instance._ip, instance._port, ConnectCallback, _socket);
-            UIManager.instance.DebugLog($"trying to connect to..<color=orange>{instance._ip} </color> port: <color=orange>{instance._port}</color>");
+            UIManager.Instance.DebugLog($"trying to connect to..<color=orange>{instance._ip} </color> port: <color=orange>{instance._port}</color>");
 
         }
 

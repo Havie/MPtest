@@ -5103,7 +5103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testSceneInjection: 1
+  _testSceneInjection: 0
   _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2034715274

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 
-public class ClientHandle : MonoBehaviour
+public class ClientHandle : MonoSingleton<ClientHandle>
 {
     public static void Welcome(sPacket packet)
     {
@@ -16,19 +16,19 @@ public class ClientHandle : MonoBehaviour
         Client.instance._myId = myId;
         ClientSend.WelcomeReceived();
 
+        var instance = GameManager.Instance;
 
+       instance._orderFrequency = packet.ReadInt();
+       instance.BatchChanged(packet.ReadInt());
+       instance.AutoSendChanged(packet.ReadBool());
+       instance._addChaotic = packet.ReadBool();
+       instance._isStackable = packet.ReadBool();
+       instance._workStationArrangement = packet.ReadBool();
+       instance._workStationTaskChanging = packet.ReadBool();
+       instance._HUDManagement = packet.ReadBool();
+       instance._HostDefectPausing = packet.ReadBool();
 
-        GameManager.instance._orderFrequency = packet.ReadInt();
-        GameManager.instance.BatchChanged(packet.ReadInt());
-        GameManager.instance.AutoSendChanged(packet.ReadBool());
-        GameManager.instance._addChaotic = packet.ReadBool();
-        GameManager.instance._isStackable = packet.ReadBool();
-        GameManager.instance._workStationArrangement = packet.ReadBool();
-        GameManager.instance._workStationTaskChanging = packet.ReadBool();
-        GameManager.instance._HUDManagement = packet.ReadBool();
-        GameManager.instance._HostDefectPausing = packet.ReadBool();
-
-        UIManager.instance.DebugLog("WE read GameManager VARS:");
+        UIManager.Instance.DebugLog("WE read GameManager VARS:");
 
         //give UDP the same port our tcp connection is using 
         Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
@@ -45,7 +45,7 @@ public class ClientHandle : MonoBehaviour
         List<QualityObject> qualities = new List<QualityObject>();
 
         var count = packet.ReadInt()/2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
-        UIManager.instance.DebugLog($"ClientHandle Count={count}");
+        UIManager.Instance.DebugLog($"ClientHandle Count={count}");
 
         ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
@@ -58,10 +58,10 @@ public class ClientHandle : MonoBehaviour
 
 
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
-        UIManager.instance.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
+        UIManager.Instance.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
-        GameManager.instance._invIN.AddItemToSlot(itemLvl, qualities,  false);
+        GameManager.Instance._invIN.AddItemToSlot(itemLvl, qualities,  false);
 
     }
 

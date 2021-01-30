@@ -37,7 +37,7 @@ public class Switch : MonoBehaviour, IInteractable
         {
             QualityOverall quality = this.GetComponentInParent<QualityOverall>();
             ObjectController oc = quality.GetComponent<ObjectController>();
-            if (oc._myID == ObjectManager.eItemID.GreenRect1)  ///FinalPower
+           // if (oc._myID == ObjectManager.eItemID.GreenRect1)  ///FinalPower
             {
                 if (QualityChecker.CheckFinalQuality(quality))
                 {

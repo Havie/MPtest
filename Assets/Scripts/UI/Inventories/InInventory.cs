@@ -30,7 +30,7 @@ public class InInventory : UIInventoryManager
         _inventoryType = eInvType.IN;
         GetGameManagerData();
         if (_INVENTORYSIZE == 0)
-            UIManager.instance.HideInInventory();
+            UIManager.Instance.HideInInventory();
         else
             GenInventory();
 
@@ -40,9 +40,9 @@ public class InInventory : UIInventoryManager
     private void GetGameManagerData()
     {
         _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        _STACKABLE = GameManager.instance._isStackable;
-        _ADDCHAOTIC = GameManager.instance._addChaotic;
-        GameManager.instance.SetInventoryIn(this);
+        _STACKABLE = GameManager.Instance._isStackable;
+        _ADDCHAOTIC = GameManager.Instance._addChaotic;
+        GameManager.Instance.SetInventoryIn(this);
     }
 
 
@@ -51,11 +51,11 @@ public class InInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = UIManager.instance._workstationManager;
-        int BATCHSIZE = GameManager.instance._batchSize;
+        WorkStationManager wm = UIManager.Instance._workstationManager;
+        int BATCHSIZE = GameManager.Instance._batchSize;
         //if (BATCHSIZE == 1)
         //    TurnOffScrollBars();
-        WorkStation myWS = GameManager.instance._workStation;
+        WorkStation myWS = GameManager.Instance._workStation;
 
         return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
@@ -69,7 +69,7 @@ public class InInventory : UIInventoryManager
         ///Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
         // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        int BATCHSIZE = GameManager.instance._batchSize;
+        int BATCHSIZE = GameManager.Instance._batchSize;
         if (BATCHSIZE == 1)
         {
             ///look at the last tasks final items in the station before mine
@@ -155,7 +155,7 @@ public class InInventory : UIInventoryManager
 
     private void SetUpStartingItems()
     {
-        ParseItems(UIManager.instance._workstationManager, GameManager.instance._workStation, true);
+        ParseItems(UIManager.Instance._workstationManager, GameManager.Instance._workStation, true);
     }
 
 

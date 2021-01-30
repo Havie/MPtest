@@ -32,12 +32,12 @@ public class UIKitting : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.instance.SetInventoryKitting(this);
+        GameManager.Instance.SetInventoryKitting(this);
         if (_bORDERPREFAB == null)
             _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder");
 
-        _ORDERFREQUENCY = GameManager.instance._orderFrequency;
-        _componentList = GameManager.instance._componentList;
+        _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
+        _componentList = GameManager.Instance._componentList;
 
         SendInNewOrder();
     }

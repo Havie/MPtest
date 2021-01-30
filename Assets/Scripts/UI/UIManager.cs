@@ -6,10 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
-public class UIManager : MonoBehaviour
+public class UIManager : MonoSingletonBackwards<UIManager>
 {
-
-    public static UIManager instance;
 
 
     [Header("Networking Components")]
@@ -36,22 +34,10 @@ public class UIManager : MonoBehaviour
     public Image _touchPhaseDisplay;
     public Image _previewSlot;
 
-    [Header("Debugg Console")]
-    public Text _debugText;
-    public int _maxTextSize = 350;
 
 
     #region Init
-    private void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
-        {
-            DebugLogWarning("Duplicate _instance, destroying : " + this.gameObject);
-            Destroy(this);
-        }
-    }
+
 
     private void Start()
     {
@@ -95,7 +81,7 @@ public class UIManager : MonoBehaviour
     private void SetUpWorkStationDropDownMenu()
     {
         //DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
-        _workstationManager = GameManager.instance.CurrentWorkStationManager;
+        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
 
         //Set up workstation selection
         if (_workstationManager != null && _workStationDropDown)
@@ -120,7 +106,7 @@ public class UIManager : MonoBehaviour
 
     public void Connected(bool cond)
     {
-        if(!cond)
+        if (!cond)
             DebugLogWarning($"connected to server = <color=red>{cond}</color>");
 
         if (_loadingTxt)
@@ -165,9 +151,12 @@ public class UIManager : MonoBehaviour
 
     public void BeginLevel(int itemLevel)
     {
+        Debug.Log($"<color=yellow> BeginLevel! </color>{itemLevel}");
+      
+
         //Debug.Log("called BeginLevel");
         //Setup the proper UI for our workStation
-        WorkStation ws = GameManager.instance._workStation;
+        WorkStation ws = GameManager.Instance._workStation;
 
         if (_tmpConfirmWorkStation && _loadingTxt && _workStationDropDown)
         {
@@ -176,13 +165,11 @@ public class UIManager : MonoBehaviour
             _workStationDropDown.SetActive(false);
         }
 
-        if (_inventoryCanvas && _networkingCanvas)
-        {
+        if (_inventoryCanvas)
             _inventoryCanvas.SetActive(true); ///when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
+        if (_networkingCanvas)
             _networkingCanvas.SetActive(false);
-        }
-        else
-            Debug.LogWarning("(UIManager): <color=red>Missing BeginLevel Canvases </color> , this should be fine if in test scene");
+
 
 
         // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");
@@ -236,8 +223,10 @@ public class UIManager : MonoBehaviour
     }
     public void ConfirmWorkStation()
     {
+        SceneLoader.LoadLevel("Inventory");
         int itemID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
         BeginLevel(itemID);
+
     }
 
     public void SwitchToHost()
@@ -334,62 +323,20 @@ public class UIManager : MonoBehaviour
     #region Debugger
     public void DebugLog(string text)
     {
-        if (_debugText)
-        {
-            try
-            {
-                _debugText.text = _debugText.text + "\n" + text;
-
-                if (_debugText.text.Length > _maxTextSize)
-                    _debugText.text = _debugText.text.Substring(_debugText.text.Length - 1 - _maxTextSize);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"DebugText throwng exepection {e}");
-            }
-
-        }
-        Debug.Log(text);
+        DebugCanvas.Instance.DebugLog(text);
     }
     public void DebugLogWarning(string text)
     {
-        if (_debugText)
-        {
-            try
-            {
-                _debugText.text = _debugText.text + "\n" + text;
-
-                if (_debugText.text.Length > _maxTextSize)
-                    _debugText.text = _debugText.text.Substring(_debugText.text.Length - 1 - _maxTextSize);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"DebugText throwng exepection {e}");
-            }
-        }
-        Debug.LogWarning(text);
+        DebugCanvas.Instance.DebugLogWarning(text);
     }
     public void DebugLogError(string text)
     {
-        try
-        {
-            _debugText.text = _debugText.text + "\n" + text;
-            if (_debugText.text.Length > _maxTextSize)
-                _debugText.text = text;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"DebugText throwng exepection {e}");
-        }
-        Debug.LogError(text);
+        DebugCanvas.Instance.DebugLogError(text);
     }
 
     public void ClearDebugLog()
     {
-        if (_debugText)
-        {
-            _debugText.text = "";
-        }
+        DebugCanvas.Instance.ClearDebugLog();
     }
 
     #endregion

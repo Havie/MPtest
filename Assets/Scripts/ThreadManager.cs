@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThreadManager : MonoBehaviour
+public class ThreadManager : MonoSingleton<ThreadManager>
 {
     private static readonly List<Action> executeOnMainThread = new List<Action>();
     private static readonly List<Action> executeCopiedOnMainThread = new List<Action>();
