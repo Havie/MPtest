@@ -1928,7 +1928,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2106156287}
   m_Layer: 0
-  m_Name: SpawnPoint (Missing Prefab)
+  m_Name: 'SpawnPoint '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5270,6 +5270,7 @@ MonoBehaviour:
   _hand2: {fileID: 5394208262529672883}
   _touchPhaseDisplay: {fileID: 6853997422946891806}
   _previewSlot: {fileID: 1297931750386382736}
+  _kittingShownOverride: {fileID: 558761535}
 --- !u!1 &2080655771
 GameObject:
   m_ObjectHideFlags: 0
@@ -5483,9 +5484,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 680986203}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.37, z: -9.63}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.087, y: 2.234, z: -9}
+  m_LocalScale: {x: 0.40257, y: 0.40257, z: 0.40257}
   m_Children:
   - {fileID: 448248971}
   m_Father: {fileID: 383828560}

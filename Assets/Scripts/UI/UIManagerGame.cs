@@ -17,7 +17,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     public Button _hand2;
     public Image _touchPhaseDisplay;
     public Image _previewSlot;
-
+    public ClickToShow _kittingShownOverride;
 
 
     #region Init
@@ -71,14 +71,16 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     private void SwitchToKitting()
     {
-
-        if (_normalInventory != null)
-            _normalInventory.SetActive(false);
-        else
-            Debug.LogError("normal??");
+        Debug.Log("SwitchToKitting");
 
         if (_kittingInventory != null)
             _kittingInventory.SetActive(true);
+
+        if (_normalInventory != null)
+            _normalInventory.SetActive(false);
+
+        if (_kittingShownOverride)
+            _kittingShownOverride.ClickToShowObject();
 
         GameManager.instance._isStackable = true;
 
@@ -154,24 +156,4 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     #endregion
 
 
-    #region Debugger
-    public void DebugLog(string text)
-    {
-        DebugCanvas.Instance.DebugLog(text);
-    }
-    public void DebugLogWarning(string text)
-    {
-        DebugCanvas.Instance.DebugLogWarning(text);
-    }
-    public void DebugLogError(string text)
-    {
-        DebugCanvas.Instance.DebugLogError(text);
-    }
-
-    public void ClearDebugLog()
-    {
-        DebugCanvas.Instance.ClearDebugLog();
-    }
-
-    #endregion
 }

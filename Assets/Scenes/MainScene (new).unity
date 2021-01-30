@@ -2904,7 +2904,7 @@ MonoBehaviour:
         m_CallState: 2
   _hostMenuManager: {fileID: 326037683}
   _myComponent: {fileID: 232537370}
-  _defaultValue: 1
+  _defaultValue: 2
 --- !u!1 &744841148
 GameObject:
   m_ObjectHideFlags: 0
@@ -4250,7 +4250,7 @@ MonoBehaviour:
         m_CallState: 2
   _hostMenuManager: {fileID: 326037683}
   _myComponent: {fileID: 1382121939}
-  _defaultValue: 1
+  _defaultValue: 15
 --- !u!1 &1198987081
 GameObject:
   m_ObjectHideFlags: 0

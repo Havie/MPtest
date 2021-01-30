@@ -8,7 +8,7 @@ public class UIKitting : MonoBehaviour
     private GameObject _bORDERPREFAB;
 
     private int _ORDERFREQUENCY;
-    private float _timeToOrder;
+    private float _timeToOrder = float.MaxValue;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
     private int _startingY = 350;
@@ -28,7 +28,6 @@ public class UIKitting : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(false);
             Destroy(transform.GetChild(0).gameObject);
         }
-        OnEnable();
     }
 
     private void OnEnable()
@@ -40,7 +39,6 @@ public class UIKitting : MonoBehaviour
         _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
         _componentList = GameManager.Instance._componentList;
 
-        SendInNewOrder();
     }
 
 
@@ -86,7 +84,6 @@ public class UIKitting : MonoBehaviour
         }
 
         // printOrderList(componentOrder);
-        Debug.Log("Kitting wants to send in new order:");
         PartDropper.Instance.SendInOrder(componentOrder);
         AddOrder(finalItemId);
     }

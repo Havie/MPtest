@@ -43,14 +43,14 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             //Debug.Log(" confirm station off");
         }
         else
-            DebugLogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
+            UIManager.DebugLogWarning("(UIManager): Missing Start objects (if in a test scene without networking this is fine)");
 
         if (_networkingCanvas)
         {
             _networkingCanvas.SetActive(true);
         }
         else
-            DebugLogWarning("(UIManager): Missing BeginLevel Canvases");
+            UIManager.DebugLogWarning("(UIManager): Missing BeginLevel Canvases");
 
         sServer.OnHostIpFound += DisableHostButton;
     }
@@ -62,13 +62,13 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     private void SetUpWorkStationDropDownMenu()
     {
         //DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
-        _workstationManager =GameManager.Instance.CurrentWorkStationManager;
+        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
 
         //Set up workstation selection
         if (_workstationManager != null && _workStationDropDown)
             _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
         else
-            DebugLogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
+            UIManager.DebugLogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
 
     }
 
@@ -81,14 +81,14 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             _usernameField.gameObject.SetActive(cond);
         }
         else
-            DebugLogWarning("(UIManager): Missing EnablePanel objects");
+            UIManager.DebugLogWarning("(UIManager): Missing EnablePanel objects");
     }
 
 
     public void Connected(bool cond)
     {
         if (!cond)
-            DebugLogWarning($"connected to server = <color=red>{cond}</color>");
+            UIManager.DebugLogWarning($"connected to server = <color=red>{cond}</color>");
 
         if (_loadingTxt)
             StartCoroutine(ConnectionResult(cond));
@@ -203,7 +203,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public void PrintMyIp()
     {
 
-        DebugLog(sServer.GetLocalIPAddress());
+        UIManager.DebugLog(sServer.GetLocalIPAddress());
     }
 
     #endregion
@@ -213,26 +213,5 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         // BroadcastListener.Instance.OnHostIpFound -= DisableHostButton;
     }
 
-
-
-    #region Debugger
-    public void DebugLog(string text)
-    {
-        DebugCanvas.Instance.DebugLog(text);
-    }
-    public void DebugLogWarning(string text)
-    {
-        DebugCanvas.Instance.DebugLogWarning(text);
-    }
-    public void DebugLogError(string text)
-    {
-        DebugCanvas.Instance.DebugLogError(text);
-    }
-
-    public void ClearDebugLog()
-    {
-        DebugCanvas.Instance.ClearDebugLog();
-    }
-
-    #endregion
 }
+
