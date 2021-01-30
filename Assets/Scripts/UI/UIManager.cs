@@ -14,28 +14,41 @@ public static class UIManager
     public static bool LoadedFromMenu { get; private set; } = false;
     public static int StationToInject { get; private set; } = 0;
 
+    ///THIS SCRIPT IS REALLY A TMP HACK
+    ///MOST OF THE STUFF IN HERE WAS SO I DIDNT HAVE TO GO AROUND TO EVERY SCRIPT AND REFACTOR IT TO CALL THE RIGHT MANAGER..
+
     #region Init
 
     public static void RegisterNetworkManager(UIManagerNetwork manager) { _networkManager = manager; }
 
     public static void RegisterGameManager(UIManagerGame manager) { _invManager = manager; }
+    /************************************************************************************************************************/
 
-
-
-    public static string GetUserName()
+    #endregion
+    /// <summary> Used to pass station choice between scenes </summary>
+    public static void SetStationLevel(int itemLevel)
     {
-        return _networkManager == null ? "NoName" : _networkManager._usernameField.text;
+        ///THIS is Circular >.< 
+        LoadedFromMenu = true;
+        StationToInject = itemLevel;
     }
 
-    public static WorkStationManager GetWSManager()
+    /************************************************************************************************************************/
+
+    ///Indirect from UIHostMenu button call:
+    public static void ConnectToServer()
     {
-        return GameManager.Instance.CurrentWorkStationManager;
+        if (_networkManager)
+            _networkManager.ConnectToServer();
+
+    }
+    public static void Connected(bool cond)
+    {
+        if (_networkManager)
+            _networkManager.Connected(cond);
     }
 
-    public static GameObject GetInventoryCanvas()
-    {
-        return _invManager == null ? null : _invManager._inventoryCanvas;
-    }
+    /************************************************************************************************************************/
 
     public static void ShowPreviewInvSlot(bool cond, Vector3 pos, Sprite img)
     {
@@ -43,22 +56,6 @@ public static class UIManager
             _invManager.ShowPreviewInvSlot(cond, pos, img);
     }
 
-
-
-
-
-    public static void Connected(bool cond)
-    {
-        if (_networkManager)
-            _networkManager.Connected(cond);
-    }
-
-    public static void SetStationLevel(int itemLevel)
-    {
-        ///THIS is Circular >.< 
-        LoadedFromMenu = true;
-        StationToInject = itemLevel;
-    }
 
     public static void BeginLevel(int itemLevel)
     {
@@ -70,35 +67,20 @@ public static class UIManager
     }
 
 
+    /************************************************************************************************************************/
+
+
+
     public static void HideInInventory()
     {
         if (_invManager)
             _invManager.HideInInventory();
     }
 
-    #endregion
-
-
-    #region ActionsfromButtons
-    ///Indirect from UIHostMenu button call:
-    public static void ConnectToServer()
-    {
-        if (_networkManager)
-            _networkManager.ConnectToServer();
-
-    }
-    #endregion
-
-
-    #region RunTime Actions
     public static void ShowTouchDisplay(float pressTime, float pressTimeMax, Vector3 pos)
     {
         if (_invManager)
             _invManager.ShowTouchDisplay(pressTime, pressTimeMax, pos);
-    }
-    private static Color SetTouchPhaseOpacity(float perct)
-    {
-        return Color.white;
     }
 
     public static void HideTouchDisplay()
@@ -106,7 +88,6 @@ public static class UIManager
         if (_invManager)
             _invManager.HideTouchDisplay();
     }
-
 
     public static void UpdateHandLocation(int index, Vector3 worldLoc)
     {
@@ -127,9 +108,7 @@ public static class UIManager
     }
 
 
-    #endregion
-
-
+    /************************************************************************************************************************/
 
 
     #region Debugger

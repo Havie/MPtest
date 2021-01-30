@@ -49,7 +49,7 @@ public class OutInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = UIManager.GetWSManager();
+        WorkStationManager wm = GameManager.Instance.CurrentWorkStationManager;
         int BATCHSIZE = GameManager.Instance._batchSize;
         WorkStation myWS = GameManager.Instance._workStation;
         ///if batch size =1 , then IN = # of produced Items at station
@@ -205,7 +205,7 @@ public class OutInventory : UIInventoryManager
 
         //cache a conditions for forloop situations
         bool cond = GameManager.instance._autoSend; //used By eInvType.OUT
-        WorkStationManager wm = UIManager.GetWSManager();
+        WorkStationManager wm =GameManager.Instance.CurrentWorkStationManager;
         WorkStation myWS = GameManager.instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
 

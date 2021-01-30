@@ -51,7 +51,7 @@ public class InInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = UIManager.GetWSManager();
+        WorkStationManager wm = GameManager.Instance.CurrentWorkStationManager;
         int BATCHSIZE = GameManager.Instance._batchSize;
         //if (BATCHSIZE == 1)
         //    TurnOffScrollBars();
@@ -155,7 +155,7 @@ public class InInventory : UIInventoryManager
 
     private void SetUpStartingItems()
     {
-        ParseItems(UIManager.GetWSManager(), GameManager.Instance._workStation, true);
+        ParseItems(GameManager.Instance.CurrentWorkStationManager, GameManager.Instance._workStation, true);
     }
 
 

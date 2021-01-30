@@ -35,7 +35,7 @@ public class StationInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = UIManager.GetWSManager();
+        WorkStationManager wm =GameManager.Instance.CurrentWorkStationManager;
 
 
         int BATCHSIZE = GameManager.Instance._batchSize;
@@ -152,7 +152,7 @@ public class StationInventory : UIInventoryManager
         //cache a conditions for forloop situations
         Dictionary<Task, int> seenTasks = new Dictionary<Task, int>(); //used By eInvType.STATION
         List<int> seenItems = new List<int>();
-        WorkStationManager wm = UIManager.GetWSManager();
+        WorkStationManager wm =GameManager.Instance.CurrentWorkStationManager;
         WorkStation myWS = GameManager.Instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
         _prefix = "station_";

@@ -192,7 +192,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     #endregion
     public void SendData()
     {
-        //Debug.Log("   ....... CALLLED SEND DATA ........        ");
+        Debug.Log($"   ....... CALLLED SEND DATA ........  _inUse= {_inUse}     ");
         WorkStation myStation = GameManager.instance._workStation;
 
         if (_inUse)//&& WorkStation._stationFlow.ContainsKey((int)myStation._myStation))

@@ -29,7 +29,11 @@ public class InventoryMask : InventoryComponent
 
         Vector2 reducedSize = new Vector2(size.x, size.y - _reducedSizeY);
 
+        if(_rt)
         _rt.sizeDelta = reducedSize;
+        else
+            Debug.Log($"<color=yellow> why is rt missing for </color> {this.gameObject.name}");
+
 
         if (_viewPort)
             _viewPort.ChangeRectTransform(reducedSize);

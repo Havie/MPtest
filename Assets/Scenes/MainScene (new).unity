@@ -4467,7 +4467,6 @@ MonoBehaviour:
   _tmpConfirmWorkStation: {fileID: 863135810}
   _tmpObjectPREFAB: {fileID: 6467200454433006771, guid: de4b9158f6dbe6440b5579dd5847acaa,
     type: 3}
-  _workstationManager: {fileID: 0}
 --- !u!4 &1316100032
 Transform:
   m_ObjectHideFlags: 0
@@ -9078,6 +9077,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DebugCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6144399833443023763, guid: e01528de33351d44b9d69745be493a28,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6144399834748454098, guid: e01528de33351d44b9d69745be493a28,
         type: 3}

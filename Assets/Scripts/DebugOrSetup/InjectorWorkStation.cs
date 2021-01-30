@@ -16,11 +16,14 @@ public class InjectorWorkStation : MonoBehaviour
     void Start()
     {
         if (UIManager.LoadedFromMenu)
+        {
             _stationToInject = UIManager.StationToInject;
+            _testSceneInjection = true; ///This is really more mandatory now
+        }
 
         Debug.Log($"The scene injector thinks: <color=green>{_testSceneInjection}</color> vs  <color=red>{UIManager.LoadedFromMenu}</color> "); 
 
-        _workStationManager = UIManager.GetWSManager();
+        _workStationManager = GameManager.Instance.CurrentWorkStationManager;
         _workStations = _workStationManager.GetStationList();
         if (_testSceneInjection)
         {

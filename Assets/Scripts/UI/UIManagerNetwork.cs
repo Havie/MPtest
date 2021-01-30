@@ -62,7 +62,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     private void SetUpWorkStationDropDownMenu()
     {
         //DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
-        _workstationManager = UIManager.GetWSManager();
+        _workstationManager =GameManager.Instance.CurrentWorkStationManager;
 
         //Set up workstation selection
         if (_workstationManager != null && _workStationDropDown)

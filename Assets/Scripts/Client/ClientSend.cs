@@ -22,7 +22,7 @@ public class ClientSend : MonoBehaviour
         {
            // Debug.Log("THE ID Sent= " + Client.instance._myId  + " the string= " + UIManager.instance._usernameField);
             packet.Write(Client.instance._myId);
-            packet.Write(UIManager.GetUserName());
+            packet.Write(UIManagerNetwork.instance._usernameField.text);
             //TODO fix this and send it AFTER we've chosen a work station (hardcoded atm)
             packet.Write((int)GameManager.Instance._workStation._myStation);
 
