@@ -20,6 +20,7 @@ public class QualityObject : MonoBehaviour
     public int MaxQuality => _qualityStep._requiredActions;
     public int ID => _qualityStep.Identifier;
     public int CurrentQuality => _currentActions <= MaxQuality ? _currentActions : 0 ;
+    public int CurrentActions => _currentActions;
     public QualityStep QualityStep => _qualityStep;
 
 
@@ -42,7 +43,7 @@ public class QualityObject : MonoBehaviour
     }
     public void CloneQuality(QualityObject toCopy)
     {
-        Debug.Log($"{this.gameObject.name} copying {toCopy}");
+       // Debug.Log($"{this.gameObject.name} copying {toCopy}");
         AssignCurrentActions(toCopy.CurrentQuality);
     }
 
@@ -54,6 +55,7 @@ public class QualityObject : MonoBehaviour
 
     public bool PerformAction(QualityAction action)
     {
+        //Debug.Log($"Perform {action._actionType} on {this.gameObject.name} _isDummy={_isDummy}");
         if (_isDummy)
             return false;
 
@@ -122,25 +124,17 @@ public class QualityObject : MonoBehaviour
     }
     private void PerformEffect()
     {
-        if (VFXManager.Instance)
+        if (VFXManager.Instance) ///TODO cache the instance?
         {
-           
             VFXManager.Instance.PerformEffect(_qualityVFXPREFAB, this.transform);
         }
-
-        /////do any VFX 
-        //if (_vfx == null)
-        //{
-        //    _vfx = GameObject.Instantiate<GameObject>(_qualityVFXPREFAB, this.transform).GetComponent<ParticleSystem>();
-        //}
-        //else
-        //{
-        //    _vfx.Play();
-        //}
+        else
+            Debug.Log("<color=yellow>no vfx?</color>");
     }
 
     private void IncreaseQuality()
     {
+        //Debug.Log($"<color=green>IncreaseQuality</color>!  on {this.gameObject.name} ");
         ++_currentActions; ///Increase our quality
         PerformEffect();
     }

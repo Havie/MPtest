@@ -115,6 +115,7 @@ public class RotationState : InputState
         {
             if (_currentSelection != null)
             {
+                //Debug.Log($"<color=blue> TryQualityAction</color>-->{_currentSelection} ");
                 TryPerformAction(QualityAction.eActionType.ROTATE, inputPos, _rotationAmount);
                 TryPerformAction(QualityAction.eActionType.TAP, inputPos, _rotationAmount);
                 _currentSelection.OnInteract();

@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [DefaultExecutionOrder(-599)] ///Load a little earlier
@@ -105,14 +105,11 @@ public class BuildableObject : MonoBehaviour
         return qs;
     }
 
-    public void DestroyObject(GameObject obj)
-    {
-        Destroy(obj);
-    }
+    public void DestroyObject(GameObject obj){Destroy(obj);}
 
     public GameObject DropItemInWorld(int itemID)
     {
-       // Debug.Log($"Drop item ID: {itemID}");
+        // Debug.Log($"Drop item ID: {itemID}");
         var prefab = _manager.GetObject(itemID);
         if (!prefab || !_spawnPoint)
             return null; ///Prevent any NPEs
@@ -149,21 +146,7 @@ public class BuildableObject : MonoBehaviour
         if (controller)
             controller.PutDown(); ///turn on physics 
 
-        if (qualities != null && qualities.Count > 0)
-        {
-            var overallQuality = newObj.GetComponent<QualityOverall>();
-            if (overallQuality)
-            {
-                foreach (var q in qualities)
-                {
-                    overallQuality.ReadOutQuality(q);
-                    Destroy(q);
-                    Debug.Log("Copied and removed A quality");
-                }
-            }
-            else
-                Debug.LogWarning($"Somehow theres qualities associated w a prefab without an OverallQualityManager {newObj.name}");
-        }
+        LoadQualitiesOntoObject(qualities, newObj);
 
         return newObj;
     }
@@ -177,14 +160,35 @@ public class BuildableObject : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
+    private void LoadQualitiesOntoObject(List<QualityObject> qualities, GameObject newObj)
+    {
+        if (qualities != null && qualities.Count > 0)
+        {
+            var overallQuality = newObj.GetComponent<QualityOverall>();
+            if (overallQuality)
+            {
+                List<QualityObject> childrenQualities = newObj.GetComponentsInChildren<QualityObject>().ToList();
+                foreach (QualityObject clonedQuality in qualities)
+                {
+                    foreach (QualityObject currQuality in childrenQualities)
+                    {
+                        if (clonedQuality.QualityStep == currQuality.QualityStep)
+                        {
+                            currQuality.AssignCurrentActions(clonedQuality.CurrentActions);
+                        }
+                        else
+                        {
+                            overallQuality.ReadOutQuality(clonedQuality);
+                        }
+                        //Debug.Log("Copied and removed A quality");
+                        Destroy(clonedQuality);///This is the dummy component being stored
+                    }
+                }
+            }
+            else
+                Debug.LogWarning($"<color=yellow>!!</color>..Somehow theres qualities associated w a prefab without an OverallQualityManager {newObj.name}");
+        }
+    }
 
-
-    //void Update()
-    //{
-    //    if (Input.GetMouseButtonDown(1))
-    //    {
-    //        DropItemInWorld(Random.Range(1,5));
-    //    }
-    //}
     #endregion
 }

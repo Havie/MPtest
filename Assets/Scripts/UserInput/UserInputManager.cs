@@ -9,7 +9,7 @@ using UnityEngine.UI;
 ///Could move the Awake/Start Functions into the constructor-they arent doing much
 
 public class UserInputManager : MonoBehaviour
-{ 
+{
     public static UserInputManager Instance { get; private set; }
 
 
@@ -71,7 +71,7 @@ public class UserInputManager : MonoBehaviour
     void CreateStates()
     {
         ///This is going to need to be abstracted into the IMoveable interface:
-       
+
 
         _freeState = new FreeState(this);
         _rotationState = new RotationState(this, _holdLeniency, _pressTimeMAX);
@@ -144,7 +144,7 @@ public class UserInputManager : MonoBehaviour
         float zCoord = screenPtObj.z;
         ///gets the world loc based on inputpos and gives it the z depth from the obj
         Vector3 worldLocInput = GetInputWorldPos(zCoord);
-       // Debug.Log($" {(currSelectionTransform).position} Thinks ScreenSpace:zCoord is : <color=yellow> {zCoord} </color> which becomes :<color=Green> {worldLocInput} </color>");
+        // Debug.Log($" {(currSelectionTransform).position} Thinks ScreenSpace:zCoord is : <color=yellow> {zCoord} </color> which becomes :<color=Green> {worldLocInput} </color>");
         return new Vector3(worldLocInput.x, worldLocInput.y, currSelectionTransform.position.z);
     }
     public Vector3 GetCurrentWorldLocBasedOnPos(Transform safePlaceToGo, IInteractable currentSelection)
@@ -172,7 +172,7 @@ public class UserInputManager : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
         if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
         {
-           // Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
+            //Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
             return (hit.transform.gameObject.GetComponent<IInteractable>());
         }
 
@@ -196,7 +196,7 @@ public class UserInputManager : MonoBehaviour
             //Debug.Log("hit =" + result.gameObject);
             IAssignable slot = result.gameObject.transform.GetComponent<IAssignable>();
 
-            if (slot!=null)
+            if (slot != null)
                 return slot;
         }
 
