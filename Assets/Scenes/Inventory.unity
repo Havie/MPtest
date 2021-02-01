@@ -716,10 +716,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _optionalChildrenItems: {fileID: 5622523479692622442}
   _mask: {fileID: 1247169880}
-  _content: {fileID: 1857107776}
-  _scrollbarVert: {fileID: 3790365783687885473}
-  _scrollbarHoriz: {fileID: 0}
-  _optionalSendButton: {fileID: 5394208262752586037}
 --- !u!1 &196202561
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,7 +1592,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c760359b24e04c498d50966dcdc53c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bg: {fileID: 1340030653}
   _viewPort: {fileID: 1277595933}
 --- !u!1 &558761533
 GameObject:
@@ -2737,6 +2732,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 567313525dd6c3b43b144d83a99cc633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _scrollbarVert: {fileID: 3790365783687885473}
+  _scrollbarHoriz: {fileID: 0}
 --- !u!1 &863923440
 GameObject:
   m_ObjectHideFlags: 0
@@ -3268,7 +3265,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c760359b24e04c498d50966dcdc53c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bg: {fileID: 138759390}
   _viewPort: {fileID: 824381739}
 --- !u!1 &1260756866
 GameObject:
@@ -3376,6 +3372,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 567313525dd6c3b43b144d83a99cc633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _scrollbarVert: {fileID: 1558017360}
+  _scrollbarHoriz: {fileID: 0}
 --- !u!1 &1303010552
 GameObject:
   m_ObjectHideFlags: 0
@@ -3750,10 +3748,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _optionalChildrenItems: {fileID: 5843297068362309736}
   _mask: {fileID: 460586905}
-  _content: {fileID: 332222017}
-  _scrollbarVert: {fileID: 1558017360}
-  _scrollbarHoriz: {fileID: 0}
-  _optionalSendButton: {fileID: 0}
 --- !u!1001 &1360056318
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5010,7 +5004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 4
+  _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -7048,10 +7042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bg: {fileID: 0}
-  _mask: {fileID: 0}
   _content: {fileID: 0}
-  _scrollbarVert: {fileID: 0}
-  _scrollbarHoriz: {fileID: 0}
   _optionalSendButton: {fileID: 0}
   _maxItemsPerRow: 3
   _maxColSize: 425
@@ -7068,10 +7059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bg: {fileID: 138759390}
-  _mask: {fileID: 1247169880}
   _content: {fileID: 1857107776}
-  _scrollbarVert: {fileID: 3790365783687885473}
-  _scrollbarHoriz: {fileID: 0}
   _optionalSendButton: {fileID: 5394208262752586037}
   _maxItemsPerRow: 3
   _maxColSize: 425
@@ -11748,10 +11736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bg: {fileID: 1340030653}
-  _mask: {fileID: 460586905}
   _content: {fileID: 332222017}
-  _scrollbarVert: {fileID: 1558017360}
-  _scrollbarHoriz: {fileID: 0}
   _optionalSendButton: {fileID: 0}
   _maxItemsPerRow: 3
   _maxColSize: 425
