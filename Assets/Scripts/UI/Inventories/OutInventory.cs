@@ -5,9 +5,7 @@ using UnityEngine.UI;
 
 public class OutInventory : UIInventoryManager
 {
-    [Header("Specifications")]
-    [SerializeField] int _maxItemsPerRow = 4;
-    [SerializeField] int _maxColSize = 425;
+
 
     #region InitalSetup
     protected override void Start()
@@ -227,55 +225,6 @@ public class OutInventory : UIInventoryManager
     }
 
 
-    /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
-    protected override void SetSizeOfContentArea()
-    {
-        if (_xMaxPerRow == 0)
-            return;
-
-        Vector2 size = Vector2.zero;
-
-
-        if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
-        else
-            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * 0), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding *0)));
-
-        //((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding /2))
-
-        // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
-
-        if (_content)
-            _content.ChangeRectTransform(size);
-
-        ///Recalibrate
-        if (size.y > _maxColSize)
-            size.y = _maxColSize;
-
-        if (_bg) ///Make sure this called before Mask
-            _bg.ChangeRectTransform(size);
-        if (_mask)
-            _mask.ChangeRectTransform(size);
-        if (_scrollbarVert)
-            _scrollbarVert.ChangeRectTransform(size);
-        if (_scrollbarHoriz)
-            _scrollbarHoriz.ChangeRectTransform(size);
-        if (_optionalSendButton)
-            _optionalSendButton.ChangeRectTransform(size);
-        //if (_optionalSendButton)
-        //    _optionalSendButton.transform.position = FindBelowBG();
-
-            // Debug.Log($"(X:{(_xMaxPerRow * _cellPadding) + (_cellPadding / 2)} , Y: {((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding))} ) {_INVENTORYSIZE} / {_xMaxPerRow} = {(_INVENTORYSIZE / _xMaxPerRow)} Mod1:: {_INVENTORYSIZE-1 % _xMaxPerRow }");
-    }
-
-    private Vector3 FindBelowBG()
-    {
-        RectTransform rt = _bg.GetComponent<RectTransform>();
-        Vector3 worldPosTop = rt.position;
-        worldPosTop.y = worldPosTop.y - rt.sizeDelta.y;
-
-        return worldPosTop;
-    }
 
 
     #endregion

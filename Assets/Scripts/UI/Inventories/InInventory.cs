@@ -7,9 +7,6 @@ public class InInventory : UIInventoryManager
 {
     #region InitalSetup
 
-    [Header("Specifications")]
-    [SerializeField] int _maxItemsPerRow = 4;
-    [SerializeField] int _maxColSize = 425;
 
     protected override void Start()
     {
@@ -208,17 +205,21 @@ public class InInventory : UIInventoryManager
             return;
 
         Vector2 size = Vector2.zero;
-
+        float extraCellpaddingX = DetermineXPadding();
+        float extraCellpaddingY = DetermineYPadding();
 
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
+            size = new Vector2(_cellPadding * extraCellpaddingX, _cellPadding * extraCellpaddingY); ///will need to change if we add more than 1 item
         else
-            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * 0), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding * 0)));
+            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * extraCellpaddingX), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding * extraCellpaddingY)));
+
 
 
         if (_content)
+        {
+            size.y += _content.GetReducedYSize;
             _content.ChangeRectTransform(size);
-
+        }
         ///Recalibrate
         if (size.y > _maxColSize)
             size.y = _maxColSize;
@@ -235,11 +236,26 @@ public class InInventory : UIInventoryManager
         // Debug.Log($"(X:{(_xMaxPerRow * _cellPadding) + (_cellPadding / 2)} , Y: {((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding))} ) {_INVENTORYSIZE} / {_xMaxPerRow} = {(_INVENTORYSIZE / _xMaxPerRow)} Mod1:: {_INVENTORYSIZE-1 % _xMaxPerRow }");
     }
 
-    public string GetRT()
+    float DetermineXPadding()
     {
-        RectTransform rt = this.GetComponent<RectTransform>();
-        return rt.sizeDelta.ToString();
+        if (_xMaxPerRow > _maxItemsPerRow)
+            return 1;
+        else
+            return 0;
     }
+    float DetermineYPadding()
+    {
+        //Debug.Log($" YHEIGHT:{((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding)}  vs {_cellPadding * 2}");
 
+        ///Need to return the difference of whatver padding required to makes 425
+        //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
+        ///the difference of whatever makes the padding equal to (_cellPadding * 2)
+        var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
+
+        if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
+            return retVal;
+        else
+            return 0.50f;
+    }
     #endregion
 }

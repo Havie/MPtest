@@ -17,7 +17,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] Button _hand2;
     [SerializeField] Image _touchPhaseDisplay;
     [SerializeField] Image _previewSlot;
-    ///These are required to toggle on/off the inventories, to let them run their awake/start functions, otherwise adding a component to an inventory that hasnt run yet has undesired results
     [SerializeField] ClickToShow _inBinToggle;
     [SerializeField] ClickToShow _outBinToggle;
 
@@ -71,8 +70,11 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     }
 
+    ///This are required to toggle on/off the inventories, to let them run their awake/start functions, 
+    ///otherwise adding a component to an inventory that hasnt run yet has undesired results since the InventoryComponent 
+    ///didnt get the chance to calculate their starting sizes properly
     IEnumerator ToggleTheInvItemsToLetThemLoad()
-    {
+    {    
         if (_inBinToggle)
             _inBinToggle.ClickToShowObject();
         if (_outBinToggle)

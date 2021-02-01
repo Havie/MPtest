@@ -17,7 +17,11 @@ public class UIInventoryManager : MonoBehaviour
     [SerializeField] protected InventoryScrollbar _scrollbarVert;
     [SerializeField] protected InventoryScrollbar _scrollbarHoriz;
     [SerializeField] protected InventorySendButton _optionalSendButton;
-    protected Button _sendButton; 
+    protected Button _sendButton;
+
+    [Header("Specifications")]
+    [SerializeField] protected int _maxItemsPerRow = 3;
+    [SerializeField] protected int _maxColSize = 425;
 
     #region GameManager Parameters
     protected int _INVENTORYSIZE;
@@ -190,19 +194,78 @@ public class UIInventoryManager : MonoBehaviour
         return count;
     }
 
+    /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {
         if (_xMaxPerRow == 0)
             return;
-        RectTransform rt = this.GetComponent<RectTransform>();
 
+        Vector2 size = Vector2.zero;
+        float extraCellpaddingX = DetermineXPadding();
+        float extraCellpaddingY = DetermineYPadding();
 
-        if (GameManager.Instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
+        Debug.Log($"x={extraCellpaddingX} , y={extraCellpaddingY}");
+
+        if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
+            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) - (_cellPadding / 2)));
+            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * extraCellpaddingX), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding * extraCellpaddingY)));
 
+        //((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding /2))
+
+        // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
+
+        if (_content)
+        {
+            size.y += _content.GetReducedYSize;
+            _content.ChangeRectTransform(size);
+        }
+
+
+        Debug.Log($" size was : {size}");
+        ///Recalibrate
+        if (size.y > _maxColSize)
+            size.y = _maxColSize;
+
+        Debug.Log($"Changing size to : {size}");
+
+        if (_bg) ///Make sure this called before Mask
+            _bg.ChangeRectTransform(size);
+        if (_mask)
+            _mask.ChangeRectTransform(size);
+        if (_scrollbarVert)
+            _scrollbarVert.ChangeRectTransform(size);
+        if (_scrollbarHoriz)
+            _scrollbarHoriz.ChangeRectTransform(size);
+        if (_optionalSendButton)
+            _optionalSendButton.ChangeRectTransform(size);
+
+
+        // Debug.Log($"(X:{(_xMaxPerRow * _cellPadding) + (_cellPadding / 2)} , Y: {((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding))} ) {_INVENTORYSIZE} / {_xMaxPerRow} = {(_INVENTORYSIZE / _xMaxPerRow)} Mod1:: {_INVENTORYSIZE-1 % _xMaxPerRow }");
     }
+
+    float DetermineXPadding()
+    {
+        if (_xMaxPerRow < _maxItemsPerRow)
+            return 0;
+        else
+            return 0;
+    }
+    float DetermineYPadding()
+    {
+        //Debug.Log($" YHEIGHT:{((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding)}  vs {_cellPadding * 2}");
+
+        ///Need to return the difference of whatver padding required to makes 425
+        //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
+
+        var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
+
+        if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
+            return retVal;
+        else
+            return 0.5f;
+    }
+
 
     protected void TurnOffScrollBars()
     {
