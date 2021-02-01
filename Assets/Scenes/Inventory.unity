@@ -4998,7 +4998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 2
+  _stationToInject: 3
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -5187,7 +5187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orderFrequency: 15
-  _batchSize: 3
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -5270,7 +5270,8 @@ MonoBehaviour:
   _hand2: {fileID: 5394208262529672883}
   _touchPhaseDisplay: {fileID: 6853997422946891806}
   _previewSlot: {fileID: 1297931750386382736}
-  _kittingShownOverride: {fileID: 558761535}
+  _inBinToggle: {fileID: 558761535}
+  _outBinToggle: {fileID: 196202566}
 --- !u!1 &2080655771
 GameObject:
   m_ObjectHideFlags: 0
@@ -9605,7 +9606,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &6144399834545552301
 MonoBehaviour:
   m_ObjectHideFlags: 0

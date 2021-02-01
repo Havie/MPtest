@@ -52,7 +52,7 @@ public class UIHostMenu : MonoBehaviour
         ///Should put this in a coroutine, that runs this after saying "..Creating Room.."
         /// Because Client was connecting before sNetworkManager ran Start 
         ShowMenuOptions(false);
-        UIManager.ConnectToServer();
+        UIManagerNetwork.Instance.ConnectToServer();
     }
 
     private void ShowMenuOptions(bool cond)

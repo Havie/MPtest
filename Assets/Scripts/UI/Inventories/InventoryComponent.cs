@@ -9,8 +9,15 @@ public abstract class InventoryComponent : MonoBehaviour
 
     protected virtual void Awake()
     {
-        _rt = this.GetComponent<RectTransform>();
+        VerifyRT();
 
+    }
+
+    protected bool VerifyRT()
+    {
+        if(_rt==null)
+            _rt = this.GetComponent<RectTransform>();
+        return _rt != null;
     }
 
     public abstract void ChangeRectTransform(Vector2 size);

@@ -8,7 +8,7 @@ public class InventoryContentArea : InventoryComponent
     public override void ChangeRectTransform(Vector2 size)
     {
      //   Debug.Log("[InventoryContentArea] Changed BG size to " + size);
-     if(_rt) ///Can be null if ur in kitting and it was never enabled?
+     if(VerifyRT()) ///Can be null if ur in kitting and it was never enabled?
         _rt.sizeDelta = size;
      }
 }

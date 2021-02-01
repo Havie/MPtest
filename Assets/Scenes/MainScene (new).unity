@@ -9081,12 +9081,17 @@ PrefabInstance:
     - target: {fileID: 6144399833443023763, guid: e01528de33351d44b9d69745be493a28,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6144399834748454098, guid: e01528de33351d44b9d69745be493a28,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 467603471}
+    - target: {fileID: 6144399834748454098, guid: e01528de33351d44b9d69745be493a28,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ClearDebugLog
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e01528de33351d44b9d69745be493a28, type: 3}

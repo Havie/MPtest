@@ -10,14 +10,16 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
 
     [Header("Game Components")]
-    public GameObject _inventoryCanvas;
-    public GameObject _normalInventory;
-    public GameObject _kittingInventory;
-    public Button _hand1;
-    public Button _hand2;
-    public Image _touchPhaseDisplay;
-    public Image _previewSlot;
-    public ClickToShow _kittingShownOverride;
+    public GameObject _inventoryCanvas;  ///TODO fix this ref being public
+    [SerializeField] GameObject _normalInventory;
+    [SerializeField] GameObject _kittingInventory;
+    [SerializeField] Button _hand1;
+    [SerializeField] Button _hand2;
+    [SerializeField] Image _touchPhaseDisplay;
+    [SerializeField] Image _previewSlot;
+    ///These are required to toggle on/off the inventories, to let them run their awake/start functions, otherwise adding a component to an inventory that hasnt run yet has undesired results
+    [SerializeField] ClickToShow _inBinToggle;
+    [SerializeField] ClickToShow _outBinToggle;
 
 
     #region Init
@@ -65,8 +67,21 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (ws.isKittingStation())
             SwitchToKitting();
 
+        StartCoroutine(ToggleTheInvItemsToLetThemLoad());
 
+    }
 
+    IEnumerator ToggleTheInvItemsToLetThemLoad()
+    {
+        if (_inBinToggle)
+            _inBinToggle.ClickToShowObject();
+        if (_outBinToggle)
+            _outBinToggle.ClickToShowObject();
+        yield return new WaitForEndOfFrame();
+        if (_inBinToggle)
+            _inBinToggle.ClickToShowObject();
+        if (_outBinToggle)
+            _outBinToggle.ClickToShowObject();
     }
 
     private void SwitchToKitting()
@@ -79,8 +94,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_normalInventory != null)
             _normalInventory.SetActive(false);
 
-        if (_kittingShownOverride)
-            _kittingShownOverride.ClickToShowObject();
+        if (_inBinToggle)
+            _inBinToggle.ClickToShowObject();
 
         GameManager.instance._isStackable = true;
 
