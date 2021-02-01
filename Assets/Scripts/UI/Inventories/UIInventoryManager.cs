@@ -215,19 +215,21 @@ public class UIInventoryManager : MonoBehaviour
 
         // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
 
+        UpdateComponentRects(size);
+
+   }
+
+    void UpdateComponentRects(Vector2 size)
+    {
         if (_content)
         {
             size.y += _content.GetReducedYSize;
             _content.ChangeRectTransform(size);
         }
 
-
-        Debug.Log($" size was : {size}");
         ///Recalibrate
         if (size.y > _maxColSize)
             size.y = _maxColSize;
-
-        Debug.Log($"Changing size to : {size}");
 
         if (_bg) ///Make sure this called before Mask
             _bg.ChangeRectTransform(size);
@@ -239,13 +241,12 @@ public class UIInventoryManager : MonoBehaviour
             _scrollbarHoriz.ChangeRectTransform(size);
         if (_optionalSendButton)
             _optionalSendButton.ChangeRectTransform(size);
-
-
-        // Debug.Log($"(X:{(_xMaxPerRow * _cellPadding) + (_cellPadding / 2)} , Y: {((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding))} ) {_INVENTORYSIZE} / {_xMaxPerRow} = {(_INVENTORYSIZE / _xMaxPerRow)} Mod1:: {_INVENTORYSIZE-1 % _xMaxPerRow }");
     }
 
     float DetermineXPadding()
     {
+        ///Adding padding here results in the items all being anchored wrongly to the left, 
+        ///cant see to figure out how to center them in NextSlotLocation()
         if (_xMaxPerRow < _maxItemsPerRow)
             return 0;
         else
@@ -253,11 +254,9 @@ public class UIInventoryManager : MonoBehaviour
     }
     float DetermineYPadding()
     {
-        //Debug.Log($" YHEIGHT:{((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding)}  vs {_cellPadding * 2}");
-
-        ///Need to return the difference of whatver padding required to makes 425
+        ///Need to return the difference of whatver padding required to make _maxColSize (425):
         //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
-
+        /// the difference required to made y height the size of 2 slots:
         var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
 
         if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
