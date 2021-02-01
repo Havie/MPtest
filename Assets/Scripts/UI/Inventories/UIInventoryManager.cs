@@ -12,10 +12,7 @@ public class UIInventoryManager : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] protected InventoryBackground _bg;
-    [SerializeField] protected InventoryMask _mask;
     [SerializeField] protected InventoryContentArea _content;
-    [SerializeField] protected InventoryScrollbar _scrollbarVert;
-    [SerializeField] protected InventoryScrollbar _scrollbarHoriz;
     [SerializeField] protected InventorySendButton _optionalSendButton;
     protected Button _sendButton;
 
@@ -49,7 +46,6 @@ public class UIInventoryManager : MonoBehaviour
 
     protected virtual void Start()
     {
-
     }
 
 
@@ -216,7 +212,7 @@ public class UIInventoryManager : MonoBehaviour
         // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
 
         UpdateComponentRects(size);
-
+        DetermineBestScale();
    }
 
     void UpdateComponentRects(Vector2 size)
@@ -233,12 +229,6 @@ public class UIInventoryManager : MonoBehaviour
 
         if (_bg) ///Make sure this called before Mask
             _bg.ChangeRectTransform(size);
-        if (_mask)
-            _mask.ChangeRectTransform(size);
-        if (_scrollbarVert)
-            _scrollbarVert.ChangeRectTransform(size);
-        if (_scrollbarHoriz)
-            _scrollbarHoriz.ChangeRectTransform(size);
         if (_optionalSendButton)
             _optionalSendButton.ChangeRectTransform(size);
     }
@@ -265,7 +255,10 @@ public class UIInventoryManager : MonoBehaviour
             return 0.5f;
     }
 
-
+    void DetermineBestScale()
+    {
+        ///TODO scale the UI UP a bit based on how small the inventory size is 
+    }
     protected void TurnOffScrollBars()
     {
         if (_scrollBarVert)

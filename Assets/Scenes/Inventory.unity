@@ -715,6 +715,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _optionalChildrenItems: {fileID: 5622523479692622442}
+  _mask: {fileID: 1247169880}
+  _content: {fileID: 1857107776}
+  _scrollbarVert: {fileID: 3790365783687885473}
+  _scrollbarHoriz: {fileID: 0}
+  _optionalSendButton: {fileID: 5394208262752586037}
 --- !u!1 &196202561
 GameObject:
   m_ObjectHideFlags: 0
@@ -3744,6 +3749,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _optionalChildrenItems: {fileID: 5843297068362309736}
+  _mask: {fileID: 460586905}
+  _content: {fileID: 332222017}
+  _scrollbarVert: {fileID: 1558017360}
+  _scrollbarHoriz: {fileID: 0}
+  _optionalSendButton: {fileID: 0}
 --- !u!1001 &1360056318
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5000,7 +5010,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 3
+  _stationToInject: 4
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -7043,6 +7053,8 @@ MonoBehaviour:
   _scrollbarVert: {fileID: 0}
   _scrollbarHoriz: {fileID: 0}
   _optionalSendButton: {fileID: 0}
+  _maxItemsPerRow: 3
+  _maxColSize: 425
 --- !u!114 &2602109608856965224
 MonoBehaviour:
   m_ObjectHideFlags: 0

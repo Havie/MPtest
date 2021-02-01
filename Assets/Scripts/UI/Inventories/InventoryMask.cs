@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class InventoryMask : InventoryComponent
 {
-    [SerializeField] InventoryBackground _bg = default;
     [SerializeField] InventoryViewport _viewPort = default;
     float _reducedSizeY;
     protected override void Awake()
@@ -14,15 +13,10 @@ public class InventoryMask : InventoryComponent
             _viewPort = this.GetComponentInChildren<InventoryViewport>();
     }
 
-    void Start()
-    {
-        CalculateReducedSize();
-    }
-
-    private void CalculateReducedSize() ///This cant happen if the BG has been previously set/changed before Start, becuz of this UIManager now needs to toggle the inventory on/off to let load
+    public void CalculateReducedSize(float bgYSize) ///This cant happen if the BG has been previously set/changed before Start, becuz of this UIManager now needs to toggle the inventory on/off to let load
     {
         if (VerifyRT())
-            _reducedSizeY = _bg.GetRectSize().y - _rt.sizeDelta.y;
+            _reducedSizeY = bgYSize - _rt.sizeDelta.y;
     }
 
     public override void ChangeRectTransform(Vector2 size)
