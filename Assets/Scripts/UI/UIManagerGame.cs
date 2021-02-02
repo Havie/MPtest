@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
+using UserInput;
+
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>

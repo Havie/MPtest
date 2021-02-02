@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UserInput;         ///TODO wish i cud clean up this dependency to UserInputManager
 
 public static class PreviewManager
 {

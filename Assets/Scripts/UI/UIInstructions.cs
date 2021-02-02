@@ -15,7 +15,10 @@ public class UIInstructions : MonoBehaviour, IInteractable
 
     public void InstructionsClicked()
     {
-        Debug.Log($"Instructions Clicked _isAnimating={_isAnimating}");
+        if (_isAnimating)
+            Debug.Log($"Instructions Clicked _isAnimating= <color=red>{_isAnimating}</color>");
+        else
+            Debug.Log($"Instructions Clicked _isAnimating= <color=green>{_isAnimating}</color>");
         if (_isAnimating)
             return;
 
