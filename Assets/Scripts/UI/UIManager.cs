@@ -33,22 +33,6 @@ public static class UIManager
         StationToInject = itemLevel;
     }
 
-    /************************************************************************************************************************/
-
-    ///Indirect from UIHostMenu button call:
-    public static void ConnectToServer()
-    {
-        if (_networkManager)
-            _networkManager.ConnectToServer();
-
-    }
-    public static void Connected(bool cond)
-    {
-        if (_networkManager)
-            _networkManager.Connected(cond);
-    }
-
-    /************************************************************************************************************************/
 
     public static void ShowPreviewInvSlot(bool cond, Vector3 pos, Sprite img)
     {
@@ -60,7 +44,7 @@ public static class UIManager
     public static void BeginLevel(int itemLevel)
     {
         LoadedFromMenu = true;
-        Debug.Log($"<color=orange> LoadedFromMenu</color> ={LoadedFromMenu}");
+        //Debug.Log($"<color=purple> LoadedFromMenu</color> ={LoadedFromMenu}");
      
         if (_invManager)
             _invManager.BeginLevel(itemLevel);

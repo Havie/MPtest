@@ -7,6 +7,7 @@ public class InventorySendButton : InventoryComponent
 
     public override void ChangeRectTransform(Vector2 size)
     {
-        _rt.sizeDelta = new Vector2(size.x, _rt.sizeDelta.y);
+        if(VerifyRT())
+            _rt.sizeDelta = new Vector2(size.x, _rt.sizeDelta.y);
     }
 }

@@ -50,6 +50,6 @@ public class InjectorWorkStation : MonoBehaviour
 
     private void InjectItem(int ItemID)
     {
-        UserInputManager.Instance.InjectItem(ItemID);
+        UserInput.UserInputManager.Instance.InjectItem(ItemID);
     }
 }

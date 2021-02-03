@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VFXManager : MonoBehaviour
+public class VFXManager : MonoSingleton<VFXManager>
 {
-    public static VFXManager Instance { get; private set; }
 
     private Dictionary<GameObject, ParticleSystem> _vfxMap = new Dictionary<GameObject, ParticleSystem>();
 
@@ -13,14 +12,6 @@ public class VFXManager : MonoBehaviour
     float _timeSinceLastQueue = 0;
     float _delay = 25f;
 
-    void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
-            Destroy(this);
-
-    }
 
     void LateUpdate()
     {

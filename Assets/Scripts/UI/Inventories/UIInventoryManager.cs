@@ -12,12 +12,13 @@ public class UIInventoryManager : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] protected InventoryBackground _bg;
-    [SerializeField] protected InventoryMask _mask;
     [SerializeField] protected InventoryContentArea _content;
-    [SerializeField] protected InventoryScrollbar _scrollbarVert;
-    [SerializeField] protected InventoryScrollbar _scrollbarHoriz;
     [SerializeField] protected InventorySendButton _optionalSendButton;
-    protected Button _sendButton; 
+    protected Button _sendButton;
+
+    [Header("Specifications")]
+    [SerializeField] protected int _maxItemsPerRow = 3;
+    [SerializeField] protected int _maxColSize = 425;
 
     #region GameManager Parameters
     protected int _INVENTORYSIZE;
@@ -40,15 +41,19 @@ public class UIInventoryManager : MonoBehaviour
 
     protected string _prefix;
 
+    private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
+    private Vector3 _NORMAL = new Vector3(1, 1, 1);
+    private Vector3 _SMALLER = new Vector3(0.5f, 0.5f, 0.5f);
+
+    /************************************************************************************************************************/
     public bool IsInitalized { get; protected set; }
 
 
     protected virtual void Start()
     {
-
     }
 
-
+    /************************************************************************************************************************/
     #region Helper Initilization Methods for extended classes
     protected void PrintASequence(int[] sequence, string seqName)
     {
@@ -190,20 +195,97 @@ public class UIInventoryManager : MonoBehaviour
         return count;
     }
 
+    /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {
         if (_xMaxPerRow == 0)
             return;
-        RectTransform rt = this.GetComponent<RectTransform>();
 
+        Vector2 size;
+        float extraCellpaddingX = DetermineXPadding();
+        float extraCellpaddingY = DetermineYPadding();
 
-        if (GameManager.Instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            rt.sizeDelta = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
+        //Debug.Log($"x={extraCellpaddingX} , y={extraCellpaddingY}");
+
+        if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
+            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
         else
-            rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) - (_cellPadding / 2)));
+            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * extraCellpaddingX), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding * extraCellpaddingY)));
 
+        //((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding /2))
+
+        // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
+
+        UpdateComponentRects(size);
+        DetermineBestScale();
     }
 
+    void UpdateComponentRects(Vector2 size)
+    {
+        if (_content)
+        {
+            size.y += _content.GetReducedYSize;
+            _content.ChangeRectTransform(size);
+        }
+
+        ///Recalibrate
+        if (size.y > _maxColSize)
+            size.y = _maxColSize;
+
+        if (_bg) ///Make sure this called before Mask
+            _bg.ChangeRectTransform(size);
+        if (_optionalSendButton)
+            _optionalSendButton.ChangeRectTransform(size);
+    }
+
+    float DetermineXPadding()
+    {
+        ///Adding padding here results in the items all being anchored wrongly to the left, 
+        ///cant see to figure out how to center them in NextSlotLocation()
+        if (_xMaxPerRow < _maxItemsPerRow)
+            return 0;
+        else
+            return 0;
+    }
+    float DetermineYPadding()
+    {
+        ///Need to return the difference of whatver padding required to make _maxColSize (425):
+        //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
+        /// the difference required to made y height the size of 2 slots:
+        var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
+
+        if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
+            return retVal;
+        else
+            return 0.5f;
+    }
+
+    void DetermineBestScale()
+    {
+        ///TODO scale the UI UP a bit based on how small the inventory size is 
+
+        ///float scale = ((float)12 / (float)_INVENTORYSIZE);
+     
+
+        ///i NEED AN expoential curve,that the closer u get to ONE the harder cap on being 1.5 
+        ///
+
+        float max = 1.25f;
+        float min = 0.75f;
+        float scale = min + (3.5f/_INVENTORYSIZE);
+
+        if (scale > max)
+        {
+            if (_INVENTORYSIZE == 1)
+                scale = 1.50f;
+            else
+                scale = max;
+        }
+
+        transform.localScale = new Vector3(scale, scale, scale);
+        //Debug.Log($"[{_inventoryType}] _INVENTORYSIZE={_INVENTORYSIZE} --> {scale}");
+
+    }
     protected void TurnOffScrollBars()
     {
         if (_scrollBarVert)
@@ -288,7 +370,7 @@ public class UIInventoryManager : MonoBehaviour
 
 
         if (!IsInitalized)
-             Start();
+            Start();
 
         if (!_ADDCHAOTIC)
         {
@@ -303,7 +385,7 @@ public class UIInventoryManager : MonoBehaviour
                     return;
             }
             //fell thru so we are full
-            Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
+            //Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
             UIInventorySlot nSlot = CreateNewSlot();
             nSlot.AssignItem(itemID, 1, qualities);
             _extraSlots.Add(nSlot);
@@ -442,7 +524,7 @@ public class UIInventoryManager : MonoBehaviour
 
     public void SendBatch()
     {
-        Debug.Log($"heared send batch {this.gameObject.name} " );
+        Debug.Log($"heared send batch {this.gameObject.name} ");
         foreach (var slot in _slots)
         {
             slot.SendData();
@@ -478,7 +560,7 @@ public class UIInventoryManager : MonoBehaviour
 
         return count;
     }
-   
+
     public List<UIInventorySlot> GetAllSlotsInUse()
     {
         if (!IsInitalized)
@@ -496,6 +578,9 @@ public class UIInventoryManager : MonoBehaviour
         }
         return retList;
     }
-    
+
     #endregion
 }
+
+
+

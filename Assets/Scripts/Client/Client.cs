@@ -99,7 +99,7 @@ public class Client : MonoSingleton<Client>
         yield return new WaitForSeconds(seconds);
         //Debug.LogWarning($"Connection comparison <color=green>{_isConnected}</color>  <color=blue>{_tcp._socket.Connected}</color>");
         _isConnected = _tcp._socket.Connected;
-        UIManager.Connected(_isConnected);
+        UIManagerNetwork.Instance.Connected(_isConnected);
     }
 
     public class TCP

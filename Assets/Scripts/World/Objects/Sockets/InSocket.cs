@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
+using UserInput;
 public class InSocket : Socket
 {
     [Range(-0.5f, 0.5f)]
@@ -92,6 +92,7 @@ public class InSocket : Socket
 
         bool valid = false;
 
+        ///TODO wish i cud clean up this dependency to UserInputManager
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
         if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller && requiredAttachmentID == (int)socket.Controller._myID)
         {

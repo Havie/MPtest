@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIDeadZone : MonoBehaviour
+public class UIDeadZone : InventoryComponent
 {
     [Header("Make Sure the Image component of the deadzone is on but alpha is 0, otherwise it wont raycast")]
     [Tooltip("The location where an item will reset to if placed in a deadzone")]
@@ -10,11 +10,20 @@ public class UIDeadZone : MonoBehaviour
 
    public Transform GetSafePosition { get; private set; }
 
+
+
     void Start()
     {
         if (_safePlace)
             GetSafePosition = _safePlace.transform;
         else
             UIManager.DebugLogWarning($"saFeplace not set up for {this.gameObject.transform.parent.gameObject.name}");
+    }
+
+
+    public override void ChangeRectTransform(Vector2 size)
+    {
+        if (VerifyRT())
+            _rt.sizeDelta = size;
     }
 }

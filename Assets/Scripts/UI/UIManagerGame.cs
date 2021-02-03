@@ -4,20 +4,23 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
+using UserInput;
+
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
 
     [Header("Game Components")]
-    public GameObject _inventoryCanvas;
-    public GameObject _normalInventory;
-    public GameObject _kittingInventory;
-    public Button _hand1;
-    public Button _hand2;
-    public Image _touchPhaseDisplay;
-    public Image _previewSlot;
-    public ClickToShow _kittingShownOverride;
+    public GameObject _inventoryCanvas;  ///TODO fix this ref being public
+    [SerializeField] GameObject _normalInventory;
+    [SerializeField] GameObject _kittingInventory;
+    [SerializeField] Button _hand1;
+    [SerializeField] Button _hand2;
+    [SerializeField] Image _touchPhaseDisplay;
+    [SerializeField] Image _previewSlot;
+    [SerializeField] ClickToShow _inBinToggle;
+    [SerializeField] ClickToShow _outBinToggle;
 
 
     #region Init
@@ -51,7 +54,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     public void BeginLevel(int itemLevel)
     {
-        Debug.Log($"<color=green> BeginLevel:Game </color>GAME:{itemLevel}");
+        Debug.Log($"<color=blue> BeginLevel:Game </color>GAME:{itemLevel}");
 
 
         //Debug.Log("called BeginLevel");
@@ -65,8 +68,24 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (ws.isKittingStation())
             SwitchToKitting();
 
+        StartCoroutine(ToggleTheInvItemsToLetThemLoad());
 
+    }
 
+    ///This are required to toggle on/off the inventories, to let them run their awake/start functions, 
+    ///otherwise adding a component to an inventory that hasnt run yet has undesired results since the InventoryComponent 
+    ///didnt get the chance to calculate their starting sizes properly
+    IEnumerator ToggleTheInvItemsToLetThemLoad()
+    {    
+        if (_inBinToggle)
+            _inBinToggle.ClickToShowObject();
+        if (_outBinToggle)
+            _outBinToggle.ClickToShowObject();
+        yield return new WaitForEndOfFrame();
+        if (_inBinToggle)
+            _inBinToggle.ClickToShowObject();
+        if (_outBinToggle)
+            _outBinToggle.ClickToShowObject();
     }
 
     private void SwitchToKitting()
@@ -79,8 +98,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_normalInventory != null)
             _normalInventory.SetActive(false);
 
-        if (_kittingShownOverride)
-            _kittingShownOverride.ClickToShowObject();
+        if (_inBinToggle)
+            _inBinToggle.ClickToShowObject();
 
         GameManager.instance._isStackable = true;
 
