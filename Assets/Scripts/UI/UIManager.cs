@@ -44,7 +44,7 @@ public static class UIManager
     public static void BeginLevel(int itemLevel)
     {
         LoadedFromMenu = true;
-        Debug.Log($"<color=orange> LoadedFromMenu</color> ={LoadedFromMenu}");
+        //Debug.Log($"<color=purple> LoadedFromMenu</color> ={LoadedFromMenu}");
      
         if (_invManager)
             _invManager.BeginLevel(itemLevel);

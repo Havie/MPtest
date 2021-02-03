@@ -41,6 +41,11 @@ public class UIInventoryManager : MonoBehaviour
 
     protected string _prefix;
 
+    private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
+    private Vector3 _NORMAL = new Vector3(1, 1, 1);
+    private Vector3 _SMALLER = new Vector3(0.5f, 0.5f, 0.5f);
+
+    /************************************************************************************************************************/
     public bool IsInitalized { get; protected set; }
 
 
@@ -48,7 +53,7 @@ public class UIInventoryManager : MonoBehaviour
     {
     }
 
-
+    /************************************************************************************************************************/
     #region Helper Initilization Methods for extended classes
     protected void PrintASequence(int[] sequence, string seqName)
     {
@@ -196,11 +201,11 @@ public class UIInventoryManager : MonoBehaviour
         if (_xMaxPerRow == 0)
             return;
 
-        Vector2 size = Vector2.zero;
+        Vector2 size;
         float extraCellpaddingX = DetermineXPadding();
         float extraCellpaddingY = DetermineYPadding();
 
-        Debug.Log($"x={extraCellpaddingX} , y={extraCellpaddingY}");
+        //Debug.Log($"x={extraCellpaddingX} , y={extraCellpaddingY}");
 
         if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
             size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
@@ -213,7 +218,7 @@ public class UIInventoryManager : MonoBehaviour
 
         UpdateComponentRects(size);
         DetermineBestScale();
-   }
+    }
 
     void UpdateComponentRects(Vector2 size)
     {
@@ -258,6 +263,28 @@ public class UIInventoryManager : MonoBehaviour
     void DetermineBestScale()
     {
         ///TODO scale the UI UP a bit based on how small the inventory size is 
+
+        ///float scale = ((float)12 / (float)_INVENTORYSIZE);
+     
+
+        ///i NEED AN expoential curve,that the closer u get to ONE the harder cap on being 1.5 
+        ///
+
+        float max = 1.25f;
+        float min = 0.75f;
+        float scale = min + (3.5f/_INVENTORYSIZE);
+
+        if (scale > max)
+        {
+            if (_INVENTORYSIZE == 1)
+                scale = 1.50f;
+            else
+                scale = max;
+        }
+
+        transform.localScale = new Vector3(scale, scale, scale);
+        //Debug.Log($"[{_inventoryType}] _INVENTORYSIZE={_INVENTORYSIZE} --> {scale}");
+
     }
     protected void TurnOffScrollBars()
     {
@@ -343,7 +370,7 @@ public class UIInventoryManager : MonoBehaviour
 
 
         if (!IsInitalized)
-             Start();
+            Start();
 
         if (!_ADDCHAOTIC)
         {
@@ -358,7 +385,7 @@ public class UIInventoryManager : MonoBehaviour
                     return;
             }
             //fell thru so we are full
-            Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
+            //Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
             UIInventorySlot nSlot = CreateNewSlot();
             nSlot.AssignItem(itemID, 1, qualities);
             _extraSlots.Add(nSlot);
@@ -497,7 +524,7 @@ public class UIInventoryManager : MonoBehaviour
 
     public void SendBatch()
     {
-        Debug.Log($"heared send batch {this.gameObject.name} " );
+        Debug.Log($"heared send batch {this.gameObject.name} ");
         foreach (var slot in _slots)
         {
             slot.SendData();
@@ -533,7 +560,7 @@ public class UIInventoryManager : MonoBehaviour
 
         return count;
     }
-   
+
     public List<UIInventorySlot> GetAllSlotsInUse()
     {
         if (!IsInitalized)
@@ -551,7 +578,7 @@ public class UIInventoryManager : MonoBehaviour
         }
         return retList;
     }
-    
+
     #endregion
 }
 

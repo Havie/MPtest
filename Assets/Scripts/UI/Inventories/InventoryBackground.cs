@@ -7,6 +7,7 @@ public class InventoryBackground : InventoryComponent
 
     [SerializeField] RectTransform _optionalChildrenItems = default;
     [SerializeField] protected InventoryMask _mask;
+    [SerializeField] protected UIDeadZone _deadZone;
 
 
     //[SerializeField] Transform _optionalSendButton = default;
@@ -26,6 +27,8 @@ public class InventoryBackground : InventoryComponent
             _rt.sizeDelta = size; ///Make sure this called before Mask
             if (_mask)
                 _mask.ChangeRectTransform(size);
+            if (_deadZone)
+                _deadZone.ChangeRectTransform(size);
         }
         else
             Debug.Log($"<color=yellow> why is rt missing for </color> {this.gameObject.name}");

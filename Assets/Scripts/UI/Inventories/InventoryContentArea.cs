@@ -14,7 +14,7 @@ public class InventoryContentArea : InventoryComponent
 
     private void CalculateReducedSize() ///This cant happen if the BG has been previously set/changed before Start, becuz of this UIManager now needs to toggle the inventory on/off to let load
     {
-        if (VerifyRT())
+        if (VerifyRT()&& _bg)
             _reducedSizeY = _bg.GetRectSize().y - _rt.sizeDelta.y;
     }
 

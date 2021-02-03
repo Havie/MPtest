@@ -54,7 +54,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     public void BeginLevel(int itemLevel)
     {
-        Debug.Log($"<color=green> BeginLevel:Game </color>GAME:{itemLevel}");
+        Debug.Log($"<color=blue> BeginLevel:Game </color>GAME:{itemLevel}");
 
 
         //Debug.Log("called BeginLevel");

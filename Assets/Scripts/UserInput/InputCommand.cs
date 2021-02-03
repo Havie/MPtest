@@ -5,8 +5,6 @@ using UnityEngine;
 
 namespace UserInput
 {
-
-   // public enum eInputType { DOWN, UP, HOLD}
     public class InputCommand
     {
        
