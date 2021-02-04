@@ -13,6 +13,7 @@ public class UIPartCountDisplay : MonoBehaviour
 
 
     [SerializeField] bool showIfFull = false;
+    [SerializeField] bool isDefect = false;
 
     void LateUpdate()
     {
@@ -49,8 +50,7 @@ public class UIPartCountDisplay : MonoBehaviour
         }
         else
         {
-            if (_text)
-                _text.text = $"{current}/{max}";
+            UpdateText(current, max);
 
             ///Don't Show Button
             if (_optionalItemToShow)
@@ -71,8 +71,7 @@ public class UIPartCountDisplay : MonoBehaviour
         }
         else
         {
-            if (_text)
-                _text.text = $"{current}/{max}";
+            UpdateText(current, max);
             ///Don't Show SendButton
             if (_optionalItemToShow)
                 _optionalItemToShow.SetActive(false);
@@ -80,6 +79,13 @@ public class UIPartCountDisplay : MonoBehaviour
         }
     }
 
+    void UpdateText(int current, int max)
+    {
+        if (isDefect)
+            _text.text = $"{current}";
+        else
+            _text.text = $"{current}/{max}";
+    }
 
     void DisableText(bool cond)
     {

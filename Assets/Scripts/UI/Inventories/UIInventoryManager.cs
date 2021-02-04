@@ -29,7 +29,7 @@ public class UIInventoryManager : MonoBehaviour
     ///Dont think were using these anymore dynamically??
     GameObject _scrollBarVert = default;
     GameObject _scrollBarHoriz = default;
-    public enum eInvType { IN, OUT, STATION };
+    public enum eInvType { IN, OUT, STATION, DEFECT };
     protected eInvType _inventoryType;
     protected UIInventorySlot[] _slots;
     protected List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
