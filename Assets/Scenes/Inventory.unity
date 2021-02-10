@@ -2338,6 +2338,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 29.603
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 775c55257c41cc642a269bbc4a6036cc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4c138151b6d0daa4d9ad287653ccf796, type: 2}
     - target: {fileID: 919132149155446097, guid: 775c55257c41cc642a269bbc4a6036cc,
         type: 3}
       propertyPath: m_Name
@@ -3165,6 +3170,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1096452717}
     m_Modifications:
+    - target: {fileID: 204149382290249878, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4c138151b6d0daa4d9ad287653ccf796, type: 2}
     - target: {fileID: 1341619779162170361, guid: 224493f12b6da8f419ef78fcd3d138d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6032,7 +6042,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1367054571625872964}
   m_HandleRect: {fileID: 1367054571625873019}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
