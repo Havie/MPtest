@@ -14,7 +14,8 @@ public interface IMoveable :  IHighlightable
     bool OutOfBounds();
 
     void SetResetOnNextChange();
-
+    void ResetPositionHard(Vector3 objStartPos, Quaternion objStartRot);
+    Quaternion GetDefaultOrientation();
     void ResetPosition();
 
     bool IsPickedUp();

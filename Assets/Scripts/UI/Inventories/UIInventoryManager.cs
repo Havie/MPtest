@@ -219,7 +219,6 @@ public class UIInventoryManager : MonoBehaviour
         UpdateComponentRects(size);
         DetermineBestScale();
     }
-
     void UpdateComponentRects(Vector2 size)
     {
         if (_content)
@@ -237,7 +236,6 @@ public class UIInventoryManager : MonoBehaviour
         if (_optionalSendButton)
             _optionalSendButton.ChangeRectTransform(size);
     }
-
     float DetermineXPadding()
     {
         ///Adding padding here results in the items all being anchored wrongly to the left, 
@@ -259,7 +257,6 @@ public class UIInventoryManager : MonoBehaviour
         else
             return 0.5f;
     }
-
     void DetermineBestScale()
     {
         ///TODO scale the UI UP a bit based on how small the inventory size is 
@@ -272,7 +269,7 @@ public class UIInventoryManager : MonoBehaviour
 
         float max = 1.25f;
         float min = 0.75f;
-        float scale = min + (3.5f/_INVENTORYSIZE);
+        float scale = min + (2.45f/_INVENTORYSIZE);  ///Smaller the top # the smaller the inventory size
 
         if (scale > max)
         {

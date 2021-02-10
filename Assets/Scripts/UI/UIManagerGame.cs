@@ -19,10 +19,18 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] Button _hand2;
     [SerializeField] Image _touchPhaseDisplay;
     [SerializeField] Image _previewSlot;
+
+    ///NB: Dont like how "hardcoded" this is getting
+
+    [Header("Bin Toggles")]
     [SerializeField] ClickToShow _inBinToggle;
     [SerializeField] ClickToShow _outBinToggle;
 
 
+    [Header("Bin Components")]
+    [SerializeField] GameObject _defectBinInventory;
+    [SerializeField] GameObject _defectBinObject;
+    [SerializeField] GameObject _inBinObject;
     #region Init
 
 
@@ -50,23 +58,21 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         }
     }
 
-
-
     public void BeginLevel(int itemLevel)
     {
-        Debug.Log($"<color=blue> BeginLevel:Game </color>GAME:{itemLevel}");
-
-
-        //Debug.Log("called BeginLevel");
-        //Setup the proper UI for our workStation
-        WorkStation ws = GameManager.Instance._workStation;
+        //Debug.Log($"<color=blue> BeginLevel:Game </color>GAME:{itemLevel}");
 
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(true); ///when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
 
-        // Debug.Log($"{ws._stationName} is switching to kiting {ws.isKittingStation()} ");
-        if (ws.isKittingStation())
-            SwitchToKitting();
+        //Setup the proper UI for our workStation:
+        WorkStation ws = GameManager.Instance._workStation;
+
+        HandleKitting(ws);
+
+        HandleQAStation(ws);
+
+        HandleInBins(ws);
 
         StartCoroutine(ToggleTheInvItemsToLetThemLoad());
 
@@ -76,7 +82,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     ///otherwise adding a component to an inventory that hasnt run yet has undesired results since the InventoryComponent 
     ///didnt get the chance to calculate their starting sizes properly
     IEnumerator ToggleTheInvItemsToLetThemLoad()
-    {    
+    {
         if (_inBinToggle)
             _inBinToggle.ClickToShowObject();
         if (_outBinToggle)
@@ -88,9 +94,12 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             _outBinToggle.ClickToShowObject();
     }
 
-    private void SwitchToKitting()
+    private void HandleKitting(WorkStation ws)
     {
-        Debug.Log("SwitchToKitting");
+        if (!ws.isKittingStation())
+            return;
+
+        // Debug.Log("SwitchToKitting");
 
         if (_kittingInventory != null)
             _kittingInventory.SetActive(true);
@@ -105,6 +114,27 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     }
 
+    private void HandleQAStation(WorkStation ws)
+    {
+
+        bool isQA = ws.IsQAStation();
+
+        Debug.Log($"<Color=blue> IS QA </color> = {isQA}");
+        if (_defectBinInventory)
+            _defectBinInventory.SetActive(isQA);
+        if (_defectBinObject)
+            _defectBinObject.SetActive(isQA);
+
+    }
+
+    private void HandleInBins(WorkStation ws)
+    {
+        bool InBinsDisabled = !( ws.isKittingStation() && GameManager.instance._batchSize != 1);
+
+        if (_inBinObject)
+            _inBinObject.SetActive(InBinsDisabled);
+
+    }
     public void HideInInventory()
     {
         if (_normalInventory != null)
@@ -134,14 +164,11 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         Color newColor = new Color(curr.r, curr.g, curr.b, perct);
         return newColor;
     }
-
     public void HideTouchDisplay()
     {
         if (_touchPhaseDisplay)
             _touchPhaseDisplay.gameObject.SetActive(false);
     }
-
-
     public void UpdateHandLocation(int index, Vector3 worldLoc)
     {
         Button hand = index == 1 ? _hand1 : _hand2;
@@ -162,7 +189,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
                 hand.transform.localScale = Vector3.one;
         }
     }
-
     public void ResetHand(int index)
     {
 

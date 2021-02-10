@@ -25,19 +25,38 @@ public class WorkStation : ScriptableObject
 
     public List<Task> _tasks;
 
+    /************************************************************************************************************************/
 
-    //Need knowledge of what the UI is for this station, might become an enum if more than kitting is different
+
     public bool isKittingStation()
     {
-        foreach(Task t in _tasks)
+        return IsTaskType(Task.eStationType.Kitting);
+    }
+
+    public bool IsQAStation()
+    {
+        return IsTaskType(Task.eStationType.QA);
+    }
+
+
+    /************************************************************************************************************************/
+
+
+
+    private bool IsTaskType(Task.eStationType type)
+    {
+
+        foreach (Task t in _tasks)
         {
-            if (t._stationType==Task.eStationType.Kitting)
+            if (t._stationType == type)
             {
-                if (_tasks.Count > 1)
+                if (_tasks.Count > 1 && type == Task.eStationType.Kitting)
                     Debug.LogWarning($"{_stationName} is a kitting station with more than 1 task, shouldn't happen");
                 return true;
             }
         }
+
         return false;
     }
+
 }

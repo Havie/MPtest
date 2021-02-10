@@ -71,7 +71,8 @@ public class BuildableObject : MonoBehaviour
             (prefab, pos, prefab.transform.rotation);
         newObj.transform.Rotate(Vector3.left, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
         newObj.transform.SetParent(this.transform);
-
+        ///TODO PART DROPPED MUST DO THIS:
+        newObj.GetComponent<ObjectController>().SetStartingRotation(prefab.transform.rotation);
 
         if (qualities != null && qualities.Count > 0)
         {
