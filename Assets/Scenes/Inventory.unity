@@ -186,7 +186,7 @@ PrefabInstance:
     - target: {fileID: 1711186452866665239, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1711186452866665239, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
@@ -1334,7 +1334,7 @@ GameObject:
   - component: {fileID: 242546983}
   - component: {fileID: 242546986}
   m_Layer: 0
-  m_Name: Button
+  m_Name: PartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1464,7 +1464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dropper: {fileID: 1184130889}
-  _inventory: {fileID: 0}
+  _inventory: {fileID: 9017537107136777983}
 --- !u!1 &313311855
 GameObject:
   m_ObjectHideFlags: 0
@@ -6101,7 +6101,7 @@ PrefabInstance:
     - target: {fileID: 1711186452866665239, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1711186452866665239, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
@@ -7030,7 +7030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 1
+  _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -10221,8 +10221,8 @@ RectTransform:
   - {fileID: 5394208262900929672}
   - {fileID: 6853997422946891803}
   - {fileID: 1297931749299664959}
-  - {fileID: 17045187}
   - {fileID: 1657862176}
+  - {fileID: 17045187}
   - {fileID: 378924243}
   - {fileID: 1360056320}
   m_Father: {fileID: 0}
