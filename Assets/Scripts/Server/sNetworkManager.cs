@@ -9,7 +9,6 @@ public class sNetworkManager : MonoBehaviour
     public static sNetworkManager instance { get; private set; }
     public static int _defaultPort = 26951;
 
-    public GameObject _playerPrefab;
 
     private int _maxPlayers = 6;
 

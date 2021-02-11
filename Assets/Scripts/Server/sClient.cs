@@ -112,6 +112,7 @@ public class sClient
                     using (sPacket packet = new sPacket(packetBytes))
                     {
                         int packetOperation = packet.ReadInt();
+                        ///To remove this being awkwardish, we could have sServer assign this dictonary here when an sClient connects??
                         sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate);
                         _delegate?.Invoke(_id, packet);
                     }

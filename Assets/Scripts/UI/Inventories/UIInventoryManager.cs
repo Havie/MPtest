@@ -10,6 +10,12 @@ using UnityEngine.UI;
 [DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
 public class UIInventoryManager : MonoBehaviour
 {
+    /// <summary>
+    /// I realllly want to re-write this class with dependency injection,
+    /// and tweak some other design problems,
+    /// but gotta keep moving the project along, and not fix what isnt broken
+    /// </summary>
+
     [Header("Components")]
     [SerializeField] protected InventoryBackground _bg;
     [SerializeField] protected InventoryContentArea _content;
