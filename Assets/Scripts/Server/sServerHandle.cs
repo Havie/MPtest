@@ -71,7 +71,7 @@ public class sServerHandle
             info += $" server pack :({id},{curAction}) ";
         }
 
-        foreach (sClient c in sServer._clients.Values)
+        foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
             //if client workstation ID matches stationID 
             if(c._workStation == stationID)

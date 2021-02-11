@@ -109,7 +109,7 @@ public static class sServer
 
                 return;
             }
-            if (!_iAmHost) /// we dont want to process data , we might even want to close our UDP here but idk how
+            if (!_iAmHost) /// we dont want to process data , we might even want to close our UDP here but idk how without receiving errors
             {
                 //_udpListener.Close(); ///Results in Error:CanNot access disposed of object
                 Debug.Log("<color=yellow>This connection is open</color>");
