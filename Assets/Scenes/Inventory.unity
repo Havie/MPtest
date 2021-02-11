@@ -6687,7 +6687,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 9acc5d17f8d188f4fb269012869abc84, type: 2}
+      objectReference: {fileID: 2100000, guid: 4c138151b6d0daa4d9ad287653ccf796, type: 2}
     - target: {fileID: 1341619779162170361, guid: 224493f12b6da8f419ef78fcd3d138d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7045,7 +7045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 1
+  _stationToInject: 5
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
