@@ -4,84 +4,23 @@ using UnityEngine;
 using TMPro;
 
 
-public class UIPartCountDisplay : MonoBehaviour
+public abstract class UIPartCountDisplay : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI _text;
-    [SerializeField] UIInventoryManager _manager;
 
-    [SerializeField] GameObject _optionalItemToShow;
+    [SerializeField] protected TextMeshProUGUI _text;
+    [SerializeField] protected UIInventoryManager _manager;
+
+    ///IN- Shows drop Arrow when Not Empty, shows text if not empty
+    ///OUT- Shows Send Button When Full , always shows text
+    ///DEFECT- Shows no Object , shows text if not empty 
 
 
-    [SerializeField] bool showIfFull = false;
-
-    void LateUpdate()
+   protected virtual void UpdateText(int current, int max)
     {
-        if(_manager)
-        {
-            if(_manager.IsInitalized)
-            {
-                DisableText(false);
-
-                int current = _manager.SlotsInUse();
-                int max = _manager.MaxSlots();
-
-                if (showIfFull)
-                    ShowIfFull(current, max);
-                else
-                    ShowDefault(current, max);
-
-                return;
-            }
-        }
-
-        DisableText(true);
+        _text.text = $"{current}/{max}";
     }
 
-    public void ShowIfFull(int current, int max)
-    {
-        if (current != 0)
-        {
-            DisableText(true);
-            ///Show Button
-            if (_optionalItemToShow)
-                _optionalItemToShow.SetActive(true);
-
-        }
-        else
-        {
-            if (_text)
-                _text.text = $"{current}/{max}";
-
-            ///Don't Show Button
-            if (_optionalItemToShow)
-                _optionalItemToShow.SetActive(false);
-
-        }
-    }
-
-    public void ShowDefault(int current, int max)
-    {
-        if (current == max)
-        {
-            DisableText(true);
-            ///Show Send Button
-            if (_optionalItemToShow)
-                _optionalItemToShow.SetActive(true);
-
-        }
-        else
-        {
-            if (_text)
-                _text.text = $"{current}/{max}";
-            ///Don't Show SendButton
-            if (_optionalItemToShow)
-                _optionalItemToShow.SetActive(false);
-
-        }
-    }
-
-
-    void DisableText(bool cond)
+    protected void DisableText(bool cond)
     {
         if (_text)
             _text.enabled = !cond;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OutInventory : UIInventoryManager
+public class DefectInventory : UIInventoryManager
 {
 
 
@@ -24,7 +24,7 @@ public class OutInventory : UIInventoryManager
             }
         }
       
-        _inventoryType = eInvType.OUT;
+        _inventoryType = eInvType.DEFECT;
         GetGameManagerData();
         GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
@@ -37,7 +37,7 @@ public class OutInventory : UIInventoryManager
         _INVENTORYSIZE = DetermineWorkStationBatchSize();
         _STACKABLE = GameManager.Instance._isStackable;
         _ADDCHAOTIC = GameManager.Instance._addChaotic;
-        GameManager.Instance.SetInventoryOut(this);
+        //GameManager.Instance.SetInventoryOut(this);
 
     }
 
@@ -178,6 +178,7 @@ public class OutInventory : UIInventoryManager
 
 
 
+
     #endregion
     /************************************************************************************************************/
 
@@ -206,19 +207,17 @@ public class OutInventory : UIInventoryManager
         WorkStation myWS = GameManager.instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
 
-        _prefix = "out_";
+        _prefix = "defect_";
 
         //Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount
         _extraSlots = new List<UIInventorySlot>(); //Instantiated before for loop becuz CreateNewslot uses its Count
-
         for (int i = 0; i < _INVENTORYSIZE; ++i)
         {
             //Add slot component to our list
             _slots[i] = CreateNewSlot();
-            _slots[i].SetAutomatic(cond);
             _slots[i].transform.localScale = new Vector3(-1, 1, 1);
         }
-        SetUpBatchOutput(wm, myWS);
+        //SetUpBatchOutput(wm, myWS);
 
 
     }

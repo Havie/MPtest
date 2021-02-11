@@ -8,7 +8,7 @@ public interface IAssignable
     bool PreviewSlot(Sprite img);
     void UndoPreview();
     void RemoveItem();
-    bool AssignItem(ObjectController oc, int count);
+    bool  AssignItem(ObjectController oc, int count);
 
     bool AssignItem(int id, int count, List<QualityObject> qualities);
 

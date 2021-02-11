@@ -38,6 +38,7 @@ public class ObjectController : MonoBehaviour, IConstructable
     private float _handStartZ;
 
     private Switch _switch;
+    private Quaternion _startingRotation;
 
     /************************************************************************************************************************/
     #region Init
@@ -290,6 +291,9 @@ public class ObjectController : MonoBehaviour, IConstructable
         _resetOnChange = true;
         // Debug.DrawRay(_collider.bounds.min, -Vector3.forward, Color.red, 1);
     }
+
+    public Quaternion GetDefaultOrientation() => _startingRotation;
+
     public void ResetPosition()
     {
         ///fck all this somethings off w the scaling , just set it to 0.
@@ -300,8 +304,17 @@ public class ObjectController : MonoBehaviour, IConstructable
         //Debug.LogWarning($"min.y={min.y} and diff={diffBelowTable}   oldy= {mpos.y} newy= {mpos.y + Mathf.Abs(diffBelowTable)}  ....... my scale= {this.transform.localScale}");
 
 
+        ///Will move the table up from being below, but does not reset rotation
+        Debug.Log("Calling ResetPosition for OBJ");
         var mpos = transform.position;
         transform.position = new Vector3(mpos.x, 0, mpos.z);
+    }
+
+    public void ResetPositionHard(Vector3 objStartPos, Quaternion objStartRot)
+    {
+        transform.position = objStartPos;
+        transform.rotation = _startingRotation;
+        Debug.Log($"RESET rot={_startingRotation}");
     }
     public bool IsPickedUp() => _pickedUp;
    
@@ -415,7 +428,6 @@ public class ObjectController : MonoBehaviour, IConstructable
 
     ///METHOD REQUIRES SHADER TO SUPPORT ALPHA TRANSPARENCY ON MATERIAL
     private void ChangeMaterialColor(float opacity) { ChangeMaterialColor(_meshRenderer, opacity); }
-
     private void ChangeMaterialColor(MeshRenderer mr, float opacity)
     {
         if (opacity > 1)
@@ -436,7 +448,6 @@ public class ObjectController : MonoBehaviour, IConstructable
         ChangeHighLightColor(color);
     }
     private void ResetHittingTable() { _hittingTable = false; }
-
     private void TrySetChildren(float opacity)
     {
         if (_parent != null)
@@ -453,7 +464,6 @@ public class ObjectController : MonoBehaviour, IConstructable
             mr.material = m;
         }
     }
-
     protected Vector2 DoRotation(Vector3 dir)
     {
 
@@ -531,7 +541,6 @@ public class ObjectController : MonoBehaviour, IConstructable
 
         //return dot / _dampening;
     }
-
     protected void Follow(Vector3 loc)
     {
         if (_canFollow)
@@ -556,8 +565,6 @@ public class ObjectController : MonoBehaviour, IConstructable
         else
             UIManager.DebugLogWarning("No Parent for this object and follow set to false, prefab possibly set wrong");
     }
-
-
     private void ToggleRB(bool cond)
     {
         if (_rb)  ///This gets kind of weird with the subobjects
@@ -568,7 +575,11 @@ public class ObjectController : MonoBehaviour, IConstructable
         if (_collider)
             _collider.isTrigger = cond;
     }
-
+    public void SetStartingRotation(Quaternion rot)
+    {
+        _startingRotation = rot;
+        Debug.Log($"SetRot={_startingRotation}");
+    }
 
 
     /************************************************************************************************************************/

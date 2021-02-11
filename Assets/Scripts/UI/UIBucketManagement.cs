@@ -10,7 +10,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     [SerializeField] UIInventoryManager _inventory;
     private Sprite _defaultIcon;
 
-    private bool _autoSend = true;
+
 
     int _itemID = -1;
     public bool _inUse;
@@ -29,8 +29,8 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
     /************************************************************************************************************************/
 
-    private void Awake() 
-    { 
+    private void Awake()
+    {
         _defaultIcon = _myIcon.sprite;
         _NORMAL = transform.localScale;
         _LARGER = _NORMAL * 1.45f;
@@ -44,7 +44,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     public bool PreviewSlot(Sprite img)
     {
         bool retVal = true;
-         if (!_inUse)
+        if (!_inUse)
         {
             AssignSprite(img);
             _myIcon.color = _VISIBLE;
@@ -70,10 +70,10 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
     public bool AssignItem(ObjectController oc, int count)
     {
-        if(oc==null)
+        if (oc == null)
         {
             ///The displacement state will try assigning the bucket cast as an ObjectController to itself
-            return false; 
+            return false;
         }
 
         /// get ID from controller
@@ -93,37 +93,26 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     }
     public bool AssignItem(int id, int count, List<QualityObject> qualities)
     {
-        //Debug.Log($"ASsign Item in BUCKET! _autoSend={_autoSend}");
+        //Debug.Log($"ASsign Item in BUCKET! }");
 
-        if (!_inUse)
-        {
-            AssignSpriteByID(id, false);
+        AssignSpriteByID(id, false);
 
-            ///Might have to clone it, but lets see if we can store it
-            if (qualities != null)
-                _qualities = qualities;
-            else
-                _qualities.Clear();
-
-            //if (qualities != null)
-            //    DebugQualityIn();
-            //else
-            //    UIManager.DebugLog("Qualities Read was Null");
-
-            _itemID = id;
-            _inUse = true;
-            if (_autoSend)
-            {
-                TellManager();
-                RestoreDefault();
-            }
+        ///Might have to clone it, but lets see if we can store it
+        if (qualities != null)
+            _qualities = qualities;
+        else
+            _qualities.Clear();
 
 
+        _itemID = id;
 
-            return true;
-        }
+        TellManager();
+        RestoreDefault();
 
-        return false;
+
+        return true;
+
+
     }
     #endregion
     public void SendData()

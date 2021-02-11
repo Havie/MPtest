@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PartBin : MonoBehaviour, IMoveable
+public class PartBin : MonoBehaviour  //, IMoveable turned off moving
 {
-    [SerializeField] Transform _mTransform;
+    [SerializeField] Transform _mTransform; ///dont remember why i was caching this?
     [SerializeField] GameObject _self;
     [SerializeField] Transform _parent;
 
@@ -25,114 +25,119 @@ public class PartBin : MonoBehaviour, IMoveable
 
     }
 
+    ///Removed Moveable interface
     #region Interface
-    public Transform Transform() => _mTransform;
-    public GameObject GetGameObject() => _self;
-    public Transform GetParent() => _parent;
+    //public Transform Transform() => _mTransform;
+    //public GameObject GetGameObject() => _self;
+    //public Transform GetParent() => _parent;
 
 
 
-    public void OnInteract()
-    {
-        //Debug.Log($"Interacted with {_self.name}");
-    }
-
-    public void OnFollowInput(Vector3 worldPos) {  Follow(worldPos); }
+    //public void OnInteract()
+    //{
+    //    //Debug.Log($"Interacted with {_self.name}");
+    //}
 
 
-    public Vector2 OnRotate(Vector3 dot)  { return  Vector2.zero;  } ///Dont do 
 
 
-    public bool OutOfBounds()
-    {
-        ///TODO figure out where it shudnt go
-        return false;
-    }
-
-    public void SetResetOnNextChange()
-    {
-        _resetOnChange = true;
-    }
-
-    public void ResetPosition()
-    {
-        var mpos = transform.position;
-        transform.position = new Vector3(mpos.x, mpos.y, mpos.z); ///Will have to change to be left/right scene bounds
-    }
-    public void OnBeginFollow()
-    {
-        _canFollow = true;
-    }
-
-    public void OnEndFollow()
-    {
-        _canFollow = false; /// not sure
-    }
+    ////IMoveable
+    //public void OnFollowInput(Vector3 worldPos) {  Follow(worldPos); }
 
 
-    public void HandleInteractionTime(float time)
-    {
-       
-    }
+    //public Vector2 OnRotate(Vector3 dot)  { return  Vector2.zero;  } ///Dont do 
 
-    public void ChangeAppearanceMoving()
-    {
+    //public void OnBeginFollow()
+    //{
+    //    _canFollow = true;
+    //}
+
+    //public void OnEndFollow()
+    //{
+    //    _canFollow = false; /// not sure
+    //}
+
+
+    //public bool OutOfBounds()
+    //{
+    //    ///TODO figure out where it shudnt go
+    //    return false;
+    //}
+
+    //public void SetResetOnNextChange()
+    //{
+    //    _resetOnChange = true;
+    //}
+
+    //public void ResetPosition()
+    //{
+    //    var mpos = transform.position;
+    //    transform.position = new Vector3(mpos.x, mpos.y, mpos.z); ///Will have to change to be left/right scene bounds
+    //}
+
+    //public bool IsPickedUp()
+    //{
+    //    return false;
+    //}
+
+    //public void ChangeAppearanceMoving()
+    //{
       
-    }
+    //}
 
-    public void ChangeAppearanceNormal()
-    {
+    //public void ChangeAppearanceNormal()
+    //{
        
-    }
+    //}
 
-    public float DesiredSceneDepth() => SceneDepthInitalizer.Instance.DepthOfBins;
+    //public float DesiredSceneDepth() => SceneDepthInitalizer.Instance.DepthOfBins;
 
-    public void SetHighlighted(bool cond)
-    {
+    //public void SetHighlighted(bool cond)
+    //{
        
-    }
-    public bool IsHighlighted()
-    {
-        return false;
-    }
+    //}
+    //public bool IsHighlighted()
+    //{
+    //    return false;
+    //}
 
-    public void ChangeHighlightAmount(float amnt)
-    {
+    //public void ChangeHighlightAmount(float amnt)
+    //{
        
-    }
+    //}
+
+    //public void HandleInteractionTime(float time)
+    //{
+
+    //}
 
 
-    public bool IsPickedUp()
-    {
-        return false;
-    }
 
+    /////IHighlightable
+    //public float GetHighlightIntensity()
+    //{
+    //    return 0;
+    //}
 
-    ///IHighlightable
-    public float GetHighlightIntensity()
-    {
-        return 0;
-    }
+    //public Color GetHighLightColor()
+    //{
+    //    return Color.white;
+    //}
 
-    public Color GetHighLightColor()
-    {
-        return Color.white;
-    }
-
-    public void ChangeHighLightColor(Color color)
-    {
+    //public void ChangeHighLightColor(Color color)
+    //{
         
-    }
+    //}
 
-    public void HandleHighlightPreview()
-    {
+    //public void HandleHighlightPreview()
+    //{
        
-    }
+    //}
 
-    public void CancelHighLightPreview()
-    {
+    //public void CancelHighLightPreview()
+    //{
         
-    }
+    //}
 
 
 

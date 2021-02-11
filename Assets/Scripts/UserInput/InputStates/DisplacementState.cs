@@ -35,7 +35,6 @@ namespace UserInput
                 _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
                 //Debug.LogWarning($" (1st) _mOffset= <color=red> {_brain._mOffset} </color>");
                 _brain._objStartPos = transform.position;
-                _brain._objStartRot = transform.rotation;
 
                 ///only if on table
                 // if (_currentSelection.SetOnTable())  
@@ -49,17 +48,18 @@ namespace UserInput
         }
         private void ResetObjectOrigin(IMoveable moveableObject, float zCoord)
         {
+            Debug.Log("Object was on table");
             ///Reset the object to have the right orientation for construction when picked back up
             if (moveableObject != null)
             {
                 Vector3 mouseLocWorld = _brain.GetInputWorldPos(zCoord);
+                ///Find new starting position based off of where the input is :
                 _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _zDepth);
-                Debug.LogWarning($"mouseLocWorld={mouseLocWorld} , _objStartPos={_brain._objStartPos} ");
-                _brain._mOffset = Vector3.zero;
+                //Debug.Log($"mouseLocWorld={mouseLocWorld} , _objStartPos={_brain._objStartPos} ");
+                _brain._mOffset = Vector3.zero; ///Reset the offset, since its dead on w the input location
+                _brain._objStartRot = Quaternion.identity;
                 ///new
-                var trans = moveableObject.GetGameObject().transform;
-                trans.position = _brain._objStartPos;
-                trans.rotation = _brain._objStartRot;
+                moveableObject.ResetPositionHard(_brain._objStartPos, _brain._objStartRot);
                 ///Start moving the object
             }
             else
