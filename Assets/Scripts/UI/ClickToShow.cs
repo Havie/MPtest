@@ -26,7 +26,6 @@ public class ClickToShow : MonoBehaviour
 
     public void ClickToShowObject()
     {
-        Debug.Log("Interacted with ClickToShow");
         shown = !shown;
         if (_gameObjectToShow)
             _gameObjectToShow.SetActive(shown);

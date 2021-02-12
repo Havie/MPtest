@@ -69,8 +69,8 @@ namespace UserInput
                     if (_currentSelection != null)
                     {
                         _brain._mOffset = Vector3.zero; /// it spawns here so no difference
-                        _brain._objStartPos = new Vector3(0, 0, _zDepth);
-                        _brain._objStartRot = Quaternion.identity;
+                        _brain.SetObjectStartPos(new Vector3(0, 0, _zDepth));
+                        _brain.SetObjectStartRot(Quaternion.identity);
 
                         IConstructable moveableObject = _currentSelection as IConstructable;
                         if (moveableObject != null)

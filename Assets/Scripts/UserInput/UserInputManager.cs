@@ -24,10 +24,8 @@ namespace UserInput
         ///Cant find a place for -shared between states, dont wana pass everytime
         [HideInInspector]
         public Vector3 _mOffset; ///distance between obj in world and camera
-        [HideInInspector]
-        public Vector3 _objStartPos;
-        [HideInInspector]
-        public Quaternion _objStartRot;
+        public Vector3 _objStartPos { get; private set; }
+        public Quaternion _objStartRot { get; private set; }
 
         [SerializeField] LayerMask _objectLayer = default;
         //UI
@@ -104,9 +102,6 @@ namespace UserInput
             if (_currentState != null)
                 _currentState.Execute(command);
         }
-
- 
-
         /************************************************************************************************************************/
         public IInteractable CurrentSelection => _currentState.CurrentSelection;
         public void SwitchState(InputState nextState, IInteractable currentSelection)
@@ -125,6 +120,14 @@ namespace UserInput
                 Destroy(oc.GetGameObject());
         }
 
+
+
+        public void SetObjectStartPos(Vector3 pos) 
+        {
+            Debug.Log($"SetObjectStartPos For brain to <color=red>{pos}</color>");
+            _objStartPos = pos; 
+        }
+        public void SetObjectStartRot(Quaternion rot) { _objStartRot = rot; }
         #endregion
         /************************************************************************************************************************/
         //          HELPERS FOR STATES
