@@ -420,6 +420,9 @@ MonoBehaviour:
   _mOffset: {x: 0, y: 0, z: 0}
   _objStartPos: {x: 0, y: 0, z: 0}
   _objStartRot: {x: 0, y: 0, z: 0, w: 0}
+  _objectLayer:
+    serializedVersion: 2
+    m_Bits: 1
   _Raycaster: {fileID: 5394208262448427698}
 --- !u!4 &112527775
 Transform:
@@ -7058,7 +7061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 2
+  _stationToInject: 1
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -8093,7 +8096,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1367054571625872964}
   m_HandleRect: {fileID: 1367054571625873019}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -48,7 +48,7 @@ namespace UserInput
         }
         private void ResetObjectOrigin(IMoveable moveableObject, float zCoord)
         {
-            Debug.Log("Object was on table");
+           // Debug.Log("Object was on table");
             ///Reset the object to have the right orientation for construction when picked back up
             if (moveableObject != null)
             {

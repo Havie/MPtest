@@ -305,7 +305,7 @@ public class ObjectController : MonoBehaviour, IConstructable
 
 
         ///Will move the table up from being below, but does not reset rotation
-        Debug.Log("Calling ResetPosition for OBJ");
+        //Debug.Log("Calling ResetPosition for OBJ");
         var mpos = transform.position;
         transform.position = new Vector3(mpos.x, 0, mpos.z);
     }
@@ -314,7 +314,7 @@ public class ObjectController : MonoBehaviour, IConstructable
     {
         transform.position = objStartPos;
         transform.rotation = _startingRotation;
-        Debug.Log($"RESET rot={_startingRotation}");
+       // Debug.Log($"RESET rot={_startingRotation}");
     }
     public bool IsPickedUp() => _pickedUp;
    

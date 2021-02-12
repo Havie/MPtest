@@ -69,9 +69,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         WorkStation ws = GameManager.Instance._workStation;
 
         HandleKitting(ws);
-
         HandleQAStation(ws);
-
+        HandleShippingStation(ws);
         HandleInBins(ws);
 
         StartCoroutine(ToggleTheInvItemsToLetThemLoad());
@@ -96,21 +95,23 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     private void HandleKitting(WorkStation ws)
     {
-        if (!ws.isKittingStation())
-            return;
+        //if (!ws.isKittingStation())
+        //    return;
+
+        bool cond = ws.isKittingStation();
 
         // Debug.Log("SwitchToKitting");
 
         if (_kittingInventory != null)
-            _kittingInventory.SetActive(true);
+            _kittingInventory.SetActive(cond);
 
         if (_normalInventory != null)
-            _normalInventory.SetActive(false);
+            _normalInventory.SetActive(!cond);
 
-        if (_inBinToggle)
+        if (_inBinToggle && cond)
             _inBinToggle.ClickToShowObject();
 
-        GameManager.instance._isStackable = true;
+        GameManager.instance._isStackable = cond;
 
     }
 
@@ -123,6 +124,12 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             _defectBinInventory.SetActive(isQA);
         if (_defectBinObject)
             _defectBinObject.SetActive(isQA);
+
+    }
+    private void HandleShippingStation(WorkStation ws)
+    {
+        bool cond = ws.IsShippingStation() && GameManager.instance._batchSize == 1;
+        
 
     }
 
