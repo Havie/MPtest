@@ -97,7 +97,7 @@ public class InSocket : Socket
             //check the angles of attachment
             //Vector3 dir = socket.transform.forward - this.transform.forward;
             float angle = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
-            Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
+            //Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
                 if (angle < _attachmentSensitivity) // -1 is perfect match 

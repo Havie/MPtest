@@ -24,8 +24,8 @@ namespace UserInput
         ///Cant find a place for -shared between states, dont wana pass everytime
         [HideInInspector]
         public Vector3 _mOffset; ///distance between obj in world and camera
-        public Vector3 _objStartPos { get; private set; }
-        public Quaternion _objStartRot { get; private set; }
+        public Vector3 ObjStartPos { get; private set; }
+        public Quaternion ObjStartRot { get; private set; }
 
         [SerializeField] LayerMask _objectLayer = default;
         //UI
@@ -119,15 +119,8 @@ namespace UserInput
             if (oc != null)
                 Destroy(oc.GetGameObject());
         }
-
-
-
-        public void SetObjectStartPos(Vector3 pos) 
-        {
-            Debug.Log($"SetObjectStartPos For brain to <color=red>{pos}</color>");
-            _objStartPos = pos; 
-        }
-        public void SetObjectStartRot(Quaternion rot) { _objStartRot = rot; }
+        public void SetObjectStartPos(Vector3 pos)  { ObjStartPos = pos; }
+        public void SetObjectStartRot(Quaternion rot) { ObjStartRot = rot; }
         #endregion
         /************************************************************************************************************************/
         //          HELPERS FOR STATES
@@ -169,7 +162,7 @@ namespace UserInput
         {
             var ray = _mainCamera.ScreenPointToRay(pos);
             Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
-            if (Physics.Raycast(ray, out RaycastHit hit)) //10000, _objectLayer, QueryTriggerInteraction.Collide)) ///Need to set QueryTriggerInteraction.Collide becuz our objs are Triggers
+            if (Physics.Raycast(ray, out RaycastHit hit, 10000, _objectLayer, QueryTriggerInteraction.Collide)) ///Need to set QueryTriggerInteraction.Collide becuz our objs are Triggers
             {
                // Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
                 return (hit.transform.gameObject.GetComponent<IInteractable>());

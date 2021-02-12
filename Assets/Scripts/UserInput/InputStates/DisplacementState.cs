@@ -59,7 +59,7 @@ namespace UserInput
                 _brain._mOffset = Vector3.zero; ///Reset the offset, since its dead on w the input location
                 _brain.SetObjectStartRot(Quaternion.identity);
                 ///new
-                moveableObject.ResetPositionHard(_brain._objStartPos, _brain._objStartRot);
+                moveableObject.ResetPositionHard(_brain.ObjStartPos, _brain.ObjStartRot);
                 ///Start moving the object
                // Debug.Log($"Object was on table reset Zdepth to : <color=orange>{new Vector3(mouseLocWorld.x, mouseLocWorld.y, _partDepth)}</color>");
             }
@@ -156,10 +156,10 @@ namespace UserInput
                         ///put it back to where we picked it up 
                         if (slot != null) // we tried dropping in incompatible slot
                         {
-                            Debug.Log($"Try putting it back: {_brain._objStartPos}");
+                            Debug.Log($"Try putting it back: {_brain.ObjStartPos}");
                             var trans = moveableObject.GetGameObject().transform;
-                            trans.position = _brain._objStartPos;
-                            trans.rotation = _brain._objStartRot;
+                            trans.position = _brain.ObjStartPos;
+                            trans.rotation = _brain.ObjStartRot;
                             UIManager.ShowPreviewInvSlot(false, inputPos, null);
                         }
                         else

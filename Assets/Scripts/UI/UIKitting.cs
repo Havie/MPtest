@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class UIKitting : MonoBehaviour
 {
+    ///TODO This class probably needs to be re-written to not use "Vertical LayoutGrp and content Size fitter
+    ///to match our other inventories,
+    ///or a lot of debugging needs to be done to get these to play nicely together as its just a total
+    ///hail mary right now
+
+    [Header("Vertical Layout Overrides These..")]
+    [SerializeField] int _startingX = 16;   ///0
+    [SerializeField] int _startingY = 350;
+    [SerializeField] int _yOffset = -39;  ///-65
+
 
     private GameObject _bORDERPREFAB;
 
@@ -11,9 +21,7 @@ public class UIKitting : MonoBehaviour
     private float _timeToOrder = float.MaxValue;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
-    private int _startingY = 350;
-    private int _yOffset = -39;  ///-65
-   // private int _xOffset = 16;   ///0
+
 
     private ComponentList _componentList;
     List<int> _usedIndicies = new List<int>();
@@ -115,9 +123,9 @@ public class UIKitting : MonoBehaviour
     {
         var manager = GameManager.instance.CurrentWorkStationManager;
         var list = manager.GetStationList();
-        var lastStation = list[list.Count-1];
+        var lastStation = list[list.Count - 1];
         var lastTaskList = lastStation._tasks;
-        var lastTask = lastTaskList[lastTaskList.Count-1];
+        var lastTask = lastTaskList[lastTaskList.Count - 1];
         var finalItemList = lastTask._finalItemID;
         var finalItem = finalItemList[Random.Range(0, finalItemList.Count)];
 
@@ -133,10 +141,10 @@ public class UIKitting : MonoBehaviour
         List<ObjectManager.eItemID> componentsNeeded = _componentList.GetComponentListByItemID(finalItemId);
         int size = componentsNeeded.Count;
         ObjectManager.eItemID[] componentOrder = new ObjectManager.eItemID[size];
-       
+
         foreach (var item in componentsNeeded)
         {
-            componentOrder[GetUnusedIndex(size)] =item;
+            componentOrder[GetUnusedIndex(size)] = item;
         }
 
         // printOrderList(componentOrder);
@@ -159,7 +167,7 @@ public class UIKitting : MonoBehaviour
     private void printOrderList(ObjectManager.eItemID[] componentOrder)
     {
         string s = "";
-        for (int i =0; i< componentOrder.Length; ++i)
+        for (int i = 0; i < componentOrder.Length; ++i)
         {
             s += $"#{i} = ItemID:{componentOrder[i]} , ";
         }
@@ -174,7 +182,7 @@ public class UIKitting : MonoBehaviour
         //Get the kitting task (should be only task)
         foreach (Task t in workStation._tasks)
         {
-            if (t._stationType==Task.eStationType.Kitting)
+            if (t._stationType == Task.eStationType.Kitting)
             {
                 //Remove the count-1 when we get sprites for every type
                 int rng = Random.Range(0, t._finalItemID.Count);
@@ -194,7 +202,7 @@ public class UIKitting : MonoBehaviour
 
     private Vector3 FindPosition(int index)
     {
-        return new Vector3(16, _startingY + (_yOffset * index), 0);
+        return new Vector3(_startingX, _startingY + (_yOffset * index), 0);
     }
 
     private void ButtonDestroyedCallback(OrderButton orderButton)
