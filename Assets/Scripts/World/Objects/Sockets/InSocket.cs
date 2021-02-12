@@ -92,17 +92,17 @@ public class InSocket : Socket
 
         bool valid = false;
 
-        ///TODO wish i cud clean up this dependency to UserInputManager
+        ///TODO wish i cud clean up this dependency of UserInputManager
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
         if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller && requiredAttachmentID == (int)socket.Controller._myID)
         {
             //check the angles of attachment
-            Vector3 dir = socket.transform.position - this.transform.position;
-            float angle = Vector3.Dot(this.transform.forward.normalized, dir.normalized);
-            //Debug.Log($"angle={angle} for {requiredAttachmentID} ?> {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
+            //Vector3 dir = socket.transform.forward - this.transform.forward;
+            float angle = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
+            Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
-                if (angle > _attachmentSensitivity) // 1 is perfect match 
+                if (angle < _attachmentSensitivity) // -1 is perfect match 
                     valid = true;
                 else
                 {

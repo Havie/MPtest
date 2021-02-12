@@ -578,7 +578,7 @@ public class ObjectController : MonoBehaviour, IConstructable
     public void SetStartingRotation(Quaternion rot)
     {
         _startingRotation = rot;
-        Debug.Log($"SetRot={_startingRotation}");
+        //Debug.Log($"SetRot={_startingRotation}");
     }
 
 

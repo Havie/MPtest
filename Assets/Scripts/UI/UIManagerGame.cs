@@ -118,8 +118,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     {
 
         bool isQA = ws.IsQAStation();
-
-        Debug.Log($"<Color=blue> IS QA </color> = {isQA}");
+        //Debug.Log($"<Color=blue> IS QA </color> = {isQA}");
         if (_defectBinInventory)
             _defectBinInventory.SetActive(isQA);
         if (_defectBinObject)

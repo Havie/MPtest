@@ -168,7 +168,7 @@ namespace UserInput
             Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
             if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
             {
-                //Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
+                Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
                 return (hit.transform.gameObject.GetComponent<IInteractable>());
             }
 
