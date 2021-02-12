@@ -11,8 +11,6 @@ public class InSocket : Socket
     [SerializeField] ObjectManager.eItemID[] _createdID = default;
 
 
-    public enum test { opONE, opTWO }
-
     private bool _canCollide;
 
     private void Awake()
@@ -128,7 +126,7 @@ public class InSocket : Socket
     [CanEditMultipleObjects]
     public class InSocketEditor : Editor
     {
-        //SerializedProperty typeProp;
+        //SerializedProperty forcedLayer;
         string[] _enumList;
         SerializedProperty _attachmentSensitivity;
         SerializedProperty _requiredAttachmentID;
@@ -137,6 +135,7 @@ public class InSocket : Socket
         private void OnEnable()
         {
             //typeProp = serializedObject.FindProperty("test");
+            //forcedLayer = serializedObject.FindProperty("_forcedLayer");  ///Have to do a string becuz var is private
             _enumList = GetEnumList();
             _attachmentSensitivity = serializedObject.FindProperty(nameof(_attachmentSensitivity));
             _requiredAttachmentID = serializedObject.FindProperty(nameof(_requiredAttachmentID));
@@ -150,6 +149,8 @@ public class InSocket : Socket
             // ///Cant figure out how to completely redraw the array so best I can do is provide a numbered preview list
             //DrawPreviewDropDown();
 
+            //EditorGUILayout.PropertyField(forcedLayer);
+            //forcedLayer= EditorGUILayout.EnumPopup((LayerMask)forcedLayer.enumValueIndex);
             EditorGUILayout.PropertyField(_attachmentSensitivity);
             EditorGUILayout.PropertyField(_requiredAttachmentID);
             EditorGUILayout.PropertyField(_createdID);
