@@ -155,6 +155,7 @@ namespace UserInput
                         ///put it back to where we picked it up 
                         if (slot != null) // we tried dropping in incompatible slot
                         {
+                            Debug.Log($"Try putting it back: {_brain._objStartPos}");
                             var trans = moveableObject.GetGameObject().transform;
                             trans.position = _brain._objStartPos;
                             trans.rotation = _brain._objStartRot;

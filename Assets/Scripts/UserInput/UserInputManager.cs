@@ -166,9 +166,9 @@ namespace UserInput
         {
             var ray = _mainCamera.ScreenPointToRay(pos);
             Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
-            if (Physics.Raycast(ray, out RaycastHit hit, 10000, _objectLayer, QueryTriggerInteraction.Collide)) ///Need to set QueryTriggerInteraction.Collide becuz our objs are Triggers
+            if (Physics.Raycast(ray, out RaycastHit hit)) //10000, _objectLayer, QueryTriggerInteraction.Collide)) ///Need to set QueryTriggerInteraction.Collide becuz our objs are Triggers
             {
-                //Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
+               // Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
                 return (hit.transform.gameObject.GetComponent<IInteractable>());
             }
 

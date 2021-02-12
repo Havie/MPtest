@@ -18,6 +18,7 @@ public class UIKitting : MonoBehaviour
     private ComponentList _componentList;
     List<int> _usedIndicies = new List<int>();
 
+    /************************************************************************************************************************/
 
 
     private void Awake()
@@ -34,12 +35,13 @@ public class UIKitting : MonoBehaviour
     {
         GameManager.Instance.SetInventoryKitting(this);
         if (_bORDERPREFAB == null)
-            _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder");
+            _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder_slot");
 
         _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
         _componentList = GameManager.Instance._componentList;
 
     }
+    /************************************************************************************************************************/
 
 
     public void Update()
@@ -52,6 +54,60 @@ public class UIKitting : MonoBehaviour
         else
             _timeToOrder += Time.deltaTime;
     }
+
+
+
+
+    public void AddOrder(int itemID)
+    {
+        var bOrder = GameObject.Instantiate(_bORDERPREFAB);
+        OrderButton ob = bOrder.GetComponent<OrderButton>();
+        //Debug.Log("assign item with ID:" + itemID);
+        ob.SetOrder(itemID, GetEstimatedDeliveryTime());
+        _orderList.Add(ob);
+        bOrder.transform.SetParent(this.transform);
+        bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
+        bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
+
+        //Get data based off of the incoming value
+    }
+
+
+    public void RemoveOrder(int itemID)
+    {
+        //Debug.Log(_orderList.Count +" size  , Remove order with ItemID : " + itemID);
+        /* for (int i = _orderList.Count-1; i >0 ; i--)*/
+        for (int i = 0; i < this.transform.childCount; i++)
+        {
+            var child = this.transform.GetChild(i);
+            var order = child.GetComponent<OrderButton>();
+            if (order != null)
+            {
+                if (order.ItemID == itemID)
+                {
+                    //Debug.LogWarning($"Item ID {itemID} found match");
+                    RemoveOrder(order);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void RemoveOrder(OrderButton orderButton)
+    {
+        if (_orderList.Contains(orderButton))
+        {
+            _orderList.Remove(orderButton);
+        }
+        else
+            Debug.LogError("how is this not in the list");
+
+        //TODO play animation then give the anim on.finish() this callback
+        ButtonDestroyedCallback(orderButton);
+    }
+
+
+    /************************************************************************************************************************/
 
     /**Kittings "Final ItemIDs should be the final item(s) that go to shipping */
 
@@ -100,7 +156,7 @@ public class UIKitting : MonoBehaviour
         }
     }
 
-    void printOrderList(ObjectManager.eItemID[] componentOrder)
+    private void printOrderList(ObjectManager.eItemID[] componentOrder)
     {
         string s = "";
         for (int i =0; i< componentOrder.Length; ++i)
@@ -130,56 +186,11 @@ public class UIKitting : MonoBehaviour
     }
 
 
-    public void AddOrder(int itemID)
-    {
-        var bOrder = GameObject.Instantiate(_bORDERPREFAB);
-        OrderButton ob = bOrder.GetComponent<OrderButton>();
-        //Debug.Log("assign item with ID:" + itemID);
-        ob.SetOrder(itemID, GetEstimatedDeliveryTime());
-        _orderList.Add(ob);
-        bOrder.transform.SetParent(this.transform);
-        bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
-        bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
-
-        //Get data based off of the incoming value
-    }
     private float GetEstimatedDeliveryTime()
     {
         return Time.time + 600;  ///10min 
     }
 
-    public void RemoveOrder(int itemID)
-    {
-        //Debug.Log(_orderList.Count +" size  , Remove order with ItemID : " + itemID);
-        /* for (int i = _orderList.Count-1; i >0 ; i--)*/
-        for (int i = 0; i < this.transform.childCount; i++)
-        {
-            var child = this.transform.GetChild(i);
-            var order = child.GetComponent<OrderButton>();
-            if (order != null)
-            {
-                if (order.ItemID == itemID)
-                {
-                    //Debug.LogWarning($"Item ID {itemID} found match");
-                    RemoveOrder(order);
-                    return;
-                }
-            }
-        }
-    }
-
-    public void RemoveOrder(OrderButton orderButton)
-    {
-        if (_orderList.Contains(orderButton))
-        {
-            _orderList.Remove(orderButton);
-        }
-        else
-            Debug.LogError("how is this not in the list");
-
-        //TODO play animation then give the anim on.finish() this callback
-        ButtonDestroyedCallback(orderButton);
-    }
 
     private Vector3 FindPosition(int index)
     {
