@@ -11,8 +11,8 @@ namespace UserInput
         public IInteractable CurrentSelection => _currentSelection;
         protected IInteractable _currentSelection;
 
-        protected float _zDepth => -SceneDepthInitalizer.Instance.PartDisFromCam; // 1; //-9f;
-
+        protected float _zDepth => -SceneDepthInitalizer.Instance.PartDisFromCam; // 1ish;;
+        protected float _partDepth => SceneDepthInitalizer.Instance.DepthOfParts; //-9ishf;
         /************************************************************************************************************************/
 
         public abstract void EnableState(IInteractable currentSelection);

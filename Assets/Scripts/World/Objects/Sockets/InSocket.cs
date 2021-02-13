@@ -11,8 +11,6 @@ public class InSocket : Socket
     [SerializeField] ObjectManager.eItemID[] _createdID = default;
 
 
-    public enum test { opONE, opTWO }
-
     private bool _canCollide;
 
     private void Awake()
@@ -92,17 +90,17 @@ public class InSocket : Socket
 
         bool valid = false;
 
-        ///TODO wish i cud clean up this dependency to UserInputManager
+        ///TODO wish i cud clean up this dependency of UserInputManager
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
         if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller && requiredAttachmentID == (int)socket.Controller._myID)
         {
             //check the angles of attachment
-            Vector3 dir = socket.transform.position - this.transform.position;
-            float angle = Vector3.Dot(this.transform.forward.normalized, dir.normalized);
-            //Debug.Log($"angle={angle} for {requiredAttachmentID} ?> {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
+            //Vector3 dir = socket.transform.forward - this.transform.forward;
+            float angle = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
+            //Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
-                if (angle > _attachmentSensitivity) // 1 is perfect match 
+                if (angle < _attachmentSensitivity) // -1 is perfect match 
                     valid = true;
                 else
                 {
@@ -128,7 +126,7 @@ public class InSocket : Socket
     [CanEditMultipleObjects]
     public class InSocketEditor : Editor
     {
-        //SerializedProperty typeProp;
+        //SerializedProperty forcedLayer;
         string[] _enumList;
         SerializedProperty _attachmentSensitivity;
         SerializedProperty _requiredAttachmentID;
@@ -137,6 +135,7 @@ public class InSocket : Socket
         private void OnEnable()
         {
             //typeProp = serializedObject.FindProperty("test");
+            //forcedLayer = serializedObject.FindProperty("_forcedLayer");  ///Have to do a string becuz var is private
             _enumList = GetEnumList();
             _attachmentSensitivity = serializedObject.FindProperty(nameof(_attachmentSensitivity));
             _requiredAttachmentID = serializedObject.FindProperty(nameof(_requiredAttachmentID));
@@ -150,6 +149,8 @@ public class InSocket : Socket
             // ///Cant figure out how to completely redraw the array so best I can do is provide a numbered preview list
             //DrawPreviewDropDown();
 
+            //EditorGUILayout.PropertyField(forcedLayer);
+            //forcedLayer= EditorGUILayout.EnumPopup((LayerMask)forcedLayer.enumValueIndex);
             EditorGUILayout.PropertyField(_attachmentSensitivity);
             EditorGUILayout.PropertyField(_requiredAttachmentID);
             EditorGUILayout.PropertyField(_createdID);

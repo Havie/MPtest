@@ -38,6 +38,10 @@ public class WorkStation : ScriptableObject
         return IsTaskType(Task.eStationType.QA);
     }
 
+    public bool IsShippingStation()
+    {
+        return IsTaskType(Task.eStationType.Shipping);
+    }
 
     /************************************************************************************************************************/
 

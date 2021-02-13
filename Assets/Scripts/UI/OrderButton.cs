@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class OrderButton : MonoBehaviour
 {
     [SerializeField] Text _text = default;
-    [SerializeField] Image _img = default;
+    [SerializeField] UIInventorySlot _slot = default;
     [SerializeField] ColorManager _cm = default;
 
     private int _itemID;
@@ -24,8 +24,8 @@ public class OrderButton : MonoBehaviour
     {
         if(!_text)
             _text = this.GetComponentInChildren<Text>();
-        if(!_img)
-            _img = this.GetComponentInChildren<Image>();
+        //if(!_img)
+        //    _img = this.GetComponentInChildren<Image>();
     }
 
     public int ItemID => _itemID;
@@ -42,8 +42,11 @@ public class OrderButton : MonoBehaviour
         _delieveryTime = timePromised;
 
 
-        if (_img)
-            _img.sprite = img;
+        //if (_img)
+        //    _img.sprite = img;
+
+        _slot.SetAutomatic(true);
+        _slot.SetRequiredID(itemID);
 
         _itemID = itemID;
 

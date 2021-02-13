@@ -24,12 +24,10 @@ namespace UserInput
         ///Cant find a place for -shared between states, dont wana pass everytime
         [HideInInspector]
         public Vector3 _mOffset; ///distance between obj in world and camera
-        [HideInInspector]
-        public Vector3 _objStartPos;
-        [HideInInspector]
-        public Quaternion _objStartRot;
+        public Vector3 ObjStartPos { get; private set; }
+        public Quaternion ObjStartRot { get; private set; }
 
-
+        [SerializeField] LayerMask _objectLayer = default;
         //UI
         [SerializeField] GraphicRaycaster _Raycaster = default;
         PointerEventData _PointerEventData;
@@ -104,9 +102,6 @@ namespace UserInput
             if (_currentState != null)
                 _currentState.Execute(command);
         }
-
- 
-
         /************************************************************************************************************************/
         public IInteractable CurrentSelection => _currentState.CurrentSelection;
         public void SwitchState(InputState nextState, IInteractable currentSelection)
@@ -124,7 +119,8 @@ namespace UserInput
             if (oc != null)
                 Destroy(oc.GetGameObject());
         }
-
+        public void SetObjectStartPos(Vector3 pos)  { ObjStartPos = pos; }
+        public void SetObjectStartRot(Quaternion rot) { ObjStartRot = rot; }
         #endregion
         /************************************************************************************************************************/
         //          HELPERS FOR STATES
@@ -166,9 +162,9 @@ namespace UserInput
         {
             var ray = _mainCamera.ScreenPointToRay(pos);
             Debug.DrawRay(ray.origin, ray.direction * 1350, Color.red, 5);
-            if (Physics.Raycast(ray, out RaycastHit hit)) ///not sure why but i need a RB to raycast, think i would only need a collider??
+            if (Physics.Raycast(ray, out RaycastHit hit, 10000, _objectLayer, QueryTriggerInteraction.Collide)) ///Need to set QueryTriggerInteraction.Collide becuz our objs are Triggers
             {
-                //Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
+               // Debug.Log($"Raycast hit: {hit.transform.gameObject} ::" + (hit.transform.gameObject.GetComponent<IInteractable>()));
                 return (hit.transform.gameObject.GetComponent<IInteractable>());
             }
 

@@ -34,33 +34,34 @@ namespace UserInput
                 float zCoord = _brain.WorldToScreenPoint(transform.position).z;
                 _brain._mOffset = transform.position - _brain.GetInputWorldPos(zCoord);
                 //Debug.LogWarning($" (1st) _mOffset= <color=red> {_brain._mOffset} </color>");
-                _brain._objStartPos = transform.position;
+                _brain.SetObjectStartPos(transform.position);
 
                 ///only if on table
                 // if (_currentSelection.SetOnTable())  
                 // if (_brain._currentSelection._hittingTable)
                 if (moveableObject.OutOfBounds())
-                    ResetObjectOrigin(moveableObject, _zDepth); ///zCoord
+                    ResetObjectOrigin(moveableObject);
 
                 moveableObject.OnBeginFollow(); ///Might mess up objectCntroller
                 //HandManager.PickUpItem(_currentSelection as ObjectController); //might have moved to the wrong spot
             }
         }
-        private void ResetObjectOrigin(IMoveable moveableObject, float zCoord)
+        private void ResetObjectOrigin(IMoveable moveableObject)
         {
-            Debug.Log("Object was on table");
+       
             ///Reset the object to have the right orientation for construction when picked back up
             if (moveableObject != null)
             {
-                Vector3 mouseLocWorld = _brain.GetInputWorldPos(zCoord);
+                Vector3 mouseLocWorld = _brain.GetInputWorldPos(_zDepth); ///Get the right x/y based on zDepth
                 ///Find new starting position based off of where the input is :
-                _brain._objStartPos = new Vector3(mouseLocWorld.x, mouseLocWorld.y, _zDepth);
+                _brain.SetObjectStartPos(new Vector3(mouseLocWorld.x, mouseLocWorld.y, _partDepth)); ///Put the obj at the zDepth of parts, which is different than zDepth for Camera
                 //Debug.Log($"mouseLocWorld={mouseLocWorld} , _objStartPos={_brain._objStartPos} ");
                 _brain._mOffset = Vector3.zero; ///Reset the offset, since its dead on w the input location
-                _brain._objStartRot = Quaternion.identity;
+                _brain.SetObjectStartRot(Quaternion.identity);
                 ///new
-                moveableObject.ResetPositionHard(_brain._objStartPos, _brain._objStartRot);
+                moveableObject.ResetPositionHard(_brain.ObjStartPos, _brain.ObjStartRot);
                 ///Start moving the object
+               // Debug.Log($"Object was on table reset Zdepth to : <color=orange>{new Vector3(mouseLocWorld.x, mouseLocWorld.y, _partDepth)}</color>");
             }
             else
                 Debug.LogWarning("This happened?1");
@@ -155,9 +156,10 @@ namespace UserInput
                         ///put it back to where we picked it up 
                         if (slot != null) // we tried dropping in incompatible slot
                         {
+                            Debug.Log($"Try putting it back: {_brain.ObjStartPos}");
                             var trans = moveableObject.GetGameObject().transform;
-                            trans.position = _brain._objStartPos;
-                            trans.rotation = _brain._objStartRot;
+                            trans.position = _brain.ObjStartPos;
+                            trans.rotation = _brain.ObjStartRot;
                             UIManager.ShowPreviewInvSlot(false, inputPos, null);
                         }
                         else

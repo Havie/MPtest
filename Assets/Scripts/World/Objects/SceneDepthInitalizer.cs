@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public  class SceneDepthInitalizer : MonoBehaviour
+public class SceneDepthInitalizer : MonoBehaviour
 {
     public static SceneDepthInitalizer Instance { get; private set; }
 
@@ -23,25 +23,27 @@ public  class SceneDepthInitalizer : MonoBehaviour
         else if (Instance != this)
             Destroy(this);
 
-         _mainCamera = Camera.main;
+        _mainCamera = Camera.main;
     }
 
     void Start()
     {
         RegisterDepthObjectController(_controllerDepth);
         RegisterDepthPartBin(_binDepth);
+
+        //Debug.Log($"The PartDisFromCam zDepth will be <color=yellow>{PartDisFromCam}</color> vs <color=green>{DepthOfParts}</color>");
     }
 
 
     private void RegisterDepthObjectController(Transform controller)
     {
         FigureOutzDepthDifference(controller);
-         DepthOfParts = _mainCamera.transform.position.z - PartDisFromCam;
+        DepthOfParts = _mainCamera.transform.position.z - PartDisFromCam;
     }
     private void FigureOutzDepthDifference(Transform controller)
     {
         PartDisFromCam = _mainCamera.transform.position.z - controller.position.z;
-    }
+     }
 
     private void RegisterDepthPartBin(Transform bin)
     {
