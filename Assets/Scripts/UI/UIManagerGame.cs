@@ -13,8 +13,10 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     [Header("Game Components")]
     public GameObject _inventoryCanvas;  ///TODO fix this ref being public
-    [SerializeField] GameObject _normalInventory;
+    [SerializeField] GameObject _normalInInventory;
+    [SerializeField] GameObject _normalOutInventory;
     [SerializeField] GameObject _kittingInventory;
+    [SerializeField] GameObject _shippingInventory;
     [SerializeField] Button _hand1;
     [SerializeField] Button _hand2;
     [SerializeField] Image _touchPhaseDisplay;
@@ -71,7 +73,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         HandleKitting(ws);
         HandleQAStation(ws);
         HandleShippingStation(ws);
-        HandleInBins(ws);
 
         StartCoroutine(ToggleTheInvItemsToLetThemLoad());
 
@@ -100,18 +101,22 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
         bool cond = ws.isKittingStation();
 
-        // Debug.Log("SwitchToKitting");
+        Debug.Log("SwitchToKitting = " + cond);
 
-        if (_kittingInventory != null)
+        if (_kittingInventory != null && GameManager.instance._batchSize !=1)
             _kittingInventory.SetActive(cond);
 
-        if (_normalInventory != null)
-            _normalInventory.SetActive(!cond);
+        if (_normalInInventory != null)
+            _normalInInventory.SetActive(!cond);
 
         if (_inBinToggle && cond)
             _inBinToggle.ClickToShowObject();
 
-        GameManager.instance._isStackable = cond;
+        if (_inBinObject)
+            _inBinObject.SetActive(!cond);
+
+        if(cond)
+            GameManager.instance._isStackable = true;
 
     }
 
@@ -129,22 +134,18 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     private void HandleShippingStation(WorkStation ws)
     {
         bool cond = ws.IsShippingStation() && GameManager.instance._batchSize == 1;
-        
 
+        if (_shippingInventory)
+            _shippingInventory.SetActive(cond);
+        if (_normalOutInventory)
+            _normalOutInventory.SetActive(!cond);
     }
 
-    private void HandleInBins(WorkStation ws)
-    {
-        bool InBinsDisabled = !( ws.isKittingStation() && GameManager.instance._batchSize != 1);
 
-        if (_inBinObject)
-            _inBinObject.SetActive(InBinsDisabled);
-
-    }
     public void HideInInventory()
     {
-        if (_normalInventory != null)
-            _normalInventory.SetActive(false);
+        if (_normalInInventory != null)
+            _normalInInventory.SetActive(false);
     }
 
     #endregion

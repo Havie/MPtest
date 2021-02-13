@@ -16,4 +16,5 @@ MonoBehaviour:
   _sendOutputToStation: 7
   _myStationName: Six
   _tasks:
+  - {fileID: 11400000, guid: 3d45eed7a74c72b4d917a9adf6c396e6, type: 2}
   - {fileID: 11400000, guid: 139b9325bcc8d6044b9c394394d3bea1, type: 2}
