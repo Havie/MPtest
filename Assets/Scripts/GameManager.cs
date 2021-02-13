@@ -26,12 +26,15 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion
  
 
+
+     public WorkStation _workStation { get; private set; }
+     public UIInventoryManager _invIN { get; private set; }
+     public UIInventoryManager _invOUT { get; private set; }
+     public UIInventoryManager _invSTATION { get; private set; }
+     public UIKitting _invKITTING { get; private set; }
+    public UIShipping _invShipping { get; private set; }
+  
     [Header("Components")]
-    [HideInInspector] public WorkStation _workStation;
-    [HideInInspector] public UIInventoryManager _invIN;
-    [HideInInspector] public UIInventoryManager _invOUT;
-    [HideInInspector] public UIInventoryManager _invSTATION;
-    [HideInInspector] public UIKitting _invKITTING;
     public ComponentList _componentList;
     [SerializeField] WorkStationManager _batchWorkStationManager = default;
     [SerializeField] WorkStationManager _pullWorkStationManager = default;
@@ -109,7 +112,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
     public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
     public void SetInventoryKitting(UIKitting inv) { _invKITTING = inv; }
-
+    public void SetInventoryShipping(UIShipping inv) { _invShipping=inv; }
     #region Setters for Host Changes 
     /// These Are from Button VerifyInput Events and from ClientHandle
     public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
