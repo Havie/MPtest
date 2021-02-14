@@ -45,6 +45,11 @@ public static class HandManager
     }
 
 
+    public static void StartToHandleIntensityChange(IHighlightable potentialItemToBePickedUp)
+    {
+        Debug.Log($"[TODO] <color=yellow>HandManager not set up yet for IHighlightable </color>");
+    }
+
     public static void StartToHandleIntensityChange(ObjectController potentialItemToBePickedUp)
     {
         if (potentialItemToBePickedUp == null)
