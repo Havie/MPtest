@@ -25,6 +25,8 @@ public class PartBin : MonoBehaviour  //, IMoveable turned off moving
 
     }
 
+
+    ///GOING TO DELETE
     ///Removed Moveable interface
     #region Interface
     //public Transform Transform() => _mTransform;
