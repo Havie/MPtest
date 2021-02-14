@@ -1217,7 +1217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &196202562
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1347,6 +1347,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2085627893}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &209127082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209127081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85ad01d96105e2438d53afa90937cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameObjectToShow: {fileID: 7642059448170430255}
 --- !u!4 &234665635 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1519082420152229926, guid: 224493f12b6da8f419ef78fcd3d138d6,
@@ -2852,7 +2865,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &558761534
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7970,6 +7983,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1754680202}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1759027929 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1861592723927677251, guid: 224493f12b6da8f419ef78fcd3d138d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1204019618}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1759027930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759027929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85ad01d96105e2438d53afa90937cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameObjectToShow: {fileID: 6779161226590445789}
 --- !u!1 &1796390107
 GameObject:
   m_ObjectHideFlags: 0
@@ -8184,7 +8216,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1851523641
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8440,7 +8472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 6
+  _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -8605,6 +8637,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1846906904}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2049207714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049207713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85ad01d96105e2438d53afa90937cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameObjectToShow: {fileID: 1267863505}
 --- !u!1 &2065194972
 GameObject:
   m_ObjectHideFlags: 0
@@ -8635,7 +8680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orderFrequency: 5
-  _batchSize: 1
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -8715,8 +8760,8 @@ MonoBehaviour:
   _hand2: {fileID: 5394208262529672883}
   _touchPhaseDisplay: {fileID: 6853997422946891806}
   _previewSlot: {fileID: 1297931750386382736}
-  _inBinToggle: {fileID: 558761535}
-  _outBinToggle: {fileID: 196202566}
+  _inBinToggle: {fileID: 209127082}
+  _outBinToggle: {fileID: 1759027930}
   _defectBinInventory: {fileID: 289886723}
   _defectBinObject: {fileID: 2049207713}
   _inBinObject: {fileID: 209127081}

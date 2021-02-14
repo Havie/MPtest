@@ -4,7 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class ObjectController : MonoBehaviour, IConstructable
+public class ObjectController : HighlightableObject, IConstructable
 {
 
     public ObjectManager.eItemID _myID;
@@ -19,7 +19,6 @@ public class ObjectController : MonoBehaviour, IConstructable
     private Vector3 _startSize;
     private MeshRenderer _meshRenderer;
     private List<MeshRenderer> _childrenMeshRenderers;
-    private HighlightTrigger _highlightTrigger;
     ///Components
     private Rigidbody _rb;
     private Collider _collider;
@@ -42,8 +41,9 @@ public class ObjectController : MonoBehaviour, IConstructable
 
     /************************************************************************************************************************/
     #region Init
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _startSize = this.transform.localScale;
         _meshRenderer = this.GetComponent<MeshRenderer>();
         _rb = this.gameObject.AddComponent<Rigidbody>();
@@ -71,21 +71,12 @@ public class ObjectController : MonoBehaviour, IConstructable
             _canFollow = false;
         }
         ToggleRB(true); ///turn off physics 
-        SetUpHighlightComponent();
+ 
         DetermineHandLocation();
         _rotateAroundAxis = DetermineRotationAccess();
 
     }
 
-    private void SetUpHighlightComponent()
-    {
-        var effect = transform.gameObject.AddComponent<HighlightEffect>();
-        var profile = Resources.Load<HighlightProfile>("Shaders/Highlight Plus Profile");
-        if (profile != null)
-            effect.ProfileLoad(profile);
-        _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
-
-    }
 
     private eRotationAxis DetermineRotationAccess()
     {
@@ -165,81 +156,13 @@ public class ObjectController : MonoBehaviour, IConstructable
     #region INTERFACE
 
     ///IInteractable
-    public GameObject GetGameObject() => gameObject;
-    public Transform GetParent() => this.transform.parent;
-    public Transform Transform() => this.transform;
-    public void OnInteract()
-    {
-        ///Nothing really happens we click this object?
-    }
-    public void HandleInteractionTime(float time)
+    public override void HandleInteractionTime(float time)
     {
         ChangeHighlightAmount(time);
     }
 
     ///IHighlightable
-    private bool _isHighlighted;
-    public bool IsHighlighted() => _isHighlighted;
-    public void SetHighlighted(bool cond)
-    {
-        if (_highlightTrigger)
-            _highlightTrigger.Highlight(cond);
-
-        var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
-        foreach (var item in childrenHighlights)
-        {
-            item.Highlight(cond);
-        }
-
-        _isHighlighted = cond;
-    }
-    public void ChangeHighlightAmount(float intensity)
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            effect.outline = intensity;
-
-            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
-            foreach (var item in childrenEffects)
-            {
-                item.outline = intensity;
-            }
-        }
-    }
-    public float GetHighlightIntensity()
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            return effect.outline;
-        }
-        return 0;
-    }
-    public Color GetHighLightColor()
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            return effect.outlineColor;
-        }
-        return Color.white;
-    }
-    public void ChangeHighLightColor(Color color)
-    {
-        if (_highlightTrigger)
-        {
-            var effect = this.GetComponent<HighlightEffect>();
-            effect.outlineColor = color;
-
-            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
-            foreach (var item in childrenEffects)
-            {
-                item.outlineColor = color;
-            }
-        }
-    }
-    public void HandleHighlightPreview()
+    public override void HandleHighlightPreview()
     {
         ///if its a current item being held in hand , return
         if (IsPickedUp())
@@ -256,7 +179,7 @@ public class ObjectController : MonoBehaviour, IConstructable
         HandManager.StartToHandleIntensityChange(this);
 
     }
-    public void CancelHighLightPreview()
+    public override void CancelHighLightPreview()
     {
         SetHandPreviewingMode(false);
 
