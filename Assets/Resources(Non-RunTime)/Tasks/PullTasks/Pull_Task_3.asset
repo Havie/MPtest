@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _finalItemID: 11000000
   _requiredItemIDs: 04000000
-  isKittingStation: 0
+  _stationType: 0
