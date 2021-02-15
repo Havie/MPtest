@@ -67,11 +67,9 @@ public class BuildableObject : MonoBehaviour
         if (!prefab)
             return null; ///Prevent any NPEs
 
-        GameObject newObj = GameObject.Instantiate<GameObject>
-            (prefab, pos, prefab.transform.rotation);
-        newObj.transform.Rotate(Vector3.left, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
-        newObj.transform.SetParent(this.transform);
-        newObj.GetComponent<ObjectController>().SetStartingRotation(prefab.transform.rotation);
+        GameObject newObj = InstantiateObjectProperly(itemID, prefab, pos, Vector3.left);
+
+        //Could I do  LoadQualitiesOntoObject(qualities, newObj); here? 
 
         if (qualities != null && qualities.Count > 0)
         {
@@ -105,7 +103,7 @@ public class BuildableObject : MonoBehaviour
         return qs;
     }
 
-    public void DestroyObject(GameObject obj){Destroy(obj);}
+    public void DestroyObject(GameObject obj) { Destroy(obj); }
 
     public GameObject DropItemInWorld(int itemID)
     {
@@ -115,16 +113,12 @@ public class BuildableObject : MonoBehaviour
             return null; ///Prevent any NPEs
 
 
-        GameObject newObj = GameObject.Instantiate<GameObject>
-          (prefab, GetRandomPos(_spawnPoint.position), prefab.transform.rotation);
+        var pos = GetRandomPos(_spawnPoint.position);
+        GameObject newObj = InstantiateObjectProperly(itemID, prefab, pos, GetRandomPos(pos));
 
-        newObj.transform.Rotate(GetRandomPos(newObj.transform.position), 0f); ///was 10f to add tilt toward camera but removed when picking up off table
-        newObj.transform.SetParent(this.transform);
-       
         var controller = newObj.GetComponent<ObjectController>();
         if (controller)
         {
-            controller.SetStartingRotation(prefab.transform.rotation);
             controller.PutDown(); ///turn on physics 
         }
 
@@ -139,21 +133,33 @@ public class BuildableObject : MonoBehaviour
         if (!prefab || !_spawnPoint)
             return null; ///Prevent any NPEs
 
-        GameObject newObj = GameObject.Instantiate<GameObject>
-            (prefab, GetRandomPos(_spawnPoint.position), prefab.transform.rotation);
-
-        newObj.transform.Rotate(GetRandomPos(newObj.transform.position), 0f); ///was 10f to add tilt toward camera but removed when picking up off table
-        newObj.transform.SetParent(this.transform);
-
-        var controller = newObj.GetComponent<ObjectController>();
-        if (controller)
-            controller.PutDown(); ///turn on physics 
+        GameObject newObj = DropItemInWorld(itemID);
 
         LoadQualitiesOntoObject(qualities, newObj);
 
         return newObj;
     }
 
+    /************************************************************************************************************************/
+
+
+    private GameObject InstantiateObjectProperly(int itemID, GameObject prefab, Vector3 pos, Vector3 rot)
+    {
+
+        GameObject newObj = GameObject.Instantiate<GameObject>
+          (prefab, pos, prefab.transform.rotation);
+
+
+        newObj.transform.Rotate(rot, 0f); ///was 10f to add tilt toward camera but removed when picking up off table
+
+        newObj.transform.SetParent(this.transform);
+
+        var controller = newObj.GetComponent<ObjectController>();
+        if (controller)
+            controller.SetStartingRotation(prefab.transform.rotation);
+
+        return newObj;
+    }
     private Vector3 GetRandomPos(Vector3 near)
     {
         float x = Random.Range(near.x - 0.75f, near.x + 0.75f);
