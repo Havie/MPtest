@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d1e50687b33a3943be11dc515ccd8c8, type: 3}
-  m_Name: Pull_Task_3
+  m_Name: b_Task_2
   m_EditorClassIdentifier: 
-  _finalItemID: 11000000
-  _requiredItemIDs: 04000000
-  isKittingStation: 0
+  _finalItemID: 07000000
+  _requiredItemIDs: 0300000005000000
+  _stationType: 0
