@@ -1561,7 +1561,7 @@ MonoBehaviour:
   seeThroughBorder: 0
   seeThroughBorderColor: {r: 0, g: 0, b: 0, a: 1}
   seeThroughBorderWidth: 0.45
-  rmsCount: 4
+  rmsCount: 5
 --- !u!114 &240609320
 MonoBehaviour:
   m_ObjectHideFlags: 0
