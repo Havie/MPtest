@@ -115,22 +115,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
     }
     #endregion
-    public void SendData()
-    {
-        //Debug.Log("   ....... CALLLED SEND DATA ........        ");
-        WorkStation myStation = GameManager.instance._workStation;
 
-        if (_inUse)//&& WorkStation._stationFlow.ContainsKey((int)myStation._myStation))
-        {
-            //int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
-            UIManager.DebugLog($"(UIInventorySlot) sending: <color=green>{_itemID}</color> to Station: <color=blue>{(int)myStation._sendOutputToStation}</color>");
-            ClientSend.Instance.SendItem(_itemID, _qualities, (int)myStation._sendOutputToStation);
-            CheckKitting();
-            RemoveItem(); // should always call RestoreDefault;
-        }
-        //else
-        // Debug.LogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
-    }
 
     /************************************************************************************************************************/
 
@@ -160,7 +145,6 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         // Debug.Log($"{this.gameObject.name} AssigndSprite = <color=green>{img.name}</color>");
 
     }
-
 
 
     private void DebugQualityIn()

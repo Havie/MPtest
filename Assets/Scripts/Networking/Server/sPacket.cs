@@ -21,6 +21,7 @@ public enum ClientPackets
     playerMovement,
     stationID, 
     item, 
+    batch,
 }
 
 public class sPacket : IDisposable

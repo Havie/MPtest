@@ -42,7 +42,7 @@ public class ClientSend :MonoSingleton<ClientSend>
         }
     }
 
-    public  void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
+    public void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
     {
         UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
@@ -70,9 +70,22 @@ public class ClientSend :MonoSingleton<ClientSend>
         }
     }
 
+    /// <summary>
+    /// For now, this is only for tracking statistics across the network...
+    /// TODO: It would be really nice to encapsulate sending Items from this Batch, not the individual slots calling SendItem()
+    /// however the way this was built with AutoSend and UIInventoryManager it would take some re-designing, plan to return to fix this
+    /// </summary>
+    /// <param name="batch"></param>
     public void BatchSent(BatchWrapper batch)
     {
         Debug.Log($"<color=yellow>Client Handling BatchSent </color>{batch.StationId} , {batch.ItemCount}");
+
+        using (sPacket packet = new sPacket((int)ClientPackets.batch))
+        {
+            packet.Write(batch.StationId);
+            packet.Write(batch.ItemCount);
+            SendTCPData(packet);
+        }
     }
 
 

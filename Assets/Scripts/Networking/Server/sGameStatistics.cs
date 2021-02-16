@@ -11,14 +11,23 @@ public class sGameStatistics
     public int ShippedLate { get; private set; } = 0;
 
 
+    float _timeGameStarted;
     Queue<ItemOrder> _orders; ///For now we use a QUEUE and dont check item Type since we only have one
-    private float totalShippingTime = 0;
+    float totalShippingTime = 0;
+    Dictionary<int, Queue<float>> _cycleTimes;
+    /************************************************************************************************************************/
 
-    public sGameStatistics()
+    public sGameStatistics(float timeGameStarted)
     {
+        _timeGameStarted = timeGameStarted;
         _orders = new Queue<ItemOrder>();
+        _cycleTimes = new Dictionary<int, Queue<float>>();
     }
+    /************************************************************************************************************************/
 
+
+    public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
+    public float GetThroughput() => (totalShippingTime / GetTotalShipped());
     public void AddedADefect() { ++Defects; }
 
     public void CreatedAnOrder(int itemID, float time)
@@ -44,14 +53,60 @@ public class sGameStatistics
         ++ShippedOnTime;
     }
 
-    public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
+    public void StationSentBatch(int stationID, int batchSize, float time)
+    {
 
-    public float GetThroughput() => (totalShippingTime / GetTotalShipped());
+        ///Keep track of cycletime
+        if (_cycleTimes.TryGetValue(stationID, out Queue<float> times))
+        {
+            times.Enqueue(time);
+            return;
+        }
 
+        ///Creates a new Entry
+        Queue<float> newTimesQueue = new Queue<float>();
+        //newTimesQueue.Enqueue(_timeGameStarted); //perhaps not?
+        newTimesQueue.Enqueue(time);
+        _cycleTimes.Add(stationID, newTimesQueue);
+
+    }
+
+    public float GetCycleTimeForStation(int stationID, float endTime)
+    {
+        bool detailedINFO = false;
+        ///Could add up the endTime - the startTime  and divide by cycles?
+        int cycles = 1;
+        if (_cycleTimes.TryGetValue(stationID, out Queue<float> times))
+        {
+            cycles = times.Count;
+           
+            if (detailedINFO) ///Need to play around w this later
+            {
+                float consequentTime = 0;
+                float totalTime = 0;
+                while (times.Count != 0)
+                {
+                    ///could Get More detailed info by subtracting each time by next time
+                    float firstTime = times.Dequeue();
+                    Debug.Log($"This Cycle took : {firstTime - consequentTime} seconds");
+                    consequentTime = firstTime;
+                    totalTime += firstTime;
+                }
+
+                Debug.Log($"Hoping these #s match: { (endTime - _timeGameStarted) / cycles}  vs { (totalTime) / cycles}");
+            }
+        }
+
+        //Debug.Log($"# of cycles for station#{stationID} was : {cycles}");
+        return (endTime - _timeGameStarted) / cycles;
+    }
 
 
     public float GetCycleTime(WorkStation ws)
     {
         return 0;
     }
+
+    /************************************************************************************************************************/
+
 }

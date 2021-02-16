@@ -11,10 +11,10 @@ public class sServerHandle
         int clientIdCheck = packet.ReadInt();
         string username = packet.ReadString();
 
-        Debug.Log($"<color=blue>{sServer._clients[fromClient]._tcp._socket.Client.RemoteEndPoint} </color> <color=green>{username}</color> connected successfully and is now player {fromClient}");
+        Debug.Log($"[ServerHandle] <color=blue>{sServer._clients[fromClient]._tcp._socket.Client.RemoteEndPoint} </color> <color=green>{username}</color> connected successfully and is now player {fromClient}");
         if (fromClient != clientIdCheck)
         {
-            Debug.Log($"Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
+            Debug.Log($"[ServerHandle] Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
         }
 
 
@@ -39,7 +39,7 @@ public class sServerHandle
     public static void StationIDReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
-        Debug.Log("The stationID Read was : " + stationID);
+        Debug.Log("[ServerHandle] stationID Read was : " + stationID);
         sClient client = sServer._clients[fromClient];
         if (client != null)
             client._workStation = stationID;
@@ -51,14 +51,14 @@ public class sServerHandle
     {
 
         int itemLvl = packet.ReadInt();
-        Debug.Log("The itemLvl Read was : " + itemLvl);
+        Debug.Log("[ServerHandle] itemLvl Read was : " + itemLvl);
         int stationID = packet.ReadInt();
-        Debug.Log("The stationID Read was : " + stationID);
+        Debug.Log("[ServerHandle] stationID Read was : " + stationID);
 
         List<int> qualities = new List<int>();
 
         var count = packet.ReadInt();
-        Debug.Log($"ServerHandle QualityCount={count}");
+        Debug.Log($"[ServerHandle] QualityCount={count}");
         string info = "";
         ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
@@ -85,6 +85,25 @@ public class sServerHandle
 
         }
 
+    }
+
+    public static void BatchReceived(int fromClient, sPacket packet)
+    {
+
+        int stationID = packet.ReadInt();
+        int batchSize = packet.ReadInt();
+        
+        Debug.Log("[sServerHandle] stationID Read was : " + stationID);
+        Debug.Log("[sServerHandle] batchSize Read was : " + batchSize);
+
+        if (fromClient != stationID)
+            Debug.Log("[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>");
+
+        sServer._gameStatistics.StationSentBatch(stationID, batchSize, Time.time);
+
+        var cycleTime= sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
+
+        Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
 }
