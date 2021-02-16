@@ -616,8 +616,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mOffset: {x: 0, y: 0, z: 0}
-  _objStartPos: {x: 0, y: 0, z: 0}
-  _objStartRot: {x: 0, y: 0, z: 0, w: 0}
+  _objectLayer:
+    serializedVersion: 2
+    m_Bits: 0
   _Raycaster: {fileID: 1148312937}
 --- !u!4 &112527775
 Transform:
@@ -5186,6 +5187,8 @@ GameObject:
   - component: {fileID: 1501261307}
   - component: {fileID: 1501261306}
   - component: {fileID: 1501261309}
+  - component: {fileID: 1501261310}
+  - component: {fileID: 1501261308}
   m_Layer: 0
   m_Name: ClientManager
   m_TagString: Untagged
@@ -5221,6 +5224,33 @@ Transform:
   m_Father: {fileID: 1141904581}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1501261308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501261305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7835cff18bd7f4645a02c5ebdfcc3fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
+  _unityEventResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1501261310}
+        m_MethodName: BatchSent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1501261309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5231,6 +5261,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 948e81a18334eee48ad2f9892f08ba80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1501261310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501261305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d0fdaba4100c34bb998b2fdd083bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1501927324
@@ -7730,11 +7772,6 @@ MonoBehaviour:
   _decreaseChangeOverTime: 0
   _HUDManagement: 0
   _HostDefectPausing: 0
-  _workStation: {fileID: 11400000, guid: 83ee4cd14e2c033479dd73f9080cec19, type: 2}
-  _invIN: {fileID: 0}
-  _invOUT: {fileID: 0}
-  _invSTATION: {fileID: 0}
-  _invKITTING: {fileID: 0}
   _componentList: {fileID: 11400000, guid: d22a25fd5bbeb864b943c79a8b778f54, type: 2}
   _batchWorkStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
     type: 2}

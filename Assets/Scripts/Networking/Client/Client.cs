@@ -337,11 +337,11 @@ public class Client : MonoSingleton<Client>
         _packetHandlers = new Dictionary<int, PacketHandler>()
         {
             //Setup the <index, Delegate> 
-            { (int)ServerPackets.welcome, ClientHandle.Welcome } ,
-            { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer }, //oldTutorial
-            { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition }, //oldTutorial
-            { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation }, //oldTutorial
-            { (int)ServerPackets.item, ClientHandle.ItemReceived }
+            { (int)ServerPackets.welcome, ClientHandle.Instance.Welcome } ,
+            { (int)ServerPackets.spawnPlayer, ClientHandle.Instance.SpawnPlayer }, //oldTutorial
+            { (int)ServerPackets.playerPosition, ClientHandle.Instance.PlayerPosition }, //oldTutorial
+            { (int)ServerPackets.playerRotation, ClientHandle.Instance.PlayerRotation }, //oldTutorial
+            { (int)ServerPackets.item, ClientHandle.Instance.ItemReceived }
 
 
         };

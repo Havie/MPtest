@@ -190,7 +190,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         return false;
     }
     #endregion
-    public void SendData()
+    public bool SendData()
     {
         //Debug.Log($"   ....... CALLLED SEND DATA ........  _inUse= {_inUse}     ");
         WorkStation myStation = GameManager.instance._workStation;
@@ -199,12 +199,14 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         {
             //int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
             UIManager.DebugLog($"(UIInventorySlot) sending: <color=green>{_itemID}</color> to Station: <color=blue>{(int)myStation._sendOutputToStation}</color>");
-            ClientSend.SendItem(_itemID, _qualities, (int)myStation._sendOutputToStation);
+            ClientSend.Instance.SendItem(_itemID, _qualities, (int)myStation._sendOutputToStation);
             CheckKitting();
             RemoveItem(); // should always call RestoreDefault;
+            return true;
         }
         //else
         // Debug.LogError($"Error Sending Out INV slot , no StationKey {(int)myStation._myStation}");
+        return false;
     }
 
     public List<QualityObject> RebuildQualities()

@@ -4893,7 +4893,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 247238633}
   m_HandleRect: {fileID: 247238632}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5985,6 +5985,7 @@ MonoBehaviour:
   _optionalSendButton: {fileID: 0}
   _maxItemsPerRow: 3
   _maxColSize: 425
+  _batchSentEvent: {fileID: 0}
 --- !u!114 &1277595933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9647,7 +9648,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1367054571625872964}
   m_HandleRect: {fileID: 1367054571625873019}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10665,6 +10666,7 @@ MonoBehaviour:
   _optionalSendButton: {fileID: 0}
   _maxItemsPerRow: 10
   _maxColSize: 100
+  _batchSentEvent: {fileID: 0}
 --- !u!114 &2602109608856965224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10682,6 +10684,7 @@ MonoBehaviour:
   _optionalSendButton: {fileID: 5394208262752586037}
   _maxItemsPerRow: 3
   _maxColSize: 425
+  _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
 --- !u!222 &2665052946768191924
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12042,7 +12045,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6139951411717935101}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -15501,6 +15504,7 @@ MonoBehaviour:
   _optionalSendButton: {fileID: 0}
   _maxItemsPerRow: 3
   _maxColSize: 425
+  _batchSentEvent: {fileID: 0}
 --- !u!1 &9028841948821380008
 GameObject:
   m_ObjectHideFlags: 0

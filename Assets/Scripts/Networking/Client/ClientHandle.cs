@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ClientHandle : MonoSingleton<ClientHandle>
 {
-    public static void Welcome(sPacket packet)
+    public  void Welcome(sPacket packet)
     {
         string msg = packet.ReadString();
         int myId = packet.ReadInt();
@@ -14,7 +14,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         ///TODO Read In Game Manager Vars
         Debug.Log($"Message from server: { msg}");
         Client.instance._myId = myId;
-        ClientSend.WelcomeReceived();
+        ClientSend.Instance.WelcomeReceived();
 
         var instance = GameManager.Instance;
 
@@ -36,11 +36,9 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
 
 
-    public static void ItemReceived(sPacket packet)
+    public void ItemReceived(sPacket packet)
     {
         int itemLvl = packet.ReadInt(); //get rid of the first btye data?
-
-
 
         List<QualityObject> qualities = new List<QualityObject>();
 
@@ -66,8 +64,9 @@ public class ClientHandle : MonoSingleton<ClientHandle>
     }
 
 
+
     #region OldTutorial
-    public static void SpawnPlayer(sPacket packet)
+    public  void SpawnPlayer(sPacket packet)
     {
         int id = packet.ReadInt();
         string username = packet.ReadString();
@@ -77,7 +76,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         //GameManager.instance.SpawnPlayer(id, username, pos, rot);
     }
 
-    public static void PlayerPosition(sPacket packet)
+    public  void PlayerPosition(sPacket packet)
     {
         int id = packet.ReadInt();
         Vector3 position = packet.ReadVector3();
@@ -88,7 +87,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         }
     }
 
-    public static void PlayerRotation(sPacket packet)
+    public  void PlayerRotation(sPacket packet)
     {
         int id = packet.ReadInt();
         Quaternion rotation = packet.ReadQuaternion();

@@ -80,7 +80,8 @@ public class sServerHandle
                 c.SendItem(itemLvl, qualities);
             }
 
-            Debug.Log(info);
+            if(!info.Equals(""))
+                Debug.Log(info);
 
         }
 

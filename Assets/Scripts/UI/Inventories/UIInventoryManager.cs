@@ -26,6 +26,9 @@ public class UIInventoryManager : MonoBehaviour
     [SerializeField] protected int _maxItemsPerRow = 3;
     [SerializeField] protected int _maxColSize = 425;
 
+    [SerializeField] BatchEvent _batchSentEvent;
+
+
     #region GameManager Parameters
     protected int _INVENTORYSIZE;
     protected bool _STACKABLE;
@@ -528,9 +531,11 @@ public class UIInventoryManager : MonoBehaviour
     public void SendBatch()
     {
         Debug.Log($"heared send batch {this.gameObject.name} ");
+        int count = 0;
         foreach (var slot in _slots)
         {
-            slot.SendData();
+            if (slot.SendData())
+                ++count;
         }
 
         bool allowSendWrongItems = false;
@@ -539,12 +544,18 @@ public class UIInventoryManager : MonoBehaviour
         {
             foreach (var slot in _extraSlots)
             {
-                slot.SendData();
+                if(slot.SendData())
+                    ++count;
             }
         }
 
         if (_sendButton)
             _sendButton.interactable = false;
+
+        ///TaskComplete 
+        /// TODO might want to identify our station ID somehow else
+        if(_batchSentEvent)
+            _batchSentEvent.Raise(new BatchWrapper((int)GameManager.Instance._workStation._myStation, count));
     }
 
     public int MaxSlots()
