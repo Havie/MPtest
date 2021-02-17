@@ -71,7 +71,7 @@ public class ClientSend :MonoSingleton<ClientSend>
     }
 
     /// <summary>
-    /// For now, this is only for tracking statistics across the network...
+    /// For now, this is only for tracking statistics across the network...Called from an InspectorEvent
     /// TODO: It would be really nice to encapsulate sending Items from this Batch, not the individual slots calling SendItem()
     /// however the way this was built with AutoSend and UIInventoryManager it would take some re-designing, plan to return to fix this
     /// </summary>
@@ -84,9 +84,11 @@ public class ClientSend :MonoSingleton<ClientSend>
         {
             packet.Write(batch.StationId);
             packet.Write(batch.ItemCount);
+            packet.Write(batch.IsShipped);
             SendTCPData(packet);
         }
     }
+
 
 
     #endregion

@@ -36,25 +36,11 @@ public class sGameStatistics
         _orders.Enqueue(order);
     }
 
-    public void ShippedAnOrder(float time)
+
+    public void StationSentBatch(int stationID, int batchSize, bool wasShipped, float time)
     {
-        if (_orders.Count < 1)
-            return;
-
-        ItemOrder fifoOrder = _orders.Dequeue();
-        float timeToShipThisItem = time - fifoOrder.StartTime;
-        totalShippingTime += timeToShipThisItem;
-
-        if (fifoOrder.PromisedTime >= time)
-        {
-            ++ShippedLate;
-            return;
-        }
-        ++ShippedOnTime;
-    }
-
-    public void StationSentBatch(int stationID, int batchSize, float time)
-    {
+        if (wasShipped)
+            ShippedAnOrder(time);
 
         ///Keep track of cycletime
         if (_cycleTimes.TryGetValue(stationID, out Queue<float> times))
@@ -109,4 +95,20 @@ public class sGameStatistics
 
     /************************************************************************************************************************/
 
+    private void ShippedAnOrder(float time)
+    {
+        if (_orders.Count < 1)
+            return;
+
+        ItemOrder fifoOrder = _orders.Dequeue();
+        float timeToShipThisItem = time - fifoOrder.StartTime;
+        totalShippingTime += timeToShipThisItem;
+
+        if (fifoOrder.PromisedTime >= time)
+        {
+            ++ShippedLate;
+            return;
+        }
+        ++ShippedOnTime;
+    }
 }

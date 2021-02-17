@@ -5189,6 +5189,7 @@ GameObject:
   - component: {fileID: 1501261309}
   - component: {fileID: 1501261310}
   - component: {fileID: 1501261308}
+  - component: {fileID: 1501261311}
   m_Layer: 0
   m_Name: ClientManager
   m_TagString: Untagged
@@ -5275,6 +5276,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d0fdaba4100c34bb998b2fdd083bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1501261311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501261305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd2a8b92566521d4ba68cb6f8ba44288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameEvent: {fileID: 11400000, guid: 9aaed4c8e09a41848b28567809ee990f, type: 2}
+  _unityEventResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1501261309}
+        m_MethodName: OrderReceived
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1501927324
 GameObject:
   m_ObjectHideFlags: 0

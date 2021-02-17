@@ -92,6 +92,7 @@ public class sServerHandle
 
         int stationID = packet.ReadInt();
         int batchSize = packet.ReadInt();
+        bool wasShipped = packet.ReadBool();
         
         Debug.Log("[sServerHandle] stationID Read was : " + stationID);
         Debug.Log("[sServerHandle] batchSize Read was : " + batchSize);
@@ -99,7 +100,7 @@ public class sServerHandle
         if (fromClient != stationID)
             Debug.Log("[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>");
 
-        sServer._gameStatistics.StationSentBatch(stationID, batchSize, Time.time);
+        sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
         var cycleTime= sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
 

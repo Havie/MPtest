@@ -8,6 +8,7 @@ public class UIKitting : MonoBehaviour
     ///to match our other inventories,
     ///or a lot of debugging needs to be done to get these to play nicely together as its just a total
     ///hail mary right now
+    [SerializeField] OrderReceivedEvent _orderCreated;
 
     [Header("Vertical Layout Overrides These..")]
     [SerializeField] int _startingX = 16;   ///0
@@ -71,13 +72,16 @@ public class UIKitting : MonoBehaviour
         var bOrder = GameObject.Instantiate(_bORDERPREFAB);
         OrderButton ob = bOrder.GetComponent<OrderButton>();
         //Debug.Log("assign item with ID:" + itemID);
-        ob.SetOrder(itemID, GetEstimatedDeliveryTime());
+        float deliveryTime = GetEstimatedDeliveryTime();
+        ob.SetOrder(itemID, deliveryTime);
         _orderList.Add(ob);
         bOrder.transform.SetParent(this.transform);
         bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
         bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
 
         //Get data based off of the incoming value
+        if (_orderCreated)
+            _orderCreated.Raise(new OrderWrapper(itemID, Time.time, deliveryTime));
     }
 
 

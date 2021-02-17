@@ -554,8 +554,11 @@ public class UIInventoryManager : MonoBehaviour
 
         ///TaskComplete 
         /// TODO might want to identify our station ID somehow else
-        if(_batchSentEvent)
-            _batchSentEvent.Raise(new BatchWrapper((int)GameManager.Instance._workStation._myStation, count));
+        if (_batchSentEvent)
+        {
+            WorkStation ws = GameManager.Instance._workStation;
+            _batchSentEvent.Raise(new BatchWrapper((int)ws._myStation, count, ws.IsShippingStation()));
+        }
     }
 
     public int MaxSlots()

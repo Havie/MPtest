@@ -63,7 +63,10 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     }
 
-
+    public void OrderReceived(OrderWrapper order)
+    {
+        Debug.Log($"<color=white>(ClientHandle) Order Received</color>");
+    }
 
     #region OldTutorial
     public  void SpawnPlayer(sPacket packet)
