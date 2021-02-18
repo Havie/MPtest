@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class sGameStatistics
 {
-    public static float ORDER_SHIPPING_DELAY = 1000f; ///TODO correlate this with kitting
 
     public int Defects { get; private set; } = 0;
     public int ShippedOnTime { get; private set; } = 0;
     public int ShippedLate { get; private set; } = 0;
 
 
-    float _timeGameStarted;
+    float _timeGameStarted; ///TODO correlate this properly w actual start, not station select?
     Queue<ItemOrder> _orders; ///For now we use a QUEUE and dont check item Type since we only have one
     float totalShippingTime = 0;
     Dictionary<int, Queue<float>> _cycleTimes;
@@ -29,14 +28,11 @@ public class sGameStatistics
     public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
     public float GetThroughput() => (totalShippingTime / GetTotalShipped());
     public void AddedADefect() { ++Defects; }
-
-    public void CreatedAnOrder(int itemID, float time)
+    public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
     {
-        ItemOrder order = new ItemOrder(itemID, time, time + ORDER_SHIPPING_DELAY);
+        ItemOrder order = new ItemOrder(itemID, createdTime, expectedTime);
         _orders.Enqueue(order);
     }
-
-
     public void StationSentBatch(int stationID, int batchSize, bool wasShipped, float time)
     {
         if (wasShipped)
@@ -56,7 +52,6 @@ public class sGameStatistics
         _cycleTimes.Add(stationID, newTimesQueue);
 
     }
-
     public float GetCycleTimeForStation(int stationID, float endTime)
     {
         bool detailedINFO = false;
@@ -85,12 +80,6 @@ public class sGameStatistics
 
         //Debug.Log($"# of cycles for station#{stationID} was : {cycles}");
         return (endTime - _timeGameStarted) / cycles;
-    }
-
-
-    public float GetCycleTime(WorkStation ws)
-    {
-        return 0;
     }
 
     /************************************************************************************************************************/

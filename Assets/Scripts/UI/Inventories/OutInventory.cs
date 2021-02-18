@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class OutInventory : UIInventoryManager
 {
-
+    [Header("Event")]
+    [SerializeField] BatchEvent _batchSentEvent;
 
     #region InitalSetup
     protected override void Start()
@@ -13,8 +14,7 @@ public class OutInventory : UIInventoryManager
         if (IsInitalized)
             return;
 
-        if (_bSlotPREFAB == null)
-            _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
+        base.Start();
         if (!_sendButton)
         {
             if (_optionalSendButton)
@@ -224,6 +224,69 @@ public class OutInventory : UIInventoryManager
     }
 
 
+
+    /************************************************************************************************************/
+
+    public override void ItemAssigned(UIInventorySlot slot)
+    {
+        CheckIfBatchIsReady();
+    }
+
+
+    /** When an item gets assigned to the batch tell the manager*/
+    public void CheckIfBatchIsReady()
+    {
+        ///TMP off
+        /*
+         foreach (var slot in _slots)
+         {
+             if (!slot.GetInUse())
+             {
+                 if (_optionalSendButton)
+                     _optionalSendButton.interactable = false;
+                 return;
+             }
+         }
+        */
+        //If all buttons hold the correct items , we can send
+        if (_sendButton)
+            _sendButton.interactable = true;
+
+
+    }
+
+    public void SendBatch()
+    {
+        Debug.Log($"heared send batch {this.gameObject.name} ");
+        int count = 0;
+        foreach (var slot in _slots)
+        {
+            if (slot.SendData())
+                ++count;
+        }
+
+        bool allowSendWrongItems = false;
+
+        if (allowSendWrongItems)
+        {
+            foreach (var slot in _extraSlots)
+            {
+                if (slot.SendData())
+                    ++count;
+            }
+        }
+
+        if (_sendButton)
+            _sendButton.interactable = false;
+
+        ///TaskComplete 
+        /// TODO might want to identify our station ID somehow else
+        if (_batchSentEvent)
+        {
+            WorkStation ws = GameManager.Instance._workStation;
+            _batchSentEvent.Raise(new BatchWrapper((int)ws._myStation, count, ws.IsShippingStation()));
+        }
+    }
 
 
     #endregion

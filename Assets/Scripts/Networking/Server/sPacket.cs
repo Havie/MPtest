@@ -22,6 +22,7 @@ public enum ClientPackets
     stationID, 
     item, 
     batch,
+    orderCreated
 }
 
 public class sPacket : IDisposable

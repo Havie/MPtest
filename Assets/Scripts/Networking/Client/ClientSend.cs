@@ -78,7 +78,7 @@ public class ClientSend :MonoSingleton<ClientSend>
     /// <param name="batch"></param>
     public void BatchSent(BatchWrapper batch)
     {
-        Debug.Log($"<color=yellow>Client Handling BatchSent </color>{batch.StationId} , {batch.ItemCount}");
+        Debug.Log($"<color=yellow>Client Send BatchSent </color>{batch.StationId} , {batch.ItemCount}");
 
         using (sPacket packet = new sPacket((int)ClientPackets.batch))
         {
@@ -89,6 +89,17 @@ public class ClientSend :MonoSingleton<ClientSend>
         }
     }
 
+    public void OrderCreated(OrderWrapper order)
+    {
+        Debug.Log($"<color=white>(ClientSend) Order Created</color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.orderCreated))
+        {
+            packet.Write(order.ItemID);
+            packet.Write(order.CreatedTime);
+            packet.Write(order.DueTime);
+            SendTCPData(packet);
+        }
+    }
 
 
     #endregion

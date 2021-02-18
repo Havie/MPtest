@@ -13,17 +13,8 @@ public class InInventory : UIInventoryManager
         if (IsInitalized)
             return;
 
-        if (_bSlotPREFAB == null)
-            _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
-        if (!_sendButton)
-        {
-            var go = GameObject.FindGameObjectWithTag("SendButton");
-            if (go != null)
-            {
-                _sendButton = go.GetComponent<Button>();
-                _sendButton.interactable = false;
-            }
-        }
+        base.Start();
+
         _inventoryType = eInvType.IN;
         GetGameManagerData();
         if (_INVENTORYSIZE == 0)

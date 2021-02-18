@@ -29,9 +29,9 @@ public class sServerHandle
 
 
         sClient client = sServer._clients[fromClient];
-        if(client!=null)
+        if (client != null)
         {
-            if(client._player!=null)
+            if (client._player != null)
                 client._player.SetInput(inputs, rotation);
         }
     }
@@ -74,13 +74,13 @@ public class sServerHandle
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
             //if client workstation ID matches stationID 
-            if(c._workStation == stationID)
+            if (c._workStation == stationID)
             {
                 //Send the item to their inventory:
                 c.SendItem(itemLvl, qualities);
             }
 
-            if(!info.Equals(""))
+            if (!info.Equals(""))
                 Debug.Log(info);
 
         }
@@ -93,7 +93,7 @@ public class sServerHandle
         int stationID = packet.ReadInt();
         int batchSize = packet.ReadInt();
         bool wasShipped = packet.ReadBool();
-        
+
         Debug.Log("[sServerHandle] stationID Read was : " + stationID);
         Debug.Log("[sServerHandle] batchSize Read was : " + batchSize);
 
@@ -102,9 +102,23 @@ public class sServerHandle
 
         sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
-        var cycleTime= sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
+        var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
 
         Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
+    }
+
+    public static void OrderCreated(int fromClient, sPacket packet)
+    {
+        int itemID = packet.ReadInt();
+        float createdTime = packet.ReadFloat();
+        float dueTime = packet.ReadFloat();
+
+        Debug.Log("<color=white>[sServerHandle]</color> itemID Read was : " + itemID);
+        Debug.Log("<color=white>[sServerHandle]</color> createdTime Read was : " + createdTime);
+        Debug.Log("<color=white>[sServerHandle]</color> dueTime Read was : " + dueTime);
+
+        sServer._gameStatistics.CreatedAnOrder(itemID, createdTime, dueTime);
+
     }
 
 }

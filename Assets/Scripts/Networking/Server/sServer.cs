@@ -184,7 +184,8 @@ public static class sServer
                 { (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
                 { (int)ClientPackets.stationID , sServerHandle.StationIDReceived},
                 { (int)ClientPackets.item , sServerHandle.ItemReceived},
-                { (int)ClientPackets.batch , sServerHandle.BatchReceived}
+                { (int)ClientPackets.batch , sServerHandle.BatchReceived},
+                { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated}
 
             };
 

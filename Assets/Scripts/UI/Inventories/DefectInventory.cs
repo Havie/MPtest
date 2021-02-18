@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class DefectInventory : UIInventoryManager
 {
-
+    [Header("Event")]
+    [SerializeField] DefectEvent _defectEvent;
 
     #region InitalSetup
     protected override void Start()
@@ -13,17 +14,7 @@ public class DefectInventory : UIInventoryManager
         if (IsInitalized)
             return;
 
-        if (_bSlotPREFAB == null)
-            _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
-        if (!_sendButton)
-        {
-            if (_optionalSendButton)
-            {
-                _sendButton = _optionalSendButton.GetComponent<Button>();
-                _sendButton.interactable = false;
-            }
-        }
-      
+        base.Start();
         _inventoryType = eInvType.DEFECT;
         GetGameManagerData();
         GenInventory();
@@ -59,11 +50,6 @@ public class DefectInventory : UIInventoryManager
 
         return ParseItems(wm, myWS, false) * BATCHSIZE;
 
-    }
-
-    private void SetUpBatchOutput(WorkStationManager wm, WorkStation myWS)
-    {
-        ParseItems(wm, myWS, true);
     }
 
     private int ParseItems(WorkStationManager wm, WorkStation myWS, bool AddToSlot)
@@ -222,6 +208,13 @@ public class DefectInventory : UIInventoryManager
 
     }
 
+    public override void ItemAssigned(UIInventorySlot slot)
+    {
+        Debug.Log("DEFECT EVENNNTTT!!!!!!!!!!!");
+        //FireEvent
+        _defectEvent.Raise(new DefectWrapper((int)GameManager.instance._workStation._myStation, slot.GetItemID()));
+
+    }
 
 
 

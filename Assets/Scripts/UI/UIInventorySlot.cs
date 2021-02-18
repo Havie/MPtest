@@ -178,7 +178,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
                     Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
                 SendData(); // out only
             }
-            else if (_isOutSlot) //non pull send
+            else //non pull send
             {
                 TellManager();
             }
@@ -250,37 +250,6 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         // Debug.Log($"{this.gameObject.name} AssigndSprite = <color=green>{img.name}</color>");
 
     }
-    /**DEPRECEATED */
-    private bool AssignItem(int id, int count) ///Need to make this priv and re-direct old calls
-    {
-        //if (this.gameObject.name.Contains("tation"))
-        //   Debug.Log(this.gameObject.name + " Assign ITEM "  + "id=" +id  + "  , autosend="+_autoSend + " , _inUse="+ _inUse + " , _isOutSlot=" + _isOutSlot + " , _requiredID=" + _requiredID) ;
-        if (!_inUse)
-        {
-            if (_isOutSlot && id != RequiredID)
-                return false;
-
-            AssignSpriteByID(id, false);
-
-            _itemID = id;
-            _numItemsStored = count;
-            _inUse = true;
-            if (_autoSend)
-            {
-                if (count > 1)
-                    Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
-                SendData(); // out only
-            }
-            else if (_isOutSlot) //non pull send
-            {
-                TellManager();
-            }
-
-            return true;
-        }
-
-        return false;
-    }
 
 
     private void DebugQualityIn()
@@ -298,7 +267,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
 
     private void TellManager()
     {
-        _manager.CheckIfBatchIsReady();
+        _manager.ItemAssigned(this);
     }
     private void RestoreDefault()
     {

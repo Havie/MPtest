@@ -91,7 +91,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
         return false;
     }
-    public bool AssignItem(int id, int count, List<QualityObject> qualities)
+    public virtual bool AssignItem(int id, int count, List<QualityObject> qualities)
     {
         //Debug.Log($"ASsign Item in BUCKET! }");
 

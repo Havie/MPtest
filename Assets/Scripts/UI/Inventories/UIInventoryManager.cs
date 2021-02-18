@@ -26,8 +26,6 @@ public class UIInventoryManager : MonoBehaviour
     [SerializeField] protected int _maxItemsPerRow = 3;
     [SerializeField] protected int _maxColSize = 425;
 
-    [SerializeField] BatchEvent _batchSentEvent;
-
 
     #region GameManager Parameters
     protected int _INVENTORYSIZE;
@@ -35,9 +33,7 @@ public class UIInventoryManager : MonoBehaviour
     protected bool _ADDCHAOTIC;
     #endregion
     protected GameObject _bSlotPREFAB;
-    ///Dont think were using these anymore dynamically??
-    GameObject _scrollBarVert = default;
-    GameObject _scrollBarHoriz = default;
+
     public enum eInvType { IN, OUT, STATION, DEFECT };
     protected eInvType _inventoryType;
     protected UIInventorySlot[] _slots;
@@ -60,6 +56,8 @@ public class UIInventoryManager : MonoBehaviour
 
     protected virtual void Start()
     {
+        if (_bSlotPREFAB == null)
+            _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
     }
 
     /************************************************************************************************************************/
@@ -292,13 +290,6 @@ public class UIInventoryManager : MonoBehaviour
         //Debug.Log($"[{_inventoryType}] _INVENTORYSIZE={_INVENTORYSIZE} --> {scale}");
 
     }
-    protected void TurnOffScrollBars()
-    {
-        if (_scrollBarVert)
-            _scrollBarVert.SetActive(false);
-        if (_scrollBarHoriz)
-            _scrollBarHoriz.SetActive(false);
-    }
     #endregion
 
     #region RunTimeOperations
@@ -368,7 +359,7 @@ public class UIInventoryManager : MonoBehaviour
         return false;
     }
 
-    /**Used by IN-inventory with no specific slot in mind */
+    /**Used by all inventories initially to make required, and by IN-inventory with no specific slot in mind */
     public void AddItemToSlot(int itemID, List<QualityObject> qualities, bool makeRequired)
     {
         //if(_inventoryType==eInvType.OUT)
@@ -506,60 +497,7 @@ public class UIInventoryManager : MonoBehaviour
         button.transform.SetAsLastSibling();
     }
 
-    /** When an item gets assigned to the batch tell the manager*/
-    public void CheckIfBatchIsReady()
-    {
-        ///TMP off
-        /*
-         foreach (var slot in _slots)
-         {
-             if (!slot.GetInUse())
-             {
-                 if (_optionalSendButton)
-                     _optionalSendButton.interactable = false;
-                 return;
-             }
-         }
-        */
-        //If all buttons hold the correct items , we can send
-        if (_sendButton)
-            _sendButton.interactable = true;
-
-
-    }
-
-    public void SendBatch()
-    {
-        Debug.Log($"heared send batch {this.gameObject.name} ");
-        int count = 0;
-        foreach (var slot in _slots)
-        {
-            if (slot.SendData())
-                ++count;
-        }
-
-        bool allowSendWrongItems = false;
-
-        if (allowSendWrongItems)
-        {
-            foreach (var slot in _extraSlots)
-            {
-                if(slot.SendData())
-                    ++count;
-            }
-        }
-
-        if (_sendButton)
-            _sendButton.interactable = false;
-
-        ///TaskComplete 
-        /// TODO might want to identify our station ID somehow else
-        if (_batchSentEvent)
-        {
-            WorkStation ws = GameManager.Instance._workStation;
-            _batchSentEvent.Raise(new BatchWrapper((int)ws._myStation, count, ws.IsShippingStation()));
-        }
-    }
+    public virtual void ItemAssigned(UIInventorySlot slot){}
 
     public int MaxSlots()
     {

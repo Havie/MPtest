@@ -11,8 +11,7 @@ public class StationInventory : UIInventoryManager
         if (IsInitalized)
             return;
 
-        if (_bSlotPREFAB == null)
-            _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
+        base.Start();
 
         _inventoryType = eInvType.STATION;
         GetGameManagerData();
