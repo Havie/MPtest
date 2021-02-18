@@ -87,9 +87,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b81178fbe4c5044ca659d3663bf9ccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scrollBarVert: {fileID: 0}
-  _scrollBarHoriz: {fileID: 0}
-  maxItemsPerRow: 4
+  _bg: {fileID: 0}
+  _content: {fileID: 0}
+  _optionalSendButton: {fileID: 0}
+  _maxItemsPerRow: 3
+  _maxColSize: 425
 --- !u!1 &428164342062657178
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,6 +271,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59991c39c6949e418f5d31b34f6e4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _startingX: 16
+  _startingY: 350
+  _yOffset: -39
 --- !u!222 &5405166380893237249
 CanvasRenderer:
   m_ObjectHideFlags: 0
