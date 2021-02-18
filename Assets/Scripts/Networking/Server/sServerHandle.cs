@@ -121,4 +121,21 @@ public class sServerHandle
 
     }
 
+    public static void DefectAdded(int fromClient, sPacket packet)
+    {
+        int stationID = packet.ReadInt();
+        int itemID = packet.ReadInt();
+
+        if (fromClient != stationID)
+            Debug.Log("[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>");
+
+
+        Debug.Log("<color=orange>[sServerHandle]</color> itemID Read was : " + stationID);
+        Debug.Log("<color=orange>[sServerHandle]</color> createdTime Read was : " + itemID);
+
+        sServer._gameStatistics.AddedADefect(stationID, itemID);
+
+
+        Debug.Log($"Current Defects#={sServer._gameStatistics.Defects}");
+    }
 }

@@ -39,111 +39,22 @@ public class InInventory : UIInventoryManager
 
     private int DetermineWorkStationBatchSize()
     {
-        WorkStationManager wm = GameManager.Instance.CurrentWorkStationManager;
-        int BATCHSIZE = GameManager.Instance._batchSize;
-        //if (BATCHSIZE == 1)
-        //    TurnOffScrollBars();
-        WorkStation myWS = GameManager.Instance._workStation;
+        var gm = GameManager.instance;
 
-        return ParseItems(wm, myWS, false) * BATCHSIZE;
-    }
-
-    protected virtual int ParseItems(WorkStationManager wm, WorkStation myWS, bool AddToSlotOnFind)
-    {
-
-        int count = 0;
-        int[] stationSequence = getProperSequence(wm, myWS);
-        var stationList = wm.GetStationList();
-        ///Figure out myplace in Sequence 
-        int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-        // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        int BATCHSIZE = GameManager.Instance._batchSize;
-        if (BATCHSIZE == 1)
-        {
-            ///look at the last tasks final items in the station before mine
-            if (startingIndex > 1) /// no kitting on pull, so second station
-            {
-                WorkStation ws = stationList[startingIndex - 1];
-                Task lastTask = ws._tasks[ws._tasks.Count - 1];
-                // Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
-                count += lastTask._finalItemID.Count;
-                if (AddToSlotOnFind)
-                {
-                    foreach (var item in lastTask._finalItemID)
-                    {
-                        AddItemToSlot((int)item, null, false);
-                    }
-                }
-            }
-        }
-        else  ///look at all final items for station before me , and the basic items from kitting[1]
-        {
-            var listItems = FindObjectsAtKittingStation(stationList[1]);
-            // Debug.Log("Staring index=+" + startingIndex);
-            ///foreach station between us and kitting, if listItem contains a requiredItem, remove it
-            if (startingIndex > 2) //1 = kitting
-            {
-                for (int i = 0; i < startingIndex; i++)
-                {
-                    WorkStation ws = stationList[i];
-                    foreach (Task t in ws._tasks)
-                    {
-                        foreach (var item in t._requiredItemIDs)
-                        {
-                            int itemId = (int)item;
-                            // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
-                            if (listItems.Contains(itemId))
-                                listItems.Remove(itemId);
-                        }
-                        ///were at prior station
-                        if (i == startingIndex - 1)
-                        {
-                            ///Add the final items from station prior to me
-                            foreach (var item in t._finalItemID)
-                            {
-                                int itemId = (int)item;
-                                listItems.Add(itemId);
-                                // Debug.Log($"_finalItems....Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
-
-                            }
-                        }
-                    }
-                }
-            }
-            ///finally we can add what we found
-            if (AddToSlotOnFind)
-            {
-                foreach (var item in listItems)
-                {
-                    for (int j = 0; j < BATCHSIZE; j++)
-                        AddItemToSlot((int)item, null, false);
-                }
-            }
-            count += listItems.Count;
-
-        }
-        //Debug.Log($"The # of INV items will be : {count}");
-        return count;
-    }
-
-    private List<int> FindObjectsAtKittingStation(WorkStation ws)
-    {
-        if (!ws.isKittingStation())
-            Debug.LogError("Wrong order, kitting isnt @ index 1");
-
-        List<int> items = new List<int>();
-        foreach (Task t in ws._tasks)
-        {
-            foreach (var item in t._finalItemID)
-                items.Add((int)item);
-        }
-
-        return items;
+        return StationItemParser.ParseItemsAsIN(gm._batchSize, gm.CurrentWorkStationManager, gm._workStation).Count;
+       // return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
 
     private void SetUpStartingItems()
     {
-        ParseItems(GameManager.Instance.CurrentWorkStationManager, GameManager.Instance._workStation, true);
+        //ParseItems(GameManager.Instance.CurrentWorkStationManager, GameManager.Instance._workStation, true);
+
+        var gm = GameManager.instance;
+
+        foreach (var itemID in StationItemParser.ParseItemsAsIN(gm._batchSize, gm.CurrentWorkStationManager, gm._workStation))
+        {
+            AddItemToSlot((int)itemID, null, false);
+        }
     }
 
 
@@ -161,7 +72,7 @@ public class InInventory : UIInventoryManager
 
         ///Determine layout
         _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > _maxItemsPerRow && _inventoryType != eInvType.STATION)
+        if (_INVENTORYSIZE > _maxItemsPerRow)
             _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
 
         if (_xMaxPerRow > _maxItemsPerRow)

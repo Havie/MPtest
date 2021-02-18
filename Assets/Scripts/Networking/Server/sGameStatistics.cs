@@ -27,7 +27,7 @@ public class sGameStatistics
 
     public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
     public float GetThroughput() => (totalShippingTime / GetTotalShipped());
-    public void AddedADefect() { ++Defects; }
+    public void AddedADefect(int stationID, int itemID) { ++Defects; }
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
     {
         ItemOrder order = new ItemOrder(itemID, createdTime, expectedTime);
@@ -82,6 +82,11 @@ public class sGameStatistics
         return (endTime - _timeGameStarted) / cycles;
     }
 
+    public int GetWIP()
+    {
+        ///TODO can query the final items in the _orders and add up their req Items
+        return 0;
+    }
     /************************************************************************************************************************/
 
     private void ShippedAnOrder(float time)

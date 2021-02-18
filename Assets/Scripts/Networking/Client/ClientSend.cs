@@ -101,6 +101,16 @@ public class ClientSend :MonoSingleton<ClientSend>
         }
     }
 
+    public void DefectAdded(DefectWrapper defect)
+    {
+        Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.defectAdded))
+        {
+            packet.Write(defect.StationId);
+            packet.Write(defect.ItemId);
+            SendTCPData(packet);
+        }
+    }
 
     #endregion
 

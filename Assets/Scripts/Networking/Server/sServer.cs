@@ -185,7 +185,8 @@ public static class sServer
                 { (int)ClientPackets.stationID , sServerHandle.StationIDReceived},
                 { (int)ClientPackets.item , sServerHandle.ItemReceived},
                 { (int)ClientPackets.batch , sServerHandle.BatchReceived},
-                { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated}
+                { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated},
+                { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded}
 
             };
 
