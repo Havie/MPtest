@@ -59,7 +59,7 @@ public class sServerHandle
 
         var count = packet.ReadInt();
         Debug.Log($"[ServerHandle] QualityCount={count}");
-        string info = "";
+       // string info = "";
         ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
         {
@@ -68,7 +68,7 @@ public class sServerHandle
             qualities.Add(id); ///quality ID
             qualities.Add(curAction); ///quality Count
 
-            info += $" server pack :({id},{curAction}) ";
+          //  info += $" server pack :({id},{curAction}) ";
         }
 
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
@@ -80,8 +80,8 @@ public class sServerHandle
                 c.SendItem(itemLvl, qualities);
             }
 
-            if (!info.Equals(""))
-                Debug.Log(info);
+            //if (!info.Equals(""))
+            //    Debug.Log(info);
 
         }
 
@@ -98,7 +98,7 @@ public class sServerHandle
         Debug.Log("[sServerHandle] batchSize Read was : " + batchSize);
 
         if (fromClient != stationID)
-            Debug.Log("[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>");
+            Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
         sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
@@ -127,7 +127,7 @@ public class sServerHandle
         int itemID = packet.ReadInt();
 
         if (fromClient != stationID)
-            Debug.Log("[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>");
+            Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
 
         Debug.Log("<color=orange>[sServerHandle]</color> itemID Read was : " + stationID);

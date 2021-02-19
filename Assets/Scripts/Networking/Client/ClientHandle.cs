@@ -22,7 +22,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
        instance.BatchChanged(packet.ReadInt());
        instance.AutoSendChanged(packet.ReadBool());
        instance._addChaotic = packet.ReadBool();
-       instance._isStackable = packet.ReadBool();
+       instance.IsStackableChanged(packet.ReadBool());
        instance._workStationArrangement = packet.ReadBool();
        instance._workStationTaskChanging = packet.ReadBool();
        instance._HUDManagement = packet.ReadBool();
