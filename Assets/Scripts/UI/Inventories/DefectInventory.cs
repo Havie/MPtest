@@ -15,28 +15,17 @@ public class DefectInventory : UIInventoryManager
             return;
 
         base.Start();
-        _inventoryType = eInvType.DEFECT;
-        GetGameManagerData();
-        GenInventory();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
     }
 
 
-    private void GetGameManagerData()
-    {
-        _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        _STACKABLE = GameManager.Instance._isStackable;
-        _ADDCHAOTIC = GameManager.Instance._addChaotic;
-        //GameManager.Instance.SetInventoryOut(this);
-
-    }
 
 
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    private int DetermineWorkStationBatchSize()
+    protected override int DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
         int batchSize = gm._batchSize;
@@ -56,7 +45,7 @@ public class DefectInventory : UIInventoryManager
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    private void GenInventory()
+    protected override void GenerateInventory()
     {
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
@@ -64,7 +53,7 @@ public class DefectInventory : UIInventoryManager
 
         //Determine layout
         _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > _maxItemsPerRow && _inventoryType != eInvType.STATION)
+        if (_INVENTORYSIZE > _maxItemsPerRow )
             _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
 
         if (_xMaxPerRow > _maxItemsPerRow)

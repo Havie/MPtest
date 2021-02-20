@@ -192,7 +192,7 @@ public static class StationItemParser
             return items;
         }
     }
-    public static List<int> ParseItemAsStation(int batchSize, WorkStationManager wm, WorkStation myWS)
+    public static List<int> ParseItemsAsStation(int batchSize, WorkStationManager wm, WorkStation myWS)
     {
         List<int> seenItems = new List<int>();
         if (batchSize == 1)

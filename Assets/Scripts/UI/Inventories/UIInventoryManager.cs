@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 //https://www.youtube.com/watch?v=Oba1k4wRy-0 //Tutorial
 [DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
-public class UIInventoryManager : MonoBehaviour
+public abstract class UIInventoryManager : MonoBehaviour
 {
     /// <summary>
     /// I realllly want to re-write this class with dependency injection,
@@ -34,8 +34,6 @@ public class UIInventoryManager : MonoBehaviour
     #endregion
     protected GameObject _bSlotPREFAB;
 
-    public enum eInvType { IN, OUT, STATION, DEFECT };
-    protected eInvType _inventoryType;
     protected UIInventorySlot[] _slots;
     protected List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
 
@@ -46,9 +44,6 @@ public class UIInventoryManager : MonoBehaviour
 
     protected string _prefix;
 
-    private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
-    private Vector3 _NORMAL = new Vector3(1, 1, 1);
-    private Vector3 _SMALLER = new Vector3(0.5f, 0.5f, 0.5f);
 
     /************************************************************************************************************************/
     public bool IsInitalized { get; protected set; }
@@ -58,150 +53,18 @@ public class UIInventoryManager : MonoBehaviour
     {
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
+
+        _STACKABLE = GameManager.Instance._isStackable;
+        _ADDCHAOTIC = GameManager.Instance._addChaotic;
+        _INVENTORYSIZE = DetermineWorkStationBatchSize();
+        GenerateInventory();
+
     }
 
     /************************************************************************************************************************/
     #region Helper Initilization Methods for extended classes
-    protected void PrintASequence(int[] sequence, string seqName)
-    {
-        string p = "";
-        for (int i = 0; i < sequence.Length; ++i)
-        {
-            p += $" , {sequence[i]}";
-        }
-        //Debug.Log(seqName+ ": " + p);
-    }
-
-
-    /** This is kind of a mess, thinking of making a doubly linked list class at some point*/
-    protected int[] getProperSequence(WorkStationManager wm, WorkStation myWS)
-    {
-        int[] sequence = new int[wm.GetStationCount() + 1];
-        //Debug.LogWarning("sequence size=" + wm.GetStationCount() + 1);
-        foreach (WorkStation ws in wm.GetStationList())
-        {
-            //figure out sequence (*Exclude staiton 0 cuz SELF testing*)
-            //each ws knows where its sending stuff , so we need to build the path?
-            //Debug.Log($"{(int)ws._myStation} = {(int)ws._sendOutputToStation}");
-            if ((int)ws._myStation != 0)
-                sequence[(int)ws._myStation] = (int)ws._sendOutputToStation;
-
-        }
-        PrintASequence(sequence, "initial");
-        //Find End:
-        int endIndex = -1;
-        for (int i = 1; i < sequence.Length - 1; ++i)
-        {
-            if (sequence[i] == (int)WorkStation.eStation.NONE)
-            {
-                endIndex = i;
-                break;
-            }
-        }
-        //Debug.Log("endIndex=" + endIndex);
-        //Rebuild from backwards:
-        int[] backwardSequence = new int[wm.GetStationCount()];
-        backwardSequence[0] = endIndex;
-        int totalSeen = 1;
-        while (totalSeen != backwardSequence.Length)
-        {
-            // Debug.Log($"(while)::endIndex= {endIndex}  and val at that index= {sequence[endIndex]} " );
-            for (int i = 1; i < sequence.Length - 1; i++)
-            {
-                if (sequence[i] == endIndex)
-                {
-                    backwardSequence[totalSeen] = i;
-                    endIndex = i;
-                    break;
-                }
-            }
-
-            ++totalSeen;
-        }
-        PrintASequence(backwardSequence, "backwards");
-        int[] finalSequence = new int[wm.GetStationCount()];
-        for (int i = 0; i < backwardSequence.Length; i++)
-        {
-            //Debug.Log($"final:{i} = bs({backwardSequence.Length - 1 - i}):{backwardSequence[backwardSequence.Length - 1 - i]} ");
-            finalSequence[i] = backwardSequence[backwardSequence.Length - 1 - i];
-        }
-        PrintASequence(finalSequence, "final");
-        return finalSequence;
-    }
-
-    protected int FindPlaceInSequence(int[] sequence, int myStationID)
-    {
-        int index = 0;
-        for (int i = 0; i < sequence.Length; i++)
-        {
-            if (sequence[i] == myStationID)
-                return i;
-        }
-
-        return index;
-    }
-
-    protected virtual int SumSequence(int BATCHSIZE, WorkStationManager wm, WorkStation myWS, bool reqItemsOverFinalItems, bool includeSelf, bool excludeDuplicates)
-    {
-        int count = 0;
-        int[] stationSequence = getProperSequence(wm, myWS);
-        var stationList = wm.GetStationList();
-        //Figure out myplace in Sequence 
-        int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-        List<int> seenItems = new List<int>();
-        if (!includeSelf)
-            ++startingIndex;
-        //Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        for (int i = startingIndex; i < stationSequence.Length; i++)
-        {
-            WorkStation ws = stationList[i]; /// think this is in order?
-            foreach (Task t in ws._tasks)
-            {
-                if (reqItemsOverFinalItems)
-                {
-                    if (!excludeDuplicates)
-                        count += t._requiredItemIDs.Count;
-                    else   //verify no duplicates
-                    {
-                        foreach (var item in t._requiredItemIDs)
-                        {
-                            if (BuildableObject.Instance.IsBasicItem(item)) // cant do across board, will cause issue w OUT/IN
-                            {
-                                int itemId = (int)item;
-                                if (_inventoryType == eInvType.STATION)
-                                    Debug.Log($"chosenItemID={itemId}");
-                                if (!seenItems.Contains(itemId))
-                                {
-                                    seenItems.Add(itemId);
-                                    ++count;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (!excludeDuplicates)
-                        count += t._finalItemID.Count;
-                    else  //verify no duplicates
-                    {
-                        foreach (var item in t._finalItemID)
-                        {
-                            int itemId = (int)item;
-                            if (!seenItems.Contains(itemId))
-                            {
-                                seenItems.Add(itemId);
-                                ++count;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        // Debug.Log($"The # of INV items will be : {count}");
-        return count;
-    }
-
+    protected abstract int DetermineWorkStationBatchSize();
+    protected abstract void GenerateInventory();
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {
@@ -225,70 +88,72 @@ public class UIInventoryManager : MonoBehaviour
 
         UpdateComponentRects(size);
         DetermineBestScale();
-    }
-    void UpdateComponentRects(Vector2 size)
-    {
-        if (_content)
+
+        ///LOCAL FUNCTIONS
+        void UpdateComponentRects(Vector2 v2Size)
         {
-            size.y += _content.GetReducedYSize;
-            _content.ChangeRectTransform(size);
+            if (_content)
+            {
+                v2Size.y += _content.GetReducedYSize;
+                _content.ChangeRectTransform(v2Size);
+            }
+
+            ///Recalibrate
+            if (v2Size.y > _maxColSize)
+                v2Size.y = _maxColSize;
+
+            if (_bg) ///Make sure this called before Mask
+                _bg.ChangeRectTransform(v2Size);
+            if (_optionalSendButton)
+                _optionalSendButton.ChangeRectTransform(v2Size);
         }
-
-        ///Recalibrate
-        if (size.y > _maxColSize)
-            size.y = _maxColSize;
-
-        if (_bg) ///Make sure this called before Mask
-            _bg.ChangeRectTransform(size);
-        if (_optionalSendButton)
-            _optionalSendButton.ChangeRectTransform(size);
-    }
-    float DetermineXPadding()
-    {
-        ///Adding padding here results in the items all being anchored wrongly to the left, 
-        ///cant see to figure out how to center them in NextSlotLocation()
-        if (_xMaxPerRow < _maxItemsPerRow)
-            return 0;
-        else
-            return 0;
-    }
-    float DetermineYPadding()
-    {
-        ///Need to return the difference of whatver padding required to make _maxColSize (425):
-        //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
-        /// the difference required to made y height the size of 2 slots:
-        var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
-
-        if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
-            return retVal;
-        else
-            return 0.5f;
-    }
-    void DetermineBestScale()
-    {
-        ///TODO scale the UI UP a bit based on how small the inventory size is 
-
-        ///float scale = ((float)12 / (float)_INVENTORYSIZE);
-     
-
-        ///i NEED AN expoential curve,that the closer u get to ONE the harder cap on being 1.5 
-        ///
-
-        float max = 1.25f;
-        float min = 0.75f;
-        float scale = min + (2.45f/_INVENTORYSIZE);  ///Smaller the top # the smaller the inventory size
-
-        if (scale > max)
+        float DetermineXPadding()
         {
-            if (_INVENTORYSIZE == 1)
-                scale = 1.50f;
+            ///Adding padding here results in the items all being anchored wrongly to the left, 
+            ///cant see to figure out how to center them in NextSlotLocation()
+            if (_xMaxPerRow < _maxItemsPerRow)
+                return 0;
             else
-                scale = max;
+                return 0;
         }
+        float DetermineYPadding()
+        {
+            ///Need to return the difference of whatver padding required to make _maxColSize (425):
+            //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
+            /// the difference required to made y height the size of 2 slots:
+            var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
 
-        transform.localScale = new Vector3(scale, scale, scale);
-        //Debug.Log($"[{_inventoryType}] _INVENTORYSIZE={_INVENTORYSIZE} --> {scale}");
+            if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
+                return retVal;
+            else
+                return 0.5f;
+        }
+        void DetermineBestScale()
+        {
+            ///TODO scale the UI UP a bit based on how small the inventory size is 
 
+            ///float scale = ((float)12 / (float)_INVENTORYSIZE);
+
+
+            ///i NEED AN expoential curve,that the closer u get to ONE the harder cap on being 1.5 
+            ///
+
+            float max = 1.25f;
+            float min = 0.75f;
+            float scale = min + (2.45f / _INVENTORYSIZE);  ///Smaller the top # the smaller the inventory size
+
+            if (scale > max)
+            {
+                if (_INVENTORYSIZE == 1)
+                    scale = 1.50f;
+                else
+                    scale = max;
+            }
+
+            transform.localScale = new Vector3(scale, scale, scale);
+            //Debug.Log($"[{_inventoryType}] _INVENTORYSIZE={_INVENTORYSIZE} --> {scale}");
+
+        }
     }
     #endregion
 

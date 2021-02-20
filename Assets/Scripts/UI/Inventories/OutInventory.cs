@@ -24,28 +24,17 @@ public class OutInventory : UIInventoryManager
             }
         }
       
-        _inventoryType = eInvType.OUT;
-        GetGameManagerData();
-        GenInventory();
+        GameManager.Instance.SetInventoryOut(this);
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
     }
 
 
-    private void GetGameManagerData()
-    {
-        _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        _STACKABLE = GameManager.Instance._isStackable;
-        _ADDCHAOTIC = GameManager.Instance._addChaotic;
-        GameManager.Instance.SetInventoryOut(this);
-
-    }
-
 
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    private int DetermineWorkStationBatchSize()
+    protected override int DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
         int batchSize = gm._batchSize;
@@ -76,7 +65,7 @@ public class OutInventory : UIInventoryManager
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    private void GenInventory()
+    protected override void GenerateInventory()
     {
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
@@ -84,7 +73,7 @@ public class OutInventory : UIInventoryManager
 
         //Determine layout
         _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > _maxItemsPerRow && _inventoryType != eInvType.STATION)
+        if (_INVENTORYSIZE > _maxItemsPerRow)
             _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
 
         if (_xMaxPerRow > _maxItemsPerRow)

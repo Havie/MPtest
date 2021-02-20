@@ -15,29 +15,24 @@ public class InInventory : UIInventoryManager
 
         base.Start();
 
-        _inventoryType = eInvType.IN;
-        GetGameManagerData();
         if (_INVENTORYSIZE == 0)
+        {
             UIManager.HideInInventory();
+        }
         else
-            GenInventory();
+        {
+            GameManager.Instance.SetInventoryIn(this);
+        }
 
 
     }
 
-    private void GetGameManagerData()
-    {
-        _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        _STACKABLE = GameManager.Instance._isStackable;
-        _ADDCHAOTIC = GameManager.Instance._addChaotic;
-        GameManager.Instance.SetInventoryIn(this);
-    }
 
 
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    private int DetermineWorkStationBatchSize()
+    protected override int DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
 
@@ -62,7 +57,7 @@ public class InInventory : UIInventoryManager
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    private void GenInventory()
+    protected override void GenerateInventory()
     {
 
         _slots = new UIInventorySlot[_INVENTORYSIZE];

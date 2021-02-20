@@ -13,27 +13,18 @@ public class StationInventory : UIInventoryManager
 
         base.Start();
 
-        _inventoryType = eInvType.STATION;
-        GetGameManagerData();
-        GenInventory();
+        GameManager.Instance.SetInventoryStation(this);
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
     }
 
-    private void GetGameManagerData()
-    {
-        _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        _STACKABLE = GameManager.Instance._isStackable;
-        Debug.Log($"INVReqest_STACKABLE.. {_STACKABLE}");
-        _ADDCHAOTIC = GameManager.Instance._addChaotic;
-        GameManager.Instance.SetInventoryStation(this);
-    }
+
 
 
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    private int DetermineWorkStationBatchSize()
+    protected override int DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
 
@@ -41,23 +32,23 @@ public class StationInventory : UIInventoryManager
         int batchSize = gm._batchSize;
         WorkStation myWS = gm._workStation;
 
-        return StationItemParser.ParseItemAsStation(batchSize, wm, myWS).Count;
+        return StationItemParser.ParseItemsAsStation(batchSize, wm, myWS).Count;
     }
 
     private void SetUpInfiniteItems(WorkStationManager wm, WorkStation myWS)
     {
 
-        foreach(var itemID in StationItemParser.ParseItemAsStation(GameManager.instance._batchSize, wm, myWS))
+        foreach(var itemID in StationItemParser.ParseItemsAsStation(GameManager.instance._batchSize, wm, myWS))
         {
             AssignInfiniteItem(itemID);
         }
     }
 
-     #endregion
+    #endregion
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    private void GenInventory()
+    protected override void GenerateInventory()
     {
         //if (NotStackableAndNotKitting())
         if (NotStackableOrKitting())
