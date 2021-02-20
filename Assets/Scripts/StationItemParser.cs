@@ -43,7 +43,6 @@ public static class StationItemParser
                     if (firstTime) //add my own output
                     {
                         AddSelfItems(ws, taskIndex, t);
-                        firstTime = false;
                     }
                     else
                     {
@@ -52,6 +51,7 @@ public static class StationItemParser
 
                 }
             }
+            firstTime = false;
         }
 
         return itemIDs;
@@ -94,6 +94,7 @@ public static class StationItemParser
 
         void ParseRequiredItems(Task local_task)
         {
+            Debug.Log($"We are parsing required items for task: {local_task}");
             foreach (var item in local_task._requiredItemIDs) /// look at all of its _requiredItemIDs items
             {
                 if (BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
@@ -227,16 +228,14 @@ public static class StationItemParser
             {
                 //Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
                 LookAtEveryStationsItems(stationSequence, stationList, startingIndex, seenItems);
-                Debug.Log($"<color=yellow>DID Seen Pass by REF? </color> {seenItems.Count}");
             }
             else // just look at my own items
             {
                 LookAtOwnStationItems(myWS, seenItems);
-                Debug.Log($"<color=yellow>DID Seen Pass by REF? </color>{seenItems.Count}");
+
             }
         }
 
-        Debug.Log($"RET SeenItemsCount= {seenItems.Count}");
         return seenItems;
 
         ///LOCAL FUNCTIONS:

@@ -56,15 +56,14 @@ public abstract class UIInventoryManager : MonoBehaviour
 
         _STACKABLE = GameManager.Instance._isStackable;
         _ADDCHAOTIC = GameManager.Instance._addChaotic;
-        _INVENTORYSIZE = DetermineWorkStationBatchSize();
-        GenerateInventory();
+        GenerateInventory(DetermineWorkStationBatchSize());
 
     }
 
     /************************************************************************************************************************/
     #region Helper Initilization Methods for extended classes
-    protected abstract int DetermineWorkStationBatchSize();
-    protected abstract void GenerateInventory();
+    protected abstract List<int> DetermineWorkStationBatchSize();
+    protected abstract void GenerateInventory(List<int> itemIDs);
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {

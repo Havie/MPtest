@@ -14,7 +14,6 @@ public class OutInventory : UIInventoryManager
         if (IsInitalized)
             return;
 
-        base.Start();
         if (!_sendButton)
         {
             if (_optionalSendButton)
@@ -23,7 +22,7 @@ public class OutInventory : UIInventoryManager
                 _sendButton.interactable = false;
             }
         }
-      
+        base.Start();
         GameManager.Instance.SetInventoryOut(this);
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
@@ -34,7 +33,7 @@ public class OutInventory : UIInventoryManager
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    protected override int DetermineWorkStationBatchSize()
+    protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
         int batchSize = gm._batchSize;
@@ -44,16 +43,14 @@ public class OutInventory : UIInventoryManager
             _sendButton.gameObject.SetActive(false); ///turn off the send button
         }
 
-        return StationItemParser.ParseItemsAsOUT(batchSize, gm.CurrentWorkStationManager, gm._workStation).Count;
+        return StationItemParser.ParseItemsAsOUT(batchSize, gm.CurrentWorkStationManager, gm._workStation);
        // return ParseItems(wm, myWS, false) * BATCHSIZE;
 
     }
 
-    private void SetUpBatchOutput(WorkStationManager wm, WorkStation myWS)
+    private void SetUpBatchOutput(List<int> itemIDs)
     {
-        //ParseItems(wm, myWS, true);
-        int BATCHSIZE = GameManager.Instance._batchSize;
-        foreach (var itemID in  StationItemParser.ParseItemsAsOUT(BATCHSIZE, wm, myWS))
+        foreach (var itemID in  itemIDs)
         {
             AddItemToSlot(itemID, null, true);
         }
@@ -65,8 +62,9 @@ public class OutInventory : UIInventoryManager
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    protected override void GenerateInventory()
+    protected override void GenerateInventory(List<int> itemIDs)
     {
+        _INVENTORYSIZE = itemIDs.Count;
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
@@ -85,10 +83,8 @@ public class OutInventory : UIInventoryManager
 
         //cache a conditions for forloop situations
         bool cond = GameManager.instance._autoSend; //used By eInvType.OUT
-        WorkStationManager wm =GameManager.Instance.CurrentWorkStationManager;
-        WorkStation myWS = GameManager.instance._workStation;
-        //getAPrefix for naming our buttons in scene Hierarchy
 
+        //getAPrefix for naming our buttons in scene Hierarchy
         _prefix = "out_";
 
         //Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount
@@ -102,7 +98,7 @@ public class OutInventory : UIInventoryManager
             _slots[i].transform.localScale = new Vector3(-1, 1, 1);
         }
 
-        SetUpBatchOutput(wm, myWS);
+        SetUpBatchOutput(itemIDs);
     }
 
 

@@ -32,11 +32,11 @@ public class InInventory : UIInventoryManager
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    protected override int DetermineWorkStationBatchSize()
+    protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
 
-        return StationItemParser.ParseItemsAsIN(gm._batchSize, gm.CurrentWorkStationManager, gm._workStation).Count;
+        return StationItemParser.ParseItemsAsIN(gm._batchSize, gm.CurrentWorkStationManager, gm._workStation);
        // return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
 
@@ -57,9 +57,9 @@ public class InInventory : UIInventoryManager
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    protected override void GenerateInventory()
+    protected override void GenerateInventory(List<int> itemIDs)
     {
-
+        _INVENTORYSIZE = itemIDs.Count;
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
 

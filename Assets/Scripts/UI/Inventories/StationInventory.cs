@@ -24,7 +24,7 @@ public class StationInventory : UIInventoryManager
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    protected override int DetermineWorkStationBatchSize()
+    protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
 
@@ -32,7 +32,7 @@ public class StationInventory : UIInventoryManager
         int batchSize = gm._batchSize;
         WorkStation myWS = gm._workStation;
 
-        return StationItemParser.ParseItemsAsStation(batchSize, wm, myWS).Count;
+        return StationItemParser.ParseItemsAsStation(batchSize, wm, myWS);
     }
 
     private void SetUpInfiniteItems(WorkStationManager wm, WorkStation myWS)
@@ -48,12 +48,12 @@ public class StationInventory : UIInventoryManager
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    protected override void GenerateInventory()
+    protected override void GenerateInventory(List<int> itemIDs)
     {
         //if (NotStackableAndNotKitting())
         if (NotStackableOrKitting())
             return;
-
+        _INVENTORYSIZE = itemIDs.Count;
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
@@ -98,7 +98,6 @@ public class StationInventory : UIInventoryManager
 
         if (!_STACKABLE)
         {
-            Debug.Log("FAILED CUZ NO STACKABLE");
             Destroy(this.gameObject); //good enough for now might need to go higher to parents
             return true;
         }
@@ -107,12 +106,11 @@ public class StationInventory : UIInventoryManager
         var ws = GameManager.Instance._workStation;
         if (ws.isKittingStation() && batchSize!=1)
         {
-            Debug.Log($"FAILED CUZ NO isKittingStation.. {ws}");
             Destroy(this.gameObject); //good enough for now might need to go higher to parents
             return true;
         }
 
-        UIManager.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
+        //UIManager.DebugLog("Station is stackable so enabling personal inventory, TODO remove these items from calculation of in invetory/send inventory");
         return false;
     }
 

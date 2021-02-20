@@ -25,7 +25,7 @@ public class DefectInventory : UIInventoryManager
     /************************************************************************************************************/
     #region batchSizeMethods
 
-    protected override int DetermineWorkStationBatchSize()
+    protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
         int batchSize = gm._batchSize;
@@ -36,7 +36,7 @@ public class DefectInventory : UIInventoryManager
            // TurnOffScrollBars();
         }
 
-        return StationItemParser.ParseItemsAsDefect(batchSize, gm.CurrentWorkStationManager, gm._workStation).Count;
+        return StationItemParser.ParseItemsAsDefect(batchSize, gm.CurrentWorkStationManager, gm._workStation);
         //return ParseItems(wm, myWS, false) * BATCHSIZE;
 
     }
@@ -45,8 +45,9 @@ public class DefectInventory : UIInventoryManager
     /************************************************************************************************************/
 
     /**Generates the Inventory with correct dimensions based on Game Settings. */
-    protected override void GenerateInventory()
+    protected override void GenerateInventory(List<int> itemIDs)
     {
+        _INVENTORYSIZE = itemIDs.Count;
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
