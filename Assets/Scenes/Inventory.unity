@@ -1380,12 +1380,12 @@ PrefabInstance:
     - target: {fileID: 428164341367218705, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 633
       objectReference: {fileID: 0}
     - target: {fileID: 428164341367218705, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 428164342062657177, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
@@ -1496,6 +1496,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InvGrid
+      objectReference: {fileID: 0}
+    - target: {fileID: 428164342062657178, guid: dc1fc48a92f92914a99b11f890c15743,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 763857351904366978, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
@@ -8857,7 +8862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 2
+  _stationToInject: 1
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -10032,7 +10037,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1367054571625872964}
   m_HandleRect: {fileID: 1367054571625873019}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -15284,12 +15289,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 10
-    m_Right: 10
-    m_Top: 21
-    m_Bottom: 10
+    m_Left: 5
+    m_Right: 0
+    m_Top: 5
+    m_Bottom: 5
   m_ChildAlignment: 1
-  m_Spacing: 60
+  m_Spacing: 3
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1

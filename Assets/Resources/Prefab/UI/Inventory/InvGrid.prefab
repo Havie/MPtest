@@ -420,7 +420,7 @@ PrefabInstance:
     - target: {fileID: 675346348545921075, guid: 285f2cab0a4a9a740aaca317020dab12,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 675346348545921076, guid: 285f2cab0a4a9a740aaca317020dab12,
         type: 3}
@@ -535,12 +535,12 @@ PrefabInstance:
     - target: {fileID: 1367054572022701545, guid: 285f2cab0a4a9a740aaca317020dab12,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1367054572022701545, guid: 285f2cab0a4a9a740aaca317020dab12,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1367054572022701545, guid: 285f2cab0a4a9a740aaca317020dab12,
         type: 3}
