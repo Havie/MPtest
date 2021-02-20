@@ -19,88 +19,95 @@ public static class StationItemParser
                 itemIDs.Add((int)item);
             }
 
-
+            return itemIDs;
         }
-        else if (batchSize > 1)  ///Sum the total required items (not self) all subseqential workstations, and * BATCH_SIZE
+
+        ///BATCH>1 :
+        ///Sum the total required items (not self) of all subseqential workstations, and * BATCH_SIZE
+        int[] stationSequence = getProperSequence(wm, myWS);
+        var stationList = wm.GetStationList();
+        ///Figure out myplace in Sequence 
+        int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
+        bool firstTime = true;
+        bool isKittingStation = myWS.isKittingStation();
+        ///shud only b the final item of last task
+        for (int i = startingIndex; i < stationSequence.Length; i++)
         {
-            int[] stationSequence = getProperSequence(wm, myWS);
-            var stationList = wm.GetStationList();
-            ///Figure out myplace in Sequence 
-            int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-            bool firstTime = true;
-            bool isKittingStation = myWS.isKittingStation();
-            ///shud only b the final item of last task
-            for (int i = startingIndex; i < stationSequence.Length; i++)
+            WorkStation ws = stationList[i];
+            for (int taskIndex = 0; taskIndex < ws._tasks.Count; ++taskIndex)
             {
-                WorkStation ws = stationList[i];
-                for (int c = 0; c < ws._tasks.Count; ++c)
+                Task t = ws._tasks[taskIndex]; ///get the current task 
+                if (!isKittingStation)  ///Exit early
                 {
-                    Task t = ws._tasks[c]; ///get the current task 
-                    if (!isKittingStation) ///look at the immediate output for next station final ID, then pass on basic items for others
+                    ///look at the immediate output for next station final ID, then pass on basic items for others
+                    if (firstTime) //add my own output
                     {
-                        if (firstTime) ///add my own output, keep this in the inital loop so we dont have to check if kitting again outside, and created item is on top
-                        {
-                            if (c == ws._tasks.Count - 1) /// look at the last task at this station
-                            {
-                                foreach (var item in t._finalItemID) /// final produced items
-                                {
-                                    if (!BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
-                                    {
-                                        int itemId = (int)item;
-                                        {
-                                            for (int j = 0; j < batchSize; j++)
-                                            {
-                                                itemIDs.Add((int)item);
-                                            }
-
-                                        }
-                                    }
-                                }
-                            }
-                            else //add the batch items to pass along to other stations
-                            {
-                                foreach (var item in t._requiredItemIDs) /// look at all of its required items
-                                {
-                                    if (BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
-                                    {
-                                        int itemId = (int)item;
-
-                                        for (int j = 0; j < batchSize; j++)
-                                        {
-                                            itemIDs.Add((int)item);
-                                        }
-                                        // Debug.LogWarning($" (2)...Task::{t} adding item:{item} #{itemId}");
-
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            foreach (var item in t._requiredItemIDs) /// look at all of its _requiredItemIDs items
-                            {
-                                if (BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
-                                {
-                                    int itemId = (int)item;
-
-
-                                    for (int j = 0; j < batchSize; j++)
-                                    {
-                                        itemIDs.Add((int)item);
-                                    }
-
-                                }
-                            }
-
-                        }
+                        AddSelfItems(ws, taskIndex, t);
                         firstTime = false;
                     }
+                    else
+                    {
+                        ParseRequiredItems(t);
+                    }
+
                 }
-
             }
-
         }
+
         return itemIDs;
+
+        ///LOCAL FUNCTIONS:
+        void AddSelfItems(WorkStation local_ws, int local_count, Task local_task)
+        {
+            if (local_count == local_ws._tasks.Count - 1) // look at the last task at this station and add its produced items
+            {
+                foreach (var item in local_task._finalItemID) /// final produced items
+                {
+                    if (!BuildableObject.Instance.IsBasicItem(item)) /// only add non-basic items
+                    {
+                        int itemId = (int)item;
+
+                        for (int i = 0; i < batchSize; i++)
+                        {
+                            itemIDs.Add((int)item);
+                        }
+                    }
+                }
+            }
+            else //add the batch items to pass along to other stations
+            {
+                foreach (var item in local_task._requiredItemIDs) /// look at all of its required items
+                {
+                    if (BuildableObject.Instance.IsBasicItem(item)) ///only add basic items
+                    {
+                        int itemId = (int)item;
+
+                        for (int j = 0; j < batchSize; j++)
+                        {
+                            itemIDs.Add((int)item);
+                        }
+                        // Debug.LogWarning($" (2)...Task::{t} adding item:{item} #{itemId}");
+                    }
+                }
+            }
+        }
+
+        void ParseRequiredItems(Task local_task)
+        {
+            foreach (var item in local_task._requiredItemIDs) /// look at all of its _requiredItemIDs items
+            {
+                if (BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
+                {
+                    int itemId = (int)item;
+
+                    for (int j = 0; j < batchSize; j++)
+                    {
+                        itemIDs.Add((int)item);
+                    }
+
+                }
+            }
+        }
     }
     public static List<int> ParseItemsAsIN(int batchSize, WorkStationManager wm, WorkStation myWS)
     {
@@ -174,10 +181,10 @@ public static class StationItemParser
 
         }
         //Debug.Log($"The # of INV items will be : {itemIDs.count}");
-        return itemIDs ;
+        return itemIDs;
 
         ///LOCAL FUNCTIONS:
-         List<int> FindObjectsAtKittingStation(WorkStation ws)
+        List<int> FindObjectsAtKittingStation(WorkStation ws)
         {
             if (!ws.isKittingStation())
                 Debug.LogError("Wrong order, kitting isnt @ index 1");
@@ -203,7 +210,7 @@ public static class StationItemParser
                 {
                     seenItems.Add((int)item);
                 }
-              
+
                 Debug.Log($"<color=yellow>batch size is 1 and itemCount </color> ={t._requiredItemIDs.Count} for Task:{t}");
             }
         }
@@ -214,7 +221,7 @@ public static class StationItemParser
             var stationList = wm.GetStationList();
             //Figure out myplace in Sequence 
             int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-            
+
 
             if (myWS.isKittingStation()) // look at everyones required items
             {
@@ -233,7 +240,7 @@ public static class StationItemParser
         return seenItems;
 
         ///LOCAL FUNCTIONS:
-         void LookAtEveryStationsItems(int[] sSequence, List<WorkStation> sList, int sindex, List<int> itemList)
+        void LookAtEveryStationsItems(int[] sSequence, List<WorkStation> sList, int sindex, List<int> itemList)
         {
             for (int i = sindex; i < sSequence.Length; i++)
             {
@@ -257,7 +264,7 @@ public static class StationItemParser
 
             }
         }
-         void LookAtOwnStationItems(WorkStation ws, List<int> sItems)
+        void LookAtOwnStationItems(WorkStation ws, List<int> sItems)
         {
             foreach (var task in ws._tasks)
             {
@@ -361,7 +368,7 @@ public static class StationItemParser
         return index;
     }
 
-    static int SumSequence( WorkStationManager wm, WorkStation myWS, bool reqItemsOverFinalItems, bool includeSelf, bool excludeDuplicates)
+    static int SumSequence(WorkStationManager wm, WorkStation myWS, bool reqItemsOverFinalItems, bool includeSelf, bool excludeDuplicates)
     {
         int count = 0;
         int[] stationSequence = getProperSequence(wm, myWS);

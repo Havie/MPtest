@@ -53,9 +53,9 @@ public class OutInventory : UIInventoryManager
     {
         //ParseItems(wm, myWS, true);
         int BATCHSIZE = GameManager.Instance._batchSize;
-        foreach (var item in  StationItemParser.ParseItemsAsOUT(BATCHSIZE, wm, myWS))
+        foreach (var itemID in  StationItemParser.ParseItemsAsOUT(BATCHSIZE, wm, myWS))
         {
-            AddItemToSlot((int)item, null, true);
+            AddItemToSlot(itemID, null, true);
         }
 
     }
@@ -101,9 +101,8 @@ public class OutInventory : UIInventoryManager
             _slots[i].SetAutomatic(cond);
             _slots[i].transform.localScale = new Vector3(-1, 1, 1);
         }
+
         SetUpBatchOutput(wm, myWS);
-
-
     }
 
 
