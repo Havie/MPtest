@@ -28,19 +28,19 @@ public static class StationItemParser
         var stationList = wm.GetStationList();
         ///Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-        bool firstTime = true;
         bool isKittingStation = myWS.isKittingStation();
         ///shud only b the final item of last task
         for (int i = startingIndex; i < stationSequence.Length; i++)
         {
             WorkStation ws = stationList[i];
+            Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws._stationName}");
             for (int taskIndex = 0; taskIndex < ws._tasks.Count; ++taskIndex)
             {
                 Task t = ws._tasks[taskIndex]; ///get the current task 
                 if (!isKittingStation)  ///Exit early
                 {
                     ///look at the immediate output for next station final ID, then pass on basic items for others
-                    if (firstTime) //add my own output
+                    if (ws == myWS) //add my own output
                     {
                         AddSelfItems(ws, taskIndex, t);
                     }
@@ -51,7 +51,7 @@ public static class StationItemParser
 
                 }
             }
-            firstTime = false;
+
         }
 
         return itemIDs;
@@ -59,6 +59,10 @@ public static class StationItemParser
         ///LOCAL FUNCTIONS:
         void AddSelfItems(WorkStation local_ws, int local_count, Task local_task)
         {
+            Dictionary<int, List<int>> _finalItemsPairedWithReqItems = new Dictionary<int, List<int>>();
+
+
+            Debug.Log($"..<color=green>We are parsing self items for task:</color> {local_task}");
             if (local_count == local_ws._tasks.Count - 1) // look at the last task at this station and add its produced items
             {
                 foreach (var item in local_task._finalItemID) /// final produced items
@@ -66,12 +70,16 @@ public static class StationItemParser
                     if (!BuildableObject.Instance.IsBasicItem(item)) /// only add non-basic items
                     {
                         int itemId = (int)item;
-
+                        Debug.Log($"..<color=yellow>adding non-basic item:</color> {itemId} from {local_task}");
                         for (int i = 0; i < batchSize; i++)
                         {
                             itemIDs.Add((int)item);
                         }
                     }
+                }
+                foreach (var reqItem in local_task._requiredItemIDs) /// final produced items
+                {
+
                 }
             }
             else //add the batch items to pass along to other stations
@@ -81,7 +89,7 @@ public static class StationItemParser
                     if (BuildableObject.Instance.IsBasicItem(item)) ///only add basic items
                     {
                         int itemId = (int)item;
-
+                        Debug.Log($"..<color=red>adding basic item:</color> {itemId} from {local_task}");
                         for (int j = 0; j < batchSize; j++)
                         {
                             itemIDs.Add((int)item);
@@ -94,7 +102,7 @@ public static class StationItemParser
 
         void ParseRequiredItems(Task local_task)
         {
-            Debug.Log($"We are parsing required items for task: {local_task}");
+            Debug.Log($"..<color=blue>We are parsing required basic items for task:</color> {local_task}");
             foreach (var item in local_task._requiredItemIDs) /// look at all of its _requiredItemIDs items
             {
                 if (BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 

@@ -76,7 +76,6 @@ public class GameManager : MonoSingleton<GameManager>
         if (_batchSize == 1)
         {
             _isStackable = true;
-            Debug.Log("SET STACKABLE TO TRUE");
             _autoSend = true;
             _addChaotic = false;
         }
