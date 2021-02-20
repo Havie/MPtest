@@ -37,18 +37,15 @@ public static class StationItemParser
             for (int taskIndex = 0; taskIndex < ws._tasks.Count; ++taskIndex)
             {
                 Task t = ws._tasks[taskIndex]; ///get the current task 
-                if (!isKittingStation)  ///Exit early
+                if (!isKittingStation && ws == myWS)  ///Exit early
                 {
                     ///look at the immediate output for next station final ID, then pass on basic items for others
-                    if (ws == myWS) //add my own output
-                    {
-                        AddSelfItems(ws, taskIndex, t);
-                    }
-                    else
-                    {
-                        ParseRequiredItems(t);
-                    }
-
+                    //add my own output
+                    AddSelfItems(ws, taskIndex, t);
+                }
+                else
+                {
+                    ParseRequiredItems(t);
                 }
             }
 
@@ -59,9 +56,6 @@ public static class StationItemParser
         ///LOCAL FUNCTIONS:
         void AddSelfItems(WorkStation local_ws, int local_count, Task local_task)
         {
-            Dictionary<int, List<int>> _finalItemsPairedWithReqItems = new Dictionary<int, List<int>>();
-
-
             Debug.Log($"..<color=green>We are parsing self items for task:</color> {local_task}");
             if (local_count == local_ws._tasks.Count - 1) // look at the last task at this station and add its produced items
             {
@@ -77,27 +71,25 @@ public static class StationItemParser
                         }
                     }
                 }
-                foreach (var reqItem in local_task._requiredItemIDs) /// final produced items
-                {
 
-                }
             }
-            else //add the batch items to pass along to other stations
-            {
-                foreach (var item in local_task._requiredItemIDs) /// look at all of its required items
-                {
-                    if (BuildableObject.Instance.IsBasicItem(item)) ///only add basic items
-                    {
-                        int itemId = (int)item;
-                        Debug.Log($"..<color=red>adding basic item:</color> {itemId} from {local_task}");
-                        for (int j = 0; j < batchSize; j++)
-                        {
-                            itemIDs.Add((int)item);
-                        }
-                        // Debug.LogWarning($" (2)...Task::{t} adding item:{item} #{itemId}");
-                    }
-                }
-            }
+            ///IDK WHY i was doing?
+            //else //add the batch items to pass along to other stations
+            //{
+            //    foreach (var item in local_task._requiredItemIDs) /// look at all of its required items
+            //    {
+            //        if (BuildableObject.Instance.IsBasicItem(item)) ///only add basic items
+            //        {
+            //            int itemId = (int)item;
+            //            Debug.Log($"..<color=red>adding basic item:</color> {itemId} from {local_task}");
+            //            for (int j = 0; j < batchSize; j++)
+            //            {
+            //                itemIDs.Add((int)item);
+            //            }
+            //            // Debug.LogWarning($" (2)...Task::{t} adding item:{item} #{itemId}");
+            //        }
+            //    }
+            //}
         }
 
         void ParseRequiredItems(Task local_task)
