@@ -84,8 +84,16 @@ public class sGameStatistics
 
     public int GetWIP()
     {
-        ///TODO can query the final items in the _orders and add up their req Items
-        return 0;
+        var gm = GameManager.instance;
+        int batchSize = gm._batchSize; ///If we change batch sizes mid game, move Batch inside CreatedOrder wrapper
+        var config = gm.AssemblyBook;
+        int totalWip = 0;
+        foreach (var order in _orders)
+        {
+            totalWip += config.GetRequiredComponentsForPart(order.ItemId).Count * batchSize;
+        }
+        ///TODO how to handle when items are kept at station??
+        return totalWip;
     }
     /************************************************************************************************************************/
 

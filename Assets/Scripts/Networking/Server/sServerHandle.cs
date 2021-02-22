@@ -119,6 +119,8 @@ public class sServerHandle
 
         sServer._gameStatistics.CreatedAnOrder(itemID, createdTime, dueTime);
 
+        Debug.Log("<color=purple>[sServerHandle]</color> WIP= : " + sServer._gameStatistics.GetWIP());
+
     }
 
     public static void DefectAdded(int fromClient, sPacket packet)

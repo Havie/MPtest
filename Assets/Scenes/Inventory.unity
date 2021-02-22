@@ -8529,6 +8529,7 @@ MonoBehaviour:
     type: 2}
   _pullWorkStationManager: {fileID: 11400000, guid: d1cb6a9cde483834ba58e689f501ea85,
     type: 2}
+  _assemblyBook: {fileID: 11400000, guid: 3f89a0b3b15196041ba06985c236953d, type: 2}
 --- !u!4 &2065194974
 Transform:
   m_ObjectHideFlags: 0

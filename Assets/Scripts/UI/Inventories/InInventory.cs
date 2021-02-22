@@ -36,7 +36,7 @@ public class InInventory : UIInventoryManager
     {
         var gm = GameManager.instance;
 
-        return StationItemParser.ParseItemsAsIN(gm._batchSize, gm.CurrentWorkStationManager, gm._workStation);
+        return StationItemParser.ParseItemsAsIN(gm._batchSize,gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
        // return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
 
@@ -46,7 +46,7 @@ public class InInventory : UIInventoryManager
 
         var gm = GameManager.instance;
 
-        foreach (var itemID in StationItemParser.ParseItemsAsIN(gm._batchSize, gm.CurrentWorkStationManager, gm._workStation))
+        foreach (var itemID in StationItemParser.ParseItemsAsIN(gm._batchSize,gm._isStackable, gm.CurrentWorkStationManager, gm._workStation))
         {
             AddItemToSlot((int)itemID, null, false);
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class StationItemParser
 {
-    public static List<int> ParseItemsAsOUT(int batchSize, WorkStationManager wm, WorkStation myWS)
+    public static List<int> ParseItemsAsOUT(int batchSize, bool isStackable, WorkStationManager wm, WorkStation myWS)
     {
         List<int> itemIDs = new List<int>();
 
@@ -33,7 +33,7 @@ public static class StationItemParser
         for (int i = startingIndex; i < stationSequence.Length; i++)
         {
             WorkStation ws = stationList[i];
-            Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws._stationName}");
+            //Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws._stationName}");
             for (int taskIndex = 0; taskIndex < ws._tasks.Count; ++taskIndex)
             {
                 Task t = ws._tasks[taskIndex]; ///get the current task 
@@ -43,7 +43,7 @@ public static class StationItemParser
                     //add my own output
                     AddSelfItems(ws, taskIndex, t);
                 }
-                else
+                else if (!isStackable)
                 {
                     ParseRequiredItems(t);
                 }
@@ -110,7 +110,7 @@ public static class StationItemParser
             }
         }
     }
-    public static List<int> ParseItemsAsIN(int batchSize, WorkStationManager wm, WorkStation myWS)
+    public static List<int> ParseItemsAsIN(int batchSize, bool isStackable, WorkStationManager wm, WorkStation myWS)
     {
 
         List<int> itemIDs = new List<int>();
@@ -153,7 +153,7 @@ public static class StationItemParser
                             int itemId = (int)item;
                             // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                             if (listItems.Contains(itemId))
-                                listItems.Remove(itemId);
+                                listItems.Remove(itemId); 
                         }
                         ///were at prior station
                         if (i == startingIndex - 1)
@@ -175,7 +175,17 @@ public static class StationItemParser
             {
                 for (int j = 0; j < batchSize; j++)
                 {
-                    itemIDs.Add((int)item);
+                    if (!isStackable)
+                    {
+                        itemIDs.Add((int)item);
+                    }
+                    else
+                    {
+                        if(!BuildableObject.Instance.IsBasicItem((ObjectManager.eItemID)item))
+                        {
+                            itemIDs.Add((int)item);
+                        }
+                    }
                 }
             }
 
@@ -283,7 +293,7 @@ public static class StationItemParser
     }
     public static List<int> ParseItemsAsDefect(int batchSize, WorkStationManager wm, WorkStation myWS)
     {
-        return ParseItemsAsOUT(batchSize, wm, myWS);
+        return ParseItemsAsOUT(batchSize,false, wm, myWS);
     }
 
 
