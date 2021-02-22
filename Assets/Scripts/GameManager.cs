@@ -35,6 +35,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Resources")]
     public ComponentList _componentList;
     [SerializeField] WorkStationManager _batchWorkStationManager = default;
+    [SerializeField] WorkStationManager _stackBatchWorkStationManager = default;
     [SerializeField] WorkStationManager _pullWorkStationManager = default;
     [SerializeField] PartAssemblyBook _assemblyBook = default;
     public WorkStationManager CurrentWorkStationManager { get; private set; }
@@ -83,7 +84,12 @@ public class GameManager : MonoSingleton<GameManager>
     ///Needs to be called everytime the batch size changes, to keep as current as possible
     private void DetermineCurrentWorkStation()
     {
-        CurrentWorkStationManager = _batchSize > 1 ? _batchWorkStationManager : _pullWorkStationManager;
+        if (_batchSize == 1)
+            CurrentWorkStationManager = _pullWorkStationManager;
+        else if (_isStackable)
+            CurrentWorkStationManager = _stackBatchWorkStationManager;
+        else
+            CurrentWorkStationManager = _batchWorkStationManager;
 
     }
     /** Work station is used to identify what items are produced here and where items are sent to */

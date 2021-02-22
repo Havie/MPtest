@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977898da102ecb5469631e2fc21fe578, type: 3}
-  m_Name: batch_2
+  m_Script: {fileID: 11500000, guid: 4d1e50687b33a3943be11dc515ccd8c8, type: 3}
+  m_Name: b_s_Task_4
   m_EditorClassIdentifier: 
-  _myStation: 2
-  _sendOutputToStation: 3
-  _myStationName: Pink/Yellow Topper
-  _tasks:
-  - {fileID: 11400000, guid: ba3b9b7ec3145584aa2c952ee61bc0be, type: 2}
+  _finalItemID: 0a000000
+  _requiredItemIDs: 0900000007000000
+  _stationType: 0

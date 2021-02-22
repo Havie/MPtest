@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 977898da102ecb5469631e2fc21fe578, type: 3}
-  m_Name: batch_5
+  m_Name: stack_batch_1
   m_EditorClassIdentifier: 
-  _myStation: 5
-  _sendOutputToStation: 6
-  _myStationName: Quality
+  _myStation: 1
+  _sendOutputToStation: 2
+  _myStationName: stack_batch_1
   _tasks:
-  - {fileID: 11400000, guid: f366fc44d10318248a1d80730b560b85, type: 2}
+  - {fileID: 11400000, guid: b20f7b7d1d37cfb48904dd9918af549d, type: 2}
