@@ -34,7 +34,7 @@ public class GridInventoryTemp : MonoBehaviour
         {
             var gridElement = Instantiate(gridPrefab);
             // gridLayoutElement will take care of layout, gridElement just needs to be its child
-            gridElement.transform.SetParent(gridLayoutElement.transform);
+            gridElement.transform.SetParent(gridLayoutElement.transform); ///Handles the positioning dont need to set anything else , just add as child
             // reset scale to 1, guessing another script is increasing the scale
             gridElement.gameObject.transform.localScale = new Vector3(1,1,1);
 
