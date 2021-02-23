@@ -505,6 +505,11 @@ PrefabInstance:
       propertyPath: m_Size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 675346348545921077, guid: 285f2cab0a4a9a740aaca317020dab12,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1367054572022701545, guid: 285f2cab0a4a9a740aaca317020dab12,
         type: 3}
       propertyPath: m_AnchorMax.x
