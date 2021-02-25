@@ -1500,12 +1500,12 @@ PrefabInstance:
     - target: {fileID: 428164341367218705, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 633
       objectReference: {fileID: 0}
     - target: {fileID: 428164341367218705, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 428164342062657177, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
@@ -1620,7 +1620,7 @@ PrefabInstance:
     - target: {fileID: 428164342062657178, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 763857351904366978, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
@@ -1855,12 +1855,12 @@ PrefabInstance:
     - target: {fileID: 9009426060544765902, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9009426060544765902, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc1fc48a92f92914a99b11f890c15743, type: 3}
@@ -6483,7 +6483,7 @@ MonoBehaviour:
   _optionalSendButton: {fileID: 0}
   _maxItemsPerRow: 3
   _maxColSize: 425
-  _defectEvent: {fileID: 0}
+  _defectEvent: {fileID: 11400000, guid: 830e8e3958d12ee4baaa8281dc0a3a68, type: 2}
 --- !u!114 &1277595933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9777,7 +9777,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1367054571625872964}
   m_HandleRect: {fileID: 1367054571625873019}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10579,7 +10579,7 @@ MonoBehaviour:
   _optionalSendButton: {fileID: 5394208262752586037}
   _maxItemsPerRow: 3
   _maxColSize: 425
-  _batchSentEvent: {fileID: 0}
+  _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
 --- !u!1 &2760681316453197346
 GameObject:
   m_ObjectHideFlags: 0
