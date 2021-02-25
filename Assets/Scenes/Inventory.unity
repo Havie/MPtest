@@ -1500,12 +1500,12 @@ PrefabInstance:
     - target: {fileID: 428164341367218705, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 633
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 428164341367218705, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 428164342062657177, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
@@ -1620,7 +1620,7 @@ PrefabInstance:
     - target: {fileID: 428164342062657178, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 763857351904366978, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
@@ -9183,7 +9183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7cc719ff47720498b6cd0e2b080f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _orderFrequency: 5
+  _orderFrequency: 1
   _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
@@ -9774,7 +9774,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1367054571625872964}
   m_HandleRect: {fileID: 1367054571625873019}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
