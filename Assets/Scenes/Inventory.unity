@@ -1353,10 +1353,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: KittingMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 533494565940923789, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1174855489623409342, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1746936870497405653, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
@@ -1446,12 +1451,12 @@ PrefabInstance:
     - target: {fileID: 8297284084485271442, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8297284084485271442, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8903694964952192001, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}

@@ -103,12 +103,15 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
         //Debug.Log("SwitchToKitting = " + cond);
 
-        if (_kittingInventory != null && GameManager.instance._batchSize != 1)
-            _kittingInventory.SetActive(cond);
+        if (_kittingInventory != null)
+        {
+            if (GameManager.instance._batchSize != 1)
+                _kittingInventory.SetActive(true);
+            else
+                _kittingInventory.SetActive(false);
+        }
 
-
-        Debug.Log($"<color=purple>SET KITTING--></color> {cond}  cuz { GameManager.instance._batchSize} ");
-
+  
         if (_normalInInventory != null)
             _normalInInventory.SetActive(!cond);
 
