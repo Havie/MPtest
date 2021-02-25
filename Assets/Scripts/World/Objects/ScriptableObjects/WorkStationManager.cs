@@ -42,7 +42,7 @@ public class WorkStationManager : ScriptableObject
         int wsID = dropdown.value;
         WorkStation ws = _workStations[wsID];
         GameManager.instance.AssignWorkStation(ws);
-        ClientSend.SendWorkStationID((int)ws._myStation);
+        ClientSend.Instance.SendWorkStationID((int)ws._myStation);
 
         //UIManager.instance.BeginLevel(dropdown.value); //This # might need to change and be based on the workstation, index #s probably wont perfectly match steps
         return wsID; //eventually might need to get an itemID FROM the workstation as we split tasks

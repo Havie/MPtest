@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientSend : MonoBehaviour
+public class ClientSend :MonoSingleton<ClientSend>
 {
-    private static void SendTCPData(sPacket packet)
+    private  void SendTCPData(sPacket packet)
     {
         packet.WriteLength();
         Client.instance._tcp.SendData(packet);
     }
-    private static void SendUDPData(sPacket packet)
+    private  void SendUDPData(sPacket packet)
     {
         packet.WriteLength();
         Client.instance._udp.SendData(packet);
     }
 
     #region packets
-    public static void WelcomeReceived()
+    public  void WelcomeReceived()
     {
         using (sPacket packet = new sPacket((int)ClientPackets.welcomeReceived))
         {
@@ -24,14 +24,14 @@ public class ClientSend : MonoBehaviour
             packet.Write(Client.instance._myId);
             packet.Write(UIManagerNetwork.instance._usernameField.text);
             //TODO fix this and send it AFTER we've chosen a work station (hardcoded atm)
-            packet.Write((int)GameManager.Instance._workStation._myStation);
+            //packet.Write((int)GameManager.Instance._workStation._myStation);
 
             SendTCPData(packet);
         }
     }
 
 
-    public static void SendWorkStationID(int stationID)
+    public  void SendWorkStationID(int stationID)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.stationID))
         {
@@ -42,7 +42,7 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
+    public void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
     {
         UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
@@ -70,11 +70,53 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// For now, this is only for tracking statistics across the network...Called from an InspectorEvent
+    /// TODO: It would be really nice to encapsulate sending Items from this Batch, not the individual slots calling SendItem()
+    /// however the way this was built with AutoSend and UIInventoryManager it would take some re-designing, plan to return to fix this
+    /// </summary>
+    /// <param name="batch"></param>
+    public void BatchSent(BatchWrapper batch)
+    {
+        Debug.Log($"<color=yellow>Client Send BatchSent </color>{batch.StationId} , {batch.ItemCount}");
+
+        using (sPacket packet = new sPacket((int)ClientPackets.batch))
+        {
+            packet.Write(batch.StationId);
+            packet.Write(batch.ItemCount);
+            packet.Write(batch.IsShipped);
+            SendTCPData(packet);
+        }
+    }
+
+    public void OrderCreated(OrderWrapper order)
+    {
+        Debug.Log($"<color=white>(ClientSend) Order Created</color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.orderCreated))
+        {
+            packet.Write(order.ItemID);
+            packet.Write(order.CreatedTime);
+            packet.Write(order.DueTime);
+            SendTCPData(packet);
+        }
+    }
+
+    public void DefectAdded(DefectWrapper defect)
+    {
+        Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.defectAdded))
+        {
+            packet.Write(defect.StationId);
+            packet.Write(defect.ItemId);
+            SendTCPData(packet);
+        }
+    }
+
     #endregion
 
 
     #region OldFromTutorial
-    public static void PlayerMovement(bool[] inputs)
+    public void PlayerMovement(bool[] inputs)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.playerMovement))
         {

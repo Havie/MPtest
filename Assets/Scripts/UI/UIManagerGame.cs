@@ -101,7 +101,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
         bool cond = ws.isKittingStation();
 
-        Debug.Log("SwitchToKitting = " + cond);
+        //Debug.Log("SwitchToKitting = " + cond);
 
         if (_kittingInventory != null && GameManager.instance._batchSize !=1)
             _kittingInventory.SetActive(cond);
@@ -115,8 +115,10 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_inBinObject)
             _inBinObject.SetActive(!cond);
 
-        if(cond)
-            GameManager.instance._isStackable = true;
+        if (cond)
+        {
+            GameManager.instance.IsStackableChanged( true);
+        }
 
     }
 

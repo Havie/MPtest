@@ -77,10 +77,6 @@ public class UIHostMenu : MonoBehaviour
     private void HostConnection()
     {
         Client.instance.IWillBeHost = true;
-        if (GameObject.FindObjectOfType<sNetworkManager>() == null && _NetworkManagerPREFAB != null)
-        {
-            var network=  GameObject.Instantiate(_NetworkManagerPREFAB);
-            //network.transform.parent = UIManager.Instance.transform.parent;
-        }
+        sNetworkManager.Instance.HostNetwork();
     }
 }
