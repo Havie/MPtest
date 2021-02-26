@@ -93,6 +93,10 @@ public class sGameStatistics
             totalWip += config.GetRequiredComponentsForPart(order.ItemId).Count * batchSize;
         }
         ///TODO how to handle when items are kept at station??
+        ///
+
+        ///WIP doesnt start till kitting pushes first batch
+        ///or shipping pulls item 
         return totalWip;
     }
     /************************************************************************************************************************/
