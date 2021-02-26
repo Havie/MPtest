@@ -15,11 +15,14 @@ public class UIKitting : MonoBehaviour
     [SerializeField] int _startingY = 350;
     [SerializeField] int _yOffset = -39;  ///-65
 
+    [Header("Prevent stack batch from dropping")]
+    [SerializeField] WorkStationManager _stackBatchHack = default;
 
     private GameObject _bORDERPREFAB;
 
     private int _ORDERFREQUENCY;
     private float _timeToOrder = float.MaxValue;
+    private bool _shouldDropParts = true;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
 
@@ -48,7 +51,7 @@ public class UIKitting : MonoBehaviour
 
         _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
         _componentList = GameManager.Instance._componentList;
-
+        _shouldDropParts = GameManager.instance.CurrentWorkStationManager != _stackBatchHack;
     }
     /************************************************************************************************************************/
 
@@ -152,7 +155,10 @@ public class UIKitting : MonoBehaviour
         }
 
         // printOrderList(componentOrder);
-        PartDropper.Instance.SendInOrder(componentOrder);
+        if (_shouldDropParts)
+        {
+            PartDropper.Instance.SendInOrder(componentOrder);
+        }
         AddOrder(finalItemId);
     }
 

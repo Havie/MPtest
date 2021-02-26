@@ -1358,6 +1358,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1174855489623409341, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+        type: 3}
+      propertyPath: _orderCreated
+      value: 
+      objectReference: {fileID: 11400000, guid: 9aaed4c8e09a41848b28567809ee990f,
+        type: 2}
+    - target: {fileID: 1174855489623409341, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+        type: 3}
+      propertyPath: _stackBatchHack
+      value: 
+      objectReference: {fileID: 11400000, guid: ed0ffb582f7914b4c9b3d70912b6e208,
+        type: 2}
     - target: {fileID: 1174855489623409342, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -9782,7 +9794,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1367054571625872964}
   m_HandleRect: {fileID: 1367054571625873019}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
