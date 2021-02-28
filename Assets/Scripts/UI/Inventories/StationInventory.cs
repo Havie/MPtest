@@ -31,7 +31,7 @@ public class StationInventory : UIInventoryManager
         WorkStationManager wm = gm.CurrentWorkStationManager;
         int batchSize = gm._batchSize;
         WorkStation myWS = gm._workStation;
-
+        Debug.Log($"STATION WS = {myWS} ");
         return StationItemParser.ParseItemsAsStation(batchSize, wm, myWS);
     }
 
