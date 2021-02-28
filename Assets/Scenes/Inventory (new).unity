@@ -3709,7 +3709,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 383, y: 6}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &604913492
 MonoBehaviour:
@@ -3748,7 +3748,7 @@ MonoBehaviour:
   m_CellSize: {x: 125, y: 125}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
-  m_ConstraintCount: 3
+  m_ConstraintCount: 6
 --- !u!114 &604913494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8218,7 +8218,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 500, y: 350}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1620839713
 MonoBehaviour:
@@ -14368,7 +14368,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &8851129763559421235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14384,7 +14384,7 @@ MonoBehaviour:
   _gridParent: {fileID: 1620839713}
   _gridLayoutElement: {fileID: 604913493}
   _labelText: {fileID: 0}
-  _maxHeight: 80
+  _maxHeight: 100
   _widthPadding: 73
   _heightPadding: 77
 --- !u!224 &8851129763559421237

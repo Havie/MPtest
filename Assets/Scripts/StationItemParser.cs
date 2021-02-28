@@ -33,7 +33,7 @@ public static class StationItemParser
         for (int i = startingIndex; i < stationSequence.Length; i++)
         {
             WorkStation ws = stationList[i];
-            Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws._stationName}");
+            //Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws._stationName}");
             for (int taskIndex = 0; taskIndex < ws._tasks.Count; ++taskIndex)
             {
                 Task t = ws._tasks[taskIndex]; ///get the current task 
@@ -60,16 +60,16 @@ public static class StationItemParser
         ///LOCAL FUNCTIONS:
         void AddSelfItems(WorkStation local_ws, int local_count, Task local_task)
         {
-            Debug.Log($"..<color=green>We are parsing self items for task:</color> {local_task}");
+            //Debug.Log($"..<color=green>We are parsing self items for task:</color> {local_task}");
             if (local_count == local_ws._tasks.Count - 1 && !isStackable) // look at the last task at this station and add its produced items
             {
                 foreach (var item in local_task._finalItemID) /// final produced items
                 {
-                    Debug.Log($"..<color=orange>LOOK:</color> {item} from {local_task}");
+                    //Debug.Log($"..<color=orange>LOOK:</color> {item} from {local_task}");
                     if (!BuildableObject.Instance.IsBasicItem(item)) /// only add non-basic items
                     {
                         int itemId = (int)item;
-                        Debug.Log($"..<color=yellow>adding non-basic item:</color> {itemId} from {local_task}");
+                       // Debug.Log($"..<color=yellow>adding non-basic item:</color> {itemId} from {local_task}");
                         for (int i = 0; i < batchSize; i++)
                         {
                             itemIDs.Add((int)item);
@@ -115,7 +115,7 @@ public static class StationItemParser
 
         void ParseRequiredItems(Task local_task, bool isKitting)
         {
-            Debug.Log($"..<color=blue>We are parsing required basic items for task:</color> {local_task}");
+            //Debug.Log($"..<color=blue>We are parsing required basic items for task:</color> {local_task}");
             foreach (var item in local_task._requiredItemIDs) /// look at all of its _requiredItemIDs items
             {
                 if (!isStackable || isKitting)
@@ -246,7 +246,7 @@ public static class StationItemParser
                     seenItems.Add((int)item);
                 }
 
-                Debug.Log($"<color=yellow>batch size is 1 and itemCount </color> ={t._requiredItemIDs.Count} for Task:{t}");
+                //Debug.Log($"<color=yellow>batch size is 1 and itemCount </color> ={t._requiredItemIDs.Count} for Task:{t}");
             }
         }
         else
