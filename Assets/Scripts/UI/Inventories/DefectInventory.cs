@@ -29,12 +29,6 @@ public class DefectInventory : UIInventoryManager
     {
         var gm = GameManager.instance;
         int batchSize = gm._batchSize;
-        ///if batch size =1 , then IN = # of produced Items at station
-        if (batchSize == 1) ///assume batchsize=1 enabled stackable Inv and StationINV is turned on
-        {
-            _sendButton.gameObject.SetActive(false); ///turn off the send button
-           // TurnOffScrollBars();
-        }
 
         return StationItemParser.ParseItemsAsDefect(batchSize, gm.CurrentWorkStationManager, gm._workStation);
         //return ParseItems(wm, myWS, false) * BATCHSIZE;
@@ -52,13 +46,7 @@ public class DefectInventory : UIInventoryManager
         IsInitalized = true;
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
-        //Determine layout
-        _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > _maxItemsPerRow )
-            _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
 
-        if (_xMaxPerRow > _maxItemsPerRow)
-            _xMaxPerRow = _maxItemsPerRow;
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
         //Size matters for the vert/hori scrollbars
@@ -70,7 +58,7 @@ public class DefectInventory : UIInventoryManager
         WorkStation myWS = GameManager.instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
 
-        _prefix = "defect_";
+        _prefix = "Defect";
 
         //Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount
         _extraSlots = new List<UIInventorySlot>(); //Instantiated before for loop becuz CreateNewslot uses its Count

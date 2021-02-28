@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class OutInventory : UIInventoryManager
 {
+    [Header("Components")]
+    [SerializeField] protected Button _sendButton;
+
     [Header("Event")]
     [SerializeField] BatchEvent _batchSentEvent;
 
@@ -16,11 +19,7 @@ public class OutInventory : UIInventoryManager
 
         if (!_sendButton)
         {
-            if (_optionalSendButton)
-            {
-                _sendButton = _optionalSendButton.GetComponent<Button>();
-                _sendButton.interactable = false;
-            }
+            //IDK
         }
         base.Start();
         GameManager.Instance.SetInventoryOut(this);
@@ -70,12 +69,7 @@ public class OutInventory : UIInventoryManager
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
         //Determine layout
-        _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > _maxItemsPerRow)
-            _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
 
-        if (_xMaxPerRow > _maxItemsPerRow)
-            _xMaxPerRow = _maxItemsPerRow;
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
         //Size matters for the vert/hori scrollbars
@@ -85,7 +79,7 @@ public class OutInventory : UIInventoryManager
         bool cond = GameManager.instance._autoSend; //used By eInvType.OUT
 
         //getAPrefix for naming our buttons in scene Hierarchy
-        _prefix = "out_";
+        _prefix = "Out";
 
         //Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount
         _extraSlots = new List<UIInventorySlot>(); //Instantiated before for loop becuz CreateNewslot uses its Count

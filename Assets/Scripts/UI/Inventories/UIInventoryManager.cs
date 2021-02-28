@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 //https://www.youtube.com/watch?v=Oba1k4wRy-0 //Tutorial
 [DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
@@ -17,30 +17,31 @@ public abstract class UIInventoryManager : MonoBehaviour
     /// </summary>
 
     [Header("Components")]
-    [SerializeField] protected InventoryBackground _bg;
-    [SerializeField] protected InventoryContentArea _content;
-    [SerializeField] protected InventorySendButton _optionalSendButton;
-    protected Button _sendButton;
+    [SerializeField] protected Image _gridParent;
+    [SerializeField] protected GridLayoutGroup _gridLayoutElement;
+    [SerializeField] protected TextMeshProUGUI _labelText;
+    protected GameObject _bSlotPREFAB;
+
 
     [Header("Specifications")]
-    [SerializeField] protected int _maxItemsPerRow = 3;
-    [SerializeField] protected int _maxColSize = 425;
+    [SerializeField] protected int _maxHeight =350;
+    [SerializeField] protected int _widthPadding = 73;
+    [SerializeField] protected int _heightPadding = 77;
 
+    private float _gridCellWidth;
+    private float _gridCellHeight;
+    private int _numberOfColumns;
+    private int _numberOfRows;
+    private int _currColCount = 0;
 
     #region GameManager Parameters
     protected int _INVENTORYSIZE;
     protected bool _STACKABLE;
     protected bool _ADDCHAOTIC;
     #endregion
-    protected GameObject _bSlotPREFAB;
 
     protected UIInventorySlot[] _slots;
     protected List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
-
-    protected int _xMaxPerRow;
-    protected int _cellPadding = 75;
-    protected float _startingX = 37.5f;
-    protected float _startingY = -37.5f;
 
     protected string _prefix;
 
@@ -51,12 +52,18 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     protected virtual void Start()
     {
+        _numberOfColumns = _gridLayoutElement.constraintCount;
+        _gridCellWidth = _gridLayoutElement.cellSize.x;
+        _gridCellHeight = _gridLayoutElement.cellSize.y;
+
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
 
         _STACKABLE = GameManager.Instance._isStackable;
         _ADDCHAOTIC = GameManager.Instance._addChaotic;
         GenerateInventory(DetermineWorkStationBatchSize());
+        if (_labelText)
+            _labelText.text = _prefix;
 
     }
 
@@ -67,120 +74,34 @@ public abstract class UIInventoryManager : MonoBehaviour
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {
-        if (_xMaxPerRow == 0)
-            return;
+      
+        // 73 is the combined width of element padding and scrollbar
+        float parentWidth = (_gridCellWidth * _numberOfColumns) + _widthPadding;
+        // 77 is the combined height of element padding and text label
+        float parentHeight = (_gridCellHeight * _numberOfRows) + _heightPadding;
 
-        Vector2 size;
-        float extraCellpaddingX = DetermineXPadding();
-        float extraCellpaddingY = DetermineYPadding();
-
-        //Debug.Log($"x={extraCellpaddingX} , y={extraCellpaddingY}");
-
-        if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
-        else
-            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * extraCellpaddingX), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding * extraCellpaddingY)));
-
-        //((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding /2))
-
-        // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
-
-        UpdateComponentRects(size);
-        DetermineBestScale();
-
-        ///LOCAL FUNCTIONS
-        void UpdateComponentRects(Vector2 v2Size)
+        // activates scroll bar if element is too tall
+        if (parentHeight > _maxHeight)
         {
-            if (_content)
-            {
-                v2Size.y += _content.GetReducedYSize;
-                _content.ChangeRectTransform(v2Size);
-            }
-
-            ///Recalibrate
-            if (v2Size.y > _maxColSize)
-                v2Size.y = _maxColSize;
-
-            if (_bg) ///Make sure this called before Mask
-                _bg.ChangeRectTransform(v2Size);
-            if (_optionalSendButton)
-                _optionalSendButton.ChangeRectTransform(v2Size);
+            parentHeight = _maxHeight;
         }
-        float DetermineXPadding()
-        {
-            ///Adding padding here results in the items all being anchored wrongly to the left, 
-            ///cant see to figure out how to center them in NextSlotLocation()
-            if (_xMaxPerRow < _maxItemsPerRow)
-                return 0;
-            else
-                return 0;
-        }
-        float DetermineYPadding()
-        {
-            ///Need to return the difference of whatver padding required to make _maxColSize (425):
-            //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
-            /// the difference required to made y height the size of 2 slots:
-            var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
 
-            if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
-                return retVal;
-            else
-                return 0.5f;
-        }
-        void DetermineBestScale()
-        {
-            ///TODO scale the UI UP a bit based on how small the inventory size is 
+        //Debug.Log($"<color=blue>_gridCellWidth= {_gridCellWidth}, _numberOfColumns={_numberOfColumns} </color>," +
+        //    $"<color=yellow>_gridCellHeight= {_gridCellHeight}, _numberOfRows={_numberOfRows}</color>");
 
-            ///float scale = ((float)12 / (float)_INVENTORYSIZE);
+        //Debug.Log($"maxH= {_maxHeight} vs parentHeight={parentHeight}, Rect={new Vector2(parentWidth, parentHeight)}");
+        // sets calculated width and height
+        _gridParent.rectTransform.sizeDelta = new Vector2(parentWidth, parentHeight);
 
 
-            ///i NEED AN expoential curve,that the closer u get to ONE the harder cap on being 1.5 
-            ///
-
-            float max = 1.25f;
-            float min = 0.75f;
-            float scale = min + (2.45f / _INVENTORYSIZE);  ///Smaller the top # the smaller the inventory size
-
-            if (scale > max)
-            {
-                if (_INVENTORYSIZE == 1)
-                    scale = 1.50f;
-                else
-                    scale = max;
-            }
-
-            transform.localScale = new Vector3(scale, scale, scale);
-            //Debug.Log($"[{_inventoryType}] _INVENTORYSIZE={_INVENTORYSIZE} --> {scale}");
-
-        }
     }
     #endregion
 
     #region RunTimeOperations
-    protected Vector2 NextSlotLocation(int slotSize)
-    {
-        if (_xMaxPerRow == 0)
-        {
-            Debug.LogWarning("max rows=0?");
-            _xMaxPerRow++;
-        }
-        int yoff = slotSize / _xMaxPerRow;
-        int xoff = slotSize % _xMaxPerRow;
-        float yLoc = _startingY - (_cellPadding * yoff);
-        float xLoc = _startingX + ((xoff * _cellPadding));
-
-        /*if (_inventoryType == eInvType.STATION)
-        {
-            Debug.Log($"Prediction2 @{slotSize} ={_inventoryType}::XlocEND={xLoc}, ylocEND={yLoc} , xMaxRows={_xMaxPerRow}" +
-            $"(Extra stuff): slotlen:{slotSize}, xMaxRows:{_xMaxPerRow} , yoff:{yoff} xoff{xoff}");
-        }*/
-        return new Vector2(xLoc, yLoc);
-
-    }
 
     protected UIInventorySlot CreateNewSlot()
     {
-        Vector2 location = Vector2.zero;
+
         int slotSize = -1;
         //Determine if theres any free spots in main slots 
         for (int i = 0; i < _slots.Length; i++)
@@ -194,17 +115,23 @@ public abstract class UIInventoryManager : MonoBehaviour
         if (slotSize == -1)
             slotSize = (_slots.Length + _extraSlots.Count);
 
-        location = NextSlotLocation(slotSize);
 
-        GameObject newButton = Instantiate(_bSlotPREFAB) as GameObject;
+        if (_currColCount == _numberOfColumns)
+        {
+            _numberOfRows++;
+            _currColCount = 0;
+        }
+        GameObject newButton = Instantiate(_bSlotPREFAB);
         newButton.SetActive(true);
-        newButton.transform.SetParent(_content.transform, false);
-        newButton.transform.localPosition = new Vector3(location.x, location.y, 0);
+        newButton.transform.SetParent(_gridLayoutElement.transform);
+        newButton.transform.localScale = new Vector3(1, 1, 1);
         newButton.name = "bSlot_" + _prefix + " #" + slotSize;
         //Add slot component to our list
         var newSlot = newButton.GetComponent<UIInventorySlot>();
         //Set the slots manager:
         newSlot.SetManager(this);
+        SetSizeOfContentArea();
+        ++_currColCount;
         return newSlot;
     }
 
@@ -228,7 +155,6 @@ public abstract class UIInventoryManager : MonoBehaviour
     {
         //if(_inventoryType==eInvType.OUT)
         // Debug.Log($"Adding Item to slot {itemID}");
-
 
         if (!IsInitalized)
             Start();
@@ -358,7 +284,7 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     public void SetImportant(GameObject button)
     {
-        button.transform.SetAsLastSibling();
+       // button.transform.SetAsLastSibling();
     }
 
     public virtual void ItemAssigned(UIInventorySlot slot){}

@@ -8,6 +8,7 @@ public class GridInventoryTemp : MonoBehaviour
     public GameObject gridParent;
     public GameObject gridPrefab;
     public GameObject gridLayoutElement;
+    public GridLayoutGroup _grp;
     public int maxHeight;
     // testing var
     public int numberOfSlots;
@@ -58,6 +59,7 @@ public class GridInventoryTemp : MonoBehaviour
 			parentHeight = maxHeight;
 		}
 
+        Debug.Log($"Size for hack = <color=orange> {new Vector2(parentWidth, parentHeight)}</color>");
 		// sets calculated width and height
 		gridParent.GetComponent<Image>().rectTransform.sizeDelta = new Vector2(parentWidth, parentHeight);
     }
