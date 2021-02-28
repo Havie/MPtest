@@ -1649,7 +1649,7 @@ PrefabInstance:
     - target: {fileID: 152207334352487046, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
       propertyPath: numberOfSlots
-      value: 20
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 152207334352487046, guid: dc1fc48a92f92914a99b11f890c15743,
         type: 3}
@@ -6827,9 +6827,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 0}
-  _gridLayoutElement: {fileID: 0}
+  _gridLayoutGrp: {fileID: 0}
   _labelText: {fileID: 0}
-  _maxHeight: 0
   _widthPadding: 73
   _heightPadding: 77
   _defectEvent: {fileID: 11400000, guid: 830e8e3958d12ee4baaa8281dc0a3a68, type: 2}
@@ -9798,7 +9797,7 @@ MonoBehaviour:
   _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
-  _isStackable: 1
+  _isStackable: 0
   _workStationArrangement: 0
   _workStationTaskChanging: 0
   _decreaseChangeOverTime: 0
@@ -10273,7 +10272,7 @@ RectTransform:
   m_GameObject: {fileID: 428164341312955809}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.67, y: 0.67, z: 0.67}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7395023057148520744}
   - {fileID: 7277286006705655217}
@@ -10488,7 +10487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Content: {fileID: 428164341758306602}
   m_Horizontal: 0
-  m_Vertical: 1
+  m_Vertical: 0
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
@@ -10694,7 +10693,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 748288947935742046}
   m_HandleRect: {fileID: 748288947935742049}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -11099,9 +11098,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 963441600227822570}
-  _gridLayoutElement: {fileID: 3966701302644464260}
+  _gridLayoutGrp: {fileID: 0}
   _labelText: {fileID: 2211308042839178579}
-  _maxHeight: 350
   _widthPadding: 73
   _heightPadding: 77
   _sendButton: {fileID: 5465865525294961513}
@@ -11501,7 +11499,7 @@ MonoBehaviour:
   m_CellSize: {x: 125, y: 125}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
-  m_ConstraintCount: 3
+  m_ConstraintCount: 2
 --- !u!222 &4771546994999134967
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13760,7 +13758,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9009426061464331466}
   m_HandleRect: {fileID: 9009426061464331509}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -14226,7 +14224,7 @@ RectTransform:
   m_GameObject: {fileID: 8256427025381148981}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6700001, y: 0.6700001, z: 0.6700001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1280706589482599868}
   - {fileID: 1412864200894144805}
@@ -14382,9 +14380,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 1620839713}
-  _gridLayoutElement: {fileID: 604913493}
+  _gridLayoutGrp: {fileID: 0}
   _labelText: {fileID: 0}
-  _maxHeight: 100
   _widthPadding: 73
   _heightPadding: 77
 --- !u!224 &8851129763559421237
@@ -14585,9 +14582,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 8807713306742368126}
-  _gridLayoutElement: {fileID: 4641258761510860304}
+  _gridLayoutGrp: {fileID: 0}
   _labelText: {fileID: 7626205380398371271}
-  _maxHeight: 350
   _widthPadding: 73
   _heightPadding: 77
 --- !u!114 &9060606215813684800
@@ -14633,7 +14629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Content: {fileID: 8256427026883003838}
   m_Horizontal: 0
-  m_Vertical: 1
+  m_Vertical: 0
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1

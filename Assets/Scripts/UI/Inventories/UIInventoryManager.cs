@@ -18,20 +18,20 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] protected Image _gridParent;
-    [SerializeField] protected GridLayoutGroup _gridLayoutElement;
+    [SerializeField] protected GridLayoutGroup _gridLayoutGrp;
     [SerializeField] protected TextMeshProUGUI _labelText;
     protected GameObject _bSlotPREFAB;
 
 
     [Header("Specifications")]
-    [SerializeField] protected int _maxHeight =350;
+    protected int _maxHeight =600;
     [SerializeField] protected int _widthPadding = 73;
     [SerializeField] protected int _heightPadding = 77;
 
     private float _gridCellWidth;
     private float _gridCellHeight;
     private int _numberOfColumns;
-    private int _numberOfRows;
+    private int _numberOfRows=1;
     private int _currColCount = 0;
 
     #region GameManager Parameters
@@ -52,9 +52,12 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     protected virtual void Start()
     {
-        _numberOfColumns = _gridLayoutElement.constraintCount;
-        _gridCellWidth = _gridLayoutElement.cellSize.x;
-        _gridCellHeight = _gridLayoutElement.cellSize.y;
+        if (_gridLayoutGrp == null)
+            _gridLayoutGrp = this.GetComponentInChildren<GridLayoutGroup>();
+
+        ///TODO GLG.constraintCount and GLG.cellSize via incoming batchSize
+
+        ReconfigureGLG();
 
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
@@ -71,6 +74,25 @@ public abstract class UIInventoryManager : MonoBehaviour
     #region Helper Initilization Methods for extended classes
     protected abstract List<int> DetermineWorkStationBatchSize();
     protected abstract void GenerateInventory(List<int> itemIDs);
+    
+    private void ReconfigureGLG()
+    {
+        var batchSize = GameManager.instance._batchSize;
+        if (batchSize == 1)
+        {
+            _gridLayoutGrp.constraintCount = 1;
+        }
+        else
+        {
+            ///If #slots > Something and < SomethingElse
+            // _gridLayoutGrp.constraintCount = 2;
+            ///  else if #Slots > Something 
+            //   _gridLayoutGrp.constraintCount = 3;
+        }
+        _numberOfColumns = _gridLayoutGrp.constraintCount;
+        _gridCellWidth = _gridLayoutGrp.cellSize.x;
+        _gridCellHeight = _gridLayoutGrp.cellSize.y;
+    }
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {
@@ -123,7 +145,7 @@ public abstract class UIInventoryManager : MonoBehaviour
         }
         GameObject newButton = Instantiate(_bSlotPREFAB);
         newButton.SetActive(true);
-        newButton.transform.SetParent(_gridLayoutElement.transform);
+        newButton.transform.SetParent(_gridLayoutGrp.transform);
         newButton.transform.localScale = new Vector3(1, 1, 1);
         newButton.name = "bSlot_" + _prefix + " #" + slotSize;
         //Add slot component to our list
