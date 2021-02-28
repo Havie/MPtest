@@ -40,8 +40,8 @@ public abstract class UIInventoryManager : MonoBehaviour
     protected bool _ADDCHAOTIC;
     #endregion
 
-    protected UIInventorySlot[] _slots;
-    protected List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
+    protected UIInventorySlot[] _slots = new UIInventorySlot[0];
+    protected List<UIInventorySlot> _extraSlots = new List<UIInventorySlot>(); //incase we want to reset to base amount
 
     protected string _prefix;
 
@@ -77,18 +77,40 @@ public abstract class UIInventoryManager : MonoBehaviour
     
     private void ReconfigureGLG()
     {
+        var minCellSize = 75f;
+        var maxCellSize = 125f;
         var batchSize = GameManager.instance._batchSize;
         if (batchSize == 1)
         {
             _gridLayoutGrp.constraintCount = 1;
+            _gridLayoutGrp.cellSize = new Vector2(maxCellSize, maxCellSize);
         }
         else
         {
-            ///If #slots > Something and < SomethingElse
-            // _gridLayoutGrp.constraintCount = 2;
-            ///  else if #Slots > Something 
-            //   _gridLayoutGrp.constraintCount = 3;
+            var slotCount = _slots.Length + _extraSlots.Count;
+            //Debug.Log($"SlotCount={slotCount}");
+            if (slotCount % 2 == 0 && slotCount<9)
+            {
+                _gridLayoutGrp.constraintCount = 2;
+            }
+            else
+            {
+                _gridLayoutGrp.constraintCount = 3;
+            }
+            float scaler = 5f;
+            float cellSize = maxCellSize - (scaler * slotCount);
+            Debug.Log($"made up cellsize for {slotCount} ={cellSize}");
+
+            if (cellSize < minCellSize)
+                cellSize = minCellSize;
+
+            _gridLayoutGrp.cellSize = new Vector2(cellSize, cellSize);
+            Debug.Log($"Set cellSize to {cellSize}");
         }
+        
+        ///TODO figure out how to move the scroll bar proportional to the scaling of this GLG
+        ///TODO figure out how to move the sendButton to be centered on the scaling of this GLG
+
         _numberOfColumns = _gridLayoutGrp.constraintCount;
         _gridCellWidth = _gridLayoutGrp.cellSize.x;
         _gridCellHeight = _gridLayoutGrp.cellSize.y;
@@ -96,7 +118,7 @@ public abstract class UIInventoryManager : MonoBehaviour
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {
-      
+        ReconfigureGLG();
         // 73 is the combined width of element padding and scrollbar
         float parentWidth = (_gridCellWidth * _numberOfColumns) + _widthPadding;
         // 77 is the combined height of element padding and text label
