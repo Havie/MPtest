@@ -100,18 +100,15 @@ public abstract class UIInventoryManager : MonoBehaviour
                 _gridLayoutGrp.constraintCount = 3;
             }
             float cellSize = _maxCellSize - (_cellScaler * slotCount);
-            Debug.Log($"made up cellsize for {slotCount} ={cellSize}");
+            //Debug.Log($"made up cellsize for {slotCount} ={cellSize}");
 
             if (cellSize < _minCellSize)
                 cellSize = _minCellSize;
 
             _gridLayoutGrp.cellSize = new Vector2(cellSize, cellSize);
-            Debug.Log($"Set cellSize to {cellSize}");
+            //Debug.Log($"Set cellSize to {cellSize}");
         }
         
-        ///TODO figure out how to move the scroll bar proportional to the scaling of this GLG
-        ///TODO figure out how to move the sendButton to be centered on the scaling of this GLG
-
         _numberOfColumns = _gridLayoutGrp.constraintCount;
         _gridCellWidth = _gridLayoutGrp.cellSize.x;
         _gridCellHeight = _gridLayoutGrp.cellSize.y;
