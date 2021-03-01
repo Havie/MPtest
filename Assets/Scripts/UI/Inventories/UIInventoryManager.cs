@@ -24,9 +24,12 @@ public abstract class UIInventoryManager : MonoBehaviour
 
 
     [Header("Specifications")]
-    protected int _maxHeight =600;
+    [SerializeField] protected int _maxHeight = 600; ///Probably shouldnt touch
     [SerializeField] protected int _widthPadding = 73;
     [SerializeField] protected int _heightPadding = 77;
+    [SerializeField] protected float _minCellSize = 75f;
+    [SerializeField] protected float _maxCellSize = 125f;
+    [SerializeField] protected float _cellScaler = 5f;
 
     private float _gridCellWidth;
     private float _gridCellHeight;
@@ -77,13 +80,12 @@ public abstract class UIInventoryManager : MonoBehaviour
     
     private void ReconfigureGLG()
     {
-        var minCellSize = 75f;
-        var maxCellSize = 125f;
+
         var batchSize = GameManager.instance._batchSize;
         if (batchSize == 1)
         {
             _gridLayoutGrp.constraintCount = 1;
-            _gridLayoutGrp.cellSize = new Vector2(maxCellSize, maxCellSize);
+            _gridLayoutGrp.cellSize = new Vector2(_maxCellSize, _maxCellSize);
         }
         else
         {
@@ -97,12 +99,11 @@ public abstract class UIInventoryManager : MonoBehaviour
             {
                 _gridLayoutGrp.constraintCount = 3;
             }
-            float scaler = 5f;
-            float cellSize = maxCellSize - (scaler * slotCount);
+            float cellSize = _maxCellSize - (_cellScaler * slotCount);
             Debug.Log($"made up cellsize for {slotCount} ={cellSize}");
 
-            if (cellSize < minCellSize)
-                cellSize = minCellSize;
+            if (cellSize < _minCellSize)
+                cellSize = _minCellSize;
 
             _gridLayoutGrp.cellSize = new Vector2(cellSize, cellSize);
             Debug.Log($"Set cellSize to {cellSize}");

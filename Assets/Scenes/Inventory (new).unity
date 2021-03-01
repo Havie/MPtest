@@ -6829,8 +6829,12 @@ MonoBehaviour:
   _gridParent: {fileID: 0}
   _gridLayoutGrp: {fileID: 0}
   _labelText: {fileID: 0}
+  _maxHeight: 600
   _widthPadding: 73
   _heightPadding: 77
+  _minCellSize: 75
+  _maxCellSize: 125
+  _cellScaler: 5
   _defectEvent: {fileID: 11400000, guid: 830e8e3958d12ee4baaa8281dc0a3a68, type: 2}
 --- !u!1 &1303010552
 GameObject:
@@ -9794,10 +9798,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _orderFrequency: 5
-  _batchSize: 2
+  _batchSize: 24
   _autoSend: 0
   _addChaotic: 0
-  _isStackable: 0
+  _isStackable: 1
   _workStationArrangement: 0
   _workStationTaskChanging: 0
   _decreaseChangeOverTime: 0
@@ -10277,13 +10281,12 @@ RectTransform:
   - {fileID: 7395023057148520744}
   - {fileID: 7277286006705655217}
   - {fileID: 7946154190346500576}
-  - {fileID: 5465865525294961512}
   m_Father: {fileID: 6779161226590445786}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -308, y: 9}
+  m_AnchoredPosition: {x: -326, y: 9}
   m_SizeDelta: {x: 448, y: 350}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &428164341758306597
@@ -10469,7 +10472,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10693,7 +10696,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 748288947935742046}
   m_HandleRect: {fileID: 748288947935742049}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -11079,7 +11082,7 @@ GameObject:
   - component: {fileID: 6344272358743636142}
   - component: {fileID: 3666020037069342438}
   m_Layer: 5
-  m_Name: Label
+  m_Name: Label and BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11098,10 +11101,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 963441600227822570}
-  _gridLayoutGrp: {fileID: 0}
+  _gridLayoutGrp: {fileID: 3966701302644464260}
   _labelText: {fileID: 2211308042839178579}
+  _maxHeight: 600
   _widthPadding: 73
   _heightPadding: 77
+  _minCellSize: 75
+  _maxCellSize: 125
+  _cellScaler: 5
   _sendButton: {fileID: 5465865525294961513}
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
 --- !u!222 &2657988969116885572
@@ -11821,13 +11828,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5465865524477097208}
-  m_Father: {fileID: 428164341312955810}
-  m_RootOrder: 3
+  m_Father: {fileID: 7277286006705655217}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.000030517578, y: -8.000061}
-  m_SizeDelta: {x: 300, y: 30}
+  m_AnchoredPosition: {x: 0, y: -15}
+  m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &5465865525294961513
 MonoBehaviour:
@@ -13199,7 +13206,7 @@ GameObject:
   - component: {fileID: 3417950133135578170}
   - component: {fileID: 5009634861737994866}
   m_Layer: 5
-  m_Name: Label
+  m_Name: Label and BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13564,6 +13571,7 @@ RectTransform:
   m_Children:
   - {fileID: 2657988969116885574}
   - {fileID: 3769743975363579575}
+  - {fileID: 5465865525294961512}
   m_Father: {fileID: 428164341312955810}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13713,7 +13721,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 15, y: -54.999996}
+  m_AnchoredPosition: {x: 292, y: -54.999996}
   m_SizeDelta: {x: 20.028152, y: -70}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7395023057148520745
@@ -14176,7 +14184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7946154190346500576
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14234,8 +14242,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 16.470612, y: 8.999954}
-  m_SizeDelta: {x: 448, y: 350}
+  m_AnchoredPosition: {x: 12, y: 8.999954}
+  m_SizeDelta: {x: 298, y: 600}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8256427026883003825
 MonoBehaviour:
@@ -14311,7 +14319,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 258, y: 6}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8678890191202311316
 CanvasRenderer:
@@ -14382,8 +14390,12 @@ MonoBehaviour:
   _gridParent: {fileID: 1620839713}
   _gridLayoutGrp: {fileID: 0}
   _labelText: {fileID: 0}
+  _maxHeight: 600
   _widthPadding: 73
   _heightPadding: 77
+  _minCellSize: 75
+  _maxCellSize: 125
+  _cellScaler: 5
 --- !u!224 &8851129763559421237
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14584,8 +14596,12 @@ MonoBehaviour:
   _gridParent: {fileID: 8807713306742368126}
   _gridLayoutGrp: {fileID: 0}
   _labelText: {fileID: 7626205380398371271}
+  _maxHeight: 600
   _widthPadding: 73
   _heightPadding: 77
+  _minCellSize: 75
+  _maxCellSize: 125
+  _cellScaler: 5
 --- !u!114 &9060606215813684800
 MonoBehaviour:
   m_ObjectHideFlags: 0
