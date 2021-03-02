@@ -5737,7 +5737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Content: {fileID: 604913491}
   m_Horizontal: 0
-  m_Vertical: 1
+  m_Vertical: 0
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
@@ -9797,11 +9797,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7cc719ff47720498b6cd0e2b080f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _orderFrequency: 5
-  _batchSize: 24
+  _orderFrequency: 15
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
-  _isStackable: 1
+  _isStackable: 0
   _workStationArrangement: 0
   _workStationTaskChanging: 0
   _decreaseChangeOverTime: 0
@@ -13766,7 +13766,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9009426061464331466}
   m_HandleRect: {fileID: 9009426061464331509}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
