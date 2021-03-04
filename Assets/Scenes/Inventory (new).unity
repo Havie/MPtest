@@ -5493,7 +5493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1000704285
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10847,7 +10847,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 748288947935742046}
   m_HandleRect: {fileID: 748288947935742049}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -11345,6 +11345,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: _previewSlot
+      objectReference: {fileID: 0}
+    - target: {fileID: 3218949019558382271, guid: 854ea3c79f67b98409bed6bb5a1f41a1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4516880735604564837, guid: 854ea3c79f67b98409bed6bb5a1f41a1,
         type: 3}
@@ -13186,7 +13191,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ReferenceResolution: {x: 1920, y: 1200}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
@@ -13917,7 +13922,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9009426061464331466}
   m_HandleRect: {fileID: 9009426061464331509}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
