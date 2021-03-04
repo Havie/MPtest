@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Switch : MonoBehaviour, IInteractable
+public class Switch : InteractableObject
 {
 
     [SerializeField] GameObject _switch= default;
@@ -23,7 +23,7 @@ public class Switch : MonoBehaviour, IInteractable
     }
 
 
-    public void OnInteract()
+    public override void OnInteract()
     {
         _on = !On;
         ToggleChildren(On);
@@ -82,7 +82,6 @@ public class Switch : MonoBehaviour, IInteractable
     }
 
 
-
     private void ChangeMaterialColor(float opacity)
     {
         if (opacity > 1)
@@ -99,15 +98,6 @@ public class Switch : MonoBehaviour, IInteractable
         }
     }
 
-    public GameObject GetGameObject() => gameObject;
 
-    public Transform GetParent() => this.transform.parent;
-
-    public Transform Transform() => this.transform;
-
-    public void HandleInteractionTime(float time)
-    {
-
-    }
 
 }

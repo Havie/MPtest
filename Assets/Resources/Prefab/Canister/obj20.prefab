@@ -461,7 +461,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attachmentSensitivity: 0
   _requiredAttachmentID: 02000000
-  _createdID: 090000001700000018000000
+  _createdID: 0a000000
 --- !u!1 &2854804585543048782
 GameObject:
   m_ObjectHideFlags: 0
