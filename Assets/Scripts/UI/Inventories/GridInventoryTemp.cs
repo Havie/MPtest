@@ -8,6 +8,7 @@ public class GridInventoryTemp : MonoBehaviour
     public GameObject gridParent;
     public GameObject gridPrefab;
     public GameObject gridLayoutElement;
+    public GridLayoutGroup _grp;
     public int maxHeight;
     // testing var
     public int numberOfSlots;
@@ -34,7 +35,7 @@ public class GridInventoryTemp : MonoBehaviour
         {
             var gridElement = Instantiate(gridPrefab);
             // gridLayoutElement will take care of layout, gridElement just needs to be its child
-            gridElement.transform.SetParent(gridLayoutElement.transform);
+            gridElement.transform.SetParent(gridLayoutElement.transform); ///Handles the positioning dont need to set anything else , just add as child
             // reset scale to 1, guessing another script is increasing the scale
             gridElement.gameObject.transform.localScale = new Vector3(1,1,1);
 
@@ -58,6 +59,7 @@ public class GridInventoryTemp : MonoBehaviour
 			parentHeight = maxHeight;
 		}
 
+        Debug.Log($"Size for hack = <color=orange> {new Vector2(parentWidth, parentHeight)}</color>");
 		// sets calculated width and height
 		gridParent.GetComponent<Image>().rectTransform.sizeDelta = new Vector2(parentWidth, parentHeight);
     }

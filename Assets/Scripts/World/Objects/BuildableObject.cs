@@ -168,7 +168,6 @@ public class BuildableObject : MonoBehaviour
 
         return new Vector3(x, y, z);
     }
-
     private void LoadQualitiesOntoObject(List<QualityObject> qualities, GameObject newObj)
     {
         if (qualities != null && qualities.Count > 0)

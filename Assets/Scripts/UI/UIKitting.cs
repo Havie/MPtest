@@ -8,17 +8,21 @@ public class UIKitting : MonoBehaviour
     ///to match our other inventories,
     ///or a lot of debugging needs to be done to get these to play nicely together as its just a total
     ///hail mary right now
+    [SerializeField] OrderReceivedEvent _orderCreated;
 
     [Header("Vertical Layout Overrides These..")]
     [SerializeField] int _startingX = 16;   ///0
     [SerializeField] int _startingY = 350;
     [SerializeField] int _yOffset = -39;  ///-65
 
+    [Header("Prevent stack batch from dropping")]
+    [SerializeField] WorkStationManager _stackBatchHack = default;
 
     private GameObject _bORDERPREFAB;
 
     private int _ORDERFREQUENCY;
     private float _timeToOrder = float.MaxValue;
+    private bool _shouldDropParts = true;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
 
@@ -47,7 +51,7 @@ public class UIKitting : MonoBehaviour
 
         _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
         _componentList = GameManager.Instance._componentList;
-
+        _shouldDropParts = GameManager.instance.CurrentWorkStationManager != _stackBatchHack;
     }
     /************************************************************************************************************************/
 
@@ -71,13 +75,16 @@ public class UIKitting : MonoBehaviour
         var bOrder = GameObject.Instantiate(_bORDERPREFAB);
         OrderButton ob = bOrder.GetComponent<OrderButton>();
         //Debug.Log("assign item with ID:" + itemID);
-        ob.SetOrder(itemID, GetEstimatedDeliveryTime());
+        float deliveryTime = GetEstimatedDeliveryTime();
+        ob.SetOrder(itemID, deliveryTime);
         _orderList.Add(ob);
         bOrder.transform.SetParent(this.transform);
         bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
         bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
 
         //Get data based off of the incoming value
+        if (_orderCreated)
+            _orderCreated.Raise(new OrderWrapper(itemID, Time.time, deliveryTime));
     }
 
 
@@ -148,7 +155,10 @@ public class UIKitting : MonoBehaviour
         }
 
         // printOrderList(componentOrder);
-        PartDropper.Instance.SendInOrder(componentOrder);
+        if (_shouldDropParts)
+        {
+            PartDropper.Instance.SendInOrder(componentOrder);
+        }
         AddOrder(finalItemId);
     }
 

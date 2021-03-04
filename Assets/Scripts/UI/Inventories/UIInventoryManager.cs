@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 //https://www.youtube.com/watch?v=Oba1k4wRy-0 //Tutorial
 [DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
-public class UIInventoryManager : MonoBehaviour
+public abstract class UIInventoryManager : MonoBehaviour
 {
     /// <summary>
     /// I realllly want to re-write this class with dependency injection,
@@ -17,39 +17,37 @@ public class UIInventoryManager : MonoBehaviour
     /// </summary>
 
     [Header("Components")]
-    [SerializeField] protected InventoryBackground _bg;
-    [SerializeField] protected InventoryContentArea _content;
-    [SerializeField] protected InventorySendButton _optionalSendButton;
-    protected Button _sendButton;
+    [SerializeField] protected Image _gridParent;
+    [SerializeField] protected GridLayoutGroup _gridLayoutGrp;
+    [SerializeField] protected TextMeshProUGUI _labelText;
+    protected GameObject _bSlotPREFAB;
+
 
     [Header("Specifications")]
-    [SerializeField] protected int _maxItemsPerRow = 3;
-    [SerializeField] protected int _maxColSize = 425;
+    [SerializeField] protected int _maxHeight = 600; ///Probably shouldnt touch
+    [SerializeField] protected int _widthPadding = 73;
+    [SerializeField] protected int _heightPadding = 77;
+    [SerializeField] protected float _minCellSize = 75f;
+    [SerializeField] protected float _maxCellSize = 125f;
+    [SerializeField] protected float _cellScaler = 5f;
+
+    private float _gridCellWidth;
+    private float _gridCellHeight;
+    private int _numberOfColumns;
+    private int _numberOfRows=1;
+    private int _currColCount = 0;
 
     #region GameManager Parameters
     protected int _INVENTORYSIZE;
     protected bool _STACKABLE;
     protected bool _ADDCHAOTIC;
     #endregion
-    protected GameObject _bSlotPREFAB;
-    ///Dont think were using these anymore dynamically??
-    GameObject _scrollBarVert = default;
-    GameObject _scrollBarHoriz = default;
-    public enum eInvType { IN, OUT, STATION, DEFECT };
-    protected eInvType _inventoryType;
-    protected UIInventorySlot[] _slots;
-    protected List<UIInventorySlot> _extraSlots; //incase we want to reset to base amount
 
-    protected int _xMaxPerRow;
-    protected int _cellPadding = 75;
-    protected float _startingX = 37.5f;
-    protected float _startingY = -37.5f;
+    protected UIInventorySlot[] _slots = new UIInventorySlot[0];
+    protected List<UIInventorySlot> _extraSlots = new List<UIInventorySlot>(); //incase we want to reset to base amount
 
     protected string _prefix;
 
-    private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
-    private Vector3 _NORMAL = new Vector3(1, 1, 1);
-    private Vector3 _SMALLER = new Vector3(0.5f, 0.5f, 0.5f);
 
     /************************************************************************************************************************/
     public bool IsInitalized { get; protected set; }
@@ -57,272 +55,95 @@ public class UIInventoryManager : MonoBehaviour
 
     protected virtual void Start()
     {
+        if (_gridLayoutGrp == null)
+            _gridLayoutGrp = this.GetComponentInChildren<GridLayoutGroup>();
+
+        ///TODO GLG.constraintCount and GLG.cellSize via incoming batchSize
+
+        ReconfigureGLG();
+
+        if (_bSlotPREFAB == null)
+            _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
+
+        _STACKABLE = GameManager.Instance._isStackable;
+        _ADDCHAOTIC = GameManager.Instance._addChaotic;
+        GenerateInventory(DetermineWorkStationBatchSize());
+        if (_labelText)
+            _labelText.text = _prefix;
+
     }
 
     /************************************************************************************************************************/
     #region Helper Initilization Methods for extended classes
-    protected void PrintASequence(int[] sequence, string seqName)
+    protected abstract List<int> DetermineWorkStationBatchSize();
+    protected abstract void GenerateInventory(List<int> itemIDs);
+    
+    private void ReconfigureGLG()
     {
-        string p = "";
-        for (int i = 0; i < sequence.Length; ++i)
+
+        var batchSize = GameManager.instance._batchSize;
+        if (batchSize == 1)
         {
-            p += $" , {sequence[i]}";
+            _gridLayoutGrp.constraintCount = 1;
+            _gridLayoutGrp.cellSize = new Vector2(_maxCellSize, _maxCellSize);
         }
-        //Debug.Log(seqName+ ": " + p);
-    }
-
-
-    /** This is kind of a mess, thinking of making a doubly linked list class at some point*/
-    protected int[] getProperSequence(WorkStationManager wm, WorkStation myWS)
-    {
-        int[] sequence = new int[wm.GetStationCount() + 1];
-        //Debug.LogWarning("sequence size=" + wm.GetStationCount() + 1);
-        foreach (WorkStation ws in wm.GetStationList())
+        else
         {
-            //figure out sequence (*Exclude staiton 0 cuz SELF testing*)
-            //each ws knows where its sending stuff , so we need to build the path?
-            //Debug.Log($"{(int)ws._myStation} = {(int)ws._sendOutputToStation}");
-            if ((int)ws._myStation != 0)
-                sequence[(int)ws._myStation] = (int)ws._sendOutputToStation;
-
-        }
-        PrintASequence(sequence, "initial");
-        //Find End:
-        int endIndex = -1;
-        for (int i = 1; i < sequence.Length - 1; ++i)
-        {
-            if (sequence[i] == (int)WorkStation.eStation.NONE)
+            var slotCount = _slots.Length + _extraSlots.Count;
+            //Debug.Log($"SlotCount={slotCount}");
+            if (slotCount % 2 == 0 && slotCount<9)
             {
-                endIndex = i;
-                break;
+                _gridLayoutGrp.constraintCount = 2;
             }
-        }
-        //Debug.Log("endIndex=" + endIndex);
-        //Rebuild from backwards:
-        int[] backwardSequence = new int[wm.GetStationCount()];
-        backwardSequence[0] = endIndex;
-        int totalSeen = 1;
-        while (totalSeen != backwardSequence.Length)
-        {
-            // Debug.Log($"(while)::endIndex= {endIndex}  and val at that index= {sequence[endIndex]} " );
-            for (int i = 1; i < sequence.Length - 1; i++)
+            else
             {
-                if (sequence[i] == endIndex)
-                {
-                    backwardSequence[totalSeen] = i;
-                    endIndex = i;
-                    break;
-                }
+                _gridLayoutGrp.constraintCount = 3;
             }
+            float cellSize = _maxCellSize - (_cellScaler * slotCount);
+            //Debug.Log($"made up cellsize for {slotCount} ={cellSize}");
 
-            ++totalSeen;
+            if (cellSize < _minCellSize)
+                cellSize = _minCellSize;
+
+            _gridLayoutGrp.cellSize = new Vector2(cellSize, cellSize);
+            //Debug.Log($"Set cellSize to {cellSize}");
         }
-        PrintASequence(backwardSequence, "backwards");
-        int[] finalSequence = new int[wm.GetStationCount()];
-        for (int i = 0; i < backwardSequence.Length; i++)
-        {
-            //Debug.Log($"final:{i} = bs({backwardSequence.Length - 1 - i}):{backwardSequence[backwardSequence.Length - 1 - i]} ");
-            finalSequence[i] = backwardSequence[backwardSequence.Length - 1 - i];
-        }
-        PrintASequence(finalSequence, "final");
-        return finalSequence;
+        
+        _numberOfColumns = _gridLayoutGrp.constraintCount;
+        _gridCellWidth = _gridLayoutGrp.cellSize.x;
+        _gridCellHeight = _gridLayoutGrp.cellSize.y;
     }
-
-    protected int FindPlaceInSequence(int[] sequence, int myStationID)
-    {
-        int index = 0;
-        for (int i = 0; i < sequence.Length; i++)
-        {
-            if (sequence[i] == myStationID)
-                return i;
-        }
-
-        return index;
-    }
-
-    protected virtual int SumSequence(int BATCHSIZE, WorkStationManager wm, WorkStation myWS, bool reqItemsOverFinalItems, bool includeSelf, bool excludeDuplicates)
-    {
-        int count = 0;
-        int[] stationSequence = getProperSequence(wm, myWS);
-        var stationList = wm.GetStationList();
-        //Figure out myplace in Sequence 
-        int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
-        List<int> seenItems = new List<int>();
-        if (!includeSelf)
-            ++startingIndex;
-        //Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        for (int i = startingIndex; i < stationSequence.Length; i++)
-        {
-            WorkStation ws = stationList[i]; /// think this is in order?
-            foreach (Task t in ws._tasks)
-            {
-                if (reqItemsOverFinalItems)
-                {
-                    if (!excludeDuplicates)
-                        count += t._requiredItemIDs.Count;
-                    else   //verify no duplicates
-                    {
-                        foreach (var item in t._requiredItemIDs)
-                        {
-                            if (BuildableObject.Instance.IsBasicItem(item)) // cant do across board, will cause issue w OUT/IN
-                            {
-                                int itemId = (int)item;
-                                if (_inventoryType == eInvType.STATION)
-                                    Debug.Log($"chosenItemID={itemId}");
-                                if (!seenItems.Contains(itemId))
-                                {
-                                    seenItems.Add(itemId);
-                                    ++count;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (!excludeDuplicates)
-                        count += t._finalItemID.Count;
-                    else  //verify no duplicates
-                    {
-                        foreach (var item in t._finalItemID)
-                        {
-                            int itemId = (int)item;
-                            if (!seenItems.Contains(itemId))
-                            {
-                                seenItems.Add(itemId);
-                                ++count;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        // Debug.Log($"The # of INV items will be : {count}");
-        return count;
-    }
-
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()
     {
-        if (_xMaxPerRow == 0)
-            return;
+        ReconfigureGLG();
+        // 73 is the combined width of element padding and scrollbar
+        float parentWidth = (_gridCellWidth * _numberOfColumns) + _widthPadding;
+        // 77 is the combined height of element padding and text label
+        float parentHeight = (_gridCellHeight * _numberOfRows) + _heightPadding;
 
-        Vector2 size;
-        float extraCellpaddingX = DetermineXPadding();
-        float extraCellpaddingY = DetermineYPadding();
-
-        //Debug.Log($"x={extraCellpaddingX} , y={extraCellpaddingY}");
-
-        if (GameManager.instance._batchSize == 1) ///turn off the pesky vert scroll bars
-            size = new Vector2(_cellPadding, _cellPadding); ///will need to change if we add more than 1 item
-        else
-            size = new Vector2(((float)_xMaxPerRow * (float)_cellPadding) + (_cellPadding * extraCellpaddingX), (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + (_cellPadding * extraCellpaddingY)));
-
-        //((((_INVENTORYSIZE / _xMaxPerRow)) * _cellPadding) + (_cellPadding /2))
-
-        // Debug.Log($" {(float)_INVENTORYSIZE } / {(float)_xMaxPerRow} = <color=green>{((float)_INVENTORYSIZE / (float)_xMaxPerRow)}</color>  then w cellapdding = {((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding)} ");
-
-        UpdateComponentRects(size);
-        DetermineBestScale();
-    }
-    void UpdateComponentRects(Vector2 size)
-    {
-        if (_content)
+        // activates scroll bar if element is too tall
+        if (parentHeight > _maxHeight)
         {
-            size.y += _content.GetReducedYSize;
-            _content.ChangeRectTransform(size);
+            parentHeight = _maxHeight;
         }
 
-        ///Recalibrate
-        if (size.y > _maxColSize)
-            size.y = _maxColSize;
+        //Debug.Log($"<color=blue>_gridCellWidth= {_gridCellWidth}, _numberOfColumns={_numberOfColumns} </color>," +
+        //    $"<color=yellow>_gridCellHeight= {_gridCellHeight}, _numberOfRows={_numberOfRows}</color>");
 
-        if (_bg) ///Make sure this called before Mask
-            _bg.ChangeRectTransform(size);
-        if (_optionalSendButton)
-            _optionalSendButton.ChangeRectTransform(size);
-    }
-    float DetermineXPadding()
-    {
-        ///Adding padding here results in the items all being anchored wrongly to the left, 
-        ///cant see to figure out how to center them in NextSlotLocation()
-        if (_xMaxPerRow < _maxItemsPerRow)
-            return 0;
-        else
-            return 0;
-    }
-    float DetermineYPadding()
-    {
-        ///Need to return the difference of whatver padding required to make _maxColSize (425):
-        //var retVal = _maxColSize/ (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding );
-        /// the difference required to made y height the size of 2 slots:
-        var retVal = (_cellPadding * 2) / (((((float)_INVENTORYSIZE / (float)_xMaxPerRow)) * _cellPadding) + _cellPadding);
+        //Debug.Log($"maxH= {_maxHeight} vs parentHeight={parentHeight}, Rect={new Vector2(parentWidth, parentHeight)}");
+        // sets calculated width and height
+        _gridParent.rectTransform.sizeDelta = new Vector2(parentWidth, parentHeight);
 
-        if (((_INVENTORYSIZE / _xMaxPerRow) * _cellPadding) <= _cellPadding * 2)
-            return retVal;
-        else
-            return 0.5f;
-    }
-    void DetermineBestScale()
-    {
-        ///TODO scale the UI UP a bit based on how small the inventory size is 
 
-        ///float scale = ((float)12 / (float)_INVENTORYSIZE);
-     
-
-        ///i NEED AN expoential curve,that the closer u get to ONE the harder cap on being 1.5 
-        ///
-
-        float max = 1.25f;
-        float min = 0.75f;
-        float scale = min + (2.45f/_INVENTORYSIZE);  ///Smaller the top # the smaller the inventory size
-
-        if (scale > max)
-        {
-            if (_INVENTORYSIZE == 1)
-                scale = 1.50f;
-            else
-                scale = max;
-        }
-
-        transform.localScale = new Vector3(scale, scale, scale);
-        //Debug.Log($"[{_inventoryType}] _INVENTORYSIZE={_INVENTORYSIZE} --> {scale}");
-
-    }
-    protected void TurnOffScrollBars()
-    {
-        if (_scrollBarVert)
-            _scrollBarVert.SetActive(false);
-        if (_scrollBarHoriz)
-            _scrollBarHoriz.SetActive(false);
     }
     #endregion
 
     #region RunTimeOperations
-    protected Vector2 NextSlotLocation(int slotSize)
-    {
-        if (_xMaxPerRow == 0)
-        {
-            Debug.LogWarning("max rows=0?");
-            _xMaxPerRow++;
-        }
-        int yoff = slotSize / _xMaxPerRow;
-        int xoff = slotSize % _xMaxPerRow;
-        float yLoc = _startingY - (_cellPadding * yoff);
-        float xLoc = _startingX + ((xoff * _cellPadding));
-
-        /*if (_inventoryType == eInvType.STATION)
-        {
-            Debug.Log($"Prediction2 @{slotSize} ={_inventoryType}::XlocEND={xLoc}, ylocEND={yLoc} , xMaxRows={_xMaxPerRow}" +
-            $"(Extra stuff): slotlen:{slotSize}, xMaxRows:{_xMaxPerRow} , yoff:{yoff} xoff{xoff}");
-        }*/
-        return new Vector2(xLoc, yLoc);
-
-    }
 
     protected UIInventorySlot CreateNewSlot()
     {
-        Vector2 location = Vector2.zero;
+
         int slotSize = -1;
         //Determine if theres any free spots in main slots 
         for (int i = 0; i < _slots.Length; i++)
@@ -336,17 +157,23 @@ public class UIInventoryManager : MonoBehaviour
         if (slotSize == -1)
             slotSize = (_slots.Length + _extraSlots.Count);
 
-        location = NextSlotLocation(slotSize);
 
-        GameObject newButton = Instantiate(_bSlotPREFAB) as GameObject;
+        if (_currColCount == _numberOfColumns)
+        {
+            _numberOfRows++;
+            _currColCount = 0;
+        }
+        GameObject newButton = Instantiate(_bSlotPREFAB);
         newButton.SetActive(true);
-        newButton.transform.SetParent(_content.transform, false);
-        newButton.transform.localPosition = new Vector3(location.x, location.y, 0);
+        newButton.transform.SetParent(_gridLayoutGrp.transform);
+        newButton.transform.localScale = new Vector3(1, 1, 1);
         newButton.name = "bSlot_" + _prefix + " #" + slotSize;
         //Add slot component to our list
         var newSlot = newButton.GetComponent<UIInventorySlot>();
         //Set the slots manager:
         newSlot.SetManager(this);
+        SetSizeOfContentArea();
+        ++_currColCount;
         return newSlot;
     }
 
@@ -365,12 +192,11 @@ public class UIInventoryManager : MonoBehaviour
         return false;
     }
 
-    /**Used by IN-inventory with no specific slot in mind */
+    /**Used by all inventories initially to make required, and by IN-inventory with no specific slot in mind */
     public void AddItemToSlot(int itemID, List<QualityObject> qualities, bool makeRequired)
     {
         //if(_inventoryType==eInvType.OUT)
         // Debug.Log($"Adding Item to slot {itemID}");
-
 
         if (!IsInitalized)
             Start();
@@ -500,52 +326,10 @@ public class UIInventoryManager : MonoBehaviour
 
     public void SetImportant(GameObject button)
     {
-        button.transform.SetAsLastSibling();
+       // button.transform.SetAsLastSibling();
     }
 
-    /** When an item gets assigned to the batch tell the manager*/
-    public void CheckIfBatchIsReady()
-    {
-        ///TMP off
-        /*
-         foreach (var slot in _slots)
-         {
-             if (!slot.GetInUse())
-             {
-                 if (_optionalSendButton)
-                     _optionalSendButton.interactable = false;
-                 return;
-             }
-         }
-        */
-        //If all buttons hold the correct items , we can send
-        if (_sendButton)
-            _sendButton.interactable = true;
-
-
-    }
-
-    public void SendBatch()
-    {
-        Debug.Log($"heared send batch {this.gameObject.name} ");
-        foreach (var slot in _slots)
-        {
-            slot.SendData();
-        }
-
-        bool allowSendWrongItems = false;
-
-        if (allowSendWrongItems)
-        {
-            foreach (var slot in _extraSlots)
-            {
-                slot.SendData();
-            }
-        }
-
-        if (_sendButton)
-            _sendButton.interactable = false;
-    }
+    public virtual void ItemAssigned(UIInventorySlot slot){}
 
     public int MaxSlots()
     {

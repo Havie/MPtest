@@ -21,6 +21,7 @@ public static class sServer
 
     public static event Action<string> OnHostIpFound = delegate { };
     public static bool _iAmHost;
+    public static sGameStatistics _gameStatistics;
 
     public static void ListenForHostBroadCasts()
     {
@@ -50,6 +51,7 @@ public static class sServer
 
         BroadCastIP();
         _iAmHost = true;
+        _gameStatistics = new sGameStatistics(Time.time);
 
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
@@ -181,7 +183,10 @@ public static class sServer
                 { (int)ClientPackets.welcomeReceived , sServerHandle.WelcomeReceived},
                 { (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
                 { (int)ClientPackets.stationID , sServerHandle.StationIDReceived},
-                { (int)ClientPackets.item , sServerHandle.ItemReceived}
+                { (int)ClientPackets.item , sServerHandle.ItemReceived},
+                { (int)ClientPackets.batch , sServerHandle.BatchReceived},
+                { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated},
+                { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded}
 
             };
 
@@ -211,5 +216,7 @@ public static class sServer
         }
         throw new Exception("No network adapters with an IPv4 address in the system!");
     }
+
+
 }
 
