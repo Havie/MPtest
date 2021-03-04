@@ -489,6 +489,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: PaperLabel (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.9497854
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.78039217
+      objectReference: {fileID: 0}
     - target: {fileID: 8007406847442276695, guid: b28d92d87cbd3ca438a91ad762af1ac4,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -654,6 +669,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: PaperLabel (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.8160377
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.9533432
+      objectReference: {fileID: 0}
     - target: {fileID: 8007406847442276695, guid: b28d92d87cbd3ca438a91ad762af1ac4,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -818,6 +848,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PaperLabel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.9864136
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.740566
       objectReference: {fileID: 0}
     - target: {fileID: 8007406847442276695, guid: b28d92d87cbd3ca438a91ad762af1ac4,
         type: 3}
@@ -1224,6 +1269,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: PaperLabel (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.81811017
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.78039217
+      objectReference: {fileID: 0}
     - target: {fileID: 8007406847442276695, guid: b28d92d87cbd3ca438a91ad762af1ac4,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -1388,6 +1448,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PaperLabel (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.8066038
+      objectReference: {fileID: 0}
+    - target: {fileID: 4028513181139548532, guid: b28d92d87cbd3ca438a91ad762af1ac4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.8066038
       objectReference: {fileID: 0}
     - target: {fileID: 8007406847442276695, guid: b28d92d87cbd3ca438a91ad762af1ac4,
         type: 3}
