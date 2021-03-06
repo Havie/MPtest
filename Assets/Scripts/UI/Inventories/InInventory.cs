@@ -66,12 +66,6 @@ public class InInventory : UIInventoryManager
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
         ///Determine layout
-        _xMaxPerRow = _INVENTORYSIZE;
-        if (_INVENTORYSIZE > _maxItemsPerRow)
-            _xMaxPerRow = (_INVENTORYSIZE / _maxItemsPerRow) + 1;
-
-        if (_xMaxPerRow > _maxItemsPerRow)
-            _xMaxPerRow = _maxItemsPerRow;
 
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
@@ -79,7 +73,7 @@ public class InInventory : UIInventoryManager
         SetSizeOfContentArea();
 
         ///getAPrefix for naming our buttons in scene Hierarchy
-        _prefix = "in_";
+        _prefix = "In";
 
 
         ///Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount

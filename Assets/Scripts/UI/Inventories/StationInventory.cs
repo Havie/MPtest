@@ -58,11 +58,6 @@ public class StationInventory : UIInventoryManager
         IsInitalized = true;
         //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
 
-        //Determine layout
-        _xMaxPerRow = _INVENTORYSIZE;
-
-        if (_xMaxPerRow > 10) /// might be an issue when we have multiple Items to make, will revist
-            _xMaxPerRow = 10;
 
         //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
@@ -75,7 +70,7 @@ public class StationInventory : UIInventoryManager
         WorkStationManager wm = GameManager.Instance.CurrentWorkStationManager;
         WorkStation myWS = GameManager.Instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
-        _prefix = "station_";
+        _prefix = "Station";
 
         //Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount
         _extraSlots = new List<UIInventorySlot>(); //Instantiated before for loop becuz CreateNewslot uses its Count
@@ -118,15 +113,7 @@ public class StationInventory : UIInventoryManager
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected override void SetSizeOfContentArea()
     {
-        if (_xMaxPerRow == 0)
-            return;
-        RectTransform rt = this.GetComponent<RectTransform>();
-
-        rt.sizeDelta = new Vector2((_xMaxPerRow * _cellPadding) + (_cellPadding / 2), ((((_INVENTORYSIZE / _xMaxPerRow) + 1) * _cellPadding)));
-        // fix for a really weird issue with off center inv
-        //this.transform.localPosition = new Vector3(this.transform.localPosition.x / 2, this.transform.localPosition.y, this.transform.localPosition.z);
-        ///*Note since bSlots are anchored to top corner for IN/OUT, when they come in for station things get weird, thus the Station content pane is offset to fix this
-
+      
     }
 
     private void AssignInfiniteItem(int itemID)
