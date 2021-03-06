@@ -11,6 +11,10 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     WorkStationManager _workstationManager;
 
     [Header("Networking Components")]
+    [SerializeField] string _inventorySceneName = "Inventory";
+
+
+    [Header("Networking Components")]
     public GameObject _networkingCanvas;
     [SerializeField] GameObject _startMenu;
     public Button _bConnect;
@@ -171,7 +175,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     }
     public void ConfirmWorkStation()
     {
-        SceneLoader.LoadLevel("Inventory");
+        SceneLoader.LoadLevel(_inventorySceneName);
         int itemID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
         BeginLevel(itemID);
 

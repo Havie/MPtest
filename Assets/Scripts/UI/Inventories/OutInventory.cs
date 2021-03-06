@@ -19,8 +19,13 @@ public class OutInventory : UIInventoryManager
 
         if (!_sendButton)
         {
-            //IDK
+            Debug.Log($"<color=yellow> Unassigned send button.. hope for the best");
+            _sendButton = this.GetComponentInChildren<Button>();
+
         }
+        ///IDK if this is ideal, but i keep forgetting to set this if we remove it
+        _sendButton.onClick.RemoveAllListeners();
+        _sendButton.onClick.AddListener(SendBatch);
         base.Start();
         GameManager.Instance.SetInventoryOut(this);
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
