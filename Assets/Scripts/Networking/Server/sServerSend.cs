@@ -51,7 +51,7 @@ public class sServerSend
 
     public static void Welcome(int toClient, string msg)
     {
-        ///TODO Write all the GameManager DATA:
+        /// Write all the GameManager DATA:
         using (sPacket packet = new sPacket((int)ServerPackets.welcome)) //Auto call packet.Dispose when done "UsingBlock"
         {
             packet.Write(msg);
@@ -67,6 +67,7 @@ public class sServerSend
             packet.Write(instance._workStationTaskChanging);
             packet.Write(instance._HUDManagement);
             packet.Write(instance._HostDefectPausing);
+            packet.Write(instance._roundDuration);
 
 
             SendTCPData(toClient, packet);
@@ -112,6 +113,17 @@ public class sServerSend
             SendUDPDataToAll(player._id, packet);
         }
 
+    }
+
+    public static void StartRound(int toClient, int roundDuration)
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.roundStart))
+        {
+            packet.Write(roundDuration);
+
+            SendTCPData(toClient, packet);
+
+        }
     }
 
     public static void SendItem(int toClient, int itemID, List<int> qualityData)

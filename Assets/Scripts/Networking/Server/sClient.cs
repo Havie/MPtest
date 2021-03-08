@@ -192,7 +192,16 @@ public class sClient
         _workStation = workStation;
     }
 
-   
+    public void StartRound(int roundDuration)
+    {
+        sServerSend.StartRound(_id, roundDuration);
+    }
+
+    public void EndRound(int dataForFinalStatsTODO)
+    {
+       // sServerSend.StartRound(_id, roundDuration);
+    }
+
     public void SendItem(int itemId, List<int> qualityData)
     {
         sServerSend.SendItem(_id, itemId, qualityData);

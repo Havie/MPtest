@@ -33,7 +33,7 @@ public static class sServer
     public static void BroadCastIP()
     {
         var data = Encoding.UTF8.GetBytes(GetLocalIPAddress());
-       _udpListener.Send(data, data.Length, "255.255.255.255", sNetworkManager._defaultPort);
+        _udpListener.Send(data, data.Length, "255.255.255.255", sNetworkManager._defaultPort);
 
     }
 
@@ -51,7 +51,7 @@ public static class sServer
 
         BroadCastIP();
         _iAmHost = true;
-        _gameStatistics = new sGameStatistics(Time.time);
+        _gameStatistics = new sGameStatistics(Time.unscaledTime);
 
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
@@ -117,7 +117,7 @@ public static class sServer
                 Debug.Log("<color=yellow>This connection is open</color>");
                 return;
             }
-           
+
 
             using (sPacket packet = new sPacket(data))
             {
@@ -186,7 +186,9 @@ public static class sServer
                 { (int)ClientPackets.item , sServerHandle.ItemReceived},
                 { (int)ClientPackets.batch , sServerHandle.BatchReceived},
                 { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated},
-                { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded}
+                { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded},
+                { (int)ClientPackets.roundBegin , sServerHandle.RoundBegin},
+                { (int)ClientPackets.roundEnd , sServerHandle.RoundEnded}
 
             };
 

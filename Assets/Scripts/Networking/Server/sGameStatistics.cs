@@ -10,15 +10,16 @@ public class sGameStatistics
     public int ShippedLate { get; private set; } = 0;
 
 
-    float _timeGameStarted; ///TODO correlate this properly w actual start, not station select?
+    float _timeServerStarted; ///Just incase I wana do something w this?
+    float _currentRoundTimeStart; /// Will correlate with when the host loaded in
     Queue<ItemOrder> _orders; ///For now we use a QUEUE and dont check item Type since we only have one
     float totalShippingTime = 0;
     Dictionary<int, Queue<float>> _cycleTimes;
     /************************************************************************************************************************/
 
-    public sGameStatistics(float timeGameStarted)
+    public sGameStatistics(float timeServerStarted)
     {
-        _timeGameStarted = timeGameStarted;
+        _timeServerStarted = timeServerStarted;
         _orders = new Queue<ItemOrder>();
         _cycleTimes = new Dictionary<int, Queue<float>>();
     }
@@ -74,14 +75,13 @@ public class sGameStatistics
                     totalTime += firstTime;
                 }
 
-                Debug.Log($"Hoping these #s match: { (endTime - _timeGameStarted) / cycles}  vs { (totalTime) / cycles}");
+                Debug.Log($"Hoping these #s match: { (endTime - _currentRoundTimeStart) / cycles}  vs { (totalTime) / cycles}");
             }
         }
 
         //Debug.Log($"# of cycles for station#{stationID} was : {cycles}");
-        return (endTime - _timeGameStarted) / cycles;
+        return (endTime - _currentRoundTimeStart) / cycles;
     }
-
     public int GetWIP()
     {
         var gm = GameManager.instance;
@@ -98,6 +98,14 @@ public class sGameStatistics
         ///WIP doesnt start till kitting pushes first batch
         ///or shipping pulls item 
         return totalWip;
+    }
+    public void RoundBegin(float startTime)
+    {
+        _currentRoundTimeStart = startTime;
+    }
+    public void RoundEnded(float endTime)
+    {
+        ///Not sure, TODO
     }
     /************************************************************************************************************************/
 

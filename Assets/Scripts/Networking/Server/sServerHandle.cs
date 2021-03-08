@@ -59,7 +59,7 @@ public class sServerHandle
 
         var count = packet.ReadInt();
         Debug.Log($"[ServerHandle] QualityCount={count}");
-       // string info = "";
+        // string info = "";
         ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
         {
@@ -68,7 +68,7 @@ public class sServerHandle
             qualities.Add(id); ///quality ID
             qualities.Add(curAction); ///quality Count
 
-          //  info += $" server pack :({id},{curAction}) ";
+            //  info += $" server pack :({id},{curAction}) ";
         }
 
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
@@ -113,9 +113,9 @@ public class sServerHandle
         float createdTime = packet.ReadFloat();
         float dueTime = packet.ReadFloat();
 
-        Debug.Log("<color=white>[sServerHandle]</color> itemID Read was : " + itemID);
-        Debug.Log("<color=white>[sServerHandle]</color> createdTime Read was : " + createdTime);
-        Debug.Log("<color=white>[sServerHandle]</color> dueTime Read was : " + dueTime);
+        //Debug.Log("<color=green>[sServerHandle]</color> itemID Read was : " + itemID);
+        //Debug.Log("<color=green>[sServerHandle]</color> createdTime Read was : " + createdTime);
+        //Debug.Log("<color=green>[sServerHandle]</color> dueTime Read was : " + dueTime);
 
         sServer._gameStatistics.CreatedAnOrder(itemID, createdTime, dueTime);
 
@@ -139,5 +139,46 @@ public class sServerHandle
 
 
         Debug.Log($"Current Defects#={sServer._gameStatistics.Defects}");
+    }
+
+
+    public static void RoundBegin(int fromClient, sPacket packet)
+    {
+        float roundStart = packet.ReadFloat();
+        int roundDuration = packet.ReadInt();
+
+        Debug.Log("<color=white>[sServerHandle]</color> RoundBegin @ : " + roundStart);
+
+        ///I wish something on the server was ticking so we could keep track of time on it,
+        ///but instead we will let the hosts Timer call an end event to trigger RoundEnd
+        ///We could Tick on the sNetworkManager but feels wrong
+
+        sServer._gameStatistics.RoundBegin(roundStart);
+        foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
+        {
+            ///Tell all clients to start: (this sets the timer)
+            c.StartRound(roundDuration);
+        }
+
+    }
+
+    public static void RoundEnded(int fromClient, sPacket packet)
+    {
+        float endTime = packet.ReadFloat();
+
+        Debug.Log("<color=white>[sServerHandle]</color> RoundEnded @ : " + endTime);
+
+        sServer._gameStatistics.RoundEnded(endTime);
+
+        foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
+        {
+            //if client workstation ID matches stationID 
+            int workStationId = c._workStation;
+            float cycleTime = sServer._gameStatistics.GetCycleTimeForStation(workStationId, endTime);
+            c.EndRound(1);
+
+
+
+        }
     }
 }

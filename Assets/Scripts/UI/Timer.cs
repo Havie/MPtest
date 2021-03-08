@@ -8,13 +8,16 @@ using System.Runtime.CompilerServices;
 public class Timer : MonoBehaviour
 {
     TextMeshProUGUI _text;
-    private float _time = 90;
+    private float _time = 10; //90 //In Seconds
     private int _tLow = 60;
     private int _tBad =10;
     [SerializeField] ColorManager _cm = default;
+    [SerializeField] VoidEvent _roundEndEvent = default;
 
-
+    private bool _outOfTime = true;
     private bool test=false;
+
+
 
     private void Awake()
     {
@@ -24,16 +27,24 @@ public class Timer : MonoBehaviour
 
     private void Start()
     {
-
         if(_cm)
             _text.color = _cm.Good;
-        UpdateTime(_time);
-       
     }
 
 
     private void FixedUpdate()
     {
+        if (_outOfTime)
+        {
+            if(GameManager.instance.RoundShouldStart)
+            {
+                StartRound(GameManager.instance._roundDuration);
+                GameManager.instance.SetRoundShouldStart(false);
+            }
+
+            return;
+        }
+
         if (!test)
         {
             _time -= Time.fixedDeltaTime;
@@ -46,9 +57,16 @@ public class Timer : MonoBehaviour
         }
     }
 
+
+    private void StartRound(float roundDuration)
+    {
+        _time = roundDuration;
+        _outOfTime = false;
+    }
+
     private void UpdateTime(float time)
     {
-        if(_text && time>=0)
+        if(_text && time >= 0)
         {
             _text.text = FormatTime(time);
         }
@@ -69,9 +87,13 @@ public class Timer : MonoBehaviour
 
     private void CheckTimeColor()
     {
-        if (_time < 0 || !_cm)
-        {
+        if (_cm == null)
             return;
+
+        if ( _time < 0)
+        {
+            _outOfTime = true;
+            _roundEndEvent.Raise(); ///Will only go thru to server is client is HOST
         }
         else if (_time < _tBad)
         {
