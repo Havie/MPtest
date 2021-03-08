@@ -125,6 +125,20 @@ public class sServerSend
 
         }
     }
+        public static void EndRound(int toClient, float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.roundEnd))
+        {
+            packet.Write(cycleTime);
+            packet.Write(thruPut);
+            packet.Write(shippedOnTime);
+            packet.Write(shippedLate);
+            packet.Write(wip);
+
+            SendTCPData(toClient, packet);
+
+        }
+    }
 
     public static void SendItem(int toClient, int itemID, List<int> qualityData)
     {

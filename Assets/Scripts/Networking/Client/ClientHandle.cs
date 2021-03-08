@@ -46,7 +46,13 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     public void RoundEnded(sPacket packet)
     {
-        ///TODO
+        float cycleTime = packet.ReadFloat();
+        float thruPut = packet.ReadFloat();
+        int shippedOnTime = packet.ReadInt();
+        int shippedLate = packet.ReadInt();
+        int wip = packet.ReadInt();
+
+        UIManagerGame.Instance.RoundOutOfTime(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
     }
 
     public void ItemReceived(sPacket packet)

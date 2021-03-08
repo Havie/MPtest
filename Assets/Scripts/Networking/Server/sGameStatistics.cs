@@ -24,9 +24,19 @@ public class sGameStatistics
         _cycleTimes = new Dictionary<int, Queue<float>>();
     }
     /************************************************************************************************************************/
-
+    public void RoundBegin(float startTime)
+    {
+        _currentRoundTimeStart = startTime;
+    }
+    public void RoundEnded(float endTime)
+    {
+        ///Not sure, TODO
+    }
 
     public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
+    public int GetShippedOnTime() => ShippedOnTime;
+    public int GetShippedLate() => ShippedLate;
+
     public float GetThroughput() => (totalShippingTime / GetTotalShipped());
     public void AddedADefect(int stationID, int itemID) { ++Defects; }
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
@@ -99,14 +109,7 @@ public class sGameStatistics
         ///or shipping pulls item 
         return totalWip;
     }
-    public void RoundBegin(float startTime)
-    {
-        _currentRoundTimeStart = startTime;
-    }
-    public void RoundEnded(float endTime)
-    {
-        ///Not sure, TODO
-    }
+
     /************************************************************************************************************************/
 
     private void ShippedAnOrder(float time)

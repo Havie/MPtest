@@ -197,9 +197,9 @@ public class sClient
         sServerSend.StartRound(_id, roundDuration);
     }
 
-    public void EndRound(int dataForFinalStatsTODO)
+    public void EndRound(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
     {
-       // sServerSend.StartRound(_id, roundDuration);
+       sServerSend.EndRound(_id,  cycleTime,  thruPut,  shippedOnTime,  shippedLate,  wip);
     }
 
     public void SendItem(int itemId, List<int> qualityData)

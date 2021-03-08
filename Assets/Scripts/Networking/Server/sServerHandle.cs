@@ -168,14 +168,20 @@ public class sServerHandle
 
         Debug.Log("<color=white>[sServerHandle]</color> RoundEnded @ : " + endTime);
 
-        sServer._gameStatistics.RoundEnded(endTime);
+        var gameStats = sServer._gameStatistics;
+
+        gameStats.RoundEnded(endTime);
 
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
-            //if client workstation ID matches stationID 
             int workStationId = c._workStation;
-            float cycleTime = sServer._gameStatistics.GetCycleTimeForStation(workStationId, endTime);
-            c.EndRound(1);
+            float cycleTime = gameStats.GetCycleTimeForStation(workStationId, endTime);
+            float thruPut= gameStats.GetThroughput();
+            int shippedOnTime = gameStats.GetShippedOnTime();
+            int shippedLate = gameStats.GetShippedLate();
+            int wip = gameStats.GetWIP();
+
+            c.EndRound(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
 
 
 

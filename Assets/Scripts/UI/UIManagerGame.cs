@@ -156,7 +156,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             _normalInInventory.SetActive(false);
     }
 
-    public void RoundOutOfTime()
+    public void RoundOutOfTime(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
     {
         ///SHOW RESULTS MODAL
         if(_endResultsCanvas)
@@ -165,6 +165,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(false); 
 
+
+        ///TODO figure out how to pass this data into the module
     }
     #endregion
 
