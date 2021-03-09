@@ -144,6 +144,16 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 413333975342512123, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -250
+      objectReference: {fileID: 0}
+    - target: {fileID: 413333975342512123, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -284
+      objectReference: {fileID: 0}
     - target: {fileID: 413333976817165005, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: m_Name
@@ -254,6 +264,12 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1711186453953381560, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1025833106449496884, guid: 4989aafe3012fd1448f04be3c098b028,
+        type: 3}
     - target: {fileID: 2958992617734924392, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: _inventory
@@ -10592,6 +10608,16 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 413333975342512123, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -254
+      objectReference: {fileID: 0}
+    - target: {fileID: 413333975342512123, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 280
+      objectReference: {fileID: 0}
     - target: {fileID: 413333976817165005, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: m_Name
@@ -10702,6 +10728,12 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1711186453953381560, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1025833106449496884, guid: 4989aafe3012fd1448f04be3c098b028,
+        type: 3}
     - target: {fileID: 2958992617734924392, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: _inventory

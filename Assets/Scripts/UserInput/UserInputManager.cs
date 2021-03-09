@@ -185,7 +185,7 @@ namespace UserInput
             //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
             foreach (RaycastResult result in results)
             {
-                //Debug.Log("hit =" + result.gameObject);
+                Debug.Log("hit =" + result.gameObject);
                 IAssignable slot = result.gameObject.transform.GetComponent<IAssignable>();
 
                 if (slot != null)
