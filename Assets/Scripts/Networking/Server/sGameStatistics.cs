@@ -12,6 +12,7 @@ public class sGameStatistics
 
     float _timeServerStarted; ///Just incase I wana do something w this?
     float _currentRoundTimeStart; /// Will correlate with when the host loaded in
+    float _currentRoundEndtime;
     Queue<ItemOrder> _orders; ///For now we use a QUEUE and dont check item Type since we only have one
     float totalShippingTime = 0;
     Dictionary<int, Queue<float>> _cycleTimes;
@@ -31,13 +32,19 @@ public class sGameStatistics
     public void RoundEnded(float endTime)
     {
         ///Not sure, TODO
+        _currentRoundEndtime = endTime;
     }
 
     public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
     public int GetShippedOnTime() => ShippedOnTime;
     public int GetShippedLate() => ShippedLate;
 
-    public float GetThroughput() => (totalShippingTime / GetTotalShipped());
+    public float GetThroughput()
+    {
+        var totalShipped = GetTotalShipped();
+
+        return totalShipped > 0 ?( totalShippingTime / totalShipped) : 0;
+    }
     public void AddedADefect(int stationID, int itemID) { ++Defects; }
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
     {
@@ -63,7 +70,7 @@ public class sGameStatistics
         _cycleTimes.Add(stationID, newTimesQueue);
 
     }
-    public float GetCycleTimeForStation(int stationID, float endTime)
+    public float GetCycleTimeForStation(int stationID)
     {
         bool detailedINFO = false;
         ///Could add up the endTime - the startTime  and divide by cycles?
@@ -84,9 +91,9 @@ public class sGameStatistics
                     totalTime += firstTime;
                 }
 
-                Debug.Log($"Hoping these #s match: { (endTime - _currentRoundTimeStart) / cycles}  vs { (totalTime) / cycles}");
+                Debug.Log($"Hoping these #s match: { (_currentRoundEndtime - _currentRoundTimeStart) / cycles}  vs { (totalTime) / cycles}");
             }
-            return (endTime - _currentRoundTimeStart) / cycles;
+            return (_currentRoundEndtime - _currentRoundTimeStart) / cycles;
         }
 
         Debug.Log($"no Cycles for station ");

@@ -1893,7 +1893,8 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9085492357323014052, guid: c4f0fffa9f6e3ac40834e93334bedee8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c4f0fffa9f6e3ac40834e93334bedee8, type: 3}
 --- !u!4 &234665635 stripped
 Transform:
@@ -6900,7 +6901,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1122026722
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12998,9 +12999,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7cc719ff47720498b6cd0e2b080f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _roundDuration: 10
+  _roundDuration: 30
   _orderFrequency: 15
-  _batchSize: 2
+  _batchSize: 1
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -13075,6 +13076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9d32f81524fa7149a87dc90d8623228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _networkingSceneName: MainScene (new)
   _inventoryCanvas: {fileID: 5394208262448427709}
   _normalInInventory: {fileID: 8256427025381148981}
   _normalOutInventory: {fileID: 428164341312955809}
@@ -13562,8 +13564,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: SendBatch
+      - m_Target: {fileID: 2067033043}
+        m_MethodName: ContinueFromEndResults
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -18124,7 +18126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 8807713306742368126}
-  _gridLayoutGrp: {fileID: 0}
+  _gridLayoutGrp: {fileID: 4641258761510860304}
   _labelText: {fileID: 7626205380398371271}
   _maxHeight: 600
   _widthPadding: 73

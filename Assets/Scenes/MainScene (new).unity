@@ -7900,6 +7900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7cc719ff47720498b6cd0e2b080f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _roundDuration: 90
   _orderFrequency: 2
   _batchSize: 2
   _autoSend: 0

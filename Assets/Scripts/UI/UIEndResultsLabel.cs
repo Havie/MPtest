@@ -10,12 +10,21 @@ public class UIEndResultsLabel : MonoBehaviour
     [SerializeField] TextMeshProUGUI _resultTxt = default;
 
 
-    public void SetResults(string statTracked, float resultInfo)
+    public void SetResults(string statTracked, float resultInfo, bool formatAsTime)
     {
         if (_headerTxt)
             _headerTxt.text = statTracked;
 
         if (_resultTxt)
-            _resultTxt.text = resultInfo.ToString(); //TODO format
+        {
+            if (formatAsTime)
+            {
+                _resultTxt.text = Timer.FormatTime(resultInfo);
+            }
+            else
+            {
+                _resultTxt.text = resultInfo.ToString();
+            }
+        }
     }
 }
