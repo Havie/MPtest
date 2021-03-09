@@ -102,9 +102,9 @@ public class sServerHandle
 
         sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
-        var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
+        //var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
 
-        Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
+       // Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
     public static void OrderCreated(int fromClient, sPacket packet)

@@ -67,10 +67,9 @@ public class sGameStatistics
     {
         bool detailedINFO = false;
         ///Could add up the endTime - the startTime  and divide by cycles?
-        int cycles = 1;
         if (_cycleTimes.TryGetValue(stationID, out Queue<float> times))
         {
-            cycles = times.Count;
+            int cycles = times.Count;
            
             if (detailedINFO) ///Need to play around w this later
             {
@@ -87,10 +86,11 @@ public class sGameStatistics
 
                 Debug.Log($"Hoping these #s match: { (endTime - _currentRoundTimeStart) / cycles}  vs { (totalTime) / cycles}");
             }
+            return (endTime - _currentRoundTimeStart) / cycles;
         }
 
-        //Debug.Log($"# of cycles for station#{stationID} was : {cycles}");
-        return (endTime - _currentRoundTimeStart) / cycles;
+        Debug.Log($"no Cycles for station ");
+        return 0;
     }
     public int GetWIP()
     {
