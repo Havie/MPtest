@@ -43,6 +43,8 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     public bool GetInUse() => _inUse;
     public bool PreviewSlot(Sprite img)
     {
+
+        //Debug.Log("This called this");
         bool retVal = true;
         if (!_inUse)
         {
