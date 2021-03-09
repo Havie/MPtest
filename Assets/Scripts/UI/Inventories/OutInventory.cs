@@ -19,8 +19,16 @@ public class OutInventory : UIInventoryManager
 
         if (!_sendButton)
         {
-            //IDK
+            Debug.Log($"<color=yellow> Unassigned send button.. hope for the best");
+            _sendButton = this.GetComponentInChildren<Button>();
+
         }
+        ///IDK if this is ideal, but i keep forgetting to set this if we remove it
+        if (_sendButton.onClick.GetPersistentEventCount() == 0)
+        {
+            _sendButton.onClick.RemoveAllListeners();
+        }
+        _sendButton.onClick.AddListener(SendBatch);
         base.Start();
         GameManager.Instance.SetInventoryOut(this);
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
@@ -42,21 +50,21 @@ public class OutInventory : UIInventoryManager
             _sendButton.gameObject.SetActive(false); ///turn off the send button
         }
 
-        return StationItemParser.ParseItemsAsOUT(batchSize, gm._isStackable,gm.CurrentWorkStationManager, gm._workStation);
-       // return ParseItems(wm, myWS, false) * BATCHSIZE;
+        return StationItemParser.ParseItemsAsOUT(batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
+        // return ParseItems(wm, myWS, false) * BATCHSIZE;
 
     }
 
     private void SetUpBatchOutput(List<int> itemIDs)
     {
-        foreach (var itemID in  itemIDs)
+        foreach (var itemID in itemIDs)
         {
             AddItemToSlot(itemID, null, true);
         }
 
     }
 
- 
+
     #endregion
     /************************************************************************************************************/
 

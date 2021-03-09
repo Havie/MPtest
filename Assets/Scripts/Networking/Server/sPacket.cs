@@ -12,6 +12,8 @@ public enum ServerPackets
     playerPosition,
     playerRotation,
     item,
+    roundStart,
+    roundEnd
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -23,7 +25,9 @@ public enum ClientPackets
     item, 
     batch,
     orderCreated,
-    defectAdded
+    defectAdded,
+    roundBegin,
+    roundEnd
 }
 
 public class sPacket : IDisposable

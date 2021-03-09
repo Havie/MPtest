@@ -43,7 +43,7 @@ public class InjectorWorkStation : MonoBehaviour
         if (_workStations.Count > index)
         {
             GameManager.Instance.AssignWorkStation(_workStations[index]);
-            UIManager.BeginLevel(_stationToInject); // random#?
+            UIManager.BeginLevel(); // _stationToInject#?
         }
     }
 

@@ -21,7 +21,7 @@ public class Client : MonoSingleton<Client>
     private delegate void PacketHandler(sPacket packet);
     private static Dictionary<int, PacketHandler> _packetHandlers;
 
-    public bool IWillBeHost;
+    public bool IWillBeHost =false;
 
     private void OnApplicationQuit()
     {
@@ -341,7 +341,9 @@ public class Client : MonoSingleton<Client>
             { (int)ServerPackets.spawnPlayer, ClientHandle.Instance.SpawnPlayer }, //oldTutorial
             { (int)ServerPackets.playerPosition, ClientHandle.Instance.PlayerPosition }, //oldTutorial
             { (int)ServerPackets.playerRotation, ClientHandle.Instance.PlayerRotation }, //oldTutorial
-            { (int)ServerPackets.item, ClientHandle.Instance.ItemReceived }
+            { (int)ServerPackets.item, ClientHandle.Instance.ItemReceived },
+            { (int)ServerPackets.roundStart, ClientHandle.Instance.RoundStarted },
+            { (int)ServerPackets.roundEnd, ClientHandle.Instance.RoundEnded }
 
 
         };

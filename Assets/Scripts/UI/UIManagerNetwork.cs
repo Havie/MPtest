@@ -10,24 +10,24 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 {
     WorkStationManager _workstationManager;
 
+    [Header("Scene Loading Info")]
+    [SerializeField] string _inventorySceneName = "Inventory";
+
+
     [Header("Networking Components")]
     public GameObject _networkingCanvas;
-    [SerializeField] GameObject _startMenu;
+    [SerializeField] GameObject _startMenu = default;
     public Button _bConnect;
     public Button _bHost;
     public InputField _usernameField;
     public Text _loadingTxt;
     public GameObject _workStationDropDown;
     public Button _tmpConfirmWorkStation;
-    public GameObject _tmpObjectPREFAB;
 
-
-
-
-
+    [Header("Events")]
+    [SerializeField] VoidEvent _roundBeginEventTMP=default;
 
     #region Init
-
 
     private void Start()
     {
@@ -149,6 +149,15 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
         UIManager.SetStationLevel(itemLevel);
 
+
+        ///This will have to change at some point once all clients are connected,
+        ///will probably want to do a listen on the server once all 6 clients are connected
+        ///or the host clicks begin etc 
+        ///but for now we will
+        ///Start the Round Timer here:
+        if (_roundBeginEventTMP)
+            _roundBeginEventTMP.Raise();
+
     }
 
 
@@ -171,10 +180,9 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     }
     public void ConfirmWorkStation()
     {
-        SceneLoader.LoadLevel("Inventory");
+        SceneLoader.LoadLevel(_inventorySceneName);
         int itemID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
         BeginLevel(itemID);
-
     }
 
     public void SwitchToHost()
