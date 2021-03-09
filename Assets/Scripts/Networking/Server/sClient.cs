@@ -192,7 +192,16 @@ public class sClient
         _workStation = workStation;
     }
 
-   
+    public void StartRound(int roundDuration)
+    {
+        sServerSend.StartRound(_id, roundDuration);
+    }
+
+    public void EndRound(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
+    {
+       sServerSend.EndRound(_id,  cycleTime,  thruPut,  shippedOnTime,  shippedLate,  wip);
+    }
+
     public void SendItem(int itemId, List<int> qualityData)
     {
         sServerSend.SendItem(_id, itemId, qualityData);

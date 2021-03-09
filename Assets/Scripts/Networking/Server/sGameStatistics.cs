@@ -10,22 +10,33 @@ public class sGameStatistics
     public int ShippedLate { get; private set; } = 0;
 
 
-    float _timeGameStarted; ///TODO correlate this properly w actual start, not station select?
+    float _timeServerStarted; ///Just incase I wana do something w this?
+    float _currentRoundTimeStart; /// Will correlate with when the host loaded in
     Queue<ItemOrder> _orders; ///For now we use a QUEUE and dont check item Type since we only have one
     float totalShippingTime = 0;
     Dictionary<int, Queue<float>> _cycleTimes;
     /************************************************************************************************************************/
 
-    public sGameStatistics(float timeGameStarted)
+    public sGameStatistics(float timeServerStarted)
     {
-        _timeGameStarted = timeGameStarted;
+        _timeServerStarted = timeServerStarted;
         _orders = new Queue<ItemOrder>();
         _cycleTimes = new Dictionary<int, Queue<float>>();
     }
     /************************************************************************************************************************/
-
+    public void RoundBegin(float startTime)
+    {
+        _currentRoundTimeStart = startTime;
+    }
+    public void RoundEnded(float endTime)
+    {
+        ///Not sure, TODO
+    }
 
     public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
+    public int GetShippedOnTime() => ShippedOnTime;
+    public int GetShippedLate() => ShippedLate;
+
     public float GetThroughput() => (totalShippingTime / GetTotalShipped());
     public void AddedADefect(int stationID, int itemID) { ++Defects; }
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
@@ -74,14 +85,13 @@ public class sGameStatistics
                     totalTime += firstTime;
                 }
 
-                Debug.Log($"Hoping these #s match: { (endTime - _timeGameStarted) / cycles}  vs { (totalTime) / cycles}");
+                Debug.Log($"Hoping these #s match: { (endTime - _currentRoundTimeStart) / cycles}  vs { (totalTime) / cycles}");
             }
         }
 
         //Debug.Log($"# of cycles for station#{stationID} was : {cycles}");
-        return (endTime - _timeGameStarted) / cycles;
+        return (endTime - _currentRoundTimeStart) / cycles;
     }
-
     public int GetWIP()
     {
         var gm = GameManager.instance;
@@ -93,8 +103,13 @@ public class sGameStatistics
             totalWip += config.GetRequiredComponentsForPart(order.ItemId).Count * batchSize;
         }
         ///TODO how to handle when items are kept at station??
+        ///
+
+        ///WIP doesnt start till kitting pushes first batch
+        ///or shipping pulls item 
         return totalWip;
     }
+
     /************************************************************************************************************************/
 
     private void ShippedAnOrder(float time)

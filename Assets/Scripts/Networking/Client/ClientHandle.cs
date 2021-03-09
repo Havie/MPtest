@@ -27,6 +27,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
        instance._workStationTaskChanging = packet.ReadBool();
        instance._HUDManagement = packet.ReadBool();
        instance._HostDefectPausing = packet.ReadBool();
+       instance.RoundDurationChanged(packet.ReadInt());
 
         UIManager.DebugLog("WE read GameManager VARS:");
 
@@ -34,7 +35,25 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
     }
 
+    public void RoundStarted(sPacket packet)
+    {
+        int roundDuration = packet.ReadInt();
+        ///Cant call this yet because still in other scene:
+        //UIManagerGame.Instance.StartRound(roundDuration);
+        ///Instead spoof this way and have timer listen:
+        GameManager.instance.SetRoundShouldStart(true);
+    }
 
+    public void RoundEnded(sPacket packet)
+    {
+        float cycleTime = packet.ReadFloat();
+        float thruPut = packet.ReadFloat();
+        int shippedOnTime = packet.ReadInt();
+        int shippedLate = packet.ReadInt();
+        int wip = packet.ReadInt();
+
+        UIManagerGame.Instance.RoundOutOfTime(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
+    }
 
     public void ItemReceived(sPacket packet)
     {

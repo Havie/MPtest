@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UserInput;
@@ -13,26 +10,28 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     [Header("Game Components")]
     public GameObject _inventoryCanvas;  ///TODO fix this ref being public
-    [SerializeField] GameObject _normalInInventory;
-    [SerializeField] GameObject _normalOutInventory;
-    [SerializeField] GameObject _kittingInventory;
-    [SerializeField] GameObject _shippingInventory;
-    [SerializeField] Button _hand1;
-    [SerializeField] Button _hand2;
-    [SerializeField] Image _touchPhaseDisplay;
-    [SerializeField] Image _previewSlot;
-
+    [SerializeField] GameObject _normalInInventory = default;
+    [SerializeField] GameObject _normalOutInventory = default;
+    [SerializeField] GameObject _kittingInventory = default;
+    [SerializeField] GameObject _shippingInventory = default;
+    [SerializeField] GameObject _endResultsCanvas = default;
+    [SerializeField] Button _hand1 = default;
+    [SerializeField] Button _hand2 = default;
+    [SerializeField] Image _touchPhaseDisplay = default;
+    [SerializeField] Image _previewSlot = default;
     ///NB: Dont like how "hardcoded" this is getting
 
     [Header("Bin Toggles")]
-    [SerializeField] ClickToShow _inBinToggle;
-    [SerializeField] ClickToShow _outBinToggle;
+    [SerializeField] ClickToShow _inBinToggle = default;
+    [SerializeField] ClickToShow _outBinToggle = default;
 
 
     [Header("Bin Components")]
-    [SerializeField] GameObject _defectBinInventory;
-    [SerializeField] GameObject _defectBinObject;
-    [SerializeField] GameObject _inBinObject;
+    [SerializeField] GameObject _defectBinInventory = default;
+    [SerializeField] GameObject _defectBinObject = default;
+    [SerializeField] GameObject _inBinObject = default;
+    
+    
     #region Init
 
 
@@ -46,7 +45,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     {
         UIManager.RegisterGameManager(null);
     }
-
+    #endregion
+    #region InventoryActions
     public void ShowPreviewInvSlot(bool cond, Vector3 pos, Sprite img)
     {
         if (_previewSlot)
@@ -60,13 +60,15 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         }
     }
 
-    public void BeginLevel(int itemLevel)
+    public void BeginLevel()
     {
-        //Debug.Log($"<color=blue> BeginLevel:Game </color>GAME:{itemLevel}");
+        Debug.Log($"<color=blue> BeginLevel:Game </color>GAME:");
 
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(true); ///when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
-
+        
+        if (_endResultsCanvas)
+            _endResultsCanvas.SetActive(false);
         //Setup the proper UI for our workStation:
         WorkStation ws = GameManager.Instance._workStation;
 
@@ -77,6 +79,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         StartCoroutine(ToggleTheInvItemsToLetThemLoad());
 
     }
+
 
     ///This are required to toggle on/off the inventories, to let them run their awake/start functions, 
     ///otherwise adding a component to an inventory that hasnt run yet has undesired results since the InventoryComponent 
@@ -127,7 +130,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         }
 
     }
-
     private void HandleQAStation(WorkStation ws)
     {
 
@@ -148,19 +150,29 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_normalOutInventory)
             _normalOutInventory.SetActive(!cond);
     }
-
-
     public void HideInInventory()
     {
         if (_normalInInventory != null)
             _normalInInventory.SetActive(false);
     }
 
+    public void RoundOutOfTime(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
+    {
+        ///SHOW RESULTS MODAL
+        if(_endResultsCanvas)
+            _endResultsCanvas.SetActive(true);
+
+        if (_inventoryCanvas)
+            _inventoryCanvas.SetActive(false); 
+
+
+        ///TODO figure out how to pass this data into the module
+    }
     #endregion
 
 
 
-    #region RunTime Actions
+    #region Game Actions
     public void ShowTouchDisplay(float pressTime, float pressTimeMax, Vector3 pos)
     {
         if (_touchPhaseDisplay)

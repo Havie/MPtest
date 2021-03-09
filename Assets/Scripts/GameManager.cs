@@ -11,6 +11,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Game Modifiers")]
     ///TODO make these all accessors with priv set:
     #region Game Modifiers
+    public int _roundDuration = 10; //In SECONDS  --> 60 =1 min
     public int _orderFrequency = 3;
     public int _batchSize = 10;
     public bool _autoSend = true;
@@ -21,10 +22,9 @@ public class GameManager : MonoSingleton<GameManager>
     public bool _decreaseChangeOverTime = false;
     public bool _HUDManagement = false;
     public bool _HostDefectPausing = false;
-
     #endregion
 
-
+    public bool RoundShouldStart { get; private set; } = false;
     public WorkStation _workStation { get; private set; }
     public UIInventoryManager _invIN { get; private set; }
     public UIInventoryManager _invOUT { get; private set; }
@@ -120,6 +120,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void SetInventoryShipping(UIShipping inv) { _invShipping = inv; }
     #region Setters for Host Changes 
     /// These Are from Button VerifyInput Events and from ClientHandle
+    public void RoundDurationChanged(int duration) { _roundDuration = duration; }
     public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
     public void BatchChanged(IntWrapper val) { ValidateBatchSize(val._value); } ///from button Events
     public void BatchChanged(int val) { ValidateBatchSize(val); } ///from ClientHandle
@@ -134,6 +135,10 @@ public class GameManager : MonoSingleton<GameManager>
 
     #endregion
 
+    public void SetRoundShouldStart(bool cond)
+    {
+        RoundShouldStart = cond;
+    }
 
     private void LinqTest()
     {
