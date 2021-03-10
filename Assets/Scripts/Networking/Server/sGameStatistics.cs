@@ -43,7 +43,7 @@ public class sGameStatistics
     {
         var totalShipped = GetTotalShipped();
 
-        return totalShipped > 0 ?( totalShippingTime / totalShipped) : 0;
+        return totalShipped > 0 ? ( totalShippingTime / totalShipped) : (_currentRoundEndtime - _currentRoundTimeStart);
     }
     public void AddedADefect(int stationID, int itemID) { ++Defects; }
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
@@ -97,24 +97,30 @@ public class sGameStatistics
         }
 
         Debug.Log($"no Cycles for station ");
-        return 0;
+        return (_currentRoundEndtime - _currentRoundTimeStart);
     }
     public int GetWIP()
     {
-        var gm = GameManager.instance;
-        int batchSize = gm._batchSize; ///If we change batch sizes mid game, move Batch inside CreatedOrder wrapper
-        var config = gm.AssemblyBook;
-        int totalWip = 0;
-        foreach (var order in _orders)
-        {
-            totalWip += config.GetRequiredComponentsForPart(order.ItemId).Count * batchSize;
-        }
-        ///TODO how to handle when items are kept at station??
-        ///
+        ///TED: we do not count individual parts as WIP, but rather the amount of kits
+        /// in the simulation
 
+        ///OLD and wrong:
+        //var gm = GameManager.instance;
+        //int batchSize = gm._batchSize; ///If we change batch sizes mid game, move Batch inside CreatedOrder wrapper
+        //var config = gm.AssemblyBook;
+        //int totalWip = 0;
+        //foreach (var order in _orders)
+        //{
+        //    totalWip += config.GetRequiredComponentsForPart(order.ItemId).Count * batchSize;
+        //}
+
+
+        ///TODO - In the future, real LEAN says
         ///WIP doesnt start till kitting pushes first batch
-        ///or shipping pulls item 
-        return totalWip;
+        ///or shipping pulls an item 
+        
+        ///For now just return the # of orders
+        return _orders.Count;
     }
 
     /************************************************************************************************************************/

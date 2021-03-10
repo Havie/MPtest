@@ -214,6 +214,10 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         UIManager.DebugLog(sServer.GetLocalIPAddress());
     }
 
+    public void TestFile()
+    {
+        FileSaver.WriteToFile("test");
+    }
     #endregion
 
     private void OnDisable()
