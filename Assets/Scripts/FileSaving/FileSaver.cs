@@ -9,7 +9,8 @@ public static class FileSaver
 
     public static void WriteToFile(string word)
     {
-        UIManager.DebugLog(Application.persistentDataPath);
+        //UIManager.DebugLog(Application.persistentDataPath);
+        
         try
         {
             string[] fileArr = new string[1];
