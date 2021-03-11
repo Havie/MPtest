@@ -96,12 +96,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _myID: 23
-  _rotationAxis: 0
+  _rotateAroundAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
   _handLocation: {fileID: 0}
   _handIndex: 1
-  HandPreviewingMode: 0
 --- !u!114 &3801590717590656921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1d68c1baf5f34478705cd617a2be89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _qualities: []
   _lastKnownQuality: 0
   _currentQuality: 0
   _maxQuality: 0
@@ -226,12 +224,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _myID: 6
-  _rotationAxis: 0
+  _rotateAroundAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
   _handLocation: {fileID: 0}
   _handIndex: 1
-  HandPreviewingMode: 0
 --- !u!136 &3380900465867627500
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -258,7 +255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1d68c1baf5f34478705cd617a2be89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _qualities: []
   _lastKnownQuality: 0
   _currentQuality: 0
   _maxQuality: 0
@@ -318,8 +314,8 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -358,12 +354,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _myID: 24
-  _rotationAxis: 0
+  _rotateAroundAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
   _handLocation: {fileID: 0}
   _handIndex: 1
-  HandPreviewingMode: 0
 --- !u!65 &4873753161158163782
 BoxCollider:
   m_ObjectHideFlags: 0

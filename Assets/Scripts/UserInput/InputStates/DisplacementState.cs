@@ -97,6 +97,7 @@ namespace UserInput
 
                     if (slot != null) ///we are hovering over a slot 
                     {
+                        Debug.Log("WE are hovering over a slot!");
                         if (!slot.GetInUse())
                         {
                             ObjectController oc = moveableObject as ObjectController;
