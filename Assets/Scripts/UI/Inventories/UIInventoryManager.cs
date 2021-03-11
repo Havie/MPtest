@@ -68,8 +68,10 @@ public abstract class UIInventoryManager : MonoBehaviour
         _STACKABLE = GameManager.Instance._isStackable;
         _ADDCHAOTIC = GameManager.Instance._addChaotic;
         GenerateInventory(DetermineWorkStationBatchSize());
-        if (_labelText)
-            _labelText.text = _prefix;
+
+        // text can be changed within label element
+        //if (_labelText)
+        //    _labelText.text = _prefix;
 
     }
 
@@ -90,16 +92,23 @@ public abstract class UIInventoryManager : MonoBehaviour
         else
         {
             var slotCount = _slots.Length + _extraSlots.Count;
+            float cellSize = 0;
+
+            _gridLayoutGrp.constraintCount = 2;
+            cellSize = _maxCellSize;
+
             //Debug.Log($"SlotCount={slotCount}");
-            if (slotCount % 2 == 0 && slotCount<9)
-            {
-                _gridLayoutGrp.constraintCount = 2;
-            }
-            else
-            {
-                _gridLayoutGrp.constraintCount = 3;
-            }
-            float cellSize = _maxCellSize - (_cellScaler * slotCount);
+            //if (slotCount < 5)
+            //{
+            //    _gridLayoutGrp.constraintCount = 2;
+            //    cellSize = _maxCellSize;
+            //}
+            //else
+            //{
+            //    _gridLayoutGrp.constraintCount = 3;
+            //    cellSize = _minCellSize;
+            //}
+            //float cellSize = _maxCellSize - (_cellScaler * slotCount);
             //Debug.Log($"made up cellsize for {slotCount} ={cellSize}");
 
             if (cellSize < _minCellSize)

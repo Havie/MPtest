@@ -8,6 +8,9 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 {
     [SerializeField] Image _myIcon = default;
     [SerializeField] UIInventoryManager _inventory;
+    // testing an animation
+    public Animator _animator;
+
     private Sprite _defaultIcon;
 
 
@@ -45,10 +48,13 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     {
         Debug.Log("PEview");
         bool retVal = true;
+        
         if (!_inUse)
         {
             AssignSprite(img);
             _myIcon.color = _VISIBLE;
+
+            _animator.SetBool("Hover", true);
         }
         else
         {
@@ -172,6 +178,8 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         _inUse = false;
         _itemID = -1;
         AssignSprite(_defaultIcon);
+
+        _animator.SetBool("Hover", false);
     }
     private void SetLarger()
     {
