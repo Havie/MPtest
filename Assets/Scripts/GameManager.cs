@@ -120,6 +120,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void SetInventoryShipping(UIShipping inv) { _invShipping = inv; }
     #region Setters for Host Changes 
     /// These Are from Button VerifyInput Events and from ClientHandle
+    public void RoundDurationChanged(IntWrapper val) => RoundDurationChanged(val._value);
     public void RoundDurationChanged(int duration) { _roundDuration = duration; }
     public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
     public void BatchChanged(IntWrapper val) { ValidateBatchSize(val._value); } ///from button Events
@@ -148,32 +149,4 @@ public class GameManager : MonoSingleton<GameManager>
         //.FirstOrDefault();
     }
 
-
-
-
-
-    #region oldTutorialStuff
-    //old
-    /*public static Dictionary<int, PlayerManager> _players = new Dictionary<int, PlayerManager>();
-    public GameObject _localPlayerPREFAB;
-    public GameObject _playerPREFAB;
-    //UNUSED for reference
-    public void SpawnPlayer(int id, string username, Vector3 pos, Quaternion rot)
-    {
-        GameObject player;
-        if (id == Client.instance._myId)
-            player = Instantiate(_localPlayerPREFAB, pos, rot);
-        else
-            player = Instantiate(_playerPREFAB, pos, rot);
-
-        PlayerManager pm = player.GetComponent<PlayerManager>();
-        if (pm)
-        {
-            pm._id = id;
-            pm._username = username;
-
-            _players.Add(id, pm);
-        }
-    }*/
-    #endregion
 }

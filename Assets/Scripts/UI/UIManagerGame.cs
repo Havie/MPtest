@@ -7,6 +7,8 @@ using UserInput;
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
+    [Header("Scene Loading Info")]
+    [SerializeField] string _networkingSceneName = "MainScene (new)";
 
     [Header("Game Components")]
     public GameObject _inventoryCanvas;  ///TODO fix this ref being public
@@ -159,15 +161,31 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     public void RoundOutOfTime(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
     {
         ///SHOW RESULTS MODAL
-        if(_endResultsCanvas)
+        if (_endResultsCanvas)
+        {
             _endResultsCanvas.SetActive(true);
+            UIEndResults endResults = _endResultsCanvas.GetComponentInChildren<UIEndResults>();
+            if(endResults)
+            {
+                endResults.SetResults(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
+            }
+        }
 
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(false); 
 
 
         ///TODO figure out how to pass this data into the module
+        
     }
+    
+    public void ContinueFromEndResults()
+    {
+        //TODO?- reload to main menu and let them reconnect with new host settings / start over?
+        SceneLoader.LoadLevel(_networkingSceneName);
+
+    }
+    
     #endregion
 
 

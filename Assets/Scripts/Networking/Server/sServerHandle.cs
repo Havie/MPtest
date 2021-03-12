@@ -102,9 +102,9 @@ public class sServerHandle
 
         sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
-        var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
+        //var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
 
-        Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
+       // Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
     public static void OrderCreated(int fromClient, sPacket packet)
@@ -175,7 +175,7 @@ public class sServerHandle
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
             int workStationId = c._workStation;
-            float cycleTime = gameStats.GetCycleTimeForStation(workStationId, endTime);
+            float cycleTime = gameStats.GetCycleTimeForStation(workStationId);
             float thruPut= gameStats.GetThroughput();
             int shippedOnTime = gameStats.GetShippedOnTime();
             int shippedLate = gameStats.GetShippedLate();

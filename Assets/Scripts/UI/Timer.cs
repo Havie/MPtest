@@ -57,6 +57,21 @@ public class Timer : MonoBehaviour
         }
     }
 
+    ///For Other Classes To use:
+    public static string FormatTime(float time)
+    {
+        string min = ((int)time / 60).ToString();
+        string sec = (time % 60).ToString("0");
+
+        if (time < 60)
+            min = "0";
+        if (sec.Length == 1)
+            sec = "0" + sec;
+
+        return ($"{min}:{sec}");
+    }
+
+
 
     private void StartRound(float roundDuration)
     {
@@ -70,19 +85,6 @@ public class Timer : MonoBehaviour
         {
             _text.text = FormatTime(time);
         }
-    }
-
-    private string FormatTime(float time)
-    {
-        string min= ((int)time / 60).ToString();
-        string sec = (time%60).ToString("0");
-
-        if (time < 60)
-            min = "0";
-        if (sec.Length == 1)
-            sec = "0" + sec;
-
-        return ($"{min}:{sec}");
     }
 
     private void CheckTimeColor()

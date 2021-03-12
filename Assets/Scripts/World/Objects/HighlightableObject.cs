@@ -92,21 +92,17 @@ public class HighlightableObject : InteractableObject, IHighlightable
     }
     public virtual void HandleHighlightPreview()
     {
-
         ///if its not highlighting turn it on 
         if (!IsHighlighted())
         {
             SetHighlighted(true);
             ChangeHighlightAmount(0);
         }
-
     }
     public virtual void CancelHighLightPreview()
     {
-
         if (IsHighlighted())
             SetHighlighted(false);
-
     }
 
 

@@ -12,6 +12,7 @@ public class sGameStatistics
 
     float _timeServerStarted; ///Just incase I wana do something w this?
     float _currentRoundTimeStart; /// Will correlate with when the host loaded in
+    float _currentRoundEndtime;
     Queue<ItemOrder> _orders; ///For now we use a QUEUE and dont check item Type since we only have one
     float totalShippingTime = 0;
     Dictionary<int, Queue<float>> _cycleTimes;
@@ -31,13 +32,19 @@ public class sGameStatistics
     public void RoundEnded(float endTime)
     {
         ///Not sure, TODO
+        _currentRoundEndtime = endTime;
     }
 
     public int GetTotalShipped() => (ShippedOnTime + ShippedLate);
     public int GetShippedOnTime() => ShippedOnTime;
     public int GetShippedLate() => ShippedLate;
 
-    public float GetThroughput() => (totalShippingTime / GetTotalShipped());
+    public float GetThroughput()
+    {
+        var totalShipped = GetTotalShipped();
+
+        return totalShipped > 0 ? ( totalShippingTime / totalShipped) : (_currentRoundEndtime - _currentRoundTimeStart);
+    }
     public void AddedADefect(int stationID, int itemID) { ++Defects; }
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
     {
@@ -63,14 +70,13 @@ public class sGameStatistics
         _cycleTimes.Add(stationID, newTimesQueue);
 
     }
-    public float GetCycleTimeForStation(int stationID, float endTime)
+    public float GetCycleTimeForStation(int stationID)
     {
         bool detailedINFO = false;
         ///Could add up the endTime - the startTime  and divide by cycles?
-        int cycles = 1;
         if (_cycleTimes.TryGetValue(stationID, out Queue<float> times))
         {
-            cycles = times.Count;
+            int cycles = times.Count;
            
             if (detailedINFO) ///Need to play around w this later
             {
@@ -85,29 +91,36 @@ public class sGameStatistics
                     totalTime += firstTime;
                 }
 
-                Debug.Log($"Hoping these #s match: { (endTime - _currentRoundTimeStart) / cycles}  vs { (totalTime) / cycles}");
+                Debug.Log($"Hoping these #s match: { (_currentRoundEndtime - _currentRoundTimeStart) / cycles}  vs { (totalTime) / cycles}");
             }
+            return (_currentRoundEndtime - _currentRoundTimeStart) / cycles;
         }
 
-        //Debug.Log($"# of cycles for station#{stationID} was : {cycles}");
-        return (endTime - _currentRoundTimeStart) / cycles;
+        Debug.Log($"no Cycles for station ");
+        return (_currentRoundEndtime - _currentRoundTimeStart);
     }
     public int GetWIP()
     {
-        var gm = GameManager.instance;
-        int batchSize = gm._batchSize; ///If we change batch sizes mid game, move Batch inside CreatedOrder wrapper
-        var config = gm.AssemblyBook;
-        int totalWip = 0;
-        foreach (var order in _orders)
-        {
-            totalWip += config.GetRequiredComponentsForPart(order.ItemId).Count * batchSize;
-        }
-        ///TODO how to handle when items are kept at station??
-        ///
+        ///TED: we do not count individual parts as WIP, but rather the amount of kits
+        /// in the simulation
 
+        ///OLD and wrong:
+        //var gm = GameManager.instance;
+        //int batchSize = gm._batchSize; ///If we change batch sizes mid game, move Batch inside CreatedOrder wrapper
+        //var config = gm.AssemblyBook;
+        //int totalWip = 0;
+        //foreach (var order in _orders)
+        //{
+        //    totalWip += config.GetRequiredComponentsForPart(order.ItemId).Count * batchSize;
+        //}
+
+
+        ///TODO - In the future, real LEAN says
         ///WIP doesnt start till kitting pushes first batch
-        ///or shipping pulls item 
-        return totalWip;
+        ///or shipping pulls an item 
+        
+        ///For now just return the # of orders
+        return _orders.Count;
     }
 
     /************************************************************************************************************************/
