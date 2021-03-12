@@ -67,7 +67,7 @@ public class BuildableObject : MonoBehaviour
         if (!prefab)
             return null; ///Prevent any NPEs
 
-        GameObject newObj = InstantiateObjectProperly(itemID, prefab, pos, Vector3.left);
+        GameObject newObj = InstantiateObjectProperly( prefab, pos, Vector3.left);
 
         //Could I do  LoadQualitiesOntoObject(qualities, newObj); here? 
 
@@ -114,7 +114,7 @@ public class BuildableObject : MonoBehaviour
 
 
         var pos = GetRandomPos(_spawnPoint.position);
-        GameObject newObj = InstantiateObjectProperly(itemID, prefab, pos, GetRandomPos(pos));
+        GameObject newObj = InstantiateObjectProperly( prefab, pos, GetRandomPos(pos));
 
         var controller = newObj.GetComponent<ObjectController>();
         if (controller)
@@ -143,7 +143,7 @@ public class BuildableObject : MonoBehaviour
     /************************************************************************************************************************/
 
 
-    private GameObject InstantiateObjectProperly(int itemID, GameObject prefab, Vector3 pos, Vector3 rot)
+    private GameObject InstantiateObjectProperly(GameObject prefab, Vector3 pos, Vector3 rot)
     {
 
         GameObject newObj = GameObject.Instantiate<GameObject>

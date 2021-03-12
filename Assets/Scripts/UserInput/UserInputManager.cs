@@ -16,7 +16,7 @@ namespace UserInput
         public static UserInputManager Instance { get; private set; }
 
 
-        private float _pressTimeMAX = 0.55f; ///was 1.2f
+        [SerializeField] float _pressTimeMAX = 0.40f; ///was 1.2f
         private float _holdLeniency = 1.5f;
 
         private Vector3 _inputPos;
@@ -185,7 +185,7 @@ namespace UserInput
             //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
             foreach (RaycastResult result in results)
             {
-                Debug.Log("hit =" + result.gameObject);
+                //Debug.Log("hit =" + result.gameObject);
                 IAssignable slot = result.gameObject.transform.GetComponent<IAssignable>();
 
                 if (slot != null)

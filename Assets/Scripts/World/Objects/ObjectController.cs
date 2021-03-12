@@ -127,10 +127,6 @@ public class ObjectController : HighlightableObject, IConstructable
 
     }
     /************************************************************************************************************************/
-
-
-
-
     public void PickedUp(int handIndex)
     {
         ToggleRB(true);
@@ -193,7 +189,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
     }
 
-    ///IMoveable
+    ///IMoveable (should make a base class to inherit from )
     public void OnFollowInput(Vector3 worldPos){Follow(worldPos);}
     public Vector2 OnRotate(Vector3 dot) { return DoRotation(dot); }
     public void OnBeginFollow()
