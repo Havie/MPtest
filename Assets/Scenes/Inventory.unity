@@ -11260,7 +11260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9d32f81524fa7149a87dc90d8623228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _networkingSceneName: MainScene (new)
+  _networkingSceneName: MainScene (networking)
   _inventoryCanvas: {fileID: 5394208262448427709}
   _normalInInventory: {fileID: 8256427025381148981}
   _normalOutInventory: {fileID: 428164341312955809}
