@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using dataTracking;
 
 public class sServerHandle
 {
@@ -128,8 +129,8 @@ public class sServerHandle
         int stationID = packet.ReadInt();
         int itemID = packet.ReadInt();
 
-        if (fromClient != stationID)
-            Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
+        //if (fromClient != stationID)
+        //    Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
 
         Debug.Log("<color=orange>[sServerHandle]</color> itemID Read was : " + stationID);
@@ -140,7 +141,6 @@ public class sServerHandle
 
         Debug.Log($"Current Defects#={sServer._gameStatistics.Defects}");
     }
-
 
     public static void RoundBegin(int fromClient, sPacket packet)
     {
@@ -176,15 +176,26 @@ public class sServerHandle
         int shippedOnTime = gameStats.GetShippedOnTime();
         int shippedLate = gameStats.GetShippedLate();
         int wip = gameStats.GetWIP();
+        RoundResults rs = new RoundResults(thruPut, shippedOnTime, shippedLate, wip);
 
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
+            Debug.Log($"[ServerHandle] sees Client: {c} , {c._id} vs {c._workStation} ");
             int workStationId = c._workStation;
+            if (workStationId == 0)
+            {
+                ///Zero means one of the clients was never assigned a stationID (could be host?)
+                continue;
+            }
             ///Cycle time is the only one unique to a station:
             float cycleTime = gameStats.GetCycleTimeForStation(workStationId);
-
+            /// I am worried the workStationID frin Client doesnt correlate to the ingame WS
+            Debug.Log("[ServerHandle] stationID RoundEnd was : " + workStationId);
+            rs.SetCycleTime(workStationId, cycleTime); 
             c.EndRound(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
 
         }
+        ///Print out and store our round results
+        FileSaver.WriteToFile(rs);
     }
 }
