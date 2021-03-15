@@ -172,18 +172,18 @@ public class sServerHandle
 
         gameStats.RoundEnded(endTime);
 
+        float thruPut = gameStats.GetThroughput();
+        int shippedOnTime = gameStats.GetShippedOnTime();
+        int shippedLate = gameStats.GetShippedLate();
+        int wip = gameStats.GetWIP();
+
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
             int workStationId = c._workStation;
+            ///Cycle time is the only one unique to a station:
             float cycleTime = gameStats.GetCycleTimeForStation(workStationId);
-            float thruPut= gameStats.GetThroughput();
-            int shippedOnTime = gameStats.GetShippedOnTime();
-            int shippedLate = gameStats.GetShippedLate();
-            int wip = gameStats.GetWIP();
 
             c.EndRound(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
-
-
 
         }
     }
