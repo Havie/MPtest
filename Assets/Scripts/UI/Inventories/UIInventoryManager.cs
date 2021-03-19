@@ -48,13 +48,14 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     protected string _prefix;
 
-
     /************************************************************************************************************************/
     public bool IsInitalized { get; protected set; }
 
 
     protected virtual void Start()
     {
+
+        ///THIS WONT WORK SINCE GO IS DISABLED, CANT FIND
         if (_gridLayoutGrp == null)
             _gridLayoutGrp = this.GetComponentInChildren<GridLayoutGroup>();
 
@@ -82,6 +83,8 @@ public abstract class UIInventoryManager : MonoBehaviour
     
     private void ReconfigureGLG()
     {
+        if (_gridLayoutGrp == null)
+            return;
 
         var batchSize = GameManager.instance._batchSize;
         if (batchSize == 1)

@@ -13868,6 +13868,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1963904818618974917, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: _gridLayoutGrp
+      value: 
+      objectReference: {fileID: 7378456663688006715}
     - target: {fileID: 7784471867035960411, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -13881,6 +13886,18 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1761941095472016908, guid: ca58c9199303b3b43ba590d24a08378e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ca58c9199303b3b43ba590d24a08378e, type: 3}
+--- !u!114 &7378456663688006715 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2741737242442267178, guid: ca58c9199303b3b43ba590d24a08378e,
+    type: 3}
+  m_PrefabInstance: {fileID: 7378456663688006714}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7473564167400551205
 Transform:
   m_ObjectHideFlags: 0
@@ -14086,7 +14103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 0}
-  _gridLayoutGrp: {fileID: 0}
+  _gridLayoutGrp: {fileID: 604913493}
   _labelText: {fileID: 0}
   _maxHeight: 600
   _widthPadding: 73
