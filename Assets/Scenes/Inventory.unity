@@ -2597,12 +2597,17 @@ PrefabInstance:
     - target: {fileID: 413333975342512123, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 413333975342512123, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 413333975342512123, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 413333976817165005, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
@@ -2725,11 +2730,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 8802dfe706ba31b4ca5a58957cd00644,
         type: 3}
+    - target: {fileID: 1711186453953381560, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2958992617734924392, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: _inventory
       value: 
       objectReference: {fileID: 1267863507}
+    - target: {fileID: 2958992617734924392, guid: abf9336134fa72d40a79d44d45f01e5e,
+        type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 1024257555}
     - target: {fileID: 2958992617734924399, guid: abf9336134fa72d40a79d44d45f01e5e,
         type: 3}
       propertyPath: _worldObjectToFollow
@@ -3289,7 +3304,7 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 125, y: 125}
   m_Spacing: {x: 0, y: 0}
-  m_Constraint: 2
+  m_Constraint: 0
   m_ConstraintCount: 1
 --- !u!114 &604913494
 MonoBehaviour:
@@ -5264,6 +5279,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000704284}
   m_CullTransparentMesh: 0
+--- !u!1 &1024257552 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 413333975342512121, guid: abf9336134fa72d40a79d44d45f01e5e,
+    type: 3}
+  m_PrefabInstance: {fileID: 513548622}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1024257554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024257552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.25490198}
+  m_EffectDistance: {x: 1, y: 1}
+  m_UseGraphicAlpha: 1
+--- !u!95 &1024257555
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024257552}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: af714c81274f6a9439386673148a6e38, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1075118189
 GameObject:
   m_ObjectHideFlags: 0
@@ -11185,7 +11240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 15
-  _batchSize: 1
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -13553,12 +13608,12 @@ PrefabInstance:
     - target: {fileID: 4402883475097983312, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 249.14284
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 4402883475097983312, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 203.42851
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4402883475097983312, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
@@ -13811,12 +13866,12 @@ PrefabInstance:
     - target: {fileID: 894958115263443734, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -249.57143
+      value: -250
       objectReference: {fileID: 0}
     - target: {fileID: 894958115263443734, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 203.42865
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 894958115263443734, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
