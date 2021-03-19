@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
+using dataTracking;
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
@@ -216,7 +217,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     public void TestFile()
     {
-        FileSaver.WriteToFile("test");
+        FileSaver.WriteToFileTest("test");
     }
     #endregion
 

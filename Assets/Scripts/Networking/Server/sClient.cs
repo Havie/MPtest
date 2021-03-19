@@ -85,7 +85,8 @@ public class sClient
             }
             catch (Exception e)
             {
-                Debug.Log($"Error receiving TCP data: {e}");
+                ///This is happening when coming in and out of the networking after a round:
+                Debug.Log($"<color=red>Error receiving TCP data </color>: {e}");
                 sServer._clients[_id].Disconnect();
             }
         }
