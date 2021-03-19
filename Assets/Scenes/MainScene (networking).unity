@@ -615,6 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e6e600a93e60a4c9c6899adbeed8c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pressTimeMAX: 0.4
   _mOffset: {x: 0, y: 0, z: 0}
   _objectLayer:
     serializedVersion: 2
@@ -1909,7 +1910,7 @@ MonoBehaviour:
         m_CallState: 2
   _hostMenuManager: {fileID: 326037683}
   _myComponent: {fileID: 1401444794}
-  _defaultValue: 90
+  _defaultValue: 9999
 --- !u!1 &406432330
 GameObject:
   m_ObjectHideFlags: 0
@@ -5643,7 +5644,7 @@ MonoBehaviour:
   m_LineType: 0
   m_HideMobileInput: 0
   m_CharacterValidation: 0
-  m_CharacterLimit: 2
+  m_CharacterLimit: 5
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
