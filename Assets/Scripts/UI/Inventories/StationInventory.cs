@@ -14,7 +14,7 @@ public class StationInventory : UIInventoryManager
         base.Start();
 
         GameManager.Instance.SetInventoryStation(this);
-        //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
+        Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
     }
 
@@ -84,6 +84,11 @@ public class StationInventory : UIInventoryManager
         }
         SetUpInfiniteItems(wm, myWS);
         //ParseItemList(wm, myWS, true);
+
+        if (_slots.Length == 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
 
