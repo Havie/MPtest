@@ -11031,7 +11031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 5
+  _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2034715274
 GameObject:
@@ -11240,7 +11240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 15
-  _batchSize: 2
+  _batchSize: 1
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -13660,6 +13660,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: InventoryOut
       objectReference: {fileID: 0}
+    - target: {fileID: 5121376597989763554, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+        type: 3}
+      propertyPath: _minCellSize
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5121376597989763554, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+        type: 3}
+      propertyPath: _maxCellSize
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 7421757595039256736, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -13928,6 +13938,16 @@ PrefabInstance:
       propertyPath: _gridLayoutGrp
       value: 
       objectReference: {fileID: 7378456663688006715}
+    - target: {fileID: 1963904818618974917, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: _minCellSize
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963904818618974917, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: _maxCellSize
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 7784471867035960411, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -14163,8 +14183,8 @@ MonoBehaviour:
   _maxHeight: 600
   _widthPadding: 73
   _heightPadding: 77
-  _minCellSize: 75
-  _maxCellSize: 125
+  _minCellSize: 90
+  _maxCellSize: 120
   _cellScaler: 5
 --- !u!224 &8851129763559421237
 RectTransform:
