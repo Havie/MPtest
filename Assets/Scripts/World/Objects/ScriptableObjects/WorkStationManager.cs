@@ -48,6 +48,21 @@ public class WorkStationManager : ScriptableObject
         return wsID; //eventually might need to get an itemID FROM the workstation as we split tasks
     }
 
+    public string GetStationOutput(Dropdown dropdown)
+    {
+        int wsID = dropdown.value;
+        WorkStation ws = _workStations[wsID];
+        var outStation = ws._sendOutputToStation;
+
+        foreach (var station in _workStations)
+        {
+            if (station._myStation == outStation)
+                return station._myStationName;
+        }
+
+        return "None";
+    }
+
 
 
 }

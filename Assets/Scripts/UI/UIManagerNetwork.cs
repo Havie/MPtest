@@ -131,9 +131,9 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     }
 
 
-    public void BeginLevel(int itemLevel)
+    public void BeginLevel(int stationID)
     {
-        Debug.Log($"<color=yellow>  BeginLevel:Network </color>{itemLevel}");
+        Debug.Log($"<color=yellow>  BeginLevel:Network </color>{stationID}");
         //Debug.Log("called BeginLevel");
         //Setup the proper UI for our workStation
         WorkStation ws = GameManager.Instance._workStation;
@@ -148,7 +148,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         if (_networkingCanvas)
             _networkingCanvas.SetActive(false);
 
-        UIManager.SetStationLevel(itemLevel);
+        UIManager.SetStationLevel(stationID);
 
 
         ///This will have to change at some point once all clients are connected,
@@ -159,6 +159,12 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         if (_roundBeginEventTMP)
             _roundBeginEventTMP.Raise();
 
+    }
+
+    public void ConfirmWorkStation(int stationID)
+    {
+        SceneLoader.LoadLevel(_inventorySceneName);
+        BeginLevel(stationID);
     }
 
 
@@ -182,8 +188,8 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public void ConfirmWorkStation()
     {
         SceneLoader.LoadLevel(_inventorySceneName);
-        int itemID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
-        BeginLevel(itemID);
+        int stationID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
+        BeginLevel(stationID);
     }
 
     public void SwitchToHost()

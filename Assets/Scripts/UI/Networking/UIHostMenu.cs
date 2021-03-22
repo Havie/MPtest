@@ -29,6 +29,7 @@ public class UIHostMenu : MonoBehaviour
     public delegate void ConfirmSettings ();
     public event ConfirmSettings OnConfirmSettings;
 
+    public bool networkMode1 = false;
 
     private void Awake()
     {
@@ -53,6 +54,10 @@ public class UIHostMenu : MonoBehaviour
         /// Because Client was connecting before sNetworkManager ran Start 
         ShowMenuOptions(false);
         UIManagerNetwork.Instance.ConnectToServer();
+        if(networkMode1)
+        {
+            ///TODO Tell ui networking manager to load lobby scene
+        }
     }
 
     private void ShowMenuOptions(bool cond)

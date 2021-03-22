@@ -26,11 +26,11 @@ public static class UIManager
 
     #endregion
     /// <summary> Used to pass station choice between scenes </summary>
-    public static void SetStationLevel(int itemLevel)
+    public static void SetStationLevel(int stationID)
     {
         ///THIS is Circular >.< 
         LoadedFromMenu = true;
-        StationToInject = itemLevel;
+        StationToInject = stationID;
     }
 
 
