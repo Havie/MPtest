@@ -14,13 +14,20 @@ public class LobbyRow : MonoBehaviour
 
     private WorkStationManager _wsManager;
 
-    public void initialize(int num, string name, WorkStationManager dropDownManager, bool isInteractable)
+    public void initialize(int num, string name, WorkStationManager dropDownManager, bool isInteractable, int stationID)
     {
         _playerNumber.text = num.ToString();
-        _playerName.text = name;
         _wsManager = dropDownManager;
         _wsManager.SetupDropDown(_stationDropDown);
+        ManuallyChangeStation(stationID);
+        UpdateData(name, isInteractable, stationID);
         _outputLabel.text = _outputDefault;
+    }
+
+    public void UpdateData(string name, bool isInteractable, int stationID)
+    {
+        _playerName.text = name;
+        ManuallyChangeStation(stationID);
         SetInteractable(isInteractable);
     }
 
@@ -30,7 +37,12 @@ public class LobbyRow : MonoBehaviour
         _taskInfo.interactable = cond;
     }
 
+    private void ManuallyChangeStation(int index)
+    {
+        _stationDropDown.value = index; ///MAYBE?
+    }
 
+    /// <summary> From Button /// </summary>
     public void OnStationChanged()
     {
         //Update Output Label

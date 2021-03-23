@@ -7,13 +7,13 @@ using UnityEngine.UI;
 using dataTracking;
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
-public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
+public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 {
     WorkStationManager _workstationManager;
 
     [Header("Scene Loading Info")]
     [SerializeField] string _inventorySceneName = "Inventory";
-    [SerializeField] string _mpLobbySceneName = "MP Lobby Test";
+    [SerializeField] string _mpLobbySceneName = "MP_Lobby";
 
 
     [Header("Networking Components")]
@@ -28,6 +28,9 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     [Header("Events")]
     [SerializeField] VoidEvent _roundBeginEventTMP=default;
+
+    [Header("MPLobby Components")]
+    [SerializeField] LobbyMenu _lobbyMenu;
 
     #region Init
 
@@ -86,7 +89,6 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             UIManager.DebugLogWarning("(UIManager): Missing EnablePanel objects");
     }
 
-
     public void Connected(bool cond)
     {
         if (!cond)
@@ -103,10 +105,13 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             _loadingTxt.text = "Connection Success!";
             yield return new WaitForSeconds(0.5f);
             _loadingTxt.enabled = false;
-            SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
-            DisplaySelectWorkStation();
+            ///OLD 
+            //SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
+            //DisplaySelectWorkStation();
+            LoadLobbyScene();
+
         }
-        else
+        else   ///TODO show this when host create room fails:
         {
             _loadingTxt.text = "Connection Failed!";
             yield return new WaitForSeconds(1f);
@@ -130,7 +135,6 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             Debug.LogWarning("(UIManager): Missing DisplaySelectWorkStation objects");
 
     }
-
 
     public void BeginLevel(int stationID)
     {
@@ -167,7 +171,21 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         SceneLoader.LoadLevel(_inventorySceneName);
         BeginLevel(stationID);
     }
-
+    public void RequestRefresh()
+    {
+        ///Called by a button on the lobbyMenu
+        ClientSend.Instance.RequestMPData();
+    }
+    public void ReceieveMPData(List<LobbyPlayer> playerData)
+    {
+        if(_lobbyMenu)
+            _lobbyMenu.ReceieveRefreshData(playerData);
+    }
+    public void RegisterLobbyMenu(LobbyMenu menu)
+    {
+        //Slightly circular but needs to be set between scenes...
+        _lobbyMenu = menu;
+    }
 
     #endregion
 

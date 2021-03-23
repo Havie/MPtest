@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIHostMenu : MonoBehaviour
 {
     [Header("Project Assets")]
-    [SerializeField] GameObject _NetworkManagerPREFAB= default;
+    [SerializeField] GameObject _NetworkManagerPREFAB = default;
 
     [Header("Scene Components")]
     public GameObject _connectionObjects;
@@ -26,10 +26,9 @@ public class UIHostMenu : MonoBehaviour
 
     public GameObject _buttonCreateRoom;
 
-    public delegate void ConfirmSettings ();
+    public delegate void ConfirmSettings();
     public event ConfirmSettings OnConfirmSettings;
 
-    public bool networkMode1 = false;
 
     private void Awake()
     {
@@ -54,11 +53,8 @@ public class UIHostMenu : MonoBehaviour
         /// Because Client was connecting before sNetworkManager ran Start 
         ShowMenuOptions(false);
         UIManagerNetwork.Instance.ConnectToServer();
-        if(networkMode1)
-        {
-            /// Tell ui networking manager to load lobby scene
-            UIManagerNetwork.Instance.LoadLobbyScene();
-        }
+        UIManagerNetwork.Instance.LoadLobbyScene();
+
     }
 
     private void ShowMenuOptions(bool cond)

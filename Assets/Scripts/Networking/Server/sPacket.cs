@@ -11,6 +11,7 @@ public enum ServerPackets
     spawnPlayer,
     playerPosition,
     playerRotation,
+    sendMpData,
     item,
     roundStart,
     roundEnd
@@ -22,6 +23,7 @@ public enum ClientPackets
     welcomeReceived = 1,
     playerMovement,
     stationID, 
+    requestMpData,
     item, 
     batch,
     orderCreated,

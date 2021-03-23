@@ -75,42 +75,21 @@ public class sServerSend
     }
 
 
-    public static void SpawnPlayer(int toClient, sPlayer player)
+    public static void SendMultiPlayerData(int toClient)
     {
-        //Debug.Log("ServerSend.SpawnPlayer:: " + player._id);
-        using (sPacket packet = new sPacket((int)ServerPackets.spawnPlayer))
+        var players=sPlayerData.GetPlayerData();
+        using (sPacket packet = new sPacket((int)ServerPackets.sendMpData))
         {
-            packet.Write(player._id);
-            packet.Write(player._username);
-            packet.Write(player.transform.position);
-            packet.Write(player.transform.rotation);
+            packet.Write(players.Count);
 
-            //Important info cant risk losing so use TCP over UDP
+            foreach (var player in players)
+            {
+                packet.Write(player.ID);
+                packet.Write(player.Username);
+                packet.Write(player.StationID);
+            }
+
             SendTCPData(toClient, packet);
-        }
-
-    }
-
-    public static void PlayerPosition(sPlayer player)
-    {
-        using (sPacket packet = new sPacket((int)ServerPackets.playerPosition))
-        {
-            packet.Write(player._id);
-            packet.Write(player.transform.position);
-
-            SendUDPDataToAll(packet);
-        }
-
-    }
-
-    public static void PlayerRotation(sPlayer player)
-    {
-        using (sPacket packet = new sPacket((int)ServerPackets.playerRotation))
-        {
-            packet.Write(player._id);
-            packet.Write(player.transform.rotation);
-            //exclude self
-            SendUDPDataToAll(player._id, packet);
         }
 
     }
@@ -125,6 +104,7 @@ public class sServerSend
 
         }
     }
+
         public static void EndRound(int toClient, float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
     {
         using (sPacket packet = new sPacket((int)ServerPackets.roundEnd))
@@ -166,3 +146,45 @@ public class sServerSend
 
     #endregion
 }
+
+
+#region OLD-ForServerSidePLayerMovement
+//public static void SpawnPlayer(int toClient, sPlayer player)
+//{
+//    //Debug.Log("ServerSend.SpawnPlayer:: " + player._id);
+//    using (sPacket packet = new sPacket((int)ServerPackets.spawnPlayer))
+//    {
+//        packet.Write(player.ID);
+//        packet.Write(player.Username);
+//        packet.Write(player.transform.position);
+//        packet.Write(player.transform.rotation);
+
+//        //Important info cant risk losing so use TCP over UDP
+//        SendTCPData(toClient, packet);
+//    }
+//}
+
+//public static void PlayerPosition(sPlayer player)
+//{
+//    using (sPacket packet = new sPacket((int)ServerPackets.playerPosition))
+//    {
+//        packet.Write(player.ID);
+//        packet.Write(player.transform.position);
+
+//        SendUDPDataToAll(packet);
+//    }
+
+//}
+
+//public static void PlayerRotation(sPlayer player)
+//{
+//    using (sPacket packet = new sPacket((int)ServerPackets.playerRotation))
+//    {
+//        packet.Write(player.ID);
+//        packet.Write(player.transform.rotation);
+//        //exclude self
+//        SendUDPDataToAll(player.ID, packet);
+//    }
+
+//}
+#endregion

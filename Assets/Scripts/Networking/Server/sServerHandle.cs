@@ -16,36 +16,44 @@ public class sServerHandle
         if (fromClient != clientIdCheck)
         {
             Debug.Log($"[ServerHandle] Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
+            return;
         }
 
+        ///Store this data in a way that is useable for the LobbyMenu
+        sPlayerData.AddPlayerInfo(username, clientIdCheck);
 
     }
-    public static void PlayerMovement(int fromClient, sPacket packet)
-    {
-        bool[] inputs = new bool[packet.ReadInt()];
-        for (int i = 0; i < inputs.Length; ++i)
-            inputs[i] = packet.ReadBool();
 
-        Quaternion rotation = packet.ReadQuaternion();
-
-
-        sClient client = sServer._clients[fromClient];
-        if (client != null)
-        {
-            if (client._player != null)
-                client._player.SetInput(inputs, rotation);
-        }
-    }
-
+    ///TODO Need to call this more often when interacting w lobbyMenu
     public static void StationIDReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
         Debug.Log("[ServerHandle] stationID Read was : " + stationID);
+        ///This is somewhat unsafe
         sClient client = sServer._clients[fromClient];
         if (client != null)
+        {
             client._workStation = stationID;
+            sPlayerData.SetStationDataForPlayer(stationID, fromClient);
+
+        }
         else
             Debug.Log("Found an error w StationIDReceived");
+    }
+
+    public static void RequestMultiPlayerData(int fromClient, sPacket packet)
+    {
+        int clientIdCheck = packet.ReadInt();
+        ///This is silly... considering these already match in WelcomeReceived, and whatever calls us
+        Debug.Log("[ServerHandle] RequestMultiPlayerData from : " + clientIdCheck);
+        if (clientIdCheck < 0 || clientIdCheck >= sServer._clients.Count)
+        {
+            Debug.Log("Found an error w clientIdCheck");
+            return;
+        }
+
+        sServerSend.SendMultiPlayerData(fromClient);
+
     }
 
     public static void ItemReceived(int fromClient, sPacket packet)
@@ -105,7 +113,7 @@ public class sServerHandle
 
         //var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
 
-       // Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
+        // Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
     public static void OrderCreated(int fromClient, sPacket packet)
@@ -191,7 +199,7 @@ public class sServerHandle
             float cycleTime = gameStats.GetCycleTimeForStation(workStationId);
             /// I am worried the workStationID frin Client doesnt correlate to the ingame WS
             Debug.Log("[ServerHandle] stationID RoundEnd was : " + workStationId);
-            rs.SetCycleTime(workStationId, cycleTime); 
+            rs.SetCycleTime(workStationId, cycleTime);
             c.EndRound(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
 
         }
@@ -199,3 +207,20 @@ public class sServerHandle
         FileSaver.WriteToFile(rs);
     }
 }
+
+//public static void PlayerMovement(int fromClient, sPacket packet)
+//{
+//    bool[] inputs = new bool[packet.ReadInt()];
+//    for (int i = 0; i < inputs.Length; ++i)
+//        inputs[i] = packet.ReadBool();
+
+//    Quaternion rotation = packet.ReadQuaternion();
+
+
+//    sClient client = sServer._clients[fromClient];
+//    if (client != null)
+//    {
+//        if (client._player != null)
+//            client._player.SetInput(inputs, rotation);
+//    }
+//}

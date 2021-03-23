@@ -212,7 +212,7 @@ public class sClient
     public void Disconnect()
     {
         Debug.Log($"{_tcp._socket.Client.RemoteEndPoint} has disconnected");
-        UnityEngine.Object.Destroy(_player.gameObject);
+        //UnityEngine.Object.Destroy(_player.gameObject);
         _player = null;
         _tcp.Disconnect();
         _udp.Disconnect();

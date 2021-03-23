@@ -16,22 +16,19 @@ public class ClientSend :MonoSingleton<ClientSend>
     }
 
     #region packets
-    public  void WelcomeReceived()
+    /// <summary> We heard back from the server, so send along our Info/// </summary>
+    public void WelcomeReceived()
     {
         using (sPacket packet = new sPacket((int)ClientPackets.welcomeReceived))
         {
            // Debug.Log("THE ID Sent= " + Client.instance._myId  + " the string= " + UIManager.instance._usernameField);
             packet.Write(Client.instance._myId);
             packet.Write(UIManagerNetwork.instance._usernameField.text);
-            //TODO fix this and send it AFTER we've chosen a work station (hardcoded atm)
-            //packet.Write((int)GameManager.Instance._workStation._myStation);
-
             SendTCPData(packet);
         }
     }
 
-
-    public  void SendWorkStationID(int stationID)
+    public void SendWorkStationID(int stationID)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.stationID))
         {
@@ -42,6 +39,20 @@ public class ClientSend :MonoSingleton<ClientSend>
         }
     }
 
+    public void RequestMPData()
+    {
+        using (sPacket packet = new sPacket((int)ClientPackets.requestMpData))
+        {
+            packet.Write(Client.instance._myId);
+
+            SendTCPData(packet);
+
+        }
+    }
+
+
+
+    /***Gameplay***/
     public void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
     {
         UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
