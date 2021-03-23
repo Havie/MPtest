@@ -23,7 +23,14 @@ public class ClientSend :MonoSingleton<ClientSend>
         {
            // Debug.Log("THE ID Sent= " + Client.instance._myId  + " the string= " + UIManager.instance._usernameField);
             packet.Write(Client.instance._myId);
-            packet.Write(UIManagerNetwork.instance._usernameField.text);
+            if (Client.Instance.IWillBeHost)
+            {
+                packet.Write("Host");
+            }
+            else
+            {
+                packet.Write(UIManagerNetwork.instance._usernameField.text);
+            }
             SendTCPData(packet);
         }
     }
