@@ -13,6 +13,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     [Header("Scene Loading Info")]
     [SerializeField] string _inventorySceneName = "Inventory";
+    [SerializeField] string _mpLobbySceneName = "MP Lobby Test";
 
 
     [Header("Networking Components")]
@@ -195,6 +196,12 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public void SwitchToHost()
     {
 
+    }
+
+    public void LoadLobbyScene()
+    {
+        Debug.Log("load scene");
+        SceneLoader.LoadLevel(_mpLobbySceneName);
     }
 
     #endregion

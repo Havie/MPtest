@@ -56,7 +56,8 @@ public class UIHostMenu : MonoBehaviour
         UIManagerNetwork.Instance.ConnectToServer();
         if(networkMode1)
         {
-            ///TODO Tell ui networking manager to load lobby scene
+            /// Tell ui networking manager to load lobby scene
+            UIManagerNetwork.Instance.LoadLobbyScene();
         }
     }
 

@@ -1620,6 +1620,7 @@ MonoBehaviour:
   - {fileID: 1731204488}
   - {fileID: 346983239}
   _buttonCreateRoom: {fileID: 2049859538}
+  networkMode1: 1
 --- !u!1 &328361724
 GameObject:
   m_ObjectHideFlags: 0
@@ -4985,6 +4986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inventorySceneName: Inventory
+  _mpLobbySceneName: MP Lobby Test
   _networkingCanvas: {fileID: 1148312936}
   _startMenu: {fileID: 2014502597}
   _bConnect: {fileID: 1327848549}
