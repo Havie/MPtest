@@ -45,6 +45,7 @@ public class LobbyMenu : MonoBehaviour
 
     private void Update()
     {
+        ///TMP
         if (Input.GetKeyDown(KeyCode.P))
             PlayerConnected("host", true, -1);
     }
