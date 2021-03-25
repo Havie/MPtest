@@ -7,10 +7,10 @@ TextureImporter:
     second: UI_gridSquare_empty
   - first:
       213: 3839364410365461408
-    second: UI_atlas_1
+    second: UI_paper
   - first:
       213: -5205513811233412096
-    second: UI_atlas_2
+    second: UI_close
   - first:
       213: -1213338594156442687
     second: UI_atlas_3
@@ -182,7 +182,7 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
+  spriteExtrude: 0
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
@@ -285,10 +285,10 @@ TextureImporter:
       name: UI_radial
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 256
-        height: 256
+        x: 1
+        y: 1
+        width: 254
+        height: 254
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -361,6 +361,48 @@ TextureImporter:
       bones: []
       spriteID: 7d6ecc30d467a5ba0800000000000000
       internalID: -6099432672171596073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_paper
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 32, y: 32, z: 32, w: 32}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a34c13e699284530800000000000000
+      internalID: 3839364410365461408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_close
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00cea08c4cc42c7b0800000000000000
+      internalID: -5205513811233412096
       vertices: []
       indices: 
       edges: []
