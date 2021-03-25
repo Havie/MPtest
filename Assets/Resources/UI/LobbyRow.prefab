@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 2157122590338992452}
   - component: {fileID: 2157122590338992457}
   - component: {fileID: 2157122590338992458}
-  - component: {fileID: 2157122590338992459}
+  - component: {fileID: 559782880}
   m_Layer: 5
   m_Name: stationDropdown
   m_TagString: Untagged
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2157122590338992459
+--- !u!114 &559782880
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -403,7 +403,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2157122590338992453}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
+  m_Script: {fileID: 11500000, guid: f99f2ea939ac7cf49853810fa4cde865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -441,13 +441,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: Option A
-      m_Image: {fileID: 0}
-    - m_Text: Option B
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -540,7 +534,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Option A
+  m_Text: 
 --- !u!1 &2157122590427895793
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,7 +642,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.2}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1036,7 +1030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerNumber: {fileID: 2157122590604056962}
   _playerName: {fileID: 2157122590041665272}
-  _stationDropDown: {fileID: 2157122590338992459}
+  _stationDropDown: {fileID: 0}
   _taskInfo: {fileID: 2157122591659839578}
   _outputLabel: {fileID: 2157122591184108043}
 --- !u!1 &2157122591123881251
@@ -1378,8 +1372,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2157122590595831130}
   m_HandleRect: {fileID: 2157122590595831131}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.2
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1421,7 +1415,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -18, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2157122591570345816
 CanvasRenderer:
@@ -1591,4 +1585,15 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2157122591659839577}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4325931935704283156}
+        m_MethodName: OnDropDownEnabled
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

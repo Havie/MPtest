@@ -207,7 +207,6 @@ public class Client : MonoSingleton<Client>
                     using (sPacket packet = new sPacket(packetBytes))
                     {
                         int packetId = packet.ReadInt();
-                        Debug.Log("Client heard packetId: " + packetId);
                         _packetHandlers[packetId](packet); // Invoke delegate 
                     }
                 });

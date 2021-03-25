@@ -59,10 +59,10 @@ public class sServerSend
 
             var instance = GameManager.Instance;
             packet.Write(instance._orderFrequency);
+            packet.Write(instance._isStackable); ///needs to be before batchChanged
             packet.Write(instance._batchSize);
             packet.Write(instance._autoSend);
             packet.Write(instance._addChaotic);
-            packet.Write(instance._isStackable);
             packet.Write(instance._workStationArrangement);
             packet.Write(instance._workStationTaskChanging);
             packet.Write(instance._HUDManagement);

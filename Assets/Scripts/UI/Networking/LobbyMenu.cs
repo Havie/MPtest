@@ -16,6 +16,7 @@ public class LobbyMenu : MonoBehaviour
 
     List<LobbyRow> _rows;
 
+    List<int> _lockedDropdownIds;
 
     /// <summary>
     /// NEED TO RECEIEVE GAMEDATA SeTTINGs
@@ -25,30 +26,40 @@ public class LobbyMenu : MonoBehaviour
     {
         _lobbyRowPrefab = Resources.Load<GameObject>("UI/LobbyRow");
         _rows = new List<LobbyRow>();
+        _lockedDropdownIds = new List<int>();
     }
 
     private void Start()
     {
         ///Get some info from GameManager regarding settings
         _workstationManager = GameManager.Instance.CurrentWorkStationManager;
+        Debug.Log($"..lobby WSMAN= {_workstationManager}");
         UIManagerNetwork.Instance.RegisterLobbyMenu(this);//Slightly circular >.<
         Refresh();
         WorkStationChanged(null); ///Will notify otherplayers were connected with No ws selected
     }
-    public void ReceieveRefreshData(List<LobbyPlayer> playerData)
+    public void ReceieveRefreshData(List<LobbyPlayer> incommingData)
     {
+        _lockedDropdownIds.Clear();
+
         foreach (LobbyRow row in _rows)
         {
-            var entry = playerData[0];
-            playerData.Remove(entry);
+            var entry = incommingData[0];
+            incommingData.Remove(entry);
             row.UpdateData(entry.Username, entry.IsInteractable, entry.StationID);
+            _lockedDropdownIds.Add(entry.StationID); ///Dupes?
         }
 
-        foreach (var newPlayer in playerData)
+        foreach (var newPlayer in incommingData)
         {
             PlayerConnected(newPlayer.Username, newPlayer.IsInteractable, newPlayer.StationID);
+            _lockedDropdownIds.Add(newPlayer.StationID); ///Dupes?
         }
 
+        if(_interactableRow)
+        {
+            _interactableRow.LockDropDownItems(_lockedDropdownIds);
+        }
     }
 
     private void Update()

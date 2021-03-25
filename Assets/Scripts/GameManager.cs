@@ -104,8 +104,9 @@ public class GameManager : MonoSingleton<GameManager>
     {
         _batchSize = amnt;
         ValidateAutoSend();
-
         DetermineCurrentWorkStation();
+
+        Debug.Log($"<color=white>GM BatchChanged</color> val:{amnt}--> {CurrentWorkStationManager}");
     }
     ///We need to base auto send off batch
     private void ValidateAutoSend()

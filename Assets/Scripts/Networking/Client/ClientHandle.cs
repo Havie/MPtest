@@ -12,17 +12,17 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         int myId = packet.ReadInt();
 
         ///TODO Read In Game Manager Vars
-        Debug.Log($"Message from server: { msg}");
+        Debug.Log($"!!...Message from server: { msg}");
         Client.instance._myId = myId;
         ClientSend.Instance.WelcomeReceived();
 
         var instance = GameManager.Instance;
 
         instance._orderFrequency = packet.ReadInt();
+        instance.IsStackableChanged(packet.ReadBool()); ///needs to be before batchChanged
         instance.BatchChanged(packet.ReadInt());
         instance.AutoSendChanged(packet.ReadBool());
         instance._addChaotic = packet.ReadBool();
-        instance.IsStackableChanged(packet.ReadBool());
         instance._workStationArrangement = packet.ReadBool();
         instance._workStationTaskChanging = packet.ReadBool();
         instance._HUDManagement = packet.ReadBool();
