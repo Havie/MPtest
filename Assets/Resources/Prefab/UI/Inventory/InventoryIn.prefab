@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -249.57143, y: 203.42865}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1963904818618974917
@@ -70,6 +70,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InvGrid__IN
+      objectReference: {fileID: 0}
+    - target: {fileID: 973815649693127325, guid: 237de60b5f330d341baf369b360a064d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 973815649693127326, guid: 237de60b5f330d341baf369b360a064d,
         type: 3}
@@ -185,6 +190,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985712638144765460, guid: 237de60b5f330d341baf369b360a064d,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8463807807117071305, guid: 237de60b5f330d341baf369b360a064d,
         type: 3}
@@ -395,7 +405,17 @@ PrefabInstance:
     - target: {fileID: 7530670480331399758, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7530670480331399759, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -40
+      objectReference: {fileID: 0}
+    - target: {fileID: 7530670480331399759, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 8297284084485271442, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
@@ -412,7 +432,8 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9085492357323014052, guid: c4f0fffa9f6e3ac40834e93334bedee8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c4f0fffa9f6e3ac40834e93334bedee8, type: 3}
 --- !u!224 &6990379666142174244 stripped
 RectTransform:

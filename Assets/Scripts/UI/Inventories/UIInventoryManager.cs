@@ -34,7 +34,7 @@ public abstract class UIInventoryManager : MonoBehaviour
     private float _gridCellWidth;
     private float _gridCellHeight;
     private int _numberOfColumns;
-    private int _numberOfRows=1;
+    private int _numberOfRows = 1;
     private int _currColCount = 0;
 
     #region GameManager Parameters
@@ -86,19 +86,20 @@ public abstract class UIInventoryManager : MonoBehaviour
         if (_gridLayoutGrp == null)
             return;
 
+        var slotCount = _slots.Length + _extraSlots.Count;
         var batchSize = GameManager.instance._batchSize;
-        if (batchSize == 1)
+
+        if (slotCount == 1)
         {
             _gridLayoutGrp.constraintCount = 1;
             _gridLayoutGrp.cellSize = new Vector2(_maxCellSize, _maxCellSize);
         }
         else
         {
-            var slotCount = _slots.Length + _extraSlots.Count;
             float cellSize = 0;
 
             _gridLayoutGrp.constraintCount = 2;
-            cellSize = _maxCellSize;
+            cellSize = _minCellSize;
 
             //Debug.Log($"SlotCount={slotCount}");
             //if (slotCount < 5)
@@ -114,8 +115,8 @@ public abstract class UIInventoryManager : MonoBehaviour
             //float cellSize = _maxCellSize - (_cellScaler * slotCount);
             //Debug.Log($"made up cellsize for {slotCount} ={cellSize}");
 
-            if (cellSize < _minCellSize)
-                cellSize = _minCellSize;
+            //if (cellSize < _minCellSize)
+            //    cellSize = _minCellSize;
 
             _gridLayoutGrp.cellSize = new Vector2(cellSize, cellSize);
             //Debug.Log($"Set cellSize to {cellSize}");
@@ -140,8 +141,8 @@ public abstract class UIInventoryManager : MonoBehaviour
             parentHeight = _maxHeight;
         }
 
-        //Debug.Log($"<color=blue>_gridCellWidth= {_gridCellWidth}, _numberOfColumns={_numberOfColumns} </color>," +
-        //    $"<color=yellow>_gridCellHeight= {_gridCellHeight}, _numberOfRows={_numberOfRows}</color>");
+        Debug.Log($"<color=blue>_gridCellWidth= {_gridCellWidth}, _numberOfColumns={_numberOfColumns} </color>," +
+            $"<color=yellow>_gridCellHeight= {_gridCellHeight}, _numberOfRows={_numberOfRows}</color>" + $"<color=blue>_currColCount= {_currColCount} </color>");
 
         //Debug.Log($"maxH= {_maxHeight} vs parentHeight={parentHeight}, Rect={new Vector2(parentWidth, parentHeight)}");
         // sets calculated width and height
@@ -169,12 +170,6 @@ public abstract class UIInventoryManager : MonoBehaviour
         if (slotSize == -1)
             slotSize = (_slots.Length + _extraSlots.Count);
 
-
-        if (_currColCount == _numberOfColumns)
-        {
-            _numberOfRows++;
-            _currColCount = 0;
-        }
         GameObject newButton = Instantiate(_bSlotPREFAB);
         newButton.SetActive(true);
         newButton.transform.SetParent(_gridLayoutGrp.transform);
@@ -185,7 +180,14 @@ public abstract class UIInventoryManager : MonoBehaviour
         //Set the slots manager:
         newSlot.SetManager(this);
         SetSizeOfContentArea();
-        ++_currColCount;
+
+        if (_currColCount == _numberOfColumns && _numberOfColumns != 1)
+        {
+            _numberOfRows++;
+            _currColCount = 0;
+        }
+        _currColCount++;
+
         return newSlot;
     }
 

@@ -19,7 +19,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     public List<QualityObject> Qualities => _qualities;
     public int RequiredID { get; private set; } = -1;
 
-    private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
+    private Vector3 _LARGER = new Vector3(1.15f, 1.15f, 1.15f);
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
     private Vector3 _SMALLER = new Vector3(0.5f, 0.5f, 0.5f);
 

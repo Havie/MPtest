@@ -97,7 +97,7 @@ public class OutInventory : UIInventoryManager
             //Add slot component to our list
             _slots[i] = CreateNewSlot();
             _slots[i].SetAutomatic(cond);
-            _slots[i].transform.localScale = new Vector3(-1, 1, 1);
+            _slots[i].transform.localScale = new Vector3(1, 1, 1);
         }
 
         SetUpBatchOutput(itemIDs);
