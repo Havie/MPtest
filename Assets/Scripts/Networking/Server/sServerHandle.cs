@@ -39,6 +39,16 @@ public class sServerHandle
         }
         else
             Debug.Log("Found an error w StationIDReceived");
+
+        ///Refresh the other clients on the network with this change
+        foreach (var clientEntry in sServer._clients)
+        {
+            var otherClient = clientEntry.Value;
+            if(otherClient != client)
+            {
+                sServerSend.SendMultiPlayerData(clientEntry.Key);
+            }
+        }
     }
 
     public static void RequestMultiPlayerData(int fromClient, sPacket packet)

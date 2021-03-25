@@ -7,6 +7,7 @@ public class LobbyMenu : MonoBehaviour
 {
 
     [SerializeField] Transform _lobbyDiv = default;
+    [SerializeField] Button _startGame = default;
 
     GameObject _lobbyRowPrefab;
     WorkStationManager _workstationManager;
@@ -14,6 +15,11 @@ public class LobbyMenu : MonoBehaviour
     LobbyRow _interactableRow;
 
     List<LobbyRow> _rows;
+
+
+    /// <summary>
+    /// NEED TO RECEIEVE GAMEDATA SeTTINGs
+    /// </summary>
 
     private void Awake()
     {
@@ -26,6 +32,8 @@ public class LobbyMenu : MonoBehaviour
         ///Get some info from GameManager regarding settings
         _workstationManager = GameManager.Instance.CurrentWorkStationManager;
         UIManagerNetwork.Instance.RegisterLobbyMenu(this);//Slightly circular >.<
+        Refresh();
+        WorkStationChanged(null); ///Will notify otherplayers were connected with No ws selected
     }
     public void ReceieveRefreshData(List<LobbyPlayer> playerData)
     {
@@ -59,16 +67,29 @@ public class LobbyMenu : MonoBehaviour
             if (_interactableRow != null)
             {
                 Debug.Log($"<color=yellow> more than 1 interactble Row?</color> {_interactableRow}");
+                _interactableRow.OnSelectionChanged -= WorkStationChanged;
             }
             _interactableRow = row;
+            _interactableRow.OnSelectionChanged += WorkStationChanged;
         }
+    }
+
+    /// <summary> This will send a message across network for other players to see changes 
+    /// and update this players gameManager </summary>
+    public void WorkStationChanged(WorkStation ws)
+    {
+        if(_workstationManager)
+            _workstationManager.UpdateStation(ws);
     }
 
     /// <summary> Called From Button /// </summary>
     public void StartRound()
     {
         if (_interactableRow)
-            _interactableRow.ConfirmStation();
+        {
+            var stationID =_interactableRow.WorkStationID;
+            UIManagerNetwork.instance.ConfirmWorkStation(stationID);
+        }
     }
 
     /// <summary> Called From Button /// </summary>

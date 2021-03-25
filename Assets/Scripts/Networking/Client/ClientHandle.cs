@@ -38,7 +38,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     public void ReceivedMpData(sPacket packet)
     {
-
+        Debug.Log($"<color=green> Received refreshData From server</color>");
         List<LobbyPlayer> _players = new List<LobbyPlayer>();
         var count = packet.ReadInt();
 

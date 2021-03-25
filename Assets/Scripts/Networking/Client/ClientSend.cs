@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientSend :MonoSingleton<ClientSend>
+public class ClientSend : MonoSingleton<ClientSend>
 {
     private  void SendTCPData(sPacket packet)
     {

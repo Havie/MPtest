@@ -187,6 +187,11 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
         _lobbyMenu = menu;
     }
 
+    public void PlayerChangedWorkstation(string ws)
+    {
+
+    }
+
     #endregion
 
 
@@ -203,12 +208,6 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
         else
             Debug.LogWarning("(UIManager): Missing ConnectToServer objects");
 
-    }
-    public void ConfirmWorkStation()
-    {
-        SceneLoader.LoadLevel(_inventorySceneName);
-        int stationID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
-        BeginLevel(stationID);
     }
 
     public void SwitchToHost()

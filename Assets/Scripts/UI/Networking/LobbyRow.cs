@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 public class LobbyRow : MonoBehaviour
 {
+    public System.Action<WorkStation> OnSelectionChanged;
+    public int WorkStationID { get; private set; } = -1;
+
     [SerializeField] Text _playerNumber = default;
     [SerializeField] Text _playerName = default;
     [SerializeField] Dropdown _stationDropDown = default;
@@ -48,14 +51,11 @@ public class LobbyRow : MonoBehaviour
         //Update Output Label
         if (_wsManager)
         {
-            _outputLabel.text = _wsManager.GetStationOutput(_stationDropDown);
+            var stationPair = _wsManager.GetStationPair(_stationDropDown);
+            _outputLabel.text = stationPair.Value;
+            WorkStationID = (int)stationPair.Key._myStation;
+            OnSelectionChanged?.Invoke(stationPair.Key);
         }
-    }  
-    
-    public void ConfirmStation()
-    {
-        int stationID = _wsManager.ConfirmStation(_stationDropDown);
-        UIManagerNetwork.instance.ConfirmWorkStation(stationID);
     }
 
 
