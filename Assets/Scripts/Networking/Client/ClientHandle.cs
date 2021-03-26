@@ -38,7 +38,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     public void ReceivedMpData(sPacket packet)
     {
-        Debug.Log($"<color=green> Received refreshData From server</color>");
+        //Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
         List<LobbyPlayer> _players = new List<LobbyPlayer>();
         var count = packet.ReadInt();
 
@@ -57,11 +57,8 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     public void RoundStarted(sPacket packet)
     {
-        int roundDuration = packet.ReadInt();
-        ///Cant call this yet because still in other scene:
-        //UIManagerGame.Instance.StartRound(roundDuration);
-        ///Instead spoof this way and have timer listen:
-        GameManager.instance.SetRoundShouldStart(true);
+        int roundDuration = packet.ReadInt(); ///I think the gameManager will already have this?
+        UIManagerNetwork.Instance.ConfirmWorkStation();
     }
 
     public void RoundEnded(sPacket packet)

@@ -1030,7 +1030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerNumber: {fileID: 2157122590604056962}
   _playerName: {fileID: 2157122590041665272}
-  _stationDropDown: {fileID: 0}
+  _stationDropDown: {fileID: 559782880}
   _taskInfo: {fileID: 2157122591659839578}
   _outputLabel: {fileID: 2157122591184108043}
 --- !u!1 &2157122591123881251

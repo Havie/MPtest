@@ -7,7 +7,7 @@ public class LobbyMenu : MonoBehaviour
 {
 
     [SerializeField] Transform _lobbyDiv = default;
-    [SerializeField] Button _startGame = default;
+    [SerializeField] Button _startGameButton = default;
 
     GameObject _lobbyRowPrefab;
     WorkStationManager _workstationManager;
@@ -18,9 +18,7 @@ public class LobbyMenu : MonoBehaviour
 
     List<int> _lockedDropdownIds;
 
-    /// <summary>
-    /// NEED TO RECEIEVE GAMEDATA SeTTINGs
-    /// </summary>
+
 
     private void Awake()
     {
@@ -34,7 +32,7 @@ public class LobbyMenu : MonoBehaviour
         ///Get some info from GameManager regarding settings
         _workstationManager = GameManager.Instance.CurrentWorkStationManager;
         Debug.Log($"..lobby WSMAN= {_workstationManager}");
-        UIManagerNetwork.Instance.RegisterLobbyMenu(this);//Slightly circular >.<
+        _startGameButton.interactable= UIManagerNetwork.Instance.RegisterLobbyMenu(this); //Slightly circular >.<
         Refresh();
         WorkStationChanged(null); ///Will notify otherplayers were connected with No ws selected
     }
@@ -58,15 +56,8 @@ public class LobbyMenu : MonoBehaviour
 
         if(_interactableRow)
         {
-            _interactableRow.LockDropDownItems(_lockedDropdownIds);
+            _interactableRow.SetLockedDropDownIndicies(_lockedDropdownIds);
         }
-    }
-
-    private void Update()
-    {
-        ///TMP
-        if (Input.GetKeyDown(KeyCode.P))
-            PlayerConnected("host", true, -1);
     }
 
     public void PlayerConnected(string name, bool isInteractable, int stationID)
@@ -93,14 +84,24 @@ public class LobbyMenu : MonoBehaviour
             _workstationManager.UpdateStation(ws);
     }
 
-    /// <summary> Called From Button /// </summary>
-    public void StartRound()
+   
+    /// <summary> Called From Button only available to host /// </summary>
+    public void HostWantsToStartRound()
+    {
+        UIManagerNetwork.Instance.HostStartsRound();
+    }
+   
+    /// <summary> Called From Network /// </summary>
+    public int GetStationSelectionID()
     {
         if (_interactableRow)
         {
-            var stationID =_interactableRow.WorkStationID;
-            UIManagerNetwork.instance.ConfirmWorkStation(stationID);
+            return _interactableRow.WorkStationID;
         }
+
+        ///Should never happen
+        Debug.LogError("This should never happen");
+        return 0;
     }
 
     /// <summary> Called From Button /// </summary>
@@ -108,6 +109,9 @@ public class LobbyMenu : MonoBehaviour
     {
         UIManagerNetwork.Instance.RequestRefresh();
     }
+    
+   
+    //**************PRIVATE******************************************************************//
     private LobbyRow CreateRow(string name, bool isInteractable, int stationID)
     {
         LobbyRow row = Instantiate(_lobbyRowPrefab, _lobbyDiv).GetComponent<LobbyRow>();

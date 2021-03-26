@@ -174,7 +174,8 @@ public class sServerHandle
         sServer._gameStatistics.RoundBegin(roundStart);
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
-            ///Tell all clients to start: (this sets the timer)
+            ///Tell all clients to start: (this sets the timer, and loads the scene)
+            Debug.Log($"<color=white>[sServerHandle]</color> Telling client {c} to startRound..");
             c.StartRound(roundDuration);
         }
 

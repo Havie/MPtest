@@ -26,8 +26,6 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
     public GameObject _workStationDropDown;
     public Button _tmpConfirmWorkStation;
 
-    [Header("Events")]
-    [SerializeField] VoidEvent _roundBeginEventTMP=default;
 
     [Header("MPLobby Components")]
     [SerializeField] LobbyMenu _lobbyMenu;
@@ -121,59 +119,33 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 
     }
 
-    public void DisplaySelectWorkStation()
+    private void BeginLevel(int stationID)
     {
-        if (_tmpConfirmWorkStation && _loadingTxt && _workStationDropDown)
-        {
-            _tmpConfirmWorkStation.gameObject.SetActive(true);
-            _loadingTxt.enabled = true;
-            _loadingTxt.text = "Select Work Station";
-            _workStationDropDown.SetActive(true);
-            Debug.LogWarning("DISPLAYED the Dropdown");
-        }
-        else
-            Debug.LogWarning("(UIManager): Missing DisplaySelectWorkStation objects");
-
-    }
-
-    public void BeginLevel(int stationID)
-    {
-        Debug.Log($"<color=yellow>  BeginLevel:Network </color>{stationID}");
-        //Debug.Log("called BeginLevel");
-        //Setup the proper UI for our workStation
-        WorkStation ws = GameManager.Instance._workStation;
-
-        if (_tmpConfirmWorkStation && _loadingTxt && _workStationDropDown)
-        {
-            _tmpConfirmWorkStation.gameObject.SetActive(false);
-            _loadingTxt.enabled = false;
-            _workStationDropDown.SetActive(false);
-        }
+        Debug.LogWarning($"<color=yellow>  BeginLevel:Network </color>{stationID}");
 
         if (_networkingCanvas)
             _networkingCanvas.SetActive(false);
 
         UIManager.SetStationLevel(stationID);
-
-
-        ///This will have to change at some point once all clients are connected,
-        ///will probably want to do a listen on the server once all 6 clients are connected
-        ///or the host clicks begin etc 
-        ///but for now we will
-        ///Start the Round Timer here:
-        if (_roundBeginEventTMP)
-            _roundBeginEventTMP.Raise();
-
     }
 
-    public void ConfirmWorkStation(int stationID)
+    public void HostStartsRound()
     {
+        ///Send message to the network that we want to begin
+        ClientSend.Instance.HostWantsToBeginRound();
+    }
+
+    public void ConfirmWorkStation()
+    {
+        Debug.LogWarning("This is called");
+        ///Get the ID before leaving the Scene 
+        var stationID = _lobbyMenu.GetStationSelectionID();
         SceneLoader.LoadLevel(_inventorySceneName);
         BeginLevel(stationID);
+        GameManager.instance.SetRoundShouldStart(true);
     }
-    public void RequestRefresh()
+    public void RequestRefresh() 
     {
-        ///Called by a button on the lobbyMenu
         ClientSend.Instance.RequestMPData();
     }
     public void ReceieveMPData(List<LobbyPlayer> playerData)
@@ -181,21 +153,16 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
         if(_lobbyMenu)
             _lobbyMenu.ReceieveRefreshData(playerData);
     }
-    public void RegisterLobbyMenu(LobbyMenu menu)
+    public bool RegisterLobbyMenu(LobbyMenu menu)
     {
         //Slightly circular but needs to be set between scenes...
         _lobbyMenu = menu;
-    }
 
-    public void PlayerChangedWorkstation(string ws)
-    {
-
+        return sServer._iAmHost;
     }
 
     #endregion
 
-
-    #region ActionsfromButtons
     public void ConnectToServer()
     {
         EnablePanel(false);
@@ -210,23 +177,15 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 
     }
 
-    public void SwitchToHost()
-    {
-
-    }
-
     public void LoadLobbyScene()
     {
         Debug.Log("load scene");
         SceneLoader.LoadLevel(_mpLobbySceneName);
     }
 
-    #endregion
 
 
     #region RunTime Actions
-
-
     public void DisableHostButton(string ignore)
     {
         if (_bHost)

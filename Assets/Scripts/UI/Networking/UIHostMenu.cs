@@ -11,17 +11,6 @@ public class UIHostMenu : MonoBehaviour
     public GameObject _connectionObjects;
     public GameObject _buttonHost;
 
-    //public GameObject _orderFrequency;
-    //public GameObject _batchSize;
-    //public GameObject _autoSend;
-    //public GameObject _addChaotic;
-    //public GameObject _isStackable;
-    //public GameObject _workStationArrangement;
-    //public GameObject _workStationTaskChanging;
-    //public GameObject _decreaseChangeOverTime;
-    //public GameObject _HUDManagement;
-    //public GameObject _HostDefectPausing;
-
     [SerializeField] List<GameObject> _hostOptions = new List<GameObject>();
 
     public GameObject _buttonCreateRoom;

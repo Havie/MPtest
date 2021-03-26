@@ -23,7 +23,7 @@ public class ClientSend : MonoSingleton<ClientSend>
         {
            // Debug.Log("THE ID Sent= " + Client.instance._myId  + " the string= " + UIManager.instance._usernameField);
             packet.Write(Client.instance._myId);
-            if (Client.Instance.IWillBeHost)
+            if (sServer._iAmHost)
             {
                 packet.Write("Host");
             }
@@ -54,6 +54,43 @@ public class ClientSend : MonoSingleton<ClientSend>
 
             SendTCPData(packet);
 
+        }
+    }
+    public void HostWantsToBeginRound()
+    {
+        RoundBegin();
+    }
+    public void RoundBegin()
+    {
+        ///Weird stuff could happen if a client clicks the host button before its grayed out
+        ///Since its "Host-->Create ROOM" that actually starts server/hosting
+        ///but "Host" that sets this flag. Will investigate later when we refine networking menus
+        if (!sServer._iAmHost)
+            return;
+
+        Debug.Log($"<color=white>(ClientSend) Round Begin </color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.roundBegin))
+        {
+
+            packet.Write(Time.unscaledTime);
+            ///other clients shud already have this, might be un-needed, if removed, remove on receieve too
+            packet.Write(GameManager.Instance._roundDuration); 
+            SendTCPData(packet);
+        }
+    }
+
+    public void RoundEnded()
+    {
+        ///TODO see RoundBegin Comment about this:
+        if (!sServer._iAmHost)
+            return;
+
+        Debug.Log($"<color=white>(ClientSend) Round Ended </color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.roundEnd))
+        {
+            ///Need to do time.unScaledTime - Time.(when we came in from the networking menu)
+            packet.Write(Time.unscaledTime);
+            SendTCPData(packet);
         }
     }
 
@@ -107,6 +144,7 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
     }
 
+
     public void OrderCreated(OrderWrapper order)
     {
         Debug.Log($"<color=white>(ClientSend) Order Created</color>");
@@ -130,38 +168,7 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
     }
 
-    public void RoundBegin()
-    {
-        ///Weird stuff could happen if a client clicks the host button before its grayed out
-        ///Since its "Host-->Create ROOM" that actually starts server/hosting
-        ///but "Host" that sets this flag. Will investigate later when we refine networking menus
-        if (!Client.instance.IWillBeHost)
-            return;
 
-        Debug.Log($"<color=white>(ClientSend) Round Begin </color>");
-        using (sPacket packet = new sPacket((int)ClientPackets.roundBegin))
-        {
-            
-            packet.Write(Time.unscaledTime);
-            packet.Write(GameManager.Instance._roundDuration);
-            SendTCPData(packet);
-        }
-    }
-
-    public void RoundEnded()
-    {
-        ///TODO see RoundBegin Comment about this:
-        if (!Client.instance.IWillBeHost)
-            return;
-
-        Debug.Log($"<color=white>(ClientSend) Round Ended </color>");
-        using (sPacket packet = new sPacket((int)ClientPackets.roundEnd))
-        {
-            ///Need to do time.unScaledTime - Time.(when we came in from the networking menu)
-            packet.Write(Time.unscaledTime); 
-            SendTCPData(packet);
-        }
-    }
 
     #endregion
 

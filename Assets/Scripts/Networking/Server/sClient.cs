@@ -195,6 +195,7 @@ public class sClient
 
     public void StartRound(int roundDuration)
     {
+        ///This is the SERVER client
         sServerSend.StartRound(_id, roundDuration);
     }
 

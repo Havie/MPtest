@@ -9,14 +9,16 @@ public class LobbyRow : MonoBehaviour
 
     [SerializeField] Text _playerNumber = default;
     [SerializeField] Text _playerName = default;
-    [SerializeField] Dropdown _stationDropDown = default;
+    [SerializeField] LobbyDropdown _stationDropDown = default;
     [SerializeField] Button _taskInfo = default;
     [SerializeField] Text _outputLabel = default;
 
     private string _outputDefault = "None";
 
     private WorkStationManager _wsManager;
-    private List<int> _invalidDropDownIndicies;
+
+
+
 
     public void initialize(int num, string name, WorkStationManager dropDownManager, bool isInteractable, int stationID)
     {
@@ -26,7 +28,6 @@ public class LobbyRow : MonoBehaviour
         ManuallyChangeStation(stationID);
         UpdateData(name, isInteractable, stationID);
         _outputLabel.text = _outputDefault;
-
     }
 
     public void UpdateData(string name, bool isInteractable, int stationID)
@@ -36,37 +37,12 @@ public class LobbyRow : MonoBehaviour
         SetInteractable(isInteractable);
     }
 
-    public void LockDropDownItems(List<int> invalidIndicies)
+    public void SetLockedDropDownIndicies(List<int> invalidIndicies)
     {
-        _invalidDropDownIndicies = invalidIndicies;
-        Debug.Log($"LockDropDownItems: {_stationDropDown} c= {_invalidDropDownIndicies.Count} ");
-
-        string inde = "";
-        foreach (var index in invalidIndicies)
-        {
-            inde += $"{index}, ";
-        }
-        Debug.Log($" The invalid indicies are : {inde}");
-
-
-        int c = 0;
-        ///The true here included inactive buttons!
-        foreach (var button in _stationDropDown.GetComponentsInChildren<Toggle>(true))
-        {
-            button.interactable = !invalidIndicies.Contains(c);
-            Debug.Log($"{c} .. set {button.gameObject.name} to interactble = {!invalidIndicies.Contains(c)}");
-            ++c;
-        }
+        _stationDropDown.SetLockedDropDownIndicies(invalidIndicies);
     }
 
-
-    /// <summary> From Button /// </summary>
-    public void OnDropDownEnabled()
-    {
-        Debug.Log("LobbyRow is enabled");
-    }
-
-    /// <summary> From Button /// </summary>
+    /// <summary> Called From Button </summary>
     public void OnStationChanged()
     {
         //Update Output Label
@@ -78,6 +54,10 @@ public class LobbyRow : MonoBehaviour
             OnSelectionChanged?.Invoke(stationPair.Key);
         }
     }
+
+
+    //**************PRIVATE******************************************************************//
+
     private void SetInteractable(bool cond)
     {
         _stationDropDown.interactable = cond;
