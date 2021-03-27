@@ -14,11 +14,7 @@ public class StationInventory : UIInventoryManager
         base.Start();
 
         GameManager.Instance.SetInventoryStation(this);
-        Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
-
     }
-
-
 
 
     /************************************************************************************************************/
@@ -31,7 +27,6 @@ public class StationInventory : UIInventoryManager
         WorkStationManager wm = gm.CurrentWorkStationManager;
         int batchSize = gm._batchSize;
         WorkStation myWS = gm._workStation;
-        Debug.Log($"STATION WS = {myWS} ");
         return StationItemParser.ParseItemsAsStation(batchSize, wm, myWS);
     }
 
@@ -56,17 +51,10 @@ public class StationInventory : UIInventoryManager
         _INVENTORYSIZE = itemIDs.Count;
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
-        //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
-
-
-        //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
 
         //Size matters for the vert/hori scrollbars
         SetSizeOfContentArea();
 
-        //cache a conditions for forloop situations
-        Dictionary<Task, int> seenTasks = new Dictionary<Task, int>(); //used By eInvType.STATION
-        List<int> seenItems = new List<int>();
         WorkStationManager wm = GameManager.Instance.CurrentWorkStationManager;
         WorkStation myWS = GameManager.Instance._workStation;
         //getAPrefix for naming our buttons in scene Hierarchy
@@ -79,8 +67,6 @@ public class StationInventory : UIInventoryManager
         {
             //Add slot component to our list
             _slots[i] = CreateNewSlot();
-
-
         }
         SetUpInfiniteItems(wm, myWS);
         //ParseItemList(wm, myWS, true);
@@ -118,7 +104,7 @@ public class StationInventory : UIInventoryManager
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected override void SetSizeOfContentArea()
     {
-      
+      ///TODO remove this?
     }
 
     private void AssignInfiniteItem(int itemID)

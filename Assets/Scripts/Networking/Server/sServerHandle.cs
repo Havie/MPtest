@@ -28,7 +28,7 @@ public class sServerHandle
     public static void StationIDReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
-        Debug.Log("[ServerHandle] stationID Read was : " + stationID);
+        //Debug.Log("[ServerHandle] stationID Read was : " + stationID);
         ///This is somewhat unsafe
         sClient client = sServer._clients[fromClient];
         if (client != null)
@@ -54,8 +54,8 @@ public class sServerHandle
     public static void RequestMultiPlayerData(int fromClient, sPacket packet)
     {
         int clientIdCheck = packet.ReadInt();
+        //Debug.Log("[ServerHandle] RequestMultiPlayerData from : " + clientIdCheck);
         ///This is silly... considering these already match in WelcomeReceived, and whatever calls us
-        Debug.Log("[ServerHandle] RequestMultiPlayerData from : " + clientIdCheck);
         if (clientIdCheck < 0 || clientIdCheck >= sServer._clients.Count)
         {
             Debug.Log("Found an error w clientIdCheck");
@@ -165,7 +165,7 @@ public class sServerHandle
         float roundStart = packet.ReadFloat();
         int roundDuration = packet.ReadInt();
 
-        Debug.Log("<color=white>[sServerHandle]</color> RoundBegin @ : " + roundStart);
+        //Debug.Log("<color=white>[sServerHandle]</color> RoundBegin @ : " + roundStart);
 
         ///I wish something on the server was ticking so we could keep track of time on it,
         ///but instead we will let the hosts Timer call an end event to trigger RoundEnd
@@ -175,8 +175,8 @@ public class sServerHandle
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
             ///Tell all clients to start: (this sets the timer, and loads the scene)
-            Debug.Log($"<color=white>[sServerHandle]</color> Telling client {c} to startRound..");
-            c.StartRound(roundDuration);
+            ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
+           c.StartRound(roundDuration);
         }
 
     }

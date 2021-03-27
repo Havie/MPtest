@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
 public class DebugCanvas : MonoSingleton<DebugCanvas>
 {
-
     [Header("Debugg Console")]
-    [SerializeField] bool on = false;
     [SerializeField] int _maxTextSize = 350;
     [SerializeField] Text _debugText;
 

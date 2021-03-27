@@ -5,6 +5,7 @@ using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using dataTracking;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
@@ -18,7 +19,6 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 
     [Header("Networking Components")]
     public GameObject _networkingCanvas;
-    [SerializeField] GameObject _startMenu = default;
     public Button _bConnect;
     public Button _bHost;
     public InputField _usernameField;

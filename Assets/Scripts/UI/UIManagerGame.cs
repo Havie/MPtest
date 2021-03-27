@@ -64,8 +64,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     public void BeginLevel()
     {
-        Debug.Log($"<color=blue> BeginLevel:Game </color>GAME:");
-
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(true); ///when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
         

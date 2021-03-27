@@ -31,7 +31,6 @@ public class LobbyMenu : MonoBehaviour
     {
         ///Get some info from GameManager regarding settings
         _workstationManager = GameManager.Instance.CurrentWorkStationManager;
-        Debug.Log($"..lobby WSMAN= {_workstationManager}");
         _startGameButton.interactable= UIManagerNetwork.Instance.RegisterLobbyMenu(this); //Slightly circular >.<
         Refresh();
         WorkStationChanged(null); ///Will notify otherplayers were connected with No ws selected
