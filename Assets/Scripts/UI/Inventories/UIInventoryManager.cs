@@ -141,8 +141,8 @@ public abstract class UIInventoryManager : MonoBehaviour
             parentHeight = _maxHeight;
         }
 
-        Debug.Log($"<color=blue>_gridCellWidth= {_gridCellWidth}, _numberOfColumns={_numberOfColumns} </color>," +
-            $"<color=yellow>_gridCellHeight= {_gridCellHeight}, _numberOfRows={_numberOfRows}</color>" + $"<color=blue>_currColCount= {_currColCount} </color>");
+        //Debug.Log($"<color=blue>_gridCellWidth= {_gridCellWidth}, _numberOfColumns={_numberOfColumns} </color>," +
+        //    $"<color=yellow>_gridCellHeight= {_gridCellHeight}, _numberOfRows={_numberOfRows}</color>" + $"<color=blue>_currColCount= {_currColCount} </color>");
 
         //Debug.Log($"maxH= {_maxHeight} vs parentHeight={parentHeight}, Rect={new Vector2(parentWidth, parentHeight)}");
         // sets calculated width and height

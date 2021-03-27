@@ -5,19 +5,20 @@ using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using dataTracking;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
-public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
+public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 {
     WorkStationManager _workstationManager;
 
     [Header("Scene Loading Info")]
     [SerializeField] string _inventorySceneName = "Inventory";
+    [SerializeField] string _mpLobbySceneName = "MP_Lobby";
 
 
     [Header("Networking Components")]
     public GameObject _networkingCanvas;
-    [SerializeField] GameObject _startMenu = default;
     public Button _bConnect;
     public Button _bHost;
     public InputField _usernameField;
@@ -25,8 +26,9 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public GameObject _workStationDropDown;
     public Button _tmpConfirmWorkStation;
 
-    [Header("Events")]
-    [SerializeField] VoidEvent _roundBeginEventTMP=default;
+
+    [Header("MPLobby Components")]
+    [SerializeField] LobbyMenu _lobbyMenu;
 
     #region Init
 
@@ -85,7 +87,6 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             UIManager.DebugLogWarning("(UIManager): Missing EnablePanel objects");
     }
 
-
     public void Connected(bool cond)
     {
         if (!cond)
@@ -102,10 +103,13 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             _loadingTxt.text = "Connection Success!";
             yield return new WaitForSeconds(0.5f);
             _loadingTxt.enabled = false;
-            SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
-            DisplaySelectWorkStation();
+            ///OLD 
+            //SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
+            //DisplaySelectWorkStation();
+            LoadLobbyScene();
+
         }
-        else
+        else   ///TODO show this when host create room fails:
         {
             _loadingTxt.text = "Connection Failed!";
             yield return new WaitForSeconds(1f);
@@ -115,57 +119,50 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     }
 
-    public void DisplaySelectWorkStation()
+    private void BeginLevel(int stationID)
     {
-        if (_tmpConfirmWorkStation && _loadingTxt && _workStationDropDown)
-        {
-            _tmpConfirmWorkStation.gameObject.SetActive(true);
-            _loadingTxt.enabled = true;
-            _loadingTxt.text = "Select Work Station";
-            _workStationDropDown.SetActive(true);
-            Debug.LogWarning("DISPLAYED the Dropdown");
-        }
-        else
-            Debug.LogWarning("(UIManager): Missing DisplaySelectWorkStation objects");
-
-    }
-
-
-    public void BeginLevel(int itemLevel)
-    {
-        Debug.Log($"<color=yellow>  BeginLevel:Network </color>{itemLevel}");
-        //Debug.Log("called BeginLevel");
-        //Setup the proper UI for our workStation
-        WorkStation ws = GameManager.Instance._workStation;
-
-        if (_tmpConfirmWorkStation && _loadingTxt && _workStationDropDown)
-        {
-            _tmpConfirmWorkStation.gameObject.SetActive(false);
-            _loadingTxt.enabled = false;
-            _workStationDropDown.SetActive(false);
-        }
+        Debug.LogWarning($"<color=yellow>  BeginLevel:Network </color>{stationID}");
 
         if (_networkingCanvas)
             _networkingCanvas.SetActive(false);
 
-        UIManager.SetStationLevel(itemLevel);
-
-
-        ///This will have to change at some point once all clients are connected,
-        ///will probably want to do a listen on the server once all 6 clients are connected
-        ///or the host clicks begin etc 
-        ///but for now we will
-        ///Start the Round Timer here:
-        if (_roundBeginEventTMP)
-            _roundBeginEventTMP.Raise();
-
+        UIManager.SetStationLevel(stationID);
     }
 
+    public void HostStartsRound()
+    {
+        ///Send message to the network that we want to begin
+        ClientSend.Instance.HostWantsToBeginRound();
+    }
+
+    public void ConfirmWorkStation()
+    {
+        Debug.LogWarning("This is called");
+        ///Get the ID before leaving the Scene 
+        var stationID = _lobbyMenu.GetStationSelectionID();
+        SceneLoader.LoadLevel(_inventorySceneName);
+        BeginLevel(stationID);
+        GameManager.instance.SetRoundShouldStart(true);
+    }
+    public void RequestRefresh() 
+    {
+        ClientSend.Instance.RequestMPData();
+    }
+    public void ReceieveMPData(List<LobbyPlayer> playerData)
+    {
+        if(_lobbyMenu)
+            _lobbyMenu.ReceieveRefreshData(playerData);
+    }
+    public bool RegisterLobbyMenu(LobbyMenu menu)
+    {
+        //Slightly circular but needs to be set between scenes...
+        _lobbyMenu = menu;
+
+        return sServer._iAmHost;
+    }
 
     #endregion
 
-
-    #region ActionsfromButtons
     public void ConnectToServer()
     {
         EnablePanel(false);
@@ -179,24 +176,16 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
             Debug.LogWarning("(UIManager): Missing ConnectToServer objects");
 
     }
-    public void ConfirmWorkStation()
+
+    public void LoadLobbyScene()
     {
-        SceneLoader.LoadLevel(_inventorySceneName);
-        int itemID = _workstationManager.ConfirmStation(_workStationDropDown.GetComponent<Dropdown>());
-        BeginLevel(itemID);
+        Debug.Log("load scene");
+        SceneLoader.LoadLevel(_mpLobbySceneName);
     }
 
-    public void SwitchToHost()
-    {
-
-    }
-
-    #endregion
 
 
     #region RunTime Actions
-
-
     public void DisableHostButton(string ignore)
     {
         if (_bHost)

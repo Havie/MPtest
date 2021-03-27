@@ -181,8 +181,9 @@ public static class sServer
         _packetHandlers = new Dictionary<int, PacketHandler>()
             {
                 { (int)ClientPackets.welcomeReceived , sServerHandle.WelcomeReceived},
-                { (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
+                //{ (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
                 { (int)ClientPackets.stationID , sServerHandle.StationIDReceived},
+                { (int)ClientPackets.requestMpData , sServerHandle.RequestMultiPlayerData},
                 { (int)ClientPackets.item , sServerHandle.ItemReceived},
                 { (int)ClientPackets.batch , sServerHandle.BatchReceived},
                 { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated},

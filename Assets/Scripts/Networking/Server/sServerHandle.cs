@@ -16,36 +16,54 @@ public class sServerHandle
         if (fromClient != clientIdCheck)
         {
             Debug.Log($"[ServerHandle] Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
+            return;
         }
 
+        ///Store this data in a way that is useable for the LobbyMenu
+        sPlayerData.AddPlayerInfo(username, clientIdCheck);
 
     }
-    public static void PlayerMovement(int fromClient, sPacket packet)
-    {
-        bool[] inputs = new bool[packet.ReadInt()];
-        for (int i = 0; i < inputs.Length; ++i)
-            inputs[i] = packet.ReadBool();
 
-        Quaternion rotation = packet.ReadQuaternion();
-
-
-        sClient client = sServer._clients[fromClient];
-        if (client != null)
-        {
-            if (client._player != null)
-                client._player.SetInput(inputs, rotation);
-        }
-    }
-
+    ///TODO Need to call this more often when interacting w lobbyMenu
     public static void StationIDReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
-        Debug.Log("[ServerHandle] stationID Read was : " + stationID);
+        //Debug.Log("[ServerHandle] stationID Read was : " + stationID);
+        ///This is somewhat unsafe
         sClient client = sServer._clients[fromClient];
         if (client != null)
+        {
             client._workStation = stationID;
+            sPlayerData.SetStationDataForPlayer(stationID, fromClient);
+
+        }
         else
             Debug.Log("Found an error w StationIDReceived");
+
+        ///Refresh the other clients on the network with this change
+        foreach (var clientEntry in sServer._clients)
+        {
+            var otherClient = clientEntry.Value;
+            if(otherClient != client)
+            {
+                sServerSend.SendMultiPlayerData(clientEntry.Key);
+            }
+        }
+    }
+
+    public static void RequestMultiPlayerData(int fromClient, sPacket packet)
+    {
+        int clientIdCheck = packet.ReadInt();
+        //Debug.Log("[ServerHandle] RequestMultiPlayerData from : " + clientIdCheck);
+        ///This is silly... considering these already match in WelcomeReceived, and whatever calls us
+        if (clientIdCheck < 0 || clientIdCheck >= sServer._clients.Count)
+        {
+            Debug.Log("Found an error w clientIdCheck");
+            return;
+        }
+
+        sServerSend.SendMultiPlayerData(fromClient);
+
     }
 
     public static void ItemReceived(int fromClient, sPacket packet)
@@ -105,7 +123,7 @@ public class sServerHandle
 
         //var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
 
-       // Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
+        // Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
     public static void OrderCreated(int fromClient, sPacket packet)
@@ -147,7 +165,7 @@ public class sServerHandle
         float roundStart = packet.ReadFloat();
         int roundDuration = packet.ReadInt();
 
-        Debug.Log("<color=white>[sServerHandle]</color> RoundBegin @ : " + roundStart);
+        //Debug.Log("<color=white>[sServerHandle]</color> RoundBegin @ : " + roundStart);
 
         ///I wish something on the server was ticking so we could keep track of time on it,
         ///but instead we will let the hosts Timer call an end event to trigger RoundEnd
@@ -156,8 +174,9 @@ public class sServerHandle
         sServer._gameStatistics.RoundBegin(roundStart);
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
-            ///Tell all clients to start: (this sets the timer)
-            c.StartRound(roundDuration);
+            ///Tell all clients to start: (this sets the timer, and loads the scene)
+            ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
+           c.StartRound(roundDuration);
         }
 
     }
@@ -191,7 +210,7 @@ public class sServerHandle
             float cycleTime = gameStats.GetCycleTimeForStation(workStationId);
             /// I am worried the workStationID frin Client doesnt correlate to the ingame WS
             Debug.Log("[ServerHandle] stationID RoundEnd was : " + workStationId);
-            rs.SetCycleTime(workStationId, cycleTime); 
+            rs.SetCycleTime(workStationId, cycleTime);
             c.EndRound(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
 
         }
@@ -199,3 +218,20 @@ public class sServerHandle
         FileSaver.WriteToFile(rs);
     }
 }
+
+//public static void PlayerMovement(int fromClient, sPacket packet)
+//{
+//    bool[] inputs = new bool[packet.ReadInt()];
+//    for (int i = 0; i < inputs.Length; ++i)
+//        inputs[i] = packet.ReadBool();
+
+//    Quaternion rotation = packet.ReadQuaternion();
+
+
+//    sClient client = sServer._clients[fromClient];
+//    if (client != null)
+//    {
+//        if (client._player != null)
+//            client._player.SetInput(inputs, rotation);
+//    }
+//}

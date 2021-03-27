@@ -2,56 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class sPlayer : MonoBehaviour
+public class sPlayer
 {
 
-
-        public int _id;
-        public string _username;
-
-
-        public float _moveSpeed = 5f / Constants.TICKS_PER_SECOND;
-        private bool[] _inputs = new bool[4];
-
-        public void Init(int id, string username)
-        {
-            _id = id;
-            _username = username;
+    public int ID { get; private set; }
+    public string Username { get; private set; }
+    public int StationID { get; private set; }
 
 
-        }
+    public sPlayer(int id, string username)
+    {
+        ID = id;
+        Username = username;
+        StationID = -1;
+    }
 
-        public void Update()
-        {
+    public void SetStationID(int id)
+    {
+        StationID = id;
+    }
 
-            Vector3 inputDir = new Vector3(0, 0, 0);
-            if (_inputs[0])
-                inputDir.y += 1;
-            if (_inputs[1])
-                inputDir.y -= 1;
-            if (_inputs[2])
-                inputDir.x -= 1;
-            if (_inputs[3])
-                inputDir.x += 1;
 
-            Move(inputDir);
-        }
+    #region OLD-ForServerSidePLayerMovement
+    //public float _moveSpeed = 5f / Constants.TICKS_PER_SECOND;
+    //private bool[] _inputs = new bool[4];
+    //public void Update() ///NOTE Was Monobehavior on serverside
+    //{
 
-        public void Move(Vector3 direction)
-        {
+    //    Vector3 inputDir = new Vector3(0, 0, 0);
+    //    if (_inputs[0])
+    //        inputDir.y += 1;
+    //    if (_inputs[1])
+    //        inputDir.y -= 1;
+    //    if (_inputs[2])
+    //        inputDir.x -= 1;
+    //    if (_inputs[3])
+    //        inputDir.x += 1;
 
-             Vector3 moveDir = transform.right * direction.x + transform.forward * direction.y;
-            transform.position += moveDir * _moveSpeed;
+    //    Move(inputDir);
+    //}
 
-            sServerSend.PlayerPosition(this);
-            sServerSend.PlayerRotation(this); // let the client do the rotation not the server 
-        }
+    //public void Move(Vector3 direction)
+    //{
 
-        public void SetInput(bool[] inputs, Quaternion rot)
-        {
-            _inputs = inputs;
-            transform.rotation = rot;
-        }
+    //     Vector3 moveDir = transform.right * direction.x + transform.forward * direction.y;
+    //    transform.position += moveDir * _moveSpeed;
 
-    
+    //    sServerSend.PlayerPosition(this);
+    //    sServerSend.PlayerRotation(this); // let the client do the rotation not the server 
+    //}
+
+    //public void SetInput(bool[] inputs, Quaternion rot)
+    //{
+    //    _inputs = inputs;
+    //    transform.rotation = rot;
+    //}
+
+    #endregion
 }

@@ -90,7 +90,6 @@ GameObject:
   - component: {fileID: 5911962071277943568}
   - component: {fileID: 538381298567809671}
   - component: {fileID: 3624065791434733628}
-  - component: {fileID: 9085492357323014052}
   m_Layer: 5
   m_Name: ButtonContainer
   m_TagString: Untagged
@@ -129,9 +128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59991c39c6949e418f5d31b34f6e4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _orderCreated: {fileID: 0}
   _startingX: 16
   _startingY: 350
   _yOffset: -39
+  _stackBatchHack: {fileID: 0}
 --- !u!222 &5911962071277943568
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -179,24 +180,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
---- !u!114 &9085492357323014052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1174855489623409343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89c248319042fac43889b858f002590d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridParent: {fileID: 533494565940923789}
-  gridPrefab: {fileID: 6202581007032022996, guid: 89f3271442f1b91439773433584a2117,
-    type: 3}
-  gridLayoutElement: {fileID: 1174855489623409343}
-  maxHeight: 300
-  numberOfSlots: 5
 --- !u!1 &4694585876907586244
 GameObject:
   m_ObjectHideFlags: 0

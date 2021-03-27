@@ -34,20 +34,48 @@ public class WorkStationManager : ScriptableObject
        
     }
 
-
-    /**Called from UI asset confirm workstation button  */
-    public int ConfirmStation(Dropdown dropdown)
+    /** Called From UILobby, Updates the GameManager and Network */
+    public void UpdateStation(WorkStation ws)
     {
-        UIManager.DebugLog($" <color=red>my ws name is : {this.name} </color>");
+        if (ws != null)
+        {
+            GameManager.instance.AssignWorkStation(ws);
+            ClientSend.Instance.SendWorkStationID((int)ws._myStation);
+        }
+        else
+        {
+            ClientSend.Instance.SendWorkStationID(0);
+        }    
+    }
+    public KeyValuePair<WorkStation, string> GetStationPair(Dropdown dropdown)
+    {
         int wsID = dropdown.value;
         WorkStation ws = _workStations[wsID];
-        GameManager.instance.AssignWorkStation(ws);
-        ClientSend.Instance.SendWorkStationID((int)ws._myStation);
+        var outStation = ws._sendOutputToStation;
+        string outName = "None";
+        foreach (var station in _workStations)
+        {
+            if (station._myStation == outStation)
+            {
+                outName= station._myStationName;
+                break;
+            }
+        }
 
-        //UIManager.instance.BeginLevel(dropdown.value); //This # might need to change and be based on the workstation, index #s probably wont perfectly match steps
-        return wsID; //eventually might need to get an itemID FROM the workstation as we split tasks
+        return new KeyValuePair<WorkStation, string>(ws, outName);
     }
+    public string GetStationOutput(Dropdown dropdown)
+    {
+        int wsID = dropdown.value;
+        WorkStation ws = _workStations[wsID];
+        var outStation = ws._sendOutputToStation;
 
+        foreach (var station in _workStations)
+        {
+            if (station._myStation == outStation)
+                return station._myStationName;
+        }
 
-
+        return "None";
+    }
 }

@@ -207,7 +207,6 @@ public class Client : MonoSingleton<Client>
                     using (sPacket packet = new sPacket(packetBytes))
                     {
                         int packetId = packet.ReadInt();
-                        Debug.Log("Client heard packetId: " + packetId);
                         _packetHandlers[packetId](packet); // Invoke delegate 
                     }
                 });
@@ -338,9 +337,10 @@ public class Client : MonoSingleton<Client>
         {
             //Setup the <index, Delegate> 
             { (int)ServerPackets.welcome, ClientHandle.Instance.Welcome } ,
-            { (int)ServerPackets.spawnPlayer, ClientHandle.Instance.SpawnPlayer }, //oldTutorial
-            { (int)ServerPackets.playerPosition, ClientHandle.Instance.PlayerPosition }, //oldTutorial
-            { (int)ServerPackets.playerRotation, ClientHandle.Instance.PlayerRotation }, //oldTutorial
+            { (int)ServerPackets.sendMpData, ClientHandle.Instance.ReceivedMpData } ,
+            //{ (int)ServerPackets.spawnPlayer, ClientHandle.Instance.SpawnPlayer }, //oldTutorial
+            //{ (int)ServerPackets.playerPosition, ClientHandle.Instance.PlayerPosition }, //oldTutorial
+            //{ (int)ServerPackets.playerRotation, ClientHandle.Instance.PlayerRotation }, //oldTutorial
             { (int)ServerPackets.item, ClientHandle.Instance.ItemReceived },
             { (int)ServerPackets.roundStart, ClientHandle.Instance.RoundStarted },
             { (int)ServerPackets.roundEnd, ClientHandle.Instance.RoundEnded }
