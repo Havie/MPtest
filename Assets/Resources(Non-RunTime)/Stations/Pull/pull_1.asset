@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myStation: 1
   _sendOutputToStation: 2
-  _myStationName: One
+  _myStationName: Handle Assembly
+  _myStationInstructions: {fileID: 21300000, guid: 389be64d5a3568b4986b347f43e3eb47,
+    type: 3}
   _tasks:
   - {fileID: 11400000, guid: 9dbdfb891504d6344977f14e47f554e2, type: 2}
