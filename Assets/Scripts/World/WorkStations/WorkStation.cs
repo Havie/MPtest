@@ -9,16 +9,18 @@ public class WorkStation : ScriptableObject
 {
     /// <summary>
     /// Seems I was lazy when prototyping this and had everything public,
-    /// im too concerned changing everything to seralized fields with getters will make me have
-    /// to reset all the seralized references, I am not going to take a chance on that
+    /// im too concerned changing everything to seralized fields with getters will
+    ///  reset all the seralized references, I am not going to take a chance on that
     /// </summary>
 
     public enum eStation { SELF, ONE, TWO, THREE, FOUR, FIVE, SHIPPING, NONE };
     public eStation _myStation;
     public eStation _sendOutputToStation;
-    public string _myStationName = "";
     public string StationName => _myStationName;
+    [SerializeField] string _myStationName = "";
 
+    public Sprite StationInstructions => _myStationInstructions;
+    [SerializeField] Sprite _myStationInstructions;
 
     public List<Task> _tasks;
 
@@ -52,7 +54,9 @@ public class WorkStation : ScriptableObject
             if (t._stationType == type)
             {
                 if (_tasks.Count > 1 && type == Task.eStationType.Kitting)
+                {
                     Debug.LogWarning($"{StationName} is a kitting station with more than 1 task, shouldn't happen");
+                }
                 return true;
             }
         }

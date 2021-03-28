@@ -11,9 +11,11 @@ public class UIStationInstructions : MonoBehaviour
     {
         _isOn = !_isOn;
         this.gameObject.SetActive(_isOn);
-        if(_isOn)
+        if (_isOn)
         {
             ///Get Most recent Instruction from GM
+            Sprite img = GameManager.Instance._workStation.StationInstructions;
+            AssignInstructions(img);
 
         }
 

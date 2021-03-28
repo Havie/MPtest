@@ -57,7 +57,7 @@ public class WorkStationManager : ScriptableObject
         {
             if (station._myStation == outStation)
             {
-                outName= station._myStationName;
+                outName= station.StationName;
                 break;
             }
         }
@@ -73,7 +73,7 @@ public class WorkStationManager : ScriptableObject
         foreach (var station in _workStations)
         {
             if (station._myStation == outStation)
-                return station._myStationName;
+                return station.StationName;
         }
 
         return "None";
