@@ -24,7 +24,7 @@ public class WorkStationManager : ScriptableObject
             List<string> dropOptions = new List<string>();
             foreach (WorkStation ws in _workStations)
             {
-                dropOptions.Add(ws._stationName);
+                dropOptions.Add(ws.StationName);
                 //Debug.Log($"...adding {ws._stationName}");
             }
 
