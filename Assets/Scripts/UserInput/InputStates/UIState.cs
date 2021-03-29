@@ -48,20 +48,7 @@ namespace UserInput
                     // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
                     var qualityList = slot.RebuildQualities();
                     slot.RemoveItem();
-                    Vector3 slotLoc = slot.transform.position; ///This world space val where the canvas is wayyy off in no where land
-
-                    var nv3 = new Vector3(slotLoc.x, slotLoc.y, slotLoc.z);
-
-                    //slotLoc.z = _zDepth;  ///Might want to get a new depth based on viewing angle
-                    //slotLoc.z = -4;
-                    ///WorldToScreenPoint doesn't work when angled, this WorldLoc isn't anywhere near
-                    ///where the Camera is (the x/y vals are insane), and somehow
-                    ///when titled it makes the Zdepth wrong 
-                    //float zCoord = _brain.WorldToScreenPoint(slotLoc).z;
-
-                    // Debug.Log($"Thinks slotLoc is : <color=yellow> {nv3}  </color>and when we change it to append {_zDepth}- we get : <color=orange>{_brain.WorldToScreenPoint(slotLoc)}</color>  ,, so finalzCoord =<color=red>{_zDepth}</color> , final result=<color=green>{_brain.GetInputWorldPos(_zDepth)}</color>");
-
-
+                   
                     var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(_zDepth), qualityList).GetComponent<ObjectController>();
                     _currentSelection = obj;
                     //HandManager.PickUpItem(_currentSelection as ObjectController); ///Abstraced now when displacement calls OnBeginFollow()
