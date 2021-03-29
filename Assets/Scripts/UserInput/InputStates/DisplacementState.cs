@@ -48,12 +48,12 @@ namespace UserInput
         }
         private void ResetObjectOrigin(IMoveable moveableObject)
         {
-       
+
             ///Reset the object to have the right orientation for construction when picked back up
             if (moveableObject != null)
             {
                 Vector3 mouseLocWorld = _brain.GetInputWorldPos(_zDepth); ///Get the right x/y based on zDepth
-                ///Find new starting position based off of where the input is :
+                                                                          ///Find new starting position based off of where the input is :
                 _brain.SetObjectStartPos(new Vector3(mouseLocWorld.x, mouseLocWorld.y, _partDepth)); ///Put the obj at the zDepth of parts, which is different than zDepth for Camera
                 //Debug.Log($"mouseLocWorld={mouseLocWorld} , _objStartPos={_brain._objStartPos} ");
                 _brain._mOffset = Vector3.zero; ///Reset the offset, since its dead on w the input location
@@ -97,7 +97,7 @@ namespace UserInput
 
                     if (slot != null) ///we are hovering over a slot 
                     {
-                       // Debug.Log("WE are hovering over a slot!");
+                        // Debug.Log("WE are hovering over a slot!");
                         if (!slot.GetInUse())
                         {
                             ObjectController oc = moveableObject as ObjectController;
@@ -157,30 +157,30 @@ namespace UserInput
                         ///put it back to where we picked it up 
                         if (slot != null) // we tried dropping in incompatible slot
                         {
-                            Debug.Log($"Try putting it back: {_brain.ObjStartPos}");
+                            //Debug.Log($"Try putting it back: {_brain.ObjStartPos}");
                             var trans = moveableObject.GetGameObject().transform;
                             trans.position = _brain.ObjStartPos;
                             trans.rotation = _brain.ObjStartRot;
                             UIManager.ShowPreviewInvSlot(false, inputPos, null);
                         }
+                        ///Since its possible for the above to reset it to where it came out of UI
+                        ///Do this everytime
+                        var dz = _brain.CheckRayCastForDeadZone();
+                        if (dz)
+                        {
+                            ///If the item is dropped in a deadzone, reset it to a safe place
+                            moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition, _currentSelection);
+                        }
                         else
                         {
-                            var dz = _brain.CheckRayCastForDeadZone();
-                            if (dz)
+                            ///Check were not below the table
+                            if (moveableObject.OutOfBounds())
                             {
-                                ///If the item is dropped in a deadzone, reset it to a safe place
-                                moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition, _currentSelection);
+                                moveableObject.SetResetOnNextChange();
                             }
-                            else
-                            {
-                                ///Check were not below the table
-                                if (moveableObject.OutOfBounds())
-                                    moveableObject.SetResetOnNextChange();
-
-                                // Debug.Log($"curr: {_currentSelection.transform.position.y} vs table {_tableHeight}");
-
-                            }
+                            // Debug.Log($"curr: {_currentSelection.transform.position.y} vs table {_tableHeight}");
                         }
+
                         moveableObject.ChangeAppearanceNormal(); ///ToDo abstract this somehow
                         // HandManager.DropItem(_currentSelection);
                         //Really weird Fix to prevent raycast bug

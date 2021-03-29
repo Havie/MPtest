@@ -9,6 +9,13 @@ public class DropPartsOnClick : MonoBehaviour
     [SerializeField] UIInventoryManager _inventory;
 
 
+
+    private void OnEnable()
+    {
+        Debug.Log("pls");
+    }
+
+    /// <summary>Called from button </summary>
     public void DropPartsFromInventory()
     {
         if (_dropper && _inventory)

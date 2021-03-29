@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 

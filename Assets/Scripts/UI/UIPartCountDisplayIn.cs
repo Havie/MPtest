@@ -29,24 +29,38 @@ public class UIPartCountDisplayIn : UIPartCountDisplay
 
         DisableText(true);
     }
-
     public void ShowIfNotEmpty(int current, int max)
+    {
+        UpdateText(current, max);
+        if (current == 0)
+        {
+            DisableText(true);
+
+        }
+    }
+
+    public void ShowIfPartArrowIfNotEmpty(int current, int max)
     {
         if (current != 0)
         {
             DisableText(true);
             ///Show Button
-            if (_dropPartsArrow)
-                _dropPartsArrow.SetActive(true);
-
+            ShowDropPartsArrow(true);
         }
         else
         {
-            UpdateText(current, max); ///Not sure?
-            ///Don't Show Button
-            if (_dropPartsArrow)
-                _dropPartsArrow.SetActive(false);
+            ShowDropPartsArrow(false);
+            UpdateText(current, max);
+        }
+    }
 
+    private void ShowDropPartsArrow(bool cond)
+    {
+        if (_dropPartsArrow)
+        {
+            ///Off since feedback from UX and users always abusing dropping parts into
+            ///scene when it wasn't advantageous to them
+           // _dropPartsArrow.SetActive(cond);
         }
     }
 
