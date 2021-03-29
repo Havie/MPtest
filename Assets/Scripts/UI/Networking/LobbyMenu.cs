@@ -8,6 +8,7 @@ public class LobbyMenu : MonoBehaviour
 
     [SerializeField] Transform _lobbyDiv = default;
     [SerializeField] Button _startGameButton = default;
+    [SerializeField] Text _numPlayerText = default;
 
     GameObject _lobbyRowPrefab;
     WorkStationManager _workstationManager;
@@ -115,6 +116,7 @@ public class LobbyMenu : MonoBehaviour
     {
         LobbyRow row = Instantiate(_lobbyRowPrefab, _lobbyDiv).GetComponent<LobbyRow>();
         row.initialize(++_rowNumber, name, _workstationManager, isInteractable, stationID);
+        _numPlayerText.text = $" {_rowNumber}/{sServer._maxPlayers}";
         return row;
     }
 }

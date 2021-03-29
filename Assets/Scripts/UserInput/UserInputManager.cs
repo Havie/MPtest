@@ -143,12 +143,12 @@ namespace UserInput
         {
             Vector3 screenPtObj = WorldToScreenPoint(currentSelection.Transform().position);
             float zCoord = screenPtObj.z;
+            Vector3 adjustedForZVec = new Vector3(safePlaceToGo.position.x, safePlaceToGo.position.y, zCoord);
             ///gets the world loc based on transform and gives it the z depth from the obj
-            var v3 = _mainCamera.ScreenToWorldPoint(
-                new Vector3(safePlaceToGo.position.x, safePlaceToGo.position.y, zCoord)
-                );
+            var v3 = _mainCamera.ScreenToWorldPoint(adjustedForZVec);
 
             v3.z = currentSelection.Transform().position.z;
+            Debug.Log($"{safePlaceToGo.position}  -->{adjustedForZVec}  = RetValDeadZone= {v3}");
             return v3;
         }
 
