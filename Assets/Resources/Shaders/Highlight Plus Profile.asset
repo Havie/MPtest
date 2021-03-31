@@ -30,7 +30,7 @@ MonoBehaviour:
   overlayBlending: 0
   outline: 1
   outlineColor: {r: 1, g: 0.9237288, b: 0, a: 1}
-  outlineWidth: 0.5
+  outlineWidth: 0.75
   outlineQuality: 1
   outlineDownsampling: 1
   outlineOptimalBlit: 1
