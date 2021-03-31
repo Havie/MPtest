@@ -96,7 +96,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void AssignWorkStation(WorkStation station)
     {
         _workStation = station;
-        UIManager.DebugLog($"assigned WS <color=green>{station}</color>");
+        //UIManager.DebugLog($"assigned WS <color=green>{station}</color>");
     }
 
     ///Things are reliant on batchsize
@@ -105,8 +105,7 @@ public class GameManager : MonoSingleton<GameManager>
         _batchSize = amnt;
         ValidateAutoSend();
         DetermineCurrentWorkStation();
-
-        Debug.Log($"<color=white>GM BatchChanged</color> val:{amnt}--> {CurrentWorkStationManager}");
+       // Debug.Log($"<color=white>GM BatchChanged</color> val:{amnt}--> {CurrentWorkStationManager}");
     }
     ///We need to base auto send off batch
     private void ValidateAutoSend()

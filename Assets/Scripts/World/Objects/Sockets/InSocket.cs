@@ -6,7 +6,7 @@ using UserInput;
 public class InSocket : Socket
 {
     [Range(-0.5f, 0.5f)]
-    [SerializeField] private float _attachmentSensitivity = 0;
+     private float _attachmentSensitivity = 0.1f; ///Closeness Threshold
     [SerializeField] ObjectManager.eItemID[] _requiredAttachmentID = default;
     [SerializeField] ObjectManager.eItemID[] _createdID = default;
 
@@ -92,16 +92,36 @@ public class InSocket : Socket
 
         ///TODO wish i cud clean up this dependency of UserInputManager
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
-        if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller && requiredAttachmentID == (int)socket.Controller._myID)
+        if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller &&
+            requiredAttachmentID == (int)socket.Controller._myID
+            )
         {
             //check the angles of attachment
             //Vector3 dir = socket.transform.forward - this.transform.forward;
             float angle = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
+
+            bool roughlyAligned = Mathf.Abs(angle + 1) <= _attachmentSensitivity;
+            bool roughlyOpposite = Mathf.Abs(angle - 1) <= _attachmentSensitivity;
+
+            UIManager.DebugLog($"[InSocket] {angle.ToString("F9").TrimEnd()} and {_attachmentSensitivity}");
+            UIManager.DebugLog("[InSocket]  (" +
+                this.transform.forward.x.ToString("F9") + " , " +
+                 this.transform.forward.y.ToString("F9") + " , " +
+                  this.transform.forward.z.ToString("F9") +
+                 " ) and (" +
+                socket.transform.forward.x.ToString("F9") + " , " +
+                 socket.transform.forward.y.ToString("F9") + " , " +
+                  socket.transform.forward.z.ToString("F9") + 
+                  ") ") ;
+            UIManager.DebugLog($"roughlyAligned = {roughlyAligned} vs {roughlyOpposite} ");
             //Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
-                if (angle < _attachmentSensitivity) // -1 is perfect match 
+                if (roughlyAligned)
+                {
+                    // -1 is perfect match 
                     valid = true;
+                }
                 else
                 {
                     //Debug.Log($"The angle did not match for {requiredAttachmentID}");
