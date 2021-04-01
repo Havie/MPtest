@@ -15,6 +15,7 @@ MonoBehaviour:
   _sprites:
   - {fileID: 21300000, guid: f330966bdd994df41a631b22377eb9e2, type: 3}
   - {fileID: -9217040124374145459, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
+  - {fileID: -9217040124374145459, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
   - {fileID: 1430833188474947195, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
   - {fileID: 9180869019849337774, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
   - {fileID: 4324960531059737183, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
@@ -63,4 +64,5 @@ MonoBehaviour:
   - {fileID: 2706234840424314809, guid: 4aaaa0fc73dcf7c4fb2dc2035d1877b7, type: 3}
   - {fileID: 2706234840424314809, guid: 132817617895cb146be8d1edb79ab0bd, type: 3}
   - {fileID: 6467200454433006771, guid: d467f895777035241817bbfa3f03f96f, type: 3}
+  - {fileID: 6467200454433006771, guid: 44b0ec6d4da83484aa78207778f9bafa, type: 3}
   - {fileID: 6467200454433006771, guid: 44b0ec6d4da83484aa78207778f9bafa, type: 3}
