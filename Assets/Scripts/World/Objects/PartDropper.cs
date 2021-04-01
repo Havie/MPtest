@@ -54,7 +54,7 @@ public class PartDropper : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            BuildableObject.Instance.DropItemInWorld((int)componentOrder[i]);
+            ObjectManager.Instance.DropItemInWorld((int)componentOrder[i]);
             yield return new WaitForSeconds(_dropDelay);
         }
         _routineIsRunning = false;
@@ -71,7 +71,7 @@ public class PartDropper : MonoBehaviour
             int itemID = slot.GetItemID();
             var qualityList = slot.RebuildQualities();
             slot.RemoveItem();
-            BuildableObject.Instance.DropItemInWorld(itemID, qualityList);
+            ObjectManager.Instance.DropItemInWorld(itemID, qualityList);
         }
 
     }

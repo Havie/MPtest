@@ -3,9 +3,9 @@ using System.Linq;
 using UnityEngine;
 
 [DefaultExecutionOrder(-599)] ///Load a little earlier
-public class BuildableObject : MonoBehaviour
+public class ObjectManager : MonoBehaviour
 {
-    public static BuildableObject Instance { get; private set; }
+    public static ObjectManager Instance { get; private set; }
     public Color _colorHand1;
     public Color _colorHand2;
 

@@ -131,7 +131,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     private void AssignSpriteByID(int id, bool transparent)
     {
 
-        var bo = BuildableObject.Instance;
+        var bo = ObjectManager.Instance;
         Sprite img = bo.GetSpriteByID(id);
 
         //if (gameObject.name.Contains("#1"))

@@ -49,7 +49,7 @@ namespace UserInput
                     var qualityList = slot.RebuildQualities();
                     slot.RemoveItem();
                    
-                    var obj = BuildableObject.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(_zDepth), qualityList).GetComponent<ObjectController>();
+                    var obj = ObjectManager.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(_zDepth), qualityList).GetComponent<ObjectController>();
                     _currentSelection = obj;
                     //HandManager.PickUpItem(_currentSelection as ObjectController); ///Abstraced now when displacement calls OnBeginFollow()
                     //Debug.Log($"OBJ spawn loc={obj.transform.position}");

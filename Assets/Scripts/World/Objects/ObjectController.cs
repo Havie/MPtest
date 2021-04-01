@@ -102,7 +102,7 @@ public class ObjectController : HighlightableObject, IConstructable
         var prefab = Resources.Load<GameObject>("Prefab/hand_loc_dummy");
         if (prefab)
         {
-            var dummy = GameObject.Instantiate<GameObject>(prefab, BuildableObject.Instance.transform);
+            var dummy = GameObject.Instantiate<GameObject>(prefab, ObjectManager.Instance.transform);
             _handLocation = dummy.transform;
             var index = this.gameObject.name.IndexOf("(Clone)");
             if (index != -1)
@@ -363,7 +363,7 @@ public class ObjectController : HighlightableObject, IConstructable
     }
     private void ChangeHighLightColor(int handIndex)
     {
-        Color color = handIndex == 1 ? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
+        Color color = handIndex == 1 ? ObjectManager.Instance._colorHand1 : ObjectManager.Instance._colorHand2;
         ChangeHighLightColor(color);
     }
     private void ResetHittingTable() { _hittingTable = false; }
