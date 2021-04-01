@@ -36,12 +36,6 @@ namespace UserInput
                 //Debug.LogWarning($" (1st) _mOffset= <color=red> {_brain._mOffset} </color>");
                 _brain.SetObjectStartPos(transform.position);
 
-                ///only if on table
-                // if (_currentSelection.SetOnTable())  
-                // if (_brain._currentSelection._hittingTable)
-                if (moveableObject.OutOfBounds())
-                    ResetObjectOrigin(moveableObject);
-
                 moveableObject.OnBeginFollow(); ///Might mess up objectCntroller
                 //HandManager.PickUpItem(_currentSelection as ObjectController); //might have moved to the wrong spot
             }

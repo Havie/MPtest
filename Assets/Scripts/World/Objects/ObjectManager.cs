@@ -3,9 +3,8 @@ using System.Linq;
 using UnityEngine;
 
 [DefaultExecutionOrder(-599)] ///Load a little earlier
-public class ObjectManager : MonoBehaviour
+public class ObjectManager : MonoSingleton<ObjectManager>
 {
-    public static ObjectManager Instance { get; private set; }
     public Color _colorHand1;
     public Color _colorHand2;
 
@@ -21,16 +20,10 @@ public class ObjectManager : MonoBehaviour
 
     public bool DebugItemsOnSpawn;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
-            Destroy(this);
-
+        base.Awake();  
         _manager = Resources.Load<ObjectRecord>("ObjectRecord");
-
-
     }
 
     #region globalWork

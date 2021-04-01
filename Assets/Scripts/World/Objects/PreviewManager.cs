@@ -80,8 +80,8 @@ public static class PreviewManager
             ObjectManager.Instance.DestroyObject(item.gameObject);
         }
         var oc = _previewItem.GetComponent<ObjectController>();
-        oc.ChangeAppearanceNormal();
         HandManager.PickUpItem(oc);
+        oc.ChangeAppearanceNormal(); ///do this after picking it up so we dont reset rotation
         ///Update our overall quality, passing the data to the next object 
         var finalQuality = _previewItem.GetComponent<QualityOverall>();
         if (finalQuality)

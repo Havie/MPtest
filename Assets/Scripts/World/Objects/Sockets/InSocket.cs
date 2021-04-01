@@ -90,10 +90,15 @@ public class InSocket : Socket
 
         bool valid = false;
 
-        ///TODO wish i cud clean up this dependency of UserInputManager
+        ///Make this a requirement so edge cases dont happen
+        bool bothItemsArePickedUp = socket.Controller.IsPickedUp() && Controller.IsPickedUp();
+
+        ///TODO wish i cud clean up this dependency of UserInputManager, but no great way to tell
+        /// which part is moving, could maybe do on hand Index if we keep hand limit at 2
         //Not moving the female part and items match              //if one of my IDs = the incomming ID
-        if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller &&
-            requiredAttachmentID == (int)socket.Controller._myID
+        if (bothItemsArePickedUp &&
+            requiredAttachmentID == (int)socket.Controller._myID &&
+            UserInputManager.Instance.CurrentSelection as ObjectController != Controller //Save most expensive check for last
             )
         {
             //check the angles of attachment
@@ -103,17 +108,18 @@ public class InSocket : Socket
             bool roughlyAligned = Mathf.Abs(angle + 1) <= _attachmentSensitivity;
             bool roughlyOpposite = Mathf.Abs(angle - 1) <= _attachmentSensitivity;
 
-            UIManager.DebugLog($"[InSocket] {angle.ToString("F9").TrimEnd()} and {_attachmentSensitivity}");
-            UIManager.DebugLog("[InSocket]  (" +
-                this.transform.forward.x.ToString("F9") + " , " +
-                 this.transform.forward.y.ToString("F9") + " , " +
-                  this.transform.forward.z.ToString("F9") +
-                 " ) and (" +
-                socket.transform.forward.x.ToString("F9") + " , " +
-                 socket.transform.forward.y.ToString("F9") + " , " +
-                  socket.transform.forward.z.ToString("F9") + 
-                  ") ") ;
-            UIManager.DebugLog($"roughlyAligned = {roughlyAligned} vs {roughlyOpposite} ");
+            //UIManager.DebugLog($"[InSocket] {angle.ToString("F9").TrimEnd()} and {_attachmentSensitivity}");
+            //UIManager.DebugLog("[InSocket]  (" +
+            //    this.transform.forward.x.ToString("F9") + " , " +
+            //     this.transform.forward.y.ToString("F9") + " , " +
+            //      this.transform.forward.z.ToString("F9") +
+            //     " ) and (" +
+            //    socket.transform.forward.x.ToString("F9") + " , " +
+            //     socket.transform.forward.y.ToString("F9") + " , " +
+            //      socket.transform.forward.z.ToString("F9") + 
+            //      ") ") ;
+            //UIManager.DebugLog($"roughlyAligned = {roughlyAligned} vs {roughlyOpposite} ");
+
             //Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {

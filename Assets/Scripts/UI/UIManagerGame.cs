@@ -171,10 +171,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(false); 
-
-
-        ///TODO figure out how to pass this data into the module
-        
     }
     
     public void ContinueFromEndResults()
@@ -243,5 +239,10 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     #endregion
 
+    ///Extra button for clear when in debug mode for Inv scene
+    public void ClearDebugLogger()
+    {
+        UIManager.ClearDebugLog();
+    }
 
 }
