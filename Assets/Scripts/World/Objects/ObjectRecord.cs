@@ -5,8 +5,8 @@ using UnityEngine;
 
 
 /** Keeps Track of our sprites and game objects Associations  */
-[CreateAssetMenu(fileName = "ObjectManager", menuName = "ObjectManager")]
-public class ObjectManager : ScriptableObject
+[CreateAssetMenu(fileName = "ObjectRecord", menuName = "ObjectRecord")]
+public class ObjectRecord : ScriptableObject
 {
 
     public enum eItemID

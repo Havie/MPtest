@@ -7,7 +7,7 @@ using UnityEngine;
 public class ObjectController : HighlightableObject, IConstructable
 {
 
-    public ObjectManager.eItemID _myID;
+    public ObjectRecord.eItemID _myID;
     ///Rotational / Movement
     public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE };
     [HideInInspector]
@@ -80,7 +80,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
     private eRotationAxis DetermineRotationAccess()
     {
-        if (_parent != null && (_myID == ObjectManager.eItemID.PinkTop || _myID == ObjectManager.eItemID.RedBot))
+        if (_parent != null && (_myID == ObjectRecord.eItemID.PinkTop || _myID == ObjectRecord.eItemID.RedBot))
             return eRotationAxis.XAXIS;
         else
             return eRotationAxis.YAXIS;
@@ -568,7 +568,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
         private string[] GetEnumList()
         {
-            var arrList = System.Enum.GetValues(typeof(ObjectManager.eItemID));
+            var arrList = System.Enum.GetValues(typeof(ObjectRecord.eItemID));
             string[] list = new string[arrList.Length];
             int index = 0;
             foreach (var item in arrList)
@@ -580,9 +580,9 @@ public class ObjectController : HighlightableObject, IConstructable
             return list;
         }
 
-        private ObjectManager.eItemID AssignByID(int id)
+        private ObjectRecord.eItemID AssignByID(int id)
         {
-            return (ObjectManager.eItemID)id + 1;
+            return (ObjectRecord.eItemID)id + 1;
         }
 
 

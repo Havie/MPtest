@@ -9,11 +9,11 @@ public class Task : ScriptableObject
 
     ///output
     [SerializeField]
-    public List<ObjectManager.eItemID> _finalItemID;
+    public List<ObjectRecord.eItemID> _finalItemID;
 
     ///input 
     [SerializeField]
-    public List<ObjectManager.eItemID> _requiredItemIDs;
+    public List<ObjectRecord.eItemID> _requiredItemIDs;
 
     ///Ui info 
     //[SerializeField]

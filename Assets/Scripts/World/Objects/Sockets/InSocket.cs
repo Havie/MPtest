@@ -7,8 +7,8 @@ public class InSocket : Socket
 {
     [Range(-0.5f, 0.5f)]
      private float _attachmentSensitivity = 0.1f; ///Closeness Threshold
-    [SerializeField] ObjectManager.eItemID[] _requiredAttachmentID = default;
-    [SerializeField] ObjectManager.eItemID[] _createdID = default;
+    [SerializeField] ObjectRecord.eItemID[] _requiredAttachmentID = default;
+    [SerializeField] ObjectRecord.eItemID[] _createdID = default;
 
 
     private bool _canCollide;
@@ -195,7 +195,7 @@ public class InSocket : Socket
 
         private string[] GetEnumList()
         {
-            var arrList = System.Enum.GetValues(typeof(ObjectManager.eItemID));
+            var arrList = System.Enum.GetValues(typeof(ObjectRecord.eItemID));
             string[] list = new string[arrList.Length];
             int index = 0;
             foreach (var item in arrList)
@@ -207,9 +207,9 @@ public class InSocket : Socket
             return list;
         }
 
-        private ObjectManager.eItemID AssignByID(int id)
+        private ObjectRecord.eItemID AssignByID(int id)
         {
-            return (ObjectManager.eItemID)id + 1;
+            return (ObjectRecord.eItemID)id + 1;
         }
 
 

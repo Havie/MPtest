@@ -146,9 +146,9 @@ public class UIKitting : MonoBehaviour
         _usedIndicies.Clear();
 
         var finalItemId = PickAnItemIDFromFinalTask();
-        List<ObjectManager.eItemID> componentsNeeded = _componentList.GetComponentListByItemID(finalItemId);
+        List<ObjectRecord.eItemID> componentsNeeded = _componentList.GetComponentListByItemID(finalItemId);
         int size = componentsNeeded.Count;
-        ObjectManager.eItemID[] componentOrder = new ObjectManager.eItemID[size];
+        ObjectRecord.eItemID[] componentOrder = new ObjectRecord.eItemID[size];
 
         foreach (var item in componentsNeeded)
         {
@@ -175,7 +175,7 @@ public class UIKitting : MonoBehaviour
         }
     }
 
-    private void printOrderList(ObjectManager.eItemID[] componentOrder)
+    private void printOrderList(ObjectRecord.eItemID[] componentOrder)
     {
         string s = "";
         for (int i = 0; i < componentOrder.Length; ++i)

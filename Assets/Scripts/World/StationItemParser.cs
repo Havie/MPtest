@@ -205,7 +205,7 @@ public static class StationItemParser
                     }
                     else
                     {
-                        if (!BuildableObject.Instance.IsBasicItem((ObjectManager.eItemID)item))
+                        if (!BuildableObject.Instance.IsBasicItem((ObjectRecord.eItemID)item))
                         {
                             itemIDs.Add((int)item);
                         }

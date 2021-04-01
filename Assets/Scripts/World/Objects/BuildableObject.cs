@@ -13,7 +13,7 @@ public class BuildableObject : MonoBehaviour
 
     public QualityStep[] _qualityPresets;
 
-    private ObjectManager _manager;
+    private ObjectRecord _manager;
 
 
     //These should be connected to something else like the workstation IDs
@@ -28,7 +28,7 @@ public class BuildableObject : MonoBehaviour
         else if (Instance != this)
             Destroy(this);
 
-        _manager = Resources.Load<ObjectManager>("ObjectManager");
+        _manager = Resources.Load<ObjectRecord>("ObjectRecord");
 
 
     }
@@ -46,7 +46,7 @@ public class BuildableObject : MonoBehaviour
         return _manager.getItemName(id);
     }
 
-    public bool IsBasicItem(ObjectManager.eItemID itemID)
+    public bool IsBasicItem(ObjectRecord.eItemID itemID)
     {
         return _manager.IsBasicItem(itemID);
     }
