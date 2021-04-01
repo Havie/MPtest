@@ -6,7 +6,7 @@ using UserInput;
 public class InSocket : Socket
 {
     [Range(-0.5f, 0.5f)]
-     private float _attachmentSensitivity = 0.1f; ///Closeness Threshold
+     private float _attachmentSensitivity = 0.3f; ///Closeness Threshold
     [SerializeField] ObjectRecord.eItemID[] _requiredAttachmentID = default;
     [SerializeField] ObjectRecord.eItemID[] _createdID = default;
 
@@ -95,7 +95,8 @@ public class InSocket : Socket
 
         ///TODO wish i cud clean up this dependency of UserInputManager, but no great way to tell
         /// which part is moving, could maybe do on hand Index if we keep hand limit at 2
-        //Not moving the female part and items match              //if one of my IDs = the incomming ID
+        //Not moving the female part and items match              
+        //if my IDs = the incomming ID
         if (bothItemsArePickedUp &&
             requiredAttachmentID == (int)socket.Controller._myID &&
             UserInputManager.Instance.CurrentSelection as ObjectController != Controller //Save most expensive check for last
@@ -103,27 +104,15 @@ public class InSocket : Socket
         {
             //check the angles of attachment
             //Vector3 dir = socket.transform.forward - this.transform.forward;
-            float angle = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
-
-            bool roughlyAligned = Mathf.Abs(angle + 1) <= _attachmentSensitivity;
-            bool roughlyOpposite = Mathf.Abs(angle - 1) <= _attachmentSensitivity;
-
-            //UIManager.DebugLog($"[InSocket] {angle.ToString("F9").TrimEnd()} and {_attachmentSensitivity}");
-            //UIManager.DebugLog("[InSocket]  (" +
-            //    this.transform.forward.x.ToString("F9") + " , " +
-            //     this.transform.forward.y.ToString("F9") + " , " +
-            //      this.transform.forward.z.ToString("F9") +
-            //     " ) and (" +
-            //    socket.transform.forward.x.ToString("F9") + " , " +
-            //     socket.transform.forward.y.ToString("F9") + " , " +
-            //      socket.transform.forward.z.ToString("F9") + 
-            //      ") ") ;
-            //UIManager.DebugLog($"roughlyAligned = {roughlyAligned} vs {roughlyOpposite} ");
+            float cosAngleBetween = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
+            ///Tablet processes these single precision floating point numbers differently than PC, and rounding errors can occur: (dot product has multiple multiplcations and additions for room for rounding error)
+            //bool roughlyAligned = Mathf.Abs(cosAngleBetween - 1) <= _attachmentSensitivity; ///Try to match machine epsilon? kind of magic number solution cuz no better one 
+            bool roughlyOpposite = Mathf.Abs(cosAngleBetween + 1) <= _attachmentSensitivity; 
 
             //Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
-                if (roughlyAligned)
+                if (roughlyOpposite)
                 {
                     // -1 is perfect match 
                     valid = true;
@@ -136,7 +125,10 @@ public class InSocket : Socket
             else  //OnTriggerExit
                 valid = true;
         }
-        // else
+        else if(bothItemsArePickedUp && requiredAttachmentID != (int)socket.Controller._myID)
+        {
+            //Play Negative Sound effect
+        }
         //  Debug.LogWarning($"incomming::{(int)socket._controller._myID} != {requiredAttachmentID}");
 
         return valid;
