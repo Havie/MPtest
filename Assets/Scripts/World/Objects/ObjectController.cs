@@ -135,7 +135,6 @@ public class ObjectController : HighlightableObject, IConstructable
         ///This better encapsulates this responsiblity inside the class
         if (RotationShouldBeReset())
         {
-            Debug.Log($"{ this.gameObject.name} Should reset : _hittingTable={_hittingTable} ,  _pickedUp={_pickedUp}");
             this.transform.rotation = _startingRotation;
         }
 

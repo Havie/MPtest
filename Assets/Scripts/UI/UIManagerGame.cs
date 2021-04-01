@@ -109,21 +109,26 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_kittingInventory != null && cond)
         {
             if (GameManager.instance._batchSize != 1)
+            {
                 _kittingInventory.SetActive(true);
+            }
             else
+            {
                 _kittingInventory.SetActive(false);
+            }
         }
 
-  
-        if (_normalInInventory != null)
-            _normalInInventory.SetActive(!cond);
+
+        ShowInInventory(!cond);
 
         if (_inBinToggle && cond)
+        {
             _inBinToggle.ClickToShowObject();
-
+        }
         if (_inBinObject)
+        {
             _inBinObject.SetActive(!cond);
-
+        }
         if (cond)
         {
             GameManager.instance.IsStackableChanged(true);
@@ -150,10 +155,10 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_normalOutInventory)
             _normalOutInventory.SetActive(!cond);
     }
-    public void HideInInventory()
+    public void ShowInInventory(bool cond)
     {
         if (_normalInInventory != null)
-            _normalInInventory.SetActive(false);
+            _normalInInventory.SetActive(cond);
     }
 
     public void RoundOutOfTime(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
