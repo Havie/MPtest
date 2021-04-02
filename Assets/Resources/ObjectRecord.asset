@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2d3f32802ba84841b1dd9e95742a96d, type: 3}
-  m_Name: ObjectManager
+  m_Script: {fileID: 11500000, guid: edcc715cba0f8a34493a06540214b901, type: 3}
+  m_Name: ObjectRecord
   m_EditorClassIdentifier: 
   _sprites:
-  - {fileID: 21300000, guid: f330966bdd994df41a631b22377eb9e2, type: 3}
+  - {fileID: 0}
   - {fileID: -9217040124374145459, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
   - {fileID: 1430833188474947195, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
   - {fileID: 9180869019849337774, guid: 4989aafe3012fd1448f04be3c098b028, type: 3}
@@ -39,7 +39,7 @@ MonoBehaviour:
   - {fileID: -5591866001810319041, guid: 7b09f8fcc8d897541b2c37aa6c63d325, type: 3}
   - {fileID: -2511741933917375054, guid: 7b09f8fcc8d897541b2c37aa6c63d325, type: 3}
   _objects:
-  - {fileID: 6467200454433006771, guid: 1973b2fd5bd111445a1c37f2b6295b1b, type: 3}
+  - {fileID: 0}
   - {fileID: 2706234840424314809, guid: 636943616e229aa499295917b0ee414e, type: 3}
   - {fileID: 2706234840424314809, guid: 0545fd21a772d014e944979243043020, type: 3}
   - {fileID: 6467200454433006771, guid: c93334297148f9448b7748677e9875c8, type: 3}

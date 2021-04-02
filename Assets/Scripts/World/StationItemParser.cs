@@ -66,7 +66,7 @@ public static class StationItemParser
                 foreach (var item in local_task._finalItemID) /// final produced items
                 {
                     //Debug.Log($"..<color=orange>LOOK:</color> {item} from {local_task}");
-                    if (!BuildableObject.Instance.IsBasicItem(item)) /// only add non-basic items
+                    if (!ObjectManager.Instance.IsBasicItem(item)) /// only add non-basic items
                     {
                         int itemId = (int)item;
                        // Debug.Log($"..<color=yellow>adding non-basic item:</color> {itemId} from {local_task}");
@@ -87,7 +87,7 @@ public static class StationItemParser
                 {
                     if(isKitting)
                     {
-                        if (BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
+                        if (ObjectManager.Instance.IsBasicItem(item)) ///decide if basic item 
                         {
                             int itemId = (int)item;
 
@@ -99,7 +99,7 @@ public static class StationItemParser
                     }
                     else
                     {
-                        if (!BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
+                        if (!ObjectManager.Instance.IsBasicItem(item)) ///decide if basic item 
                         {
                             int itemId = (int)item;
 
@@ -120,7 +120,7 @@ public static class StationItemParser
             {
                 if (!isStackable || isKitting)
                 {
-                    if (BuildableObject.Instance.IsBasicItem(item)) ///decide if basic item 
+                    if (ObjectManager.Instance.IsBasicItem(item)) ///decide if basic item 
                     {
                         int itemId = (int)item;
 
@@ -205,7 +205,7 @@ public static class StationItemParser
                     }
                     else
                     {
-                        if (!BuildableObject.Instance.IsBasicItem((ObjectManager.eItemID)item))
+                        if (!ObjectManager.Instance.IsBasicItem((ObjectRecord.eItemID)item))
                         {
                             itemIDs.Add((int)item);
                         }
@@ -283,7 +283,7 @@ public static class StationItemParser
                     //verify no duplicates
                     foreach (var item in t._requiredItemIDs)
                     {
-                        if (BuildableObject.Instance.IsBasicItem(item)) //only want basic parts
+                        if (ObjectManager.Instance.IsBasicItem(item)) //only want basic parts
                         {
                             int itemId = (int)item;
                             if (!itemList.Contains(itemId))
@@ -303,7 +303,7 @@ public static class StationItemParser
             {
                 foreach (var item in task._requiredItemIDs)
                 {
-                    if (BuildableObject.Instance.IsBasicItem(item))
+                    if (ObjectManager.Instance.IsBasicItem(item))
                     {
                         int itemId = (int)item;
                         if (!sItems.Contains(itemId))
@@ -425,7 +425,7 @@ public static class StationItemParser
                     {
                         foreach (var item in t._requiredItemIDs)
                         {
-                            if (BuildableObject.Instance.IsBasicItem(item)) // cant do across board, will cause issue w OUT/IN
+                            if (ObjectManager.Instance.IsBasicItem(item)) // cant do across board, will cause issue w OUT/IN
                             {
                                 int itemId = (int)item;
 

@@ -63,7 +63,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         else if (!_inUse && RequiredID != -1)
         {
             //Debug.Log("enter2 result=" + (BuildableObject.Instance.GetSpriteByID(_requiredID) != img));
-            if (BuildableObject.Instance.GetSpriteByID(RequiredID) != img)
+            if (ObjectManager.Instance.GetSpriteByID(RequiredID) != img)
             {
                 _myIcon.color = _INVALID;
                 retVal = false;
@@ -227,7 +227,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     private void AssignSpriteByID(int id, bool transparent)
     {
 
-        var bo = BuildableObject.Instance;
+        var bo = ObjectManager.Instance;
         Sprite img = bo.GetSpriteByID(id);
 
         //if (gameObject.name.Contains("#1"))

@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-[CustomPropertyDrawer(typeof(ObjectManager.eItemID))]
+[CustomPropertyDrawer(typeof(ObjectRecord.eItemID))]
 public class eItemIDPropertyDrawer : PropertyDrawer
 {
     private int _enumOffset;  ///Need an offset if the enum does not start at 0
@@ -23,7 +23,7 @@ public class eItemIDPropertyDrawer : PropertyDrawer
         ///added this later as a test to try to offset the error, doesnt seem to help
         //gm.AddItem(new GUIContent($"{0}: {""}"), false, null);
 
-        var arr= System.Enum.GetValues(typeof(ObjectManager.eItemID)).Cast<ObjectManager.eItemID>().ToArray();
+        var arr= System.Enum.GetValues(typeof(ObjectRecord.eItemID)).Cast<ObjectRecord.eItemID>().ToArray();
         _enumOffset = (int)arr[0];
 
         foreach (var item in arr)
@@ -32,7 +32,7 @@ public class eItemIDPropertyDrawer : PropertyDrawer
         }
 
       
-        var enumId = (ObjectManager.eItemID)property.enumValueIndex + _enumOffset; ///WARNING: FOR SOME UNKNOWN HAVE TO +1 HERE TO COUNTER ACT THE -1 BELOW
+        var enumId = (ObjectRecord.eItemID)property.enumValueIndex + _enumOffset; ///WARNING: FOR SOME UNKNOWN HAVE TO +1 HERE TO COUNTER ACT THE -1 BELOW
         string val = $"{(int)enumId}: {enumId}";
 
         //EditorGUI.BeginProperty(position, label, property);
@@ -56,12 +56,12 @@ public class eItemIDPropertyDrawer : PropertyDrawer
     {
         GenericMenu gm = new GenericMenu();
 
-        foreach (var item in System.Enum.GetValues(typeof(ObjectManager.eItemID)).Cast<ObjectManager.eItemID>())
+        foreach (var item in System.Enum.GetValues(typeof(ObjectRecord.eItemID)).Cast<ObjectRecord.eItemID>())
         {
             gm.AddItem(new GUIContent($"{(int)item}: {item}"), false, () => { CallBack(item, property); });
         }
 
-        var enumId = (ObjectManager.eItemID)property.enumValueIndex;
+        var enumId = (ObjectRecord.eItemID)property.enumValueIndex;
         string val = $"{(int)enumId}: {enumId}";
 
         //if(val.Length<90)
@@ -90,7 +90,7 @@ public class eItemIDPropertyDrawer : PropertyDrawer
 
     private string[] GetEnumList()
     {
-        var arrList = System.Enum.GetValues(typeof(ObjectManager.eItemID));
+        var arrList = System.Enum.GetValues(typeof(ObjectRecord.eItemID));
         string[] list = new string[arrList.Length];
         int index = 0;
         foreach (var item in arrList)
@@ -102,7 +102,7 @@ public class eItemIDPropertyDrawer : PropertyDrawer
         return list;
     }
 
-    private void CallBack(ObjectManager.eItemID eItem, SerializedProperty property)
+    private void CallBack(ObjectRecord.eItemID eItem, SerializedProperty property)
     {
         property.serializedObject.Update();
         //Debug.Log($"Trying to set {(int)eItem} : {eItem}");

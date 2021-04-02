@@ -58,7 +58,7 @@ public static class UIManager
     public static void HideInInventory()
     {
         if (_invManager)
-            _invManager.HideInInventory();
+            _invManager.ShowInInventory(false);
     }
 
     public static void ShowTouchDisplay(float pressTime, float pressTimeMax, Vector3 pos)
