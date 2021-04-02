@@ -88,6 +88,8 @@ GameObject:
   - component: {fileID: 7336015728408350145}
   - component: {fileID: 7336015728408350144}
   - component: {fileID: 6162294887407074736}
+  - component: {fileID: 1264480611787949125}
+  - component: {fileID: 6251245076666793146}
   m_Layer: 5
   m_Name: InstructionsModal
   m_TagString: Untagged
@@ -165,6 +167,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _instructionIMG: {fileID: 2443063600364498796}
+--- !u!225 &1264480611787949125
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7336015728408350146}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!95 &6251245076666793146
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7336015728408350146}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 73bc79815cb832f4f8c5f73490ab8afa, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7853861152786956120
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +494,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8965767231964772901}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:

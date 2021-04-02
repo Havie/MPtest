@@ -140,6 +140,8 @@ GameObject:
   m_Component:
   - component: {fileID: 894958115263443734}
   - component: {fileID: 1963904818618974917}
+  - component: {fileID: 3650724145956853383}
+  - component: {fileID: 367373358184615334}
   m_Layer: 5
   m_Name: InventoryIn
   m_TagString: Untagged
@@ -189,6 +191,37 @@ MonoBehaviour:
   _minCellSize: 90
   _maxCellSize: 120
   _cellScaler: 5
+--- !u!225 &3650724145956853383
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894958115263443733}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!95 &367373358184615334
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894958115263443733}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d69c3c8038158e44bb1e1b4d6566e810, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1052504807622529871
 GameObject:
   m_ObjectHideFlags: 0
