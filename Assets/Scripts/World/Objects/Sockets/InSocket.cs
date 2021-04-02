@@ -6,9 +6,9 @@ using UserInput;
 public class InSocket : Socket
 {
     [Range(-0.5f, 0.5f)]
-    [SerializeField] private float _attachmentSensitivity = 0;
-    [SerializeField] ObjectManager.eItemID[] _requiredAttachmentID = default;
-    [SerializeField] ObjectManager.eItemID[] _createdID = default;
+     private float _attachmentSensitivity = 0.3f; ///Closeness Threshold
+    [SerializeField] ObjectRecord.eItemID[] _requiredAttachmentID = default;
+    [SerializeField] ObjectRecord.eItemID[] _createdID = default;
 
 
     private bool _canCollide;
@@ -90,18 +90,33 @@ public class InSocket : Socket
 
         bool valid = false;
 
-        ///TODO wish i cud clean up this dependency of UserInputManager
-        //Not moving the female part and items match              //if one of my IDs = the incomming ID
-        if (UserInputManager.Instance.CurrentSelection as ObjectController != Controller && requiredAttachmentID == (int)socket.Controller._myID)
+        ///Make this a requirement so edge cases dont happen
+        bool bothItemsArePickedUp = socket.Controller.IsPickedUp() && Controller.IsPickedUp();
+
+        ///TODO wish i cud clean up this dependency of UserInputManager, but no great way to tell
+        /// which part is moving, could maybe do on hand Index if we keep hand limit at 2
+        //Not moving the female part and items match              
+        //if my IDs = the incomming ID
+        if (bothItemsArePickedUp &&
+            requiredAttachmentID == (int)socket.Controller._myID &&
+            UserInputManager.Instance.CurrentSelection as ObjectController != Controller //Save most expensive check for last
+            )
         {
             //check the angles of attachment
             //Vector3 dir = socket.transform.forward - this.transform.forward;
-            float angle = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
+            float cosAngleBetween = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
+            ///Tablet processes these single precision floating point numbers differently than PC, and rounding errors can occur: (dot product has multiple multiplcations and additions for room for rounding error)
+            //bool roughlyAligned = Mathf.Abs(cosAngleBetween - 1) <= _attachmentSensitivity; ///Try to match machine epsilon? kind of magic number solution cuz no better one 
+            bool roughlyOpposite = Mathf.Abs(cosAngleBetween + 1) <= _attachmentSensitivity; 
+
             //Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
-                if (angle < _attachmentSensitivity) // -1 is perfect match 
+                if (roughlyOpposite)
+                {
+                    // -1 is perfect match 
                     valid = true;
+                }
                 else
                 {
                     //Debug.Log($"The angle did not match for {requiredAttachmentID}");
@@ -110,7 +125,10 @@ public class InSocket : Socket
             else  //OnTriggerExit
                 valid = true;
         }
-        // else
+        else if(bothItemsArePickedUp && requiredAttachmentID != (int)socket.Controller._myID)
+        {
+            //Play Negative Sound effect
+        }
         //  Debug.LogWarning($"incomming::{(int)socket._controller._myID} != {requiredAttachmentID}");
 
         return valid;
@@ -175,7 +193,7 @@ public class InSocket : Socket
 
         private string[] GetEnumList()
         {
-            var arrList = System.Enum.GetValues(typeof(ObjectManager.eItemID));
+            var arrList = System.Enum.GetValues(typeof(ObjectRecord.eItemID));
             string[] list = new string[arrList.Length];
             int index = 0;
             foreach (var item in arrList)
@@ -187,9 +205,9 @@ public class InSocket : Socket
             return list;
         }
 
-        private ObjectManager.eItemID AssignByID(int id)
+        private ObjectRecord.eItemID AssignByID(int id)
         {
-            return (ObjectManager.eItemID)id + 1;
+            return (ObjectRecord.eItemID)id + 1;
         }
 
 

@@ -38,7 +38,7 @@ public static class PreviewManager
         _previewedItems.Add(otherController);
         //Spawn a new obj via CreatedID and set opacity to preview 
         //Debug.LogError("createdid=" + createdID);
-        var obj = BuildableObject.Instance.SpawnObject(createdID);
+        var obj = ObjectManager.Instance.SpawnObject(createdID);
         ///Set its orientation to match its female parent
         obj.transform.position = controller.gameObject.transform.position;
         obj.transform.rotation = controller.gameObject.transform.rotation;
@@ -77,11 +77,11 @@ public static class PreviewManager
 
             HandManager.RemoveDeletedItem(item);
             // HandManager.PrintQueue();
-            BuildableObject.Instance.DestroyObject(item.gameObject);
+            ObjectManager.Instance.DestroyObject(item.gameObject);
         }
         var oc = _previewItem.GetComponent<ObjectController>();
-        oc.ChangeAppearanceNormal();
         HandManager.PickUpItem(oc);
+        oc.ChangeAppearanceNormal(); ///do this after picking it up so we dont reset rotation
         ///Update our overall quality, passing the data to the next object 
         var finalQuality = _previewItem.GetComponent<QualityOverall>();
         if (finalQuality)
@@ -103,7 +103,7 @@ public static class PreviewManager
             item.ChangeAppearanceNormal();
         }
         //CheckForSwitch();
-        BuildableObject.Instance.DestroyObject(_previewItem);
+        ObjectManager.Instance.DestroyObject(_previewItem);
         ResetSelf();
     }
 

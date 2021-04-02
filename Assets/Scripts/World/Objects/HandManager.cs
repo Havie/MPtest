@@ -61,7 +61,7 @@ public static class HandManager
         ///start to fade in next item to be picked up
         var currentIntensity = potentialItemToBePickedUp.GetHighlightIntensity();
         potentialItemToBePickedUp.ChangeHighlightAmount(currentIntensity + _intensityChange);
-        potentialItemToBePickedUp.ChangeHighLightColor(BuildableObject.Instance._colorHand1);
+        potentialItemToBePickedUp.ChangeHighLightColor(ObjectManager.Instance._colorHand1);
 
         int numItemsInhand = CountPickedUpItems();
 
@@ -70,7 +70,7 @@ public static class HandManager
         ///start to fade the first item in hand to orange 
         ObjectController firstItemInHand = _handArray[0];
         var currentColor = firstItemInHand.GetHighLightColor();
-        var orangeColor = BuildableObject.Instance._colorHand2;
+        var orangeColor = ObjectManager.Instance._colorHand2;
         firstItemInHand.ChangeHighLightColor(Color.Lerp(currentColor, orangeColor, 0.05f));
         ///Basing this off of the pickup times from UserInputManagerdoesnt look as good, the colors are too close
         /// so the change happens to fast, might as well just use 0.05f constant as it looks visually appealing
@@ -173,7 +173,7 @@ public static class HandManager
         {
             _handArray[0].SetHandPreviewingMode(cond);
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
-            _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
+            _handArray[0].ChangeHighLightColor(ObjectManager.Instance._colorHand1);
 
         }
         else if (CountPickedUpItems() == 2)
@@ -182,7 +182,7 @@ public static class HandManager
             _handArray[0].ChangeHighlightAmount(_outlineIntensity);
             _handArray[1].SetHandPreviewingMode(cond);
             _handArray[1].ChangeHighlightAmount(_outlineIntensity);
-            _handArray[0].ChangeHighLightColor(BuildableObject.Instance._colorHand1);
+            _handArray[0].ChangeHighLightColor(ObjectManager.Instance._colorHand1);
         }
         else
             _previewingAChange = false;

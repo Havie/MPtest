@@ -23,11 +23,7 @@ public class InInventory : UIInventoryManager
         {
             GameManager.Instance.SetInventoryIn(this);
         }
-
-
     }
-
-
 
     /************************************************************************************************************/
     #region batchSizeMethods

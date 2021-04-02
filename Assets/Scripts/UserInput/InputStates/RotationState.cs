@@ -47,14 +47,14 @@ namespace UserInput
                 _lastPos = pos;
                 _cacheInitalPos = false;
             }
-            CheckRotation(command, pos);
+            TryRotation(command, pos);
         }
 
         /************************************************************************************************************************/
 
 
         /** Player is rotating the object in the scene or pressing and holding to begin displacement */
-        private bool CheckRotation(InputCommand command, Vector3 inputPos)
+        private bool TryRotation(InputCommand command, Vector3 inputPos)
         {
             IMoveable moveableObject = _currentSelection as IMoveable;
             bool inputDown = command.DOWN || command.HOLD;
@@ -103,13 +103,17 @@ namespace UserInput
 
                     _brain.SwitchState(_brain._displacementState, _currentSelection);
                 }
-                else ///Do rotation = we're not holding
+                else///Do rotation = we're not holding
                 {
-                    ///Store rotation amount
-                    Vector3 rotation = inputPos - _lastPos;
-                    _rotationAmount += moveableObject.OnRotate(rotation);
-                    _lastPos = inputPos;
-                    HandleHighlightPreview(moveableObject);
+                    ///Prevent us from rotating not picked up items
+                    if (moveableObject.CanRotate())
+                    {
+                        ///Store rotation amount
+                        Vector3 rotation = inputPos - _lastPos;
+                        _rotationAmount += moveableObject.OnRotate(rotation);
+                        _lastPos = inputPos;
+                        HandleHighlightPreview(moveableObject);
+                    }
                     return true;
                 }
 

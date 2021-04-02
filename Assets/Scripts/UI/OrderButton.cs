@@ -32,7 +32,7 @@ public class OrderButton : MonoBehaviour
 
     public void SetOrder(int itemID, float timePromised)
     {
-        var bo = BuildableObject.Instance;
+        var bo = ObjectManager.Instance;
         //string orderName = bo.GetItemNameByID(itemID);
         Sprite img= bo.GetSpriteByID(itemID);
 

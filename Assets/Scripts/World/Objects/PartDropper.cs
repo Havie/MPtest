@@ -8,7 +8,7 @@ public class PartDropper : MonoBehaviour
 
     ///Exposed for inspector debugging
     //[SerializeField]
-    List<ObjectManager.eItemID[]> _partOrders = new List<ObjectManager.eItemID[]>();
+    List<ObjectRecord.eItemID[]> _partOrders = new List<ObjectRecord.eItemID[]>();
     float _dropDelay = 0;
     bool _routineIsRunning = false;
 
@@ -37,7 +37,7 @@ public class PartDropper : MonoBehaviour
         }
     }
 
-    public void SendInOrder(ObjectManager.eItemID[] componentOrder)
+    public void SendInOrder(ObjectRecord.eItemID[] componentOrder)
     {
         if (!_routineIsRunning && _partOrders.Count == 0)
             StartCoroutine(DropInParts(componentOrder));
@@ -45,7 +45,7 @@ public class PartDropper : MonoBehaviour
             _partOrders.Add(componentOrder);
     }
 
-    IEnumerator DropInParts(ObjectManager.eItemID[] componentOrder)
+    IEnumerator DropInParts(ObjectRecord.eItemID[] componentOrder)
     {
         _routineIsRunning = true;
         int count = componentOrder.Length;
@@ -54,7 +54,7 @@ public class PartDropper : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            BuildableObject.Instance.DropItemInWorld((int)componentOrder[i]);
+            ObjectManager.Instance.DropItemInWorld((int)componentOrder[i]);
             yield return new WaitForSeconds(_dropDelay);
         }
         _routineIsRunning = false;
@@ -71,7 +71,7 @@ public class PartDropper : MonoBehaviour
             int itemID = slot.GetItemID();
             var qualityList = slot.RebuildQualities();
             slot.RemoveItem();
-            BuildableObject.Instance.DropItemInWorld(itemID, qualityList);
+            ObjectManager.Instance.DropItemInWorld(itemID, qualityList);
         }
 
     }

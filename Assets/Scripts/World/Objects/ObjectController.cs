@@ -7,7 +7,7 @@ using UnityEngine;
 public class ObjectController : HighlightableObject, IConstructable
 {
 
-    public ObjectManager.eItemID _myID;
+    public ObjectRecord.eItemID _myID;
     ///Rotational / Movement
     public enum eRotationAxis { YAXIS, XAXIS, BOTH, NONE };
     [HideInInspector]
@@ -22,9 +22,10 @@ public class ObjectController : HighlightableObject, IConstructable
     ///Components
     private Rigidbody _rb;
     private Collider _collider;
-    public bool _hittingTable { get; private set; }
-    private float _lastGoodYAboveTable;
+    ///Reset Edge cases
+    private bool _hittingTable;
     private bool _isSubObject;
+    private bool _isInPreview;
     [HideInInspector]
     public ObjectController _parent;
     ///Hand Stuff
@@ -71,7 +72,7 @@ public class ObjectController : HighlightableObject, IConstructable
             _canFollow = false;
         }
         ToggleRB(true); ///turn off physics 
- 
+
         DetermineHandLocation();
         _rotateAroundAxis = DetermineRotationAccess();
 
@@ -80,7 +81,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
     private eRotationAxis DetermineRotationAccess()
     {
-        if (_parent != null && (_myID == ObjectManager.eItemID.PinkTop || _myID == ObjectManager.eItemID.RedBot))
+        if (_parent != null && (_myID == ObjectRecord.eItemID.PinkTop || _myID == ObjectRecord.eItemID.RedBot))
             return eRotationAxis.XAXIS;
         else
             return eRotationAxis.YAXIS;
@@ -102,7 +103,7 @@ public class ObjectController : HighlightableObject, IConstructable
         var prefab = Resources.Load<GameObject>("Prefab/hand_loc_dummy");
         if (prefab)
         {
-            var dummy = GameObject.Instantiate<GameObject>(prefab, BuildableObject.Instance.transform);
+            var dummy = GameObject.Instantiate<GameObject>(prefab, ObjectManager.Instance.transform);
             _handLocation = dummy.transform;
             var index = this.gameObject.name.IndexOf("(Clone)");
             if (index != -1)
@@ -131,6 +132,11 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         ToggleRB(true);
         SetHighlighted(true);
+        ///This better encapsulates this responsiblity inside the class
+        if (RotationShouldBeReset())
+        {
+            this.transform.rotation = _startingRotation;
+        }
 
         //HandManager.OrderChanged += UpdateHand;
         _pickedUp = true;
@@ -190,7 +196,7 @@ public class ObjectController : HighlightableObject, IConstructable
     }
 
     ///IMoveable (should make a base class to inherit from )
-    public void OnFollowInput(Vector3 worldPos){Follow(worldPos);}
+    public void OnFollowInput(Vector3 worldPos) { Follow(worldPos); }
     public Vector2 OnRotate(Vector3 dot) { return DoRotation(dot); }
     public void OnBeginFollow()
     {
@@ -198,7 +204,6 @@ public class ObjectController : HighlightableObject, IConstructable
         ResetHittingTable();
         HandManager.PickUpItem(this);
     }
-    
     public void OnEndFollow() { ChangeAppearanceNormal(); }
     public bool OutOfBounds()
     {
@@ -210,19 +215,19 @@ public class ObjectController : HighlightableObject, IConstructable
         _resetOnChange = true;
         // Debug.DrawRay(_collider.bounds.min, -Vector3.forward, Color.red, 1);
     }
-
     public Quaternion GetDefaultOrientation() => _startingRotation;
+    public bool CanRotate()
+    {
+        ///Can only rotate picked up parts, or subparts of picked up parts
+        if (_isSubObject)
+        {
+            return _parent.CanRotate();
+        }
 
+        return _pickedUp;
+    }
     public void ResetPosition()
     {
-        ///fck all this somethings off w the scaling , just set it to 0.
-        //var tableY = -0.455f;
-        //var bonusAmnt = 0.02f;
-        //var min = _collider.bounds.min;
-        //var diffBelowTable = min.y - tableY;  /// add cuz both negative 
-        //Debug.LogWarning($"min.y={min.y} and diff={diffBelowTable}   oldy= {mpos.y} newy= {mpos.y + Mathf.Abs(diffBelowTable)}  ....... my scale= {this.transform.localScale}");
-
-
         ///Will move the table up from being below, but does not reset rotation
         //Debug.Log("Calling ResetPosition for OBJ");
         var mpos = transform.position;
@@ -233,10 +238,10 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         transform.position = objStartPos;
         transform.rotation = _startingRotation;
-       // Debug.Log($"RESET rot={_startingRotation}");
+        //Debug.Log($"RESET rot={_startingRotation}");
     }
     public bool IsPickedUp() => _pickedUp;
-   
+
     ///Trying to phase these out of interface:
     public void ChangeAppearanceMoving()
     {
@@ -259,7 +264,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
         // ToggleCollider(false);
 
-            //Debug.Log($"{this.gameObject.name} heard change moving");
+        //Debug.Log($"{this.gameObject.name} heard change moving");
 
     }
     public void ChangeAppearanceNormal()
@@ -270,7 +275,7 @@ public class ObjectController : HighlightableObject, IConstructable
             UIManager.ChangeHandSize(_handIndex, false);
 
         _meshRenderer.enabled = true;
-
+        _isInPreview = false;
         ChangeMaterialColor(1f);
         TrySetChildren(1f);
         if (_switch)
@@ -296,23 +301,24 @@ public class ObjectController : HighlightableObject, IConstructable
     }
     public void ChangeAppearancePreview()
     {
+        _isInPreview = true;
         ChangeMaterialColor(0.5f);
         TrySetChildren(0.5f);
     }
     public IConstructable FindAbsoluteParent()
     {
-         return _parent == null ?this :  _parent.FindAbsoluteParent();
+        return _parent == null ? this : _parent.FindAbsoluteParent();
     }
     #endregion
 
-
     /************************************************************************************************************************/
+    ///I think i am doing both TriggerAndCollision becuz we change toggle IsTrigger on Collider when pickingup>?
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Table"))
         {
             _hittingTable = true;
-            _lastGoodYAboveTable = this.transform.position.y;
+            //_lastGoodYAboveTable = this.transform.position.y;
         }
     }
 
@@ -327,7 +333,8 @@ public class ObjectController : HighlightableObject, IConstructable
         if (other.gameObject.tag.Equals("Table"))
         {
             _hittingTable = true;
-            _lastGoodYAboveTable = this.transform.position.y;
+            //_lastGoodYAboveTable = this.transform.position.y;
+            return;
         }
     }
 
@@ -363,7 +370,7 @@ public class ObjectController : HighlightableObject, IConstructable
     }
     private void ChangeHighLightColor(int handIndex)
     {
-        Color color = handIndex == 1 ? BuildableObject.Instance._colorHand1 : BuildableObject.Instance._colorHand2;
+        Color color = handIndex == 1 ? ObjectManager.Instance._colorHand1 : ObjectManager.Instance._colorHand2;
         ChangeHighLightColor(color);
     }
     private void ResetHittingTable() { _hittingTable = false; }
@@ -499,7 +506,20 @@ public class ObjectController : HighlightableObject, IConstructable
         _startingRotation = rot;
         //Debug.Log($"SetRot={_startingRotation}");
     }
-
+    private bool RotationShouldBeReset()
+    {
+        ///If its on the table, we gotta reset the orientation when pickedup
+        if (_hittingTable)
+        {
+            return true;
+        }
+        ///Rotation can also be off if its not picked up and ontop of another item
+        if (!_pickedUp && !_isInPreview) //&& not hitting table
+        {
+            return true;
+        }
+        return false;
+    }
 
     /************************************************************************************************************************/
     ///UNUSED??
@@ -568,7 +588,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
         private string[] GetEnumList()
         {
-            var arrList = System.Enum.GetValues(typeof(ObjectManager.eItemID));
+            var arrList = System.Enum.GetValues(typeof(ObjectRecord.eItemID));
             string[] list = new string[arrList.Length];
             int index = 0;
             foreach (var item in arrList)
@@ -580,9 +600,9 @@ public class ObjectController : HighlightableObject, IConstructable
             return list;
         }
 
-        private ObjectManager.eItemID AssignByID(int id)
+        private ObjectRecord.eItemID AssignByID(int id)
         {
-            return (ObjectManager.eItemID)id + 1;
+            return (ObjectRecord.eItemID)id + 1;
         }
 
 

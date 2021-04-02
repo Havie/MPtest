@@ -18,6 +18,7 @@ public interface IMoveable :  IHighlightable
     Quaternion GetDefaultOrientation();
     void ResetPosition();
 
+    bool CanRotate();
     bool IsPickedUp();
 
     void ChangeAppearanceMoving();

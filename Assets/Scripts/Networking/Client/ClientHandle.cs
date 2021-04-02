@@ -86,7 +86,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         {
             var id = packet.ReadInt();
             var currQ = packet.ReadInt();
-            qualities.Add(BuildableObject.Instance.BuildTempQualities(id, currQ));
+            qualities.Add(ObjectManager.Instance.BuildTempQualities(id, currQ));
             Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
         }
 
