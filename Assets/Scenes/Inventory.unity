@@ -1662,6 +1662,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5394208262448427697}
     m_Modifications:
+    - target: {fileID: 1673785117654773914, guid: b6c5333e6f2e8c5429a0cfcc47efe7ab,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 301866761}
+    - target: {fileID: 1673785117654773914, guid: b6c5333e6f2e8c5429a0cfcc47efe7ab,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleInstructions
+      objectReference: {fileID: 0}
     - target: {fileID: 2443063600364498796, guid: b6c5333e6f2e8c5429a0cfcc47efe7ab,
         type: 3}
       propertyPath: m_Enabled
@@ -5823,22 +5833,12 @@ PrefabInstance:
     - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 165
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
@@ -5869,6 +5869,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.75
       objectReference: {fileID: 0}
     - target: {fileID: 2555038399510213956, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
@@ -9993,7 +10008,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 6
+  _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2033773017 stripped
 GameObject:
@@ -10208,7 +10223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 15
-  _batchSize: 1
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -11317,6 +11332,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1509044098994473348, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1509044098994473348, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1531317159345077818, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
