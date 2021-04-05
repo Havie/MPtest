@@ -30,6 +30,10 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
     [Header("MPLobby Components")]
     [SerializeField] LobbyMenu _lobbyMenu;
 
+
+    public delegate void ConnectionResult(bool cond);
+    public ConnectionResult OnConnectionResult;
+
     #region Init
 
     private void Start()
@@ -55,7 +59,7 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
         else
             UIManager.DebugLogWarning("(UIManager): Missing BeginLevel Canvases");
 
-        sServer.OnHostIpFound += DisableHostButton;
+        sServer.OnHostIpFound += DisableHostButtonHack;
     }
     private void OnDestroy()
     {
@@ -82,6 +86,7 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
             _bConnect.gameObject.SetActive(cond);
             _bHost.gameObject.SetActive(cond);
             _usernameField.gameObject.SetActive(cond);
+            _loadingTxt.gameObject.SetActive(!cond);
         }
         else
             UIManager.DebugLogWarning("(UIManager): Missing EnablePanel objects");
@@ -93,10 +98,10 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
             UIManager.DebugLogWarning($"connected to server = <color=red>{cond}</color>");
 
         if (_loadingTxt)
-            StartCoroutine(ConnectionResult(cond));
+            StartCoroutine(ConnectionResultRoutine(cond));
     }
 
-    IEnumerator ConnectionResult(bool cond)
+    IEnumerator ConnectionResultRoutine(bool cond)
     {
         if (cond)
         {
@@ -109,13 +114,17 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
             LoadLobbyScene();
 
         }
-        else   ///TODO show this when host create room fails:
+        else
         {
-            _loadingTxt.text = "Connection Failed!";
-            yield return new WaitForSeconds(1f);
+            _loadingTxt.color = Color.red;
+            _loadingTxt.text = "Connection Failed! \nCheck Tablet is connected to internet";
+            yield return new WaitForSeconds(2f);
             _loadingTxt.enabled = false;
+            _loadingTxt.color = Color.black;
             EnablePanel(true);
         }
+
+        OnConnectionResult?.Invoke(cond);
 
     }
 
@@ -163,19 +172,26 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 
     #endregion
 
+    ///Also called from button
     public void ConnectToServer()
+    {
+        ConnectToServer("Trying to find server");
+    }
+
+    public void ConnectToServer(string msg)
     {
         EnablePanel(false);
         Client.instance.ConnectToServer();
         if (_loadingTxt)
         {
-            _loadingTxt.text = "Trying to find server";
+            _loadingTxt.text = msg;
             _loadingTxt.enabled = true;
         }
         else
             Debug.LogWarning("(UIManager): Missing ConnectToServer objects");
-
+        
     }
+
 
     public void LoadLobbyScene()
     {
@@ -183,10 +199,14 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
         SceneLoader.LoadLevel(_mpLobbySceneName);
     }
 
-
+    public void EnableHostButton(bool cond)
+    {
+        if (_bHost)
+            _bHost.interactable = cond;
+    }
 
     #region RunTime Actions
-    public void DisableHostButton(string ignore)
+    public void DisableHostButtonHack(string ignore)
     {
         if (_bHost)
             _bHost.interactable = false;

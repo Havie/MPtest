@@ -22,12 +22,27 @@ public class UIHostMenu : MonoBehaviour
     {
         ShowMenuOptions(false);
     }
+    public void OnConnection(bool cond)
+    {
+        if(!cond)
+        {
+            HideHostCustomization();
+            UIManagerNetwork.Instance.EnableHostButton(true);
+        }
+        UIManagerNetwork.Instance.OnConnectionResult -= OnConnection;
+    }
 
     ///Called from Button
     public void ShowHostCustomization()
     {
         ShowMenuOptions(true);
         _connectionObjects.SetActive(false);
+    }
+
+    public void HideHostCustomization()
+    {
+        ShowMenuOptions(false);
+        _connectionObjects.SetActive(true);
     }
 
     ///Called from Button
@@ -40,9 +55,8 @@ public class UIHostMenu : MonoBehaviour
         ///Should put this in a coroutine, that runs this after saying "..Creating Room.."
         /// Because Client was connecting before sNetworkManager ran Start 
         ShowMenuOptions(false);
-        UIManagerNetwork.Instance.ConnectToServer();
-        UIManagerNetwork.Instance.LoadLobbyScene();
-
+        UIManagerNetwork.Instance.OnConnectionResult += OnConnection;
+        UIManagerNetwork.Instance.ConnectToServer("Trying to host connection");
     }
 
     private void ShowMenuOptions(bool cond)

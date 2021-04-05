@@ -1603,8 +1603,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8b698ade9037ce4680ded16bc86bd0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _NetworkManagerPREFAB: {fileID: 7320822678620815595, guid: b28a517cefe701d49a23d0e3674626d1,
-    type: 3}
   _connectionObjects: {fileID: 1216088066}
   _buttonHost: {fileID: 410306399}
   _hostOptions:
@@ -2408,7 +2406,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dcc067a3e3365c40ba8045cd69d3c43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  on: 0
   _maxTextSize: 350
   _debugText: {fileID: 186396803}
 --- !u!1 &510986260
@@ -4987,7 +4984,6 @@ MonoBehaviour:
   _inventorySceneName: Inventory
   _mpLobbySceneName: MP_Lobby
   _networkingCanvas: {fileID: 1148312936}
-  _startMenu: {fileID: 2014502597}
   _bConnect: {fileID: 1327848549}
   _bHost: {fileID: 410306402}
   _usernameField: {fileID: 1175311910}
