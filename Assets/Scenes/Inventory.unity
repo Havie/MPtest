@@ -9083,6 +9083,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _safePlace: {fileID: 331001391}
+  _extraPaddingX: 0
+  _extraPaddingY: 0
 --- !u!114 &1828940368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10108,7 +10110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 6
-  _batchSize: 1
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -10873,11 +10875,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: InventoryStation
       objectReference: {fileID: 0}
-    - target: {fileID: 7004019817554495202, guid: eeff0920a4208af41bad73c4ee6f0bd3,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.64705884
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeff0920a4208af41bad73c4ee6f0bd3, type: 3}
 --- !u!1 &428164341312955809 stripped
@@ -11370,11 +11367,6 @@ PrefabInstance:
     - target: {fileID: 1531317159345077818, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4382027254559713014, guid: ca58c9199303b3b43ba590d24a08378e,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4382027255801294341, guid: ca58c9199303b3b43ba590d24a08378e,
@@ -13733,11 +13725,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4164277825861719763, guid: 42c970f27fa9cb546b61ebf275ccb32f,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.5254902
       objectReference: {fileID: 0}
     - target: {fileID: 4402883475097983312, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
