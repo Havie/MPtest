@@ -11,10 +11,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Networking Scene.unity
     guid: f8abd47e85583ef44954195587098845
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MP_Lobby.unity
     guid: 49137169f83a1c7428677d5289d2b795
   - enabled: 1
