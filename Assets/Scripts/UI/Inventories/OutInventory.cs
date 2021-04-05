@@ -167,6 +167,37 @@ public class OutInventory : UIInventoryManager
             WorkStation ws = GameManager.Instance._workStation;
             _batchSentEvent.Raise(new BatchWrapper((int)ws._myStation, count, ws.IsShippingStation()));
         }
+        ///If any items in extra slots, should be assigned to the next batch
+        ParseExtraSlotsAndReassignIfNeeded();
+    }
+
+    private void ParseExtraSlotsAndReassignIfNeeded()
+    {
+        ///This happens in kitting where the player can add extra stuff for the next batch,
+        ///and it gets added as new "extra" slot . Upon sending the batch, we need to 
+        ///move these extra items out of extra slots, and into right place for next batch
+        List<UIInventorySlot> _slotsToBeRemoved = new List<UIInventorySlot>();
+        foreach (var item in _extraSlots)
+        {
+            if (item.GetInUse())
+            {
+                for (int i = 0; i < _slots.Length; i++)
+                {
+                    var slot = _slots[i];
+                    if (TryToAdd(slot, item.GetItemID(), item.Qualities, false)) //item.RequiresCertainID() ? think just false works
+                    {
+                        _slotsToBeRemoved.Add(item);
+                        break;
+                    }
+                }
+            }
+        }
+
+        foreach (var emptySlot in _slotsToBeRemoved)
+        {
+            _extraSlots.Remove(emptySlot);
+            Destroy(emptySlot.gameObject);
+        }
     }
 
 
