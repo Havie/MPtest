@@ -18,6 +18,7 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] protected Image _gridParent;
+    [SerializeField] protected UIDeadZone _deadZone;
     [SerializeField] protected GridLayoutGroup _gridLayoutGrp;
     [SerializeField] protected TextMeshProUGUI _labelText;
     protected GameObject _bSlotPREFAB;
@@ -148,7 +149,9 @@ public abstract class UIInventoryManager : MonoBehaviour
 
         //Debug.Log($"maxH= {_maxHeight} vs parentHeight={parentHeight}, Rect={new Vector2(parentWidth, parentHeight)}");
         // sets calculated width and height
-        _gridParent.rectTransform.sizeDelta = new Vector2(parentWidth, parentHeight);
+        var newSize = new Vector2(parentWidth, parentHeight);
+        _gridParent.rectTransform.sizeDelta = newSize;
+        _deadZone.TryScaleSizeWithInventory(newSize);
 
 
     }

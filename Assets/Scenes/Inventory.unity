@@ -10753,6 +10753,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5394208262448427697}
     m_Modifications:
+    - target: {fileID: 3810585332555596966, guid: eeff0920a4208af41bad73c4ee6f0bd3,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3810585332555596966, guid: eeff0920a4208af41bad73c4ee6f0bd3,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5635248555718135488, guid: eeff0920a4208af41bad73c4ee6f0bd3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10862,6 +10872,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InventoryStation
+      objectReference: {fileID: 0}
+    - target: {fileID: 7004019817554495202, guid: eeff0920a4208af41bad73c4ee6f0bd3,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.64705884
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeff0920a4208af41bad73c4ee6f0bd3, type: 3}
@@ -11355,6 +11370,11 @@ PrefabInstance:
     - target: {fileID: 1531317159345077818, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382027254559713014, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4382027255801294341, guid: ca58c9199303b3b43ba590d24a08378e,
@@ -13713,6 +13733,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4164277825861719763, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.5254902
       objectReference: {fileID: 0}
     - target: {fileID: 4402883475097983312, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}

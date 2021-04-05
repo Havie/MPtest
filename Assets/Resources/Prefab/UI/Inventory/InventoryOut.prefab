@@ -271,6 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridParent: {fileID: 7949012776960701024}
+  _deadZone: {fileID: 4164277825861719764}
   _gridLayoutGrp: {fileID: 6053622778028008206}
   _labelText: {fileID: 9060786102692332761}
   _maxHeight: 617

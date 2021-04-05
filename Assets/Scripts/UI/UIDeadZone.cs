@@ -26,4 +26,13 @@ public class UIDeadZone : InventoryComponent
         if (VerifyRT())
             _rt.sizeDelta = size;
     }
+
+    public void TryScaleSizeWithInventory(Vector2 parentSize)
+    {
+        Debug.Log($"Set deadzone size = {parentSize}");
+        if (VerifyRT())
+        {
+            _rt.sizeDelta = parentSize;
+        }
+    }
 }
