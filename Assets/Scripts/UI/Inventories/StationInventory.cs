@@ -104,7 +104,14 @@ public class StationInventory : UIInventoryManager
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected override void SetSizeOfContentArea()
     {
-      ///TODO remove this?
+        if (_deadZone)
+        {
+            ///TODO Set the size of the deadZone:
+            var width = _maxCellSize * _INVENTORYSIZE;
+            var height = _maxCellSize;
+            _deadZone.TryScaleSizeWithInventory(new Vector2(width, height));
+        }
+        
     }
 
     private void AssignInfiniteItem(int itemID)

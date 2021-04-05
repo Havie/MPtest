@@ -48,9 +48,9 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     public bool PreviewSlot(Sprite img)
     {
 
-        //Debug.Log("This called this");
+        Debug.Log("What called this");
         bool retVal = true;
-        
+
         if (!_inUse)
         {
             AssignSprite(img);
@@ -104,23 +104,25 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     {
         //Debug.Log($"ASsign Item in BUCKET! }");
 
-        AssignSpriteByID(id, false);
+        if (CheckWithManager(id, qualities))
+        {
+            AssignSpriteByID(id, false);
 
-        ///Might have to clone it, but lets see if we can store it
-        if (qualities != null)
-            _qualities = qualities;
-        else
-            _qualities.Clear();
-
-
-        _itemID = id;
-
-        TellManager();
-        RestoreDefault();
+            ///Might have to clone it, but lets see if we can store it
+            if (qualities != null)
+                _qualities = qualities;
+            else
+                _qualities.Clear();
 
 
-        return true;
+            _itemID = id;
 
+            RestoreDefault();
+
+
+            return true;
+        }
+        return false;
 
     }
     #endregion
@@ -169,10 +171,9 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         }
     }
 
-    private void TellManager()
+    private bool CheckWithManager(int itemID, List<QualityObject> qualities)
     {
-        if (_inventory)
-            _inventory.AddItemToSlot(_itemID, _qualities, false);
+        return _inventory.AddItemToSlot(itemID, qualities, false);
     }
     private void RestoreDefault()
     {

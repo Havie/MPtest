@@ -7,8 +7,11 @@ public class UIDeadZone : InventoryComponent
     [Header("Make Sure the Image component of the deadzone is on but alpha is 0, otherwise it wont raycast")]
     [Tooltip("The location where an item will reset to if placed in a deadzone")]
     [SerializeField] Transform _safePlace = default;
+    [SerializeField] float _extraPaddingX = 0;
+    [SerializeField] float _extraPaddingY = 0;
 
-   public Transform GetSafePosition { get; private set; }
+
+    public Transform GetSafePosition { get; private set; }
 
 
 
@@ -25,5 +28,14 @@ public class UIDeadZone : InventoryComponent
     {
         if (VerifyRT())
             _rt.sizeDelta = size;
+    }
+
+    public void TryScaleSizeWithInventory(Vector2 parentSize)
+    {
+        Debug.Log($"Set deadzone size = {parentSize}");
+        if (VerifyRT())
+        {
+            _rt.sizeDelta = new Vector2(parentSize.x + _extraPaddingX, parentSize.y + _extraPaddingY);
+        }
     }
 }

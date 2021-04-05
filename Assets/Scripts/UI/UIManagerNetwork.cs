@@ -172,7 +172,7 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 
     #endregion
 
-    ///Also called from button
+    ///called from button
     public void ConnectToServer()
     {
         ConnectToServer("Trying to find server");
