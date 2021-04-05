@@ -227,6 +227,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4402883475097983312}
   - component: {fileID: 5121376597989763554}
+  - component: {fileID: 478019972156728307}
+  - component: {fileID: 3693138860093915551}
   m_Layer: 5
   m_Name: InventoryOut
   m_TagString: Untagged
@@ -279,6 +281,37 @@ MonoBehaviour:
   _cellScaler: 5
   _sendButton: {fileID: 2942226847869692643}
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
+--- !u!225 &478019972156728307
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4402883475097983319}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!95 &3693138860093915551
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4402883475097983319}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5deb723ba4786e44189770d027a401b8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &197730189730370706
 PrefabInstance:
   m_ObjectHideFlags: 0
