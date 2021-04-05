@@ -197,10 +197,20 @@ namespace UserInput
 
         public UIDeadZone CheckRayCastForDeadZone()
         {
-            //Set the Pointer Event Position to that of the mouse position
-            _PointerEventData.position = Input.mousePosition; //Maybe I can use touch input last known
+            //Maybe I can use touch input last known? seems to be working fine for now?
+            return CheckRayCastForDeadZoneAtScreenPos(Input.mousePosition);
+        }
 
-            List<RaycastResult> results = new List<RaycastResult>();
+        public UIDeadZone CheckRayCastForDeadZoneAtWorldPos(Vector3 worldPos)
+        {
+            return CheckRayCastForDeadZoneAtScreenPos(_mainCamera.WorldToScreenPoint(worldPos));
+        }
+
+        private UIDeadZone CheckRayCastForDeadZoneAtScreenPos(Vector3 screenPos)
+        {
+            //Set the Pointer Event Position to the position on screen
+            _PointerEventData.position = screenPos; 
+            List <RaycastResult> results = new List<RaycastResult>();
 
             //Raycast using the Graphics Raycaster and mouse click position
             _Raycaster.Raycast(_PointerEventData, results);

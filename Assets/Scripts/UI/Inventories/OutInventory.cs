@@ -138,7 +138,7 @@ public class OutInventory : UIInventoryManager
 
     public void SendBatch()
     {
-        Debug.Log($"heared send batch {this.gameObject.name} ");
+        //Debug.Log($"heared send batch {this.gameObject.name} ");
         int count = 0;
         foreach (var slot in _slots)
         {
@@ -197,7 +197,9 @@ public class OutInventory : UIInventoryManager
         {
             _extraSlots.Remove(emptySlot);
             Destroy(emptySlot.gameObject);
+            --_INVENTORYSIZE; ///Not even sure this matters, past initial slot creation
         }
+            SetSizeOfContentArea(); ///adjust scrollable area
     }
 
 

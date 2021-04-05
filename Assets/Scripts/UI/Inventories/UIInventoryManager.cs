@@ -45,7 +45,7 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     protected UIInventorySlot[] _slots = new UIInventorySlot[0];
     protected List<UIInventorySlot> _extraSlots = new List<UIInventorySlot>(); //incase we want to reset to base amount
-
+    protected bool _canAssignExtraSlots = true;
     protected string _prefix;
 
     /************************************************************************************************************************/
@@ -66,8 +66,10 @@ public abstract class UIInventoryManager : MonoBehaviour
         if (_bSlotPREFAB == null)
             _bSlotPREFAB = Resources.Load<GameObject>("Prefab/UI/bSlot");
 
-        _STACKABLE = GameManager.Instance._isStackable;
-        _ADDCHAOTIC = GameManager.Instance._addChaotic;
+        var gm = GameManager.Instance;
+        _STACKABLE = gm._isStackable;
+        _ADDCHAOTIC = gm._addChaotic;
+        _canAssignExtraSlots = gm._batchSize != 1;
         GenerateInventory(DetermineWorkStationBatchSize());
 
         // text can be changed within label element
@@ -80,7 +82,7 @@ public abstract class UIInventoryManager : MonoBehaviour
     #region Helper Initilization Methods for extended classes
     protected abstract List<int> DetermineWorkStationBatchSize();
     protected abstract void GenerateInventory(List<int> itemIDs);
-    
+
     private void ReconfigureGLG()
     {
         if (_gridLayoutGrp == null)
@@ -121,7 +123,7 @@ public abstract class UIInventoryManager : MonoBehaviour
             _gridLayoutGrp.cellSize = new Vector2(cellSize, cellSize);
             //Debug.Log($"Set cellSize to {cellSize}");
         }
-        
+
         _numberOfColumns = _gridLayoutGrp.constraintCount;
         _gridCellWidth = _gridLayoutGrp.cellSize.x;
         _gridCellHeight = _gridLayoutGrp.cellSize.y;
@@ -198,16 +200,19 @@ public abstract class UIInventoryManager : MonoBehaviour
             if (slot.GetInUse() == false)
                 return true;
         }
-        foreach (var slot in _extraSlots)
+        if (_canAssignExtraSlots)
         {
-            if (slot.GetInUse() == false)
-                return true;
+            foreach (var slot in _extraSlots)
+            {
+                if (slot.GetInUse() == false)
+                    return true;
+            }
         }
         return false;
     }
 
     /**Used by all inventories initially to make required, and by IN-inventory with no specific slot in mind */
-    public void AddItemToSlot(int itemID, List<QualityObject> qualities, bool makeRequired)
+    public bool AddItemToSlot(int itemID, List<QualityObject> qualities, bool makeRequired)
     {
         //if(_inventoryType==eInvType.OUT)
         // Debug.Log($"Adding Item to slot {itemID}");
@@ -220,29 +225,33 @@ public abstract class UIInventoryManager : MonoBehaviour
             foreach (UIInventorySlot slot in _slots)
             {
                 if (TryToAdd(slot, itemID, qualities, makeRequired))
-                    return;
+                    return true;
             }
-            foreach (UIInventorySlot slot in _extraSlots)
+            if (_canAssignExtraSlots)
             {
-                if (TryToAdd(slot, itemID, qualities, makeRequired))
-                    return;
+                foreach (UIInventorySlot slot in _extraSlots)
+                {
+                    if (TryToAdd(slot, itemID, qualities, makeRequired))
+                        return true;
+                }
+                //fell thru so we are full
+                //Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
+                UIInventorySlot nSlot = CreateNewSlot();
+                nSlot.AssignItem(itemID, 1, qualities);
+                _extraSlots.Add(nSlot);
+                ++_INVENTORYSIZE; ///Not even sure this matters anymore past initial slot creation
+                SetSizeOfContentArea(); ///adjust scrollable area
             }
-            //fell thru so we are full
-            //Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
-            UIInventorySlot nSlot = CreateNewSlot();
-            nSlot.AssignItem(itemID, 1, qualities);
-            _extraSlots.Add(nSlot);
-            ++_INVENTORYSIZE;
-            SetSizeOfContentArea(); ///adjust scrollable area
         }
         else
         {
-            AddChaotic(itemID, qualities, makeRequired);
-
+           return AddChaotic(itemID, qualities, makeRequired);
         }
+
+        return false;
     }
 
-    protected void AddChaotic(int itemID, List<QualityObject> qualities, bool makeRequired)
+    protected bool AddChaotic(int itemID, List<QualityObject> qualities, bool makeRequired)
     {
         List<UIInventorySlot> _available = new List<UIInventorySlot>();
         //Search through our initial slots and save any that can accept this itemID
@@ -255,15 +264,13 @@ public abstract class UIInventoryManager : MonoBehaviour
                     if (slot.RequiredID == itemID)
                         _available.Add(slot);
                 }
-                else if (slot.GetInUse())
-                {
+                else if (!slot.GetInUse())
                     _available.Add(slot);
-                }
             }
 
         }
         //If we didnt find any in main, search our extra slots
-        if (_available.Count == 0)
+        if (_available.Count == 0 && _canAssignExtraSlots)
         {
             foreach (UIInventorySlot slot in _extraSlots)
             {
@@ -290,8 +297,9 @@ public abstract class UIInventoryManager : MonoBehaviour
                 _available[UnityEngine.Random.Range(0, _available.Count - 1)].SetRequiredID(itemID);
             else
                 _available[UnityEngine.Random.Range(0, _available.Count - 1)].AssignItem(itemID, 1, qualities);
+            return true;
         }
-        else //create an additional slot to add to 
+        else if (_canAssignExtraSlots) //create an additional slot to add to 
         {
             UIInventorySlot nSlot = CreateNewSlot();
             if (makeRequired)
@@ -300,8 +308,10 @@ public abstract class UIInventoryManager : MonoBehaviour
                 nSlot.AssignItem(itemID, 1, qualities);
 
             _extraSlots.Add(nSlot);
+            return true;
 
         }
+        return false;
     }
 
     protected bool TryToAdd(UIInventorySlot slot, int itemID, List<QualityObject> qualities, bool makeRequired)
@@ -340,10 +350,10 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     public void SetImportant(GameObject button)
     {
-       // button.transform.SetAsLastSibling();
+        // button.transform.SetAsLastSibling();
     }
 
-    public virtual void ItemAssigned(UIInventorySlot slot){}
+    public virtual void ItemAssigned(UIInventorySlot slot) { }
 
     public int MaxSlots()
     {

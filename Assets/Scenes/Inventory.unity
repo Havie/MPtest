@@ -10222,8 +10222,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roundDuration: 90
-  _orderFrequency: 15
-  _batchSize: 2
+  _orderFrequency: 6
+  _batchSize: 1
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0

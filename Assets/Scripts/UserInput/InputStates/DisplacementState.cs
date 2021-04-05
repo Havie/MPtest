@@ -156,6 +156,16 @@ namespace UserInput
                             trans.position = _brain.ObjStartPos;
                             trans.rotation = _brain.ObjStartRot;
                             UIManager.ShowPreviewInvSlot(false, inputPos, null);
+                            slot.UndoPreview();
+
+                            ///There is a problem where if the object came from UI, it
+                            /// still gets set back behind it, even with deadzone check below?
+                            var placedInDeadZone = _brain.CheckRayCastForDeadZoneAtWorldPos(trans.position);
+                            if(placedInDeadZone)
+                            {
+                                trans.position = _brain.GetCurrentWorldLocBasedOnPos(placedInDeadZone.GetSafePosition, _currentSelection);
+                            }
+
                         }
                         ///Since its possible for the above to reset it to where it came out of UI
                         ///Do this everytime
