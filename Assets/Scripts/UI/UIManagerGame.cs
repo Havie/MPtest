@@ -7,8 +7,8 @@ using UserInput;
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
-    [Header("Scene Loading Info")]
-    [SerializeField] string _networkingSceneName = "MainScene (new)";
+    //[Header("Scene Loading Info")]
+     string _networkingSceneName = "MP_Lobby";
 
     [Header("Game Components")]
     public GameObject _inventoryCanvas;  ///TODO fix this ref being public
@@ -178,6 +178,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             _inventoryCanvas.SetActive(false); 
     }
     
+    ///Called from end results modal
     public void ContinueFromEndResults()
     {
         //TODO?- reload to main menu and let them reconnect with new host settings / start over?
