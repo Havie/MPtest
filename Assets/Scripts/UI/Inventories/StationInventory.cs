@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+[DefaultExecutionOrder(10001)] // load late after Injector...
+///I am very confused why the IN and OUT inventories load after this by default, and how this one started getting
+///called early and now requires a DefaultExecutionOrder +1 after injector
 public class StationInventory : UIInventoryManager
 {
     #region InitalSetup
@@ -27,6 +31,7 @@ public class StationInventory : UIInventoryManager
         WorkStationManager wm = gm.CurrentWorkStationManager;
         int batchSize = gm._batchSize;
         WorkStation myWS = gm._workStation;
+        Debug.Log($"Station { gm._workStation}");
         return StationItemParser.ParseItemsAsStation(batchSize, wm, myWS);
     }
 

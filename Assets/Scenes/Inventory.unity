@@ -10110,7 +10110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 6
-  _batchSize: 2
+  _batchSize: 1
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -10874,6 +10874,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InventoryStation
+      objectReference: {fileID: 0}
+    - target: {fileID: 5635248555718135495, guid: eeff0920a4208af41bad73c4ee6f0bd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeff0920a4208af41bad73c4ee6f0bd3, type: 3}
@@ -12272,7 +12277,7 @@ PrefabInstance:
     - target: {fileID: 1868493068313396964, guid: 96e18ea220abbe34b902fa900e2b9098,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1868493068313396967, guid: 96e18ea220abbe34b902fa900e2b9098,
         type: 3}

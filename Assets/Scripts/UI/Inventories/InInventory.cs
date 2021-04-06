@@ -31,7 +31,6 @@ public class InInventory : UIInventoryManager
     protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
-
         return StationItemParser.ParseItemsAsIN(gm._batchSize,gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
        // return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
