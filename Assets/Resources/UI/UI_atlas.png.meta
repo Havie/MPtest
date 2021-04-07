@@ -19,10 +19,10 @@ TextureImporter:
     second: UI_gridSquare_filled
   - first:
       213: -3393561476721232282
-    second: UI_atlas_5
+    second: UI_Popup
   - first:
       213: 3874975415160311312
-    second: UI_atlas_6
+    second: UI_TurnArrow
   - first:
       213: 4831725534204920131
     second: UI_atlas_7
@@ -424,6 +424,48 @@ TextureImporter:
       bones: []
       spriteID: 1cb88072afa592fe0800000000000000
       internalID: -1213338594156442687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Popup
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 666b49811d5a7e0d0800000000000000
+      internalID: -3393561476721232282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_TurnArrow
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01e800e0c9da6c530800000000000000
+      internalID: 3874975415160311312
       vertices: []
       indices: 
       edges: []
