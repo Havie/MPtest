@@ -161,6 +161,8 @@ public class ObjectController : HighlightableObject, IConstructable
     public override void HandleInteractionTime(float time)
     {
         ChangeHighlightAmount(time);
+        ///TODO make this take in an Interface?
+        HandManager.StartToHandleIntensityChange(this);
     }
 
     ///IHighlightable
@@ -176,9 +178,6 @@ public class ObjectController : HighlightableObject, IConstructable
             SetHighlighted(true);
             ChangeHighlightAmount(0);
         }
-
-        ///TODO make this take in an Interface?
-        HandManager.StartToHandleIntensityChange(this);
 
     }
     public override void CancelHighLightPreview()
