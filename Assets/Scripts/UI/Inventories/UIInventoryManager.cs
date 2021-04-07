@@ -217,8 +217,6 @@ public abstract class UIInventoryManager : MonoBehaviour
     /**Used by all inventories initially to make required, and by IN-inventory with no specific slot in mind */
     public bool AddItemToSlot(int itemID, List<QualityObject> qualities, bool makeRequired)
     {
-        //if(_inventoryType==eInvType.OUT)
-        // Debug.Log($"Adding Item to slot {itemID}");
 
         if (!IsInitalized)
             Start();
@@ -244,6 +242,7 @@ public abstract class UIInventoryManager : MonoBehaviour
                 _extraSlots.Add(nSlot);
                 ++_INVENTORYSIZE; ///Not even sure this matters anymore past initial slot creation
                 SetSizeOfContentArea(); ///adjust scrollable area
+                return true;
             }
         }
         else
