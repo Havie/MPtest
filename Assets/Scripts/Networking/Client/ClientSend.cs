@@ -118,7 +118,7 @@ public class ClientSend : MonoSingleton<ClientSend>
                 info += $" send:({q.ID},{q.CurrentQuality}) ";
             }
 
-            UIManager.DebugLog(info);
+            //UIManager.DebugLog(info);
 
             SendTCPData(packet);
 
