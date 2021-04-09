@@ -10132,7 +10132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 3
+  _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2033773017 stripped
 GameObject:

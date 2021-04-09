@@ -203,7 +203,7 @@ namespace UserInput
 
 
         /// <summary>
-        /// Shows the Icon above your finger when moving an object
+        /// Shows the Icon of the picked up obj above your finger when moving an object
         /// </summary>
         private void ShowMovingPreviewIcon(IMoveable moveableObject, Vector3 inputPos)
         {

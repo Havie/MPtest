@@ -285,4 +285,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myIcon: {fileID: 7546707325249962745}
   _greenCheckmark: {fileID: 3568646004612352353}
+  _defaultIconUsed: {fileID: 5308747809085515294, guid: 4075b93eb647c45408378a84005eaddb,
+    type: 3}
+  _defaultIconEmpty: {fileID: 5204777658904197717, guid: 4075b93eb647c45408378a84005eaddb,
+    type: 3}
   _inUse: 0
