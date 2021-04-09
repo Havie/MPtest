@@ -44,10 +44,6 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         _autoSend = cond;
         _isOutSlot = true; // only OUT-INV calls this method so safe to assume
     }
-    public bool RequiresCertainID()
-    {
-        return RequiredID != -1;
-    }
     public void SetRequiredID(int itemID)
     {
         RequiredID = itemID;
@@ -209,6 +205,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         }
         return false;
     }
+    public bool RequiresCertainID() => RequiredID != -1;
     #endregion
     public bool SendData()
     {

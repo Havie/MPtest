@@ -11827,7 +11827,7 @@ PrefabInstance:
     - target: {fileID: 3218949019558382271, guid: 854ea3c79f67b98409bed6bb5a1f41a1,
         type: 3}
       propertyPath: m_Name
-      value: _previewSlot
+      value: _previewInvalidSlot
       objectReference: {fileID: 0}
     - target: {fileID: 3218949019558382271, guid: 854ea3c79f67b98409bed6bb5a1f41a1,
         type: 3}

@@ -12,4 +12,5 @@ public interface IAssignable
 
     bool AssignItem(int id, int count, List<QualityObject> qualities);
 
+    bool RequiresCertainID();
 }

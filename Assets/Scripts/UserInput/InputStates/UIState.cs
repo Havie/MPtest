@@ -5,6 +5,7 @@ namespace UserInput
 {
     public class UIState : InputState
     {
+
         public UIState(UserInputManager input)
         {
             _brain = input;
@@ -47,8 +48,7 @@ namespace UserInput
                     int itemID = slot.GetItemID();
                     // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
                     var qualityList = slot.RebuildQualities();
-                    slot.RemoveItem();
-                   
+                    slot.RemoveItem(); 
                     var obj = ObjectManager.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(_zDepth), qualityList).GetComponent<ObjectController>();
                     _currentSelection = obj;
                     //HandManager.PickUpItem(_currentSelection as ObjectController); ///Abstraced now when displacement calls OnBeginFollow()
