@@ -40,6 +40,12 @@ public static class UIManager
             _invManager.ShowPreviewInvSlot(cond, pos, img);
     }
 
+    public static void ShowPreviewMovingIcon(bool cond, Vector3 pos, Sprite img)
+    {
+        if (_invManager)
+            _invManager.ShowPreviewMovingIcon(cond, pos, img);
+    }
+
 
     public static void BeginLevel()
     {

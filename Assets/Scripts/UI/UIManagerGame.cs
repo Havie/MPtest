@@ -21,6 +21,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] Button _hand2 = default;
     [SerializeField] Image _touchPhaseDisplay = default;
     [SerializeField] Image _previewSlot = default;
+    [SerializeField] UIPreviewMovementIcon _previewMovingIcon = default;
     ///NB: Dont like how "hardcoded" this is getting
 
     [Header("Bin Toggles")]
@@ -41,6 +42,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     {
         UIManager.RegisterGameManager(this);
         ShowPreviewInvSlot(false, Vector3.zero, null);
+        ShowPreviewMovingIcon(false, Vector3.zero, null);
     }
 
     private void OnDestroy()
@@ -59,6 +61,14 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
                 _previewSlot.gameObject.transform.position = pos;
                 _previewSlot.sprite = img;
             }
+        }
+    }
+
+    public void ShowPreviewMovingIcon(bool cond, Vector3 pos, Sprite img)
+    {
+        if (_previewMovingIcon)
+        {
+            _previewMovingIcon.ShowPreviewMovingIcon(cond, pos, img);
         }
     }
 

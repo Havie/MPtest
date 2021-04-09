@@ -19,7 +19,7 @@ namespace UserInput
 
         public override void DisableState()
         {
-
+            UIManager.ShowPreviewMovingIcon(false, Vector3.zero, null);
         }
 
         public override void EnableState(IInteractable currentSelection)
@@ -88,9 +88,10 @@ namespace UserInput
                     worldLoc.z = moveableObject.DesiredSceneDepth();
                     moveableObject.OnFollowInput(worldLoc); //+ _brain._mOffset
                                                             //Debug.Log($" {worldLoc} + _mOffset={_brain._mOffset}  = {(worldLoc + _brain._mOffset)}");
-
+                    ShowMovingPreviewIcon(moveableObject, inputPos);
                     if (slot != null) ///we are hovering over a slot 
                     {
+                        UIManager.ShowPreviewMovingIcon(false, Vector3.zero, null);
                         // Debug.Log("WE are hovering over a slot!");
                         if (!slot.GetInUse())
                         {
@@ -201,7 +202,27 @@ namespace UserInput
         }
 
 
+        /// <summary>
+        /// Shows the Icon above your finger when moving an object
+        /// </summary>
+        private void ShowMovingPreviewIcon(IMoveable moveableObject, Vector3 inputPos)
+        {
+            ObjectController oc = moveableObject as ObjectController;
+            if (oc)
+            {
+                ///TODO -decide if each obj uses same offset (cache this) or
+                ///could make each item contain its own offset
+                var offset = Vector3.up * 175;
+                //Debug.Log($"..in={inputPos}  --> offset={inputPos + offset}");
+                Sprite img = ObjectManager.Instance.GetSpriteByID((int)oc._myID);
+                UIManager.ShowPreviewMovingIcon(true, inputPos + offset, img);
+                UIManager.ShowPreviewInvSlot(false, inputPos, img);
+            }
+        }
 
+        /// <summary>
+        /// Shows the UI icon ontop of an invalid slot so user still knows what object they are carrying
+        /// </summary>
         private void ShowDummyPreviewSlot(IConstructable moveableObject, Vector3 inputPos)
         {
             ObjectController oc = moveableObject as ObjectController;
@@ -210,6 +231,7 @@ namespace UserInput
                 Sprite img = ObjectManager.Instance.GetSpriteByID((int)oc._myID);
                 moveableObject.ChangeAppearanceHidden(true);
                 UIManager.ShowPreviewInvSlot(true, inputPos, img);
+                UIManager.ShowPreviewMovingIcon(false, inputPos, null);
             }
         }
 
