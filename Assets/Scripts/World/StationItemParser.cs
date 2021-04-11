@@ -241,7 +241,7 @@ public static class StationItemParser
     public static List<int> ParseItemsAsStation(int batchSize, bool isStackable,  WorkStationManager wm, WorkStation myWS)
     {
         List<int> seenItems = new List<int>();
-        if (batchSize == 1) ///PULL
+        if (batchSize == 1 || isStackable) ///PULL & Stackable Batch, works for now if 1 task per station
         {
             foreach (Task t in myWS._tasks)
             {
@@ -253,12 +253,12 @@ public static class StationItemParser
                 //Debug.Log($"<color=yellow>batch size is 1 and itemCount </color> ={t._requiredItemIDs.Count} for Task:{t}");
             }
         }
-        else if ( isStackable) ///STACKABLE BATCH
-        {
-            /// if WS .TASK list > 1 we have to look at all our tasks and figure out what parts
-            /// we can assemble with our in inventory, 
-            /// then only includethe parts not included to do final item ID on last Task
-        }
+        //else if ( isStackable) ///STACKABLE BATCH
+        //{
+        //    /// if WS .TASK list > 1 we have to look at all our tasks and figure out what parts
+        //    /// we can assemble with our in inventory, 
+        //    /// then only includethe parts not included to do final item ID on last Task
+        //}
         else ///BATCH
         {
 
