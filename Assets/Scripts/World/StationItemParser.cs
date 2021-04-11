@@ -255,6 +255,8 @@ public static class StationItemParser
         }
         //else if ( isStackable) ///STACKABLE BATCH
         //{
+        //Found a bit of a shortcut / hack.Since we are not going to allow users to customize the tasks lists this version of LEAN, we can just cut the tasks lists down to 1 per station, then StationItemParser can treat batch == 1 or isStackable the same
+        //This will have to change if we revisit the idea of modular task assignments
         //    /// if WS .TASK list > 1 we have to look at all our tasks and figure out what parts
         //    /// we can assemble with our in inventory, 
         //    /// then only includethe parts not included to do final item ID on last Task
