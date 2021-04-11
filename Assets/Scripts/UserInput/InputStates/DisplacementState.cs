@@ -153,7 +153,7 @@ namespace UserInput
                     {
                         //Debug.Log($"FOUND UI SLOT {slot.name}");
                         //slot.SetNormal();
-                        assigned = slot.AssignItem(moveableObject as ObjectController, 1); ///TODO verify this somehow
+                        assigned = slot.AssignItem(moveableObject as ObjectController, 1);
                         if (assigned)
                             _brain.Destroy(moveableObject);
                     }

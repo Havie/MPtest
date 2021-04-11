@@ -345,6 +345,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
     private void OnDestroy()
     {
+        HandManager.DropItem(this);
         if (_handLocation)
             Destroy(_handLocation.gameObject);
         _handLocation = null;

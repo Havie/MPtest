@@ -43,6 +43,38 @@ public static class HandManager
         CheckHandPositions();
         CancelIntensityChangePreview();
     }
+    public static void DropItem(ObjectController item)
+    {
+        if (item)
+        {
+
+            bool weHaveItem = false;
+
+            if (_handArray[0] == item)
+            {
+                weHaveItem = true;
+                ///shift other item over to slot 0
+                _handArray[0] = _handArray[1];
+                if (_handArray[0] != null)
+                    _handArray[0].PickedUp(1); ///reset our hand index
+                _handArray[1] = null;
+            }
+            else if (_handArray[1] == item)
+            {
+                weHaveItem = true;
+                _handArray[1] = null;
+            }
+            if (weHaveItem)
+            {
+                item.PutDown();
+                // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
+                item.SetHandPreviewingMode(false);
+                CheckHandPositions();
+                CancelIntensityChangePreview();
+            }
+        }
+
+    }
 
 
     public static void StartToHandleIntensityChange(IHighlightable potentialItemToBePickedUp)
@@ -76,26 +108,26 @@ public static class HandManager
         /// so the change happens to fast, might as well just use 0.05f constant as it looks visually appealing
         // (UserInput.Instance._pressTimeCURR/UserInput.Instance._pressTimeMAX)/2));
 
-
-        if (numItemsInhand < 2)
+        ///If we are already picking this item up, we dont wana do anything
+        if (numItemsInhand < 2|| potentialItemToBePickedUp == _handArray[0] || potentialItemToBePickedUp == _handArray[1])
             return;
-
         ///start to fade out next item to be dropped
         ObjectController ItemToBeDroppedNext = _handArray[1];
         var currentIntensity2 = ItemToBeDroppedNext.GetHighlightIntensity();
         ItemToBeDroppedNext.ChangeHighlightAmount(currentIntensity2 - _intensityChange);
 
  
-
-
-
-        ///We could also make the HandObject start to move towards this new item
         if (!_previewingAChange)
         {
             SetHandPreviewMode(true);
             _previewTime = 0;
         }
 
+
+        //Debug.Log($"#{numItemsInhand} .. potentialItemToBePickedUp={potentialItemToBePickedUp}, ItemToBeDroppedNext={ItemToBeDroppedNext}");
+        //Debug.Log($"#{numItemsInhand} .. 1={_handArray[0]}, 2={_handArray[1]}");
+
+        /// make the HandObject start to move towards this new item
         if (ItemToBeDroppedNext._handLocation != null && potentialItemToBePickedUp._handLocation != null)
         {
             ///weight is used to get the item to be closer to the center of new obj or hand loc in bottom corner. Just looks a bit better if stuff is fallen over
@@ -189,31 +221,6 @@ public static class HandManager
 
     }
 
-    private static void DropItem(ObjectController item)
-    {
-        if (item)
-        {
-            item.PutDown();
-           // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
-            item.SetHandPreviewingMode(false);
-            if (_handArray[0] == item)
-            {
-                ///shift other item over to slot 0
-                _handArray[0] = _handArray[1];
-                if (_handArray != null)
-                    _handArray[0].PickedUp(1); ///reset our hand index
-                _handArray[1] = null;
-            }
-            else if(_handArray[1] == item)
-            {
-                _handArray[1] = null;
-            }
-
-            CheckHandPositions();
-            CancelIntensityChangePreview();
-        }
-
-    }
 
     private static void CheckHandPositions()
     {
