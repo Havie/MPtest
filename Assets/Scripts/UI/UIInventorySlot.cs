@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class UIInventorySlot : MonoBehaviour, IAssignable
 {
     [SerializeField] Image _myIcon = default;
     [SerializeField] GameObject _greenCheckmark = default;
-    private Sprite _defaultIcon;
+    [SerializeField] Sprite _defaultIconUsed = default;
+    [SerializeField] Sprite _defaultIconEmpty = default;
+    private Sprite _currentBGSprite;
     private UIInventoryManager _manager;
     private bool _autoSend = false; //Only for OutINV, set by InventoryManager
     private bool _isOutSlot;
@@ -28,8 +31,11 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     private Color _INVALID = new Color(255, 155, 155, 0.5f);
 
     /************************************************************************************************************************/
-
-    private void Awake() { _defaultIcon = _myIcon.sprite; }
+    private void Awake()
+    {
+        ///DefaultToEmptyIcon
+        SwapBackgroundIMGs(false);
+    }
     /************************************************************************************************************************/
 
     public void SetManager(UIInventoryManager manager) { _manager = manager; }
@@ -38,15 +44,24 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         _autoSend = cond;
         _isOutSlot = true; // only OUT-INV calls this method so safe to assume
     }
-    public bool RequiresCertainID()
-    {
-        return RequiredID != -1;
-    }
     public void SetRequiredID(int itemID)
     {
         RequiredID = itemID;
         //Set transparent icon 
         AssignSpriteByID(RequiredID, true);
+    }
+    public void SwapBackgroundIMGs(bool isInUse)
+    {
+        if (isInUse)
+        {
+            _currentBGSprite = _defaultIconUsed;
+        }
+        else
+        {
+            _currentBGSprite = _defaultIconEmpty;
+
+        }
+        this.GetComponent<Image>().sprite = _currentBGSprite;
     }
     public int GetItemID() => _itemID;
 
@@ -106,6 +121,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         //    Debug.Log($"Removed Item for {this.gameObject.name} , new total={_numItemsStored}");
         if (_numItemsStored <= 0)
         {
+            SwapBackgroundIMGs(false);
             _qualities.Clear();
             if (RequiredID != -1)
             {
@@ -148,7 +164,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         {
             if (_isOutSlot && id != RequiredID)
             {
-                Debug.Log($"{id} does not match {RequiredID}");
+                //Debug.Log($"{id} does not match {RequiredID}");
                 return false;
             }
             else if (_isOutSlot && id == RequiredID)
@@ -157,7 +173,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
                     _greenCheckmark.SetActive(true);
             }
             AssignSpriteByID(id, false);
-
+            SwapBackgroundIMGs(true);
             ///Might have to clone it, but lets see if we can store it
             if (qualities != null)
                 _qualities = qualities;
@@ -189,6 +205,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         }
         return false;
     }
+    public bool RequiresCertainID() => RequiredID != -1;
     #endregion
     public bool SendData()
     {
@@ -281,7 +298,8 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         }
         else
         {
-            AssignSprite(_defaultIcon);
+            ///Just show the default ICON ontop instead of disabling
+            AssignSprite(_currentBGSprite);
         }
     }
     private void SetLarger()

@@ -31,14 +31,15 @@ public class StationInventory : UIInventoryManager
         WorkStationManager wm = gm.CurrentWorkStationManager;
         int batchSize = gm._batchSize;
         WorkStation myWS = gm._workStation;
+        bool isStackable = gm._isStackable;
         Debug.Log($"Station { gm._workStation}");
-        return StationItemParser.ParseItemsAsStation(batchSize, wm, myWS);
+        return StationItemParser.ParseItemsAsStation(batchSize, isStackable, wm, myWS);
     }
 
-    private void SetUpInfiniteItems(WorkStationManager wm, WorkStation myWS)
+    private void SetUpInfiniteItems(WorkStationManager wm, WorkStation myWS, bool isStackable=true)
     {
-
-        foreach(var itemID in StationItemParser.ParseItemsAsStation(GameManager.instance._batchSize, wm, myWS))
+       
+        foreach(var itemID in StationItemParser.ParseItemsAsStation(GameManager.instance._batchSize, isStackable, wm, myWS))
         {
             AssignInfiniteItem(itemID);
         }
@@ -53,6 +54,7 @@ public class StationInventory : UIInventoryManager
         //if (NotStackableAndNotKitting())
         if (NotStackableOrKitting())
             return;
+
         _INVENTORYSIZE = itemIDs.Count;
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
@@ -88,14 +90,6 @@ public class StationInventory : UIInventoryManager
     {
 
         if (!_STACKABLE)
-        {
-            Destroy(this.gameObject); //good enough for now might need to go higher to parents
-            return true;
-        }
-
-        int batchSize = GameManager.instance._batchSize;
-        var ws = GameManager.Instance._workStation;
-        if (ws.isKittingStation() && batchSize!=1)
         {
             Destroy(this.gameObject); //good enough for now might need to go higher to parents
             return true;

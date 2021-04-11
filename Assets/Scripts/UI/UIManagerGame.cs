@@ -141,7 +141,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         }
         if (cond)
         {
-            GameManager.instance.IsStackableChanged(true);
+            ///This seems wrong now based on allthe logic in the StationItemParser
+            //GameManager.instance.IsStackableChanged(true);
         }
 
     }

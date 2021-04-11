@@ -20,6 +20,7 @@ namespace UserInput
         public override void DisableState()
         {
             UIManager.ShowPreviewMovingIcon(false, Vector3.zero, null);
+            UIManager.ShowPreviewInvSlot(false, Vector3.zero, null);
         }
 
         public override void EnableState(IInteractable currentSelection)
@@ -98,25 +99,34 @@ namespace UserInput
                             ObjectController oc = moveableObject as ObjectController;
                             if (oc)
                             {
+                                bool didPreview = slot.PreviewSlot(ObjectManager.Instance.GetSpriteByID((int)oc._myID));
                                 ///The slot can accept this item
-                                if (slot.PreviewSlot(ObjectManager.Instance.GetSpriteByID((int)oc._myID)))
+                                if (didPreview) //|| !slot.RequiresCertainID()
                                 {
                                     IConstructable constructable = moveableObject as IConstructable;
                                     if (constructable != null)
                                     {
                                         constructable.ChangeAppearanceHidden(true);
-                                        UIManager.ShowPreviewInvSlot(false, inputPos, null);
+                                        ///Show an icon of this item in the inventory:
+                                        ///Enabling this helps with showing you pulled an item out of a slot,
+                                        ///but then makes it less inuitive when you are putting an item over a slot
+                                        ///that requires this ID.
+                                        /// since this is barely noticeable under the finger on tablet, leave it off
+                                        //ShowDummyPreviewSlot(constructable, inputPos);
+                                        UIManager.ShowPreviewInvSlot(false, Vector3.zero, null);
                                     }
                                 }
-                                else ///the slot can not accept this item so continue to show the dummy preview
+                                else
+                                {
                                     ShowDummyPreviewSlot(moveableObject as IConstructable, inputPos);
+                                }
 
                                 if (slot != _lastSlot && _lastSlot != null)
                                     _lastSlot.UndoPreview();
 
                                 _lastSlot = slot;
 
-                            }///Might be the wrong place to close this bracket
+                            }
                         }
                         else
                         {
@@ -143,7 +153,7 @@ namespace UserInput
                     {
                         //Debug.Log($"FOUND UI SLOT {slot.name}");
                         //slot.SetNormal();
-                        assigned = slot.AssignItem(moveableObject as ObjectController, 1); ///TODO verify this somehow
+                        assigned = slot.AssignItem(moveableObject as ObjectController, 1);
                         if (assigned)
                             _brain.Destroy(moveableObject);
                     }
@@ -203,7 +213,7 @@ namespace UserInput
 
 
         /// <summary>
-        /// Shows the Icon above your finger when moving an object
+        /// Shows the Icon of the picked up obj above your finger when moving an object
         /// </summary>
         private void ShowMovingPreviewIcon(IMoveable moveableObject, Vector3 inputPos)
         {
@@ -212,7 +222,7 @@ namespace UserInput
             {
                 ///TODO -decide if each obj uses same offset (cache this) or
                 ///could make each item contain its own offset
-                var offset = Vector3.up * 175;
+                var offset = Vector3.up * 175; ///doesnt make any sense how 175 on PC is nowhere near obj, and on tablet its right above finger
                 //Debug.Log($"..in={inputPos}  --> offset={inputPos + offset}");
                 Sprite img = ObjectManager.Instance.GetSpriteByID((int)oc._myID);
                 UIManager.ShowPreviewMovingIcon(true, inputPos + offset, img);

@@ -74,7 +74,7 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     {
         RestoreDefault();
     }
-
+    public bool RequiresCertainID() => false;
     public bool AssignItem(ObjectController oc, int count)
     {
         if (oc == null)

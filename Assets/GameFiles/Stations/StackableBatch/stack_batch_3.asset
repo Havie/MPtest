@@ -15,6 +15,6 @@ MonoBehaviour:
   _myStation: 3
   _sendOutputToStation: 4
   _myStationName: LesserBottleneck
+  _myStationInstructions: {fileID: 0}
   _tasks:
-  - {fileID: 11400000, guid: 6940d48e616b78d438579dcdd146bceb, type: 2}
-  - {fileID: 11400000, guid: 9fc6d040f6a1e2644968f46f07c7f838, type: 2}
+  - {fileID: 11400000, guid: f13de1f3de6d80f4bb801a52d289de76, type: 2}

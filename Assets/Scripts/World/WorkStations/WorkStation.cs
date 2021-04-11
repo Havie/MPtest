@@ -31,6 +31,10 @@ public class WorkStation : ScriptableObject
     {
         return IsTaskType(Task.eStationType.Kitting);
     }
+    public bool IsStackedKittingStation()
+    {
+        return IsTaskType(Task.eStationType.StackedKitting);
+    }
 
     public bool IsQAStation()
     {
