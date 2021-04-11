@@ -7,16 +7,18 @@ public static class StationItemParser
     public static List<int> ParseItemsAsOUT(int batchSize, bool isStackable, WorkStationManager wm, WorkStation myWS)
     {
         List<int> itemIDs = new List<int>();
-
         //Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        if (batchSize == 1) /// PULL SYSTEM
+        if (batchSize == 1 || isStackable) /// PULL SYSTEM
         {
             ///get last task at my station and put in its final item:
             Task t = myWS._tasks[myWS._tasks.Count - 1];
-
-            foreach (var item in t._finalItemID)
+            ///Have to wrap this incase stackable batch inventory is enabled:
+            for (int i = 0; i < batchSize; ++i)
             {
-                itemIDs.Add((int)item);
+                foreach (var item in t._finalItemID)
+                {
+                    itemIDs.Add((int)item);
+                }
             }
 
             return itemIDs;
@@ -24,7 +26,7 @@ public static class StationItemParser
 
         ///BATCH>1 :
         ///Sum the total required items (not self) of all subseqential workstations, and * BATCH_SIZE
-        int[] stationSequence = getProperSequence(wm, myWS);
+        int[] stationSequence = GetProperSequence(wm, myWS);
         var stationList = wm.GetStationList();
         ///Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
@@ -138,12 +140,12 @@ public static class StationItemParser
     {
 
         List<int> itemIDs = new List<int>();
-        int[] stationSequence = getProperSequence(wm, myWS);
+        int[] stationSequence = GetProperSequence(wm, myWS);
         var stationList = wm.GetStationList();
         ///Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
         // Debug.Log(myWS._myStation + " @ " + (int)myWS._myStation + "  id  is at index in sequence= " + startingIndex);
-        if (batchSize == 1)
+        if (batchSize == 1 || isStackable)
         {
             ///look at the last tasks final items in the station before mine
             if (startingIndex > 1) /// no kitting on pull, so second station
@@ -151,11 +153,13 @@ public static class StationItemParser
                 WorkStation ws = stationList[startingIndex - 1];
                 Task lastTask = ws._tasks[ws._tasks.Count - 1];
                 // Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
-
-
-                foreach (var item in lastTask._finalItemID)
+                ///Have to wrap this incase stackable batch inventory is enabled:
+                for (int i = 0; i < batchSize; ++i)
                 {
-                    itemIDs.Add((int)item);
+                    foreach (var item in lastTask._finalItemID)
+                    {
+                        itemIDs.Add((int)item);
+                    }
                 }
 
             }
@@ -234,10 +238,10 @@ public static class StationItemParser
             return items;
         }
     }
-    public static List<int> ParseItemsAsStation(int batchSize, WorkStationManager wm, WorkStation myWS)
+    public static List<int> ParseItemsAsStation(int batchSize, bool isStackable,  WorkStationManager wm, WorkStation myWS)
     {
         List<int> seenItems = new List<int>();
-        if (batchSize == 1)
+        if (batchSize == 1) ///PULL
         {
             foreach (Task t in myWS._tasks)
             {
@@ -249,10 +253,16 @@ public static class StationItemParser
                 //Debug.Log($"<color=yellow>batch size is 1 and itemCount </color> ={t._requiredItemIDs.Count} for Task:{t}");
             }
         }
-        else
+        else if ( isStackable) ///STACKABLE BATCH
+        {
+            /// if WS .TASK list > 1 we have to look at all our tasks and figure out what parts
+            /// we can assemble with our in inventory, 
+            /// then only includethe parts not included to do final item ID on last Task
+        }
+        else ///BATCH
         {
 
-            int[] stationSequence = getProperSequence(wm, myWS);
+            int[] stationSequence = GetProperSequence(wm, myWS);
             var stationList = wm.GetStationList();
             //Figure out myplace in Sequence 
             int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);
@@ -334,7 +344,7 @@ public static class StationItemParser
     }
 
     /** This is kind of a mess, thinking of making a doubly linked list class at some point*/
-    static int[] getProperSequence(WorkStationManager wm, WorkStation myWS)
+    static int[] GetProperSequence(WorkStationManager wm, WorkStation myWS)
     {
         int[] sequence = new int[wm.GetStationCount() + 1];
         //Debug.LogWarning("sequence size=" + wm.GetStationCount() + 1);
@@ -404,7 +414,7 @@ public static class StationItemParser
     static int SumSequence(WorkStationManager wm, WorkStation myWS, bool reqItemsOverFinalItems, bool includeSelf, bool excludeDuplicates)
     {
         int count = 0;
-        int[] stationSequence = getProperSequence(wm, myWS);
+        int[] stationSequence = GetProperSequence(wm, myWS);
         var stationList = wm.GetStationList();
         //Figure out myplace in Sequence 
         int startingIndex = FindPlaceInSequence(stationSequence, (int)myWS._myStation);

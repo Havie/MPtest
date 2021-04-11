@@ -20,7 +20,7 @@ public class Task : ScriptableObject
     //public bool isKittingStation; // might need to be an enum?
 
     ///For UI setup
-    public enum eStationType { Normal, Kitting, QA, Shipping}
+    public enum eStationType { Normal, Kitting, QA, Shipping, StackedKitting}
     [SerializeField]
     public eStationType _stationType;
 }

@@ -127,7 +127,9 @@ public class GameManager : MonoSingleton<GameManager>
     public void BatchChanged(int val) { ValidateBatchSize(val); } ///from ClientHandle
     public void AutoSendChanged(bool cond) { _autoSend = cond; ValidateAutoSend(); }
     public void AddChaoticChanged(bool cond) { _addChaotic = cond; }
-    public void IsStackableChanged(bool cond) { _isStackable = cond; }
+    public void IsStackableChanged(bool cond) {
+        Debug.Log("This set to :" + cond);
+        _isStackable = cond; }
     public void WorkStationArrangementChanged(bool cond) { _workStationArrangement = cond; }
     public void WorkStationTaskChanged(bool cond) { _workStationTaskChanging = cond; }
     public void DecreasedChangedOverTimeChanged(bool cond) { _decreaseChangeOverTime = cond; }
