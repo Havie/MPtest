@@ -445,6 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e6e600a93e60a4c9c6899adbeed8c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _offsetFromFinger: 0.11
   _pressTimeMAX: 0.4
   _mOffset: {x: 0, y: 0, z: 0}
   _objectLayer:
@@ -10132,7 +10133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 1
+  _stationToInject: 2
   _itemToInject: 17
 --- !u!1 &2033773017 stripped
 GameObject:

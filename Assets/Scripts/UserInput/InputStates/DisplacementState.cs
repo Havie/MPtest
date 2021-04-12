@@ -7,10 +7,12 @@ namespace UserInput
     {
 
         private IAssignable _lastSlot;
+        private float _offsetFromFinger;
 
-        public DisplacementState(UserInputManager input)
+        public DisplacementState(UserInputManager input, float offsetFromFinger)
         {
             _brain = input;
+            _offsetFromFinger = offsetFromFinger;
         }
 
         /************************************************************************************************************************/
@@ -220,10 +222,7 @@ namespace UserInput
             ObjectController oc = moveableObject as ObjectController;
             if (oc)
             {
-                ///TODO -decide if each obj uses same offset (cache this) or
-                ///could make each item contain its own offset
-                var offset = Vector3.up * 175; ///doesnt make any sense how 175 on PC is nowhere near obj, and on tablet its right above finger
-                //Debug.Log($"..in={inputPos}  --> offset={inputPos + offset}");
+                var offset = Vector3.up * (Screen.height * _offsetFromFinger);
                 Sprite img = ObjectManager.Instance.GetSpriteByID((int)oc._myID);
                 UIManager.ShowPreviewMovingIcon(true, inputPos + offset, img);
                 UIManager.ShowPreviewInvSlot(false, inputPos, img);
@@ -231,7 +230,7 @@ namespace UserInput
         }
 
         /// <summary>
-        /// Shows the UI icon ontop of an invalid slot so user still knows what object they are carrying
+        /// Shows the UI icon ontop of a UI slot so user still knows what object they are carrying
         /// </summary>
         private void ShowDummyPreviewSlot(IConstructable moveableObject, Vector3 inputPos)
         {
