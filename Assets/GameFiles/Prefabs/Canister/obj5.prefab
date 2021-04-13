@@ -123,6 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73ec9ba0b610d14b9e8779d68705b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attachmentAngle: 1
 --- !u!1 &4271512847851596980
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f263b1059f3b1f14f80b6ea3e204a37e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attachmentSensitivity: 0
   _requiredAttachmentID: 06000000
   _createdID: 17000000
 --- !u!1 &6467200454433006771

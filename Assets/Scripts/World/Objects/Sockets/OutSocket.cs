@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class OutSocket : Socket
 {
+    enum eAttachmentAngle { HORIZ, VERT}
+
+    [SerializeField] eAttachmentAngle _attachmentAngle = default;
     public float xVelocity { get; private set; }
     public float yVelocity { get; private set; }
 
     private Vector3 _lastPos;
+    public bool AttachesHorizontal => _attachmentAngle == eAttachmentAngle.HORIZ;
 
     private void Awake()
     {
@@ -18,8 +22,10 @@ public class OutSocket : Socket
     {
         ///Keep track of our movement Dir's
         var newPos = transform.position;
-        xVelocity = (_lastPos.x - newPos.x);
-        yVelocity = (_lastPos.y - newPos.y);
+        xVelocity = (newPos.x- _lastPos.x );
+        yVelocity = (newPos.y -_lastPos.y );
         _lastPos = newPos;
+
     }
+
 }

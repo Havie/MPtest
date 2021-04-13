@@ -125,7 +125,7 @@ public class InSocket : Socket
             }
             else //OnTriggerExit
             {
-                valid = isProperAttachmentVelocity(maleSocket); ;
+                valid = true;
             }
         }
         else if(bothItemsArePickedUp && requiredAttachmentID != (int)socket.Controller._myID)
@@ -134,7 +134,6 @@ public class InSocket : Socket
         }
         //  Debug.LogWarning($"incomming::{(int)socket._controller._myID} != {requiredAttachmentID}");
 
-        Debug.Log($"Return: {valid}");
         return valid;
 
     }
@@ -145,17 +144,21 @@ public class InSocket : Socket
         if (!maleSocket)
             return false;
 
-        ///Prevent proper direction, but reversed velocity attachment:
-        var properVelocity = maleSocket.xVelocity > 0 ?
-                   maleSocket.transform.position.x - this.transform.position.x > 0 :
-                     this.transform.position.x - maleSocket.transform.position.x < 0;
+        //float cosAngleBetween = Vector3.Dot(new Vector3(maleSocket.xVelocity, maleSocket.yVelocity, 0).normalized, maleSocket.transform.forward.normalized);
+        //bool roughlyAligned = Mathf.Abs(cosAngleBetween - 1) <= _attachmentSensitivity;
+        //bool roughlyOpposite = Mathf.Abs(cosAngleBetween + 1) <= _attachmentSensitivity;
+        //Debug.Log($" align={roughlyAligned} opp = {roughlyOpposite}  x: {maleSocket.transform.forward.x}");
 
-        Debug.Log($"{maleSocket.xVelocity} : " +
-            $"( {maleSocket.transform.position.x - this.transform.position.x}, " +
-            $"{ this.transform.position.x - maleSocket.transform.position.x} ) " +
-            $" = {properVelocity}");
 
-        return properVelocity;
+        if (maleSocket.AttachesHorizontal)
+        {
+            return Mathf.Sign(maleSocket.xVelocity) == Mathf.Sign(maleSocket.transform.forward.x);
+        }
+        else
+        {
+            return Mathf.Sign(maleSocket.yVelocity) == Mathf.Sign(maleSocket.transform.forward.y);
+        }
+
     }
     
 
@@ -191,7 +194,7 @@ public class InSocket : Socket
 
             //EditorGUILayout.PropertyField(forcedLayer);
             //forcedLayer= EditorGUILayout.EnumPopup((LayerMask)forcedLayer.enumValueIndex);
-            EditorGUILayout.PropertyField(_attachmentSensitivity);
+            //EditorGUILayout.PropertyField(_attachmentSensitivity);
             EditorGUILayout.PropertyField(_requiredAttachmentID);
             EditorGUILayout.PropertyField(_createdID);
 
