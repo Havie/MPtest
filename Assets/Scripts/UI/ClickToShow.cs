@@ -2,12 +2,12 @@
 using UnityEngine;
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
-[RequireComponent(typeof(AudioSource))]
+//[RequireComponent(typeof(AudioSource))]
 
 public class ClickToShow : MonoBehaviour
 {
     [SerializeField] GameObject _gameObjectToShow;
-    [SerializeField] AudioClip clip;
+    [SerializeField] SoundHelper _soundHelper;
     bool shown = false;
 
 
@@ -32,7 +32,9 @@ public class ClickToShow : MonoBehaviour
         if (_gameObjectToShow)
             _gameObjectToShow.SetActive(shown);
 
-        AudioSource.PlayClipAtPoint(clip, new Vector3(0, 0, 0));
+
+        if (_soundHelper)
+            _soundHelper.PlayAudio();
     }
 
 

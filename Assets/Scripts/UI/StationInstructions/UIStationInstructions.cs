@@ -2,12 +2,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(AudioSource))]
+//[RequireComponent(typeof(AudioSource))]
 
 public class UIStationInstructions : MonoBehaviour
 {
     [SerializeField] Image _instructionIMG = default;
-    [SerializeField] AudioClip clip;
+    [SerializeField] SoundHelper _soundHelper;
     bool _isOn;
     
 
@@ -23,7 +23,8 @@ public class UIStationInstructions : MonoBehaviour
 
         }
 
-        AudioSource.PlayClipAtPoint(clip, new Vector3(0,0,0));
+        if (_soundHelper)
+            _soundHelper.PlayAudio();
 
     }
 
