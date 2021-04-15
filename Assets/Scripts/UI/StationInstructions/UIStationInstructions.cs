@@ -1,11 +1,15 @@
 ﻿#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 using UnityEngine;
 using UnityEngine.UI;
+
+[RequireComponent(typeof(AudioSource))]
+
 public class UIStationInstructions : MonoBehaviour
 {
     [SerializeField] Image _instructionIMG = default;
-
+    [SerializeField] AudioClip clip;
     bool _isOn;
+    
 
     public void ToggleInstructions()
     {
@@ -18,6 +22,8 @@ public class UIStationInstructions : MonoBehaviour
             AssignInstructions(img);
 
         }
+
+        AudioSource.PlayClipAtPoint(clip, new Vector3(0,0,0));
 
     }
 
