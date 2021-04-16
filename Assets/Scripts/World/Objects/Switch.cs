@@ -5,9 +5,10 @@ using UnityEngine;
 public class Switch : InteractableObject
 {
 
-    [SerializeField] GameObject _switch= default;
+    [SerializeField] GameObject _switch = default;
     [SerializeField] GameObject _switchFlipped = default;
-
+    [SerializeField] GameObject _lighteningVFXPREFAB = default;
+    [SerializeField] Transform _lighteningVFXLocation = default;
 
 
     public bool On => _on;
@@ -27,32 +28,55 @@ public class Switch : InteractableObject
     {
         _on = !On;
         ToggleChildren(On);
-        PlayVFX(CheckQualityConditions(On));
-
+        CheckQualityConditions(On);
     }
 
-    private bool CheckQualityConditions(bool On)
+    private void CheckQualityConditions(bool On)
     {
-        if (On)
-        {
-            QualityOverall quality = this.GetComponentInParent<QualityOverall>();
-            ObjectController oc = quality.GetComponent<ObjectController>();
-           // if (oc._myID == ObjectManager.eItemID.GreenRect1)  ///FinalPower
-            {
-                if (QualityChecker.CheckFinalQuality(quality))
-                {
-                    return true;
-                }
-            }
-        }
+        QualityOverall quality = this.GetComponentInParent<QualityOverall>();
+        ObjectController oc = quality.GetComponent<ObjectController>();
 
-        return false;
+        if (oc._myID == ObjectRecord.eItemID.RectwTopBotPurplePlug && On)  /// item 12
+        {
+            if (QualityChecker.CheckFinalQuality(quality))
+            {
+                ///SPAWN OBJ 13 in exact position
+                ///Play VFX on OBJ 13
+                ObjectManager.Instance.SpawnFinalPower(oc, quality.Qualities);
+            }
+            else
+            {
+                ///Play failure sound TODO
+            }
+
+            return;
+        }
+        else if (oc._myID == ObjectRecord.eItemID.finalPower)  /// item 13
+        {
+            ///Could check quality of this again but shud always be enough to pass since we got it spawned in the first place
+            PlayVFX(On);
+        }
     }
 
     void PlayVFX(bool cond)
     {
         Debug.Log("Play VFX=" + cond);
+        var vfxIn = VFXManager.Instance;
+        if (vfxIn)
+        {
+            if (cond)
+            {
+                vfxIn.PerformEffect(_lighteningVFXPREFAB, _lighteningVFXLocation, true);
+            }
+            else
+            {
+                vfxIn.StopEffect(_lighteningVFXPREFAB);
+            }
+        }
+        else
+            Debug.Log("<color=yellow>no vfx?</color>");
     }
+
 
 
 

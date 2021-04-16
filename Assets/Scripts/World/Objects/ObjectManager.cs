@@ -50,8 +50,6 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
 
     public GameObject SpawnObject(int itemID, Vector3 pos, List<QualityObject> qualities)
     {
-        if (itemID == -1)
-            Debug.Break();
 
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
         //GetNextObj
@@ -85,6 +83,29 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
             FPSCounter.Instance.ProfileAnObject(newObj);
 
         return newObj;
+    }
+
+    public void SpawnFinalPower(ObjectController toReplace, List<QualityObject> qualities)
+    {
+        Transform location = toReplace.transform;
+        GameObject newObj = SpawnObject((int)ObjectRecord.eItemID.finalPower, location.position, qualities);
+        if (newObj)
+        {
+            newObj.transform.rotation = location.rotation;
+        }
+        Destroy(toReplace.gameObject);
+        ///Pick up new object
+        var oc = newObj.GetComponent<ObjectController>();
+        if (oc)
+        {
+            HandManager.PickUpItem(oc);
+        }
+        ///PlayVFX
+        var vfxSwitch = newObj.GetComponentInChildren<Switch>();
+        if(vfxSwitch)
+        {
+            vfxSwitch.OnInteract();
+        }
     }
 
     public QualityObject BuildTempQualities(int id, int currAction)

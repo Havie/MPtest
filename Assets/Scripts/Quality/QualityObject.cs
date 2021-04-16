@@ -124,9 +124,10 @@ public class QualityObject : MonoBehaviour
     }
     private void PerformEffect()
     {
-        if (VFXManager.Instance) ///TODO cache the instance?
+        var vfxIn = VFXManager.Instance;
+        if (vfxIn) ///TODO cache the instance?
         {
-            VFXManager.Instance.PerformEffect(_qualityVFXPREFAB, this.transform);
+            vfxIn.PerformEffect(_qualityVFXPREFAB, this.transform, false);
         }
         else
             Debug.Log("<color=yellow>no vfx?</color>");
