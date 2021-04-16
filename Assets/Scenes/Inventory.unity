@@ -10133,7 +10133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testSceneInjection: 1
-  _stationToInject: 2
+  _stationToInject: 5
   _itemToInject: 17
 --- !u!1 &2033773017 stripped
 GameObject:
@@ -10351,7 +10351,7 @@ MonoBehaviour:
   _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
-  _isStackable: 0
+  _isStackable: 1
   _workStationArrangement: 0
   _workStationTaskChanging: 0
   _decreaseChangeOverTime: 0

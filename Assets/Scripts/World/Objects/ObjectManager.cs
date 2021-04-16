@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [DefaultExecutionOrder(-599)] ///Load a little earlier
-public class ObjectManager : MonoSingleton<ObjectManager>
+public class ObjectManager : StaticMonoBehaviour<ObjectManager>
 {
     public Color _colorHand1;
     public Color _colorHand2;
