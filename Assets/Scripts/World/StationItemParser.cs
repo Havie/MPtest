@@ -191,8 +191,7 @@ public static class StationItemParser
                             {
                                 int itemId = (int)item;
                                 listItems.Add(itemId);
-                                Debug.Log($"_finalItems....Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
-
+                                //Debug.Log($"_finalItems....Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                             }
                         }
                     }

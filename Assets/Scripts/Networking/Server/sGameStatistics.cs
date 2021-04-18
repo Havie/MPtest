@@ -53,6 +53,7 @@ public class sGameStatistics
     }
     public void StationSentBatch(int stationID, int batchSize, bool wasShipped, float time)
     {
+        Debug.Log($"<color=White> THIS SHIPPPPPED</color> = {wasShipped}  --> ORDERCOUNT= {_orders.Count}");
         if (wasShipped)
             ShippedAnOrder(time);
 
@@ -125,17 +126,17 @@ public class sGameStatistics
 
     /************************************************************************************************************************/
 
-    private void ShippedAnOrder(float time)
+    private void ShippedAnOrder(float currTime)
     {
         ///This is gonna get tricky for debugging without full MP 
         if (_orders.Count < 1)
             return;
 
         ItemOrder fifoOrder = _orders.Dequeue();
-        float timeToShipThisItem = time - fifoOrder.StartTime;
+        float timeToShipThisItem = currTime - fifoOrder.StartTime;
         totalShippingTime += timeToShipThisItem;
-
-        if (fifoOrder.PromisedTime > time)
+        Debug.Log($"...PromisedTime = {fifoOrder.PromisedTime} vs CurrTime = {currTime}");
+        if (currTime > fifoOrder.PromisedTime )
         {
             ++ShippedLate;
             return;

@@ -29,8 +29,8 @@ public class GameManager : MonoSingleton<GameManager>
     public UIInventoryManager _invIN { get; private set; }
     public UIInventoryManager _invOUT { get; private set; }
     public UIInventoryManager _invSTATION { get; private set; }
-    public UIKitting _invKITTING { get; private set; }
-    public UIShipping _invShipping { get; private set; }
+    public UIOrdersIn _invKITTING { get; private set; }
+    public UIOrdersIn _invShipping { get; private set; }
 
     [Header("Resources")]
     public ComponentList _componentList;
@@ -116,8 +116,8 @@ public class GameManager : MonoSingleton<GameManager>
     public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
     public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
     public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
-    public void SetInventoryKitting(UIKitting inv) { _invKITTING = inv; }
-    public void SetInventoryShipping(UIShipping inv) { _invShipping = inv; }
+    public void SetInventoryKitting(UIOrdersIn inv) { _invKITTING = inv; }
+    public void SetInventoryShipping(UIOrdersIn inv) { _invShipping = inv; }
     #region Setters for Host Changes 
     /// These Are from Button VerifyInput Events and from ClientHandle
     public void RoundDurationChanged(IntWrapper val) => RoundDurationChanged(val._value);
