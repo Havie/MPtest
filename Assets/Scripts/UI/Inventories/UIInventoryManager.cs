@@ -367,7 +367,7 @@ public abstract class UIInventoryManager : MonoBehaviour
         int count = 0;
         foreach (var item in _slots)
         {
-            if (item._inUse)
+            if (item !=null && item._inUse)
                 ++count;
         }
 

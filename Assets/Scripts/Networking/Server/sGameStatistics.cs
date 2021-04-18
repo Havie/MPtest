@@ -86,7 +86,7 @@ public class sGameStatistics
                 {
                     ///could Get More detailed info by subtracting each time by next time
                     float firstTime = times.Dequeue();
-                    Debug.Log($"This Cycle took : {firstTime - consequentTime} seconds");
+                    //Debug.Log($"This Cycle took : {firstTime - consequentTime} seconds");
                     consequentTime = firstTime;
                     totalTime += firstTime;
                 }
@@ -127,6 +127,7 @@ public class sGameStatistics
 
     private void ShippedAnOrder(float time)
     {
+        ///This is gonna get tricky for debugging without full MP 
         if (_orders.Count < 1)
             return;
 
@@ -134,7 +135,7 @@ public class sGameStatistics
         float timeToShipThisItem = time - fifoOrder.StartTime;
         totalShippingTime += timeToShipThisItem;
 
-        if (fifoOrder.PromisedTime >= time)
+        if (fifoOrder.PromisedTime > time)
         {
             ++ShippedLate;
             return;

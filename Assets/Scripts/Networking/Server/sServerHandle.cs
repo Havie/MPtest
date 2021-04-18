@@ -151,13 +151,13 @@ public class sServerHandle
         //    Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
 
-        Debug.Log("<color=orange>[sServerHandle]</color> itemID Read was : " + stationID);
-        Debug.Log("<color=orange>[sServerHandle]</color> createdTime Read was : " + itemID);
+        Debug.Log("<color=orange>[sServerHandle]</color>DEFECT itemID Read was : " + stationID);
+        Debug.Log("<color=orange>[sServerHandle]</color>DEFECT createdTime Read was : " + itemID);
 
         sServer._gameStatistics.AddedADefect(stationID, itemID);
 
 
-        Debug.Log($"Current Defects#={sServer._gameStatistics.Defects}");
+        Debug.Log($"Current DEFECTS#={sServer._gameStatistics.Defects}");
     }
 
     public static void RoundBegin(int fromClient, sPacket packet)
