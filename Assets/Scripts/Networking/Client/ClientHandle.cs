@@ -99,6 +99,13 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     }
 
+    public void OrderShipped(sPacket packet)
+    {
+
+        int itemID = packet.ReadInt();
+        Debug.Log($"[ClientHandle] itemIDShipped= {itemID}");
+        ///Tell kitting menu or whoever else to remove order
+    }
 
     #region OldTutorial
     //public  void SpawnPlayer(sPacket packet)

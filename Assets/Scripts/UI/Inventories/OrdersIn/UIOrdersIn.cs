@@ -172,6 +172,25 @@ public abstract class UIOrdersIn : MonoBehaviour
         }
     }
 
+    private float GetEstimatedDeliveryTime()
+    {
+        return Time.time + 600;  ///10min 
+    }
+
+    private void ButtonDestroyedCallback(OrderButton orderButton)
+    {
+        Destroy(orderButton.gameObject);
+
+        for (int i = 0; i < _orderList.Count; i++)
+        {
+            _orderList[i].transform.localPosition = FindPosition(i);
+        }
+    }
+
+    private Vector3 FindPosition(int index)
+    {
+        return new Vector3(_startingX, _startingY + (_yOffset * index), 0);
+    }
     private void printOrderList(ObjectRecord.eItemID[] componentOrder)
     {
         string s = "";
@@ -182,7 +201,6 @@ public abstract class UIOrdersIn : MonoBehaviour
 
         Debug.LogWarning($"NEW LIST: {s}");
     }
-
 
     private void GetRandomItemIDFromKitting()
     {
@@ -201,26 +219,5 @@ public abstract class UIOrdersIn : MonoBehaviour
         }
     }
 
-
-    private float GetEstimatedDeliveryTime()
-    {
-        return Time.time + 600;  ///10min 
-    }
-
-
-    private Vector3 FindPosition(int index)
-    {
-        return new Vector3(_startingX, _startingY + (_yOffset * index), 0);
-    }
-
-    private void ButtonDestroyedCallback(OrderButton orderButton)
-    {
-        Destroy(orderButton.gameObject);
-
-        for (int i = 0; i < _orderList.Count; i++)
-        {
-            _orderList[i].transform.localPosition = FindPosition(i);
-        }
-    }
 }
 

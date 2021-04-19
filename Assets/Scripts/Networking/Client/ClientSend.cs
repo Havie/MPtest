@@ -168,8 +168,6 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
     }
 
-
-
     #endregion
 
 

@@ -142,5 +142,9 @@ public class sGameStatistics
             return;
         }
         ++ShippedOnTime;
+
+        ///This is kind of hacky for now, becuz we arent verifying the itemID in the batch,
+        ///since we only have 1 type of item to ship in this iteration of the game
+        sServerSend.OrderShipped(fifoOrder.ItemId);
     }
 }

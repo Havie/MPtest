@@ -343,12 +343,13 @@ public class Client : MonoSingleton<Client>
             //{ (int)ServerPackets.playerRotation, ClientHandle.Instance.PlayerRotation }, //oldTutorial
             { (int)ServerPackets.item, ClientHandle.Instance.ItemReceived },
             { (int)ServerPackets.roundStart, ClientHandle.Instance.RoundStarted },
-            { (int)ServerPackets.roundEnd, ClientHandle.Instance.RoundEnded }
+            { (int)ServerPackets.roundEnd, ClientHandle.Instance.RoundEnded },
+            { (int)ServerPackets.orderShipped, ClientHandle.Instance.OrderShipped }
 
 
         };
 
-        Debug.Log("InitClientData packets ");
+       // Debug.Log("InitClientData packets ");
     }
 
     private void Disconnect()
