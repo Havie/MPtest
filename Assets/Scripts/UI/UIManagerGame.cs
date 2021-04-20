@@ -33,13 +33,23 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] GameObject _defectBinInventory = default;
     [SerializeField] GameObject _defectBinObject = default;
     [SerializeField] GameObject _inBinObject = default;
-    
-    
+
+
+    ///TODO , why dont I just seralize these like everything else so its not circular?
+    public UIInventoryManager _invIN { get; private set; }
+    public UIInventoryManager _invOUT { get; private set; }
+
+    ///Load the dynamically from  _kittingInventory / _shippingInventory when needed
+    UIOrdersIn _invKITTING;
+    UIOrdersIn _invShipping;
+
+
+    /************************************************************************************************************************/
+
     #region Init
-
-
     private void Start()
     {
+        FindAndCacheInventories();
         UIManager.RegisterGameManager(this);
         ShowPreviewInvSlot(false, Vector3.zero, null);
         ShowPreviewMovingIcon(false, Vector3.zero, null);
@@ -121,6 +131,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             if (GameManager.instance._batchSize != 1)
             {
                 _kittingInventory.SetActive(true);
+                _invKITTING = _kittingInventory.GetComponentInChildren<UIOrdersIn>();
             }
             else
             {
@@ -162,14 +173,30 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         bool cond = ws.IsShippingStation() && GameManager.instance._batchSize == 1;
 
         if (_shippingInventory)
+        {
             _shippingInventory.SetActive(cond);
+            _invShipping = _shippingInventory.GetComponentInChildren<UIOrdersIn>();
+        }
         if (_normalOutInventory)
             _normalOutInventory.SetActive(!cond);
     }
     public void ShowInInventory(bool cond)
     {
         if (_normalInInventory != null)
+        {
             _normalInInventory.SetActive(cond);
+        }
+
+    }
+
+    private void FindAndCacheInventories()
+    {
+        if(_normalInInventory)
+            _invIN = _normalInInventory.GetComponentInChildren<UIInventoryManager>(true);
+        if (_normalOutInventory)
+            _invOUT = _normalOutInventory.GetComponentInChildren<UIInventoryManager>(true);
+
+        Debug.Log($" int:{_invIN}  ,    out:{_invOUT}");
     }
 
     public void RoundOutOfTime(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
@@ -196,9 +223,11 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         SceneLoader.LoadLevel(_networkingSceneName);
 
     }
-    
+
     #endregion
 
+
+    /************************************************************************************************************************/
 
 
     #region Game Actions
@@ -252,14 +281,25 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (hand)
             hand.transform.position = new Vector3(0, 2000, 0);
     }
-
-
-    #endregion
+    public void OrderShipped(int itemdID)
+    {
+        if (_invKITTING)
+        {
+            _invKITTING.RemoveOrder(itemdID);
+        }        
+        if (_invShipping)
+        {
+            _invShipping.RemoveOrder(itemdID);
+        }
+    }
 
     ///Extra button for clear when in debug mode for Inv scene
     public void ClearDebugLogger()
     {
         UIManager.ClearDebugLog();
     }
+
+    #endregion
+    /************************************************************************************************************************/
 
 }

@@ -106,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f263b1059f3b1f14f80b6ea3e204a37e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attachmentSensitivity: 0
   _requiredAttachmentID: 
   _createdID: 
 --- !u!1 &256295439351365345
@@ -450,6 +449,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _qualityStep: {fileID: 11400000, guid: a0699ff84486cec46837025cba7665aa, type: 2}
+--- !u!1 &2950450570843621627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5850214497186896451}
+  m_Layer: 0
+  m_Name: LighteningLOC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5850214497186896451
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2950450570843621627}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.072, y: -0.295, z: 0.229}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4881031315257351884}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5222815996537300939
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,6 +849,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 805222316804169311}
     m_Modifications:
+    - target: {fileID: 51474524301132115, guid: 4b7a5358c4b776b4faef6c58f7de9f5a,
+        type: 3}
+      propertyPath: _lighteningVFXPREFAB
+      value: 
+      objectReference: {fileID: 6186183218074981618, guid: 5ab474f5b82bce44aa64aa6fa98b3f85,
+        type: 3}
+    - target: {fileID: 51474524301132115, guid: 4b7a5358c4b776b4faef6c58f7de9f5a,
+        type: 3}
+      propertyPath: _lighteningVFXLocation
+      value: 
+      objectReference: {fileID: 5850214497186896451}
     - target: {fileID: 1002379840073671385, guid: 4b7a5358c4b776b4faef6c58f7de9f5a,
         type: 3}
       propertyPath: m_Name
@@ -879,6 +919,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7309490286974700489, guid: 4b7a5358c4b776b4faef6c58f7de9f5a,
+        type: 3}
+      propertyPath: _myID
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b7a5358c4b776b4faef6c58f7de9f5a, type: 3}

@@ -116,6 +116,8 @@ public class sClient
                         ///To remove this being awkwardish, we could have sServer assign this dictonary here when an sClient connects??
                         sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate);
                         _delegate?.Invoke(_id, packet);
+
+                        Debug.Log($"HandleData TCP id={_id}  packetOp={packetOperation}");
                     }
                 });
 
@@ -177,7 +179,7 @@ public class sClient
                     if(sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate))
                       _delegate?.Invoke(packetOperation, packet);
 
-                    Debug.Log("HandleData 2");
+                    Debug.Log("HandleData 2 id=" + _id);
                 }
             });
         }

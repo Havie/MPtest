@@ -19,7 +19,7 @@ public class VFXManager : MonoSingleton<VFXManager>
     }
 
 
-    public void PerformEffect(GameObject prefab, Transform location)
+    public void PerformEffect(GameObject prefab, Transform location, bool isLooping)
     {
 
         ///do any VFX 
@@ -33,19 +33,22 @@ public class VFXManager : MonoSingleton<VFXManager>
                     vfx.transform.parent = location;
                     vfx.transform.localPosition = Vector3.zero;
                     vfx.Play();
-                    if (_toBeStopped.Contains(vfx))
+                    if (!isLooping)
                     {
-                        _toBeStopped = RemoveFromQueue(vfx);
-                        _toBeStopped.Enqueue(vfx);
+                        if (_toBeStopped.Contains(vfx))
+                        {
+                            _toBeStopped = RemoveFromQueue(vfx);
+                            _toBeStopped.Enqueue(vfx);
+                        }
+                        else
+                            _toBeStopped.Enqueue(vfx);
                     }
-                    else
-                        _toBeStopped.Enqueue(vfx);
                 }
                 else
                 {
                     _vfxMap.Remove(prefab);
-                    PerformEffect(prefab, location);
-                    if (_toBeStopped.Contains(vfx))
+                    PerformEffect(prefab, location, isLooping);
+                    if (!isLooping &&  _toBeStopped.Contains(vfx))
                     {
                         _toBeStopped = RemoveFromQueue(vfx);
                     }
@@ -59,12 +62,31 @@ public class VFXManager : MonoSingleton<VFXManager>
                     vfx = go.GetComponent<ParticleSystem>();
                     vfx.Play();
                     _vfxMap.Add(prefab, vfx);
-                    _toBeStopped.Enqueue(vfx);
+                    if (!isLooping)
+                    {
+                        _toBeStopped.Enqueue(vfx);
+                    }
                 }
             }
         }
 
     }
+
+    public void StopEffect(GameObject prefab)
+    {
+        if (_vfxMap.TryGetValue(prefab, out ParticleSystem vfx))
+        {
+            if (vfx != null)
+            {
+                vfx.Stop();
+                if (_toBeStopped.Contains(vfx))
+                {
+                    _toBeStopped = RemoveFromQueue(vfx);
+                }
+            }
+        }
+    }
+
 
     Queue<ParticleSystem> RemoveFromQueue(ParticleSystem toRemove)
     {

@@ -74,10 +74,9 @@ public class sServerSend
         }
     }
 
-
     public static void SendMultiPlayerData(int toClient)
     {
-        var players=sPlayerData.GetPlayerData();
+        var players = sPlayerData.GetPlayerData();
         using (sPacket packet = new sPacket((int)ServerPackets.sendMpData))
         {
             packet.Write(players.Count);
@@ -105,7 +104,7 @@ public class sServerSend
         }
     }
 
-        public static void EndRound(int toClient, float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
+    public static void EndRound(int toClient, float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
     {
         using (sPacket packet = new sPacket((int)ServerPackets.roundEnd))
         {
@@ -137,13 +136,22 @@ public class sServerSend
             else
                 packet.Write(0);
 
-          
+
 
             SendTCPData(toClient, packet);
 
         }
     }
 
+
+    public static void OrderShipped(int itemID)
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.orderShipped))
+        {
+            packet.Write(itemID);
+            SendTCPDataToAll(packet);
+        }
+    }
     #endregion
 }
 

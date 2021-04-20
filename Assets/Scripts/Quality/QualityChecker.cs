@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class QualityChecker 
+public static class QualityChecker
 {
-   public static bool CheckFinalQuality(QualityOverall quality)
+    public static bool CheckFinalQuality(QualityOverall quality)
     {
-       if( quality.GetPercent() > 80)
+        return true;
+
+        if (quality.GetPercent() > 80)
         {
             UIManager.DebugLog($"The quality is : <color=green>{quality.GetPercent()}</color>%");
             return true;
         }
-       else
+        else
             UIManager.DebugLog($"The quality is : <color=red>{quality.GetPercent()}</color>%");
 
         return false;

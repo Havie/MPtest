@@ -26,11 +26,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     public bool RoundShouldStart { get; private set; } = false;
     public WorkStation _workStation { get; private set; }
-    public UIInventoryManager _invIN { get; private set; }
-    public UIInventoryManager _invOUT { get; private set; }
-    public UIInventoryManager _invSTATION { get; private set; }
-    public UIKitting _invKITTING { get; private set; }
-    public UIShipping _invShipping { get; private set; }
+
+
 
     [Header("Resources")]
     public ComponentList _componentList;
@@ -42,13 +39,9 @@ public class GameManager : MonoSingleton<GameManager>
     public PartAssemblyBook AssemblyBook => _assemblyBook;
    
     
-    private bool _isMobileMode;
-
-
     protected override void Awake()
     {
         base.Awake();
-        MobileSetUp();
         AutomaticChecks();
         DetermineCurrentWorkStation(); ///have to call on Awake for test scenes not run by networking UI
 
@@ -60,17 +53,6 @@ public class GameManager : MonoSingleton<GameManager>
 #endif
     }
 
-    private void MobileSetUp()
-    {
-        _isMobileMode = Application.isMobilePlatform;
-        //if (_isMobileMode)  ///let the build settings dictate
-        //{
-        //    Screen.orientation = ScreenOrientation.Landscape;
-        //    Screen.autorotateToPortrait = false;
-        //    Screen.autorotateToLandscapeRight = true;
-        //    Screen.autorotateToPortraitUpsideDown = false;
-        //}
-    }
     private void AutomaticChecks()
     {
         if (_batchSize == 1)
@@ -113,11 +95,7 @@ public class GameManager : MonoSingleton<GameManager>
         AutomaticChecks();
     }
 
-    public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
-    public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
-    public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
-    public void SetInventoryKitting(UIKitting inv) { _invKITTING = inv; }
-    public void SetInventoryShipping(UIShipping inv) { _invShipping = inv; }
+
     #region Setters for Host Changes 
     /// These Are from Button VerifyInput Events and from ClientHandle
     public void RoundDurationChanged(IntWrapper val) => RoundDurationChanged(val._value);
@@ -127,9 +105,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void BatchChanged(int val) { ValidateBatchSize(val); } ///from ClientHandle
     public void AutoSendChanged(bool cond) { _autoSend = cond; ValidateAutoSend(); }
     public void AddChaoticChanged(bool cond) { _addChaotic = cond; }
-    public void IsStackableChanged(bool cond) {
-        Debug.Log("This set to :" + cond);
-        _isStackable = cond; }
+    public void IsStackableChanged(bool cond) {_isStackable = cond; }
     public void WorkStationArrangementChanged(bool cond) { _workStationArrangement = cond; }
     public void WorkStationTaskChanged(bool cond) { _workStationTaskChanging = cond; }
     public void DecreasedChangedOverTimeChanged(bool cond) { _decreaseChangeOverTime = cond; }

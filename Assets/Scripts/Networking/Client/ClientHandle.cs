@@ -95,10 +95,18 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         UIManager.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
-        GameManager.Instance._invIN.AddItemToSlot(itemLvl, qualities, false);
+        UIManagerGame.Instance._invIN.AddItemToSlot(itemLvl, qualities, false);
 
     }
 
+    public void OrderShipped(sPacket packet)
+    {
+
+        int itemID = packet.ReadInt();
+        Debug.Log($"[ClientHandle] itemIDShipped= {itemID}");
+        ///Tell kitting menu or whoever else to remove order
+        UIManagerGame.Instance.OrderShipped(itemID);
+    }
 
     #region OldTutorial
     //public  void SpawnPlayer(sPacket packet)

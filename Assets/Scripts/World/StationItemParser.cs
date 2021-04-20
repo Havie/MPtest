@@ -71,7 +71,7 @@ public static class StationItemParser
                     if (!ObjectManager.Instance.IsBasicItem(item)) /// only add non-basic items
                     {
                         int itemId = (int)item;
-                       // Debug.Log($"..<color=yellow>adding non-basic item:</color> {itemId} from {local_task}");
+                        // Debug.Log($"..<color=yellow>adding non-basic item:</color> {itemId} from {local_task}");
                         for (int i = 0; i < batchSize; i++)
                         {
                             itemIDs.Add((int)item);
@@ -82,12 +82,12 @@ public static class StationItemParser
         }
         void ParseNextStationsRequiredItems(bool isKitting, int local_count, Task local_task)
         {
-            if (local_count == 0 ) // look at the last task at this station and add its produced items
+            if (local_count == 0) // look at the last task at this station and add its produced items
             {
                 Debug.Log($"..<color=orange>We are parsing required  items for task:</color> {local_task}");
                 foreach (var item in local_task._requiredItemIDs) /// look at all of its _requiredItemIDs items
                 {
-                    if(isKitting)
+                    if (isKitting)
                     {
                         if (ObjectManager.Instance.IsBasicItem(item)) ///decide if basic item 
                         {
@@ -179,7 +179,7 @@ public static class StationItemParser
                         foreach (var item in t._requiredItemIDs)
                         {
                             int itemId = (int)item;
-                            // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
+                           // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                             if (listItems.Contains(itemId))
                                 listItems.Remove(itemId);
                         }
@@ -191,8 +191,7 @@ public static class StationItemParser
                             {
                                 int itemId = (int)item;
                                 listItems.Add(itemId);
-                                // Debug.Log($"_finalItems....Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
-
+                                //Debug.Log($"_finalItems....Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                             }
                         }
                     }
@@ -238,7 +237,7 @@ public static class StationItemParser
             return items;
         }
     }
-    public static List<int> ParseItemsAsStation(int batchSize, bool isStackable,  WorkStationManager wm, WorkStation myWS)
+    public static List<int> ParseItemsAsStation(int batchSize, bool isStackable, WorkStationManager wm, WorkStation myWS)
     {
         List<int> seenItems = new List<int>();
         if (batchSize == 1 || isStackable) ///PULL & Stackable Batch, works for now if 1 task per station

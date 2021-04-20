@@ -99,7 +99,7 @@ public class InSocket : Socket
         //if my IDs = the incomming ID
         if (bothItemsArePickedUp &&
             requiredAttachmentID == (int)socket.Controller._myID &&
-            UserInputManager.Instance.CurrentSelection as ObjectController != Controller //Save most expensive check for last
+            UserInputManager.Instance.CurrentSelection as ObjectController != Controller //Save most expensive check for last, cant ram female into male
             )
         {
             //check the angles of attachment
@@ -107,23 +107,26 @@ public class InSocket : Socket
             float cosAngleBetween = Vector3.Dot(this.transform.forward.normalized, socket.transform.forward.normalized);
             ///Tablet processes these single precision floating point numbers differently than PC, and rounding errors can occur: (dot product has multiple multiplcations and additions for room for rounding error)
             //bool roughlyAligned = Mathf.Abs(cosAngleBetween - 1) <= _attachmentSensitivity; ///Try to match machine epsilon? kind of magic number solution cuz no better one 
-            bool roughlyOpposite = Mathf.Abs(cosAngleBetween + 1) <= _attachmentSensitivity; 
+            bool roughlyOpposite = Mathf.Abs(cosAngleBetween + 1) <= _attachmentSensitivity;
 
+            var maleSocket = socket as OutSocket;
             //Debug.Log($"NORMALIZEDangle=<color=purple>{angle}</color> for ID:{requiredAttachmentID} ?< {_attachmentSensitivity}  and inprev= {PreviewManager._inPreview}");
             if (!PreviewManager._inPreview) //OnTriggerEnter
             {
                 if (roughlyOpposite)
                 {
                     // -1 is perfect match 
-                    valid = true;
+                    valid = isProperAttachmentVelocity(maleSocket);
                 }
                 else
                 {
-                    //Debug.Log($"The angle did not match for {requiredAttachmentID}");
+                    //Debug.Log($"The angle did not match for {requiredAttachmentID} , or velocity was inverted");
                 }
             }
-            else  //OnTriggerExit
+            else //OnTriggerExit
+            {
                 valid = true;
+            }
         }
         else if(bothItemsArePickedUp && requiredAttachmentID != (int)socket.Controller._myID)
         {
@@ -135,6 +138,28 @@ public class InSocket : Socket
 
     }
 
+
+    private bool isProperAttachmentVelocity(OutSocket maleSocket)
+    {
+        if (!maleSocket)
+            return false;
+
+        //float cosAngleBetween = Vector3.Dot(new Vector3(maleSocket.xVelocity, maleSocket.yVelocity, 0).normalized, maleSocket.transform.forward.normalized);
+        //bool roughlyAligned = Mathf.Abs(cosAngleBetween - 1) <= _attachmentSensitivity;
+        //bool roughlyOpposite = Mathf.Abs(cosAngleBetween + 1) <= _attachmentSensitivity;
+        //Debug.Log($" align={roughlyAligned} opp = {roughlyOpposite}  x: {maleSocket.transform.forward.x}");
+
+
+        if (maleSocket.AttachesHorizontal)
+        {
+            return Mathf.Sign(maleSocket.xVelocity) == Mathf.Sign(maleSocket.transform.forward.x);
+        }
+        else
+        {
+            return Mathf.Sign(maleSocket.yVelocity) == Mathf.Sign(maleSocket.transform.forward.y);
+        }
+
+    }
     
 
 #if UNITY_EDITOR
@@ -169,7 +194,7 @@ public class InSocket : Socket
 
             //EditorGUILayout.PropertyField(forcedLayer);
             //forcedLayer= EditorGUILayout.EnumPopup((LayerMask)forcedLayer.enumValueIndex);
-            EditorGUILayout.PropertyField(_attachmentSensitivity);
+            //EditorGUILayout.PropertyField(_attachmentSensitivity);
             EditorGUILayout.PropertyField(_requiredAttachmentID);
             EditorGUILayout.PropertyField(_createdID);
 
