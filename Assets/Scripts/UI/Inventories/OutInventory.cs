@@ -31,7 +31,6 @@ public class OutInventory : UIInventoryManager
         }
         _sendButton.onClick.AddListener(SendBatch);
         base.Start();
-        UIManagerGame.Instance.SetInventoryOut(this);
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
     }

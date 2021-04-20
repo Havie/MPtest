@@ -17,7 +17,8 @@ public class StationInventory : UIInventoryManager
 
         base.Start();
 
-        UIManagerGame.Instance.SetInventoryStation(this);
+        ///seralize this instead on UIManagerGame
+       // UIManagerGame.Instance.SetInventoryStation(this);
     }
 
 

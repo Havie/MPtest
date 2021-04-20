@@ -19,10 +19,6 @@ public class InInventory : UIInventoryManager
         {
             UIManager.HideInInventory();
         }
-        else
-        {
-            UIManagerGame.Instance.SetInventoryIn(this);
-        }
     }
 
     /************************************************************************************************************/
