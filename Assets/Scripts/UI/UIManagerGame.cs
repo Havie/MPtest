@@ -33,10 +33,26 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] GameObject _defectBinInventory = default;
     [SerializeField] GameObject _defectBinObject = default;
     [SerializeField] GameObject _inBinObject = default;
-    
-    
-    #region Init
 
+
+    ///TODO , why dont I just seralize these, and get rid of setters? then its not circular
+    public UIInventoryManager _invIN { get; private set; }
+    public UIInventoryManager _invOUT { get; private set; }
+    public UIInventoryManager _invSTATION { get; private set; }
+    public UIOrdersIn _invKITTING { get; private set; }
+    public UIOrdersIn _invShipping { get; private set; }
+
+
+    /************************************************************************************************************************/
+
+    #region Init
+    public void SetInventoryIn(UIInventoryManager inv) { _invIN = inv; }
+    public void SetInventoryOut(UIInventoryManager inv) { _invOUT = inv; }
+    public void SetInventoryStation(UIInventoryManager inv) { _invSTATION = inv; }
+    public void SetInventoryKitting(UIOrdersIn inv) { _invKITTING = inv; }
+    public void SetInventoryShipping(UIOrdersIn inv) { _invShipping = inv; }
+
+    /************************************************************************************************************************/
 
     private void Start()
     {
@@ -196,9 +212,11 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         SceneLoader.LoadLevel(_networkingSceneName);
 
     }
-    
+
     #endregion
 
+
+    /************************************************************************************************************************/
 
 
     #region Game Actions
@@ -252,14 +270,25 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (hand)
             hand.transform.position = new Vector3(0, 2000, 0);
     }
-
-
-    #endregion
+    public void OrderShipped(int itemdID)
+    {
+        if (_invKITTING)
+        {
+            _invKITTING.RemoveOrder(itemdID);
+        }
+        if (_invShipping)
+        {
+            _invShipping.RemoveOrder(itemdID);
+        }
+    }
 
     ///Extra button for clear when in debug mode for Inv scene
     public void ClearDebugLogger()
     {
         UIManager.ClearDebugLog();
     }
+
+    #endregion
+    /************************************************************************************************************************/
 
 }

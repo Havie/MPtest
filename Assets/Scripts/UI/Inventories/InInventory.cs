@@ -21,7 +21,7 @@ public class InInventory : UIInventoryManager
         }
         else
         {
-            GameManager.Instance.SetInventoryIn(this);
+            UIManagerGame.Instance.SetInventoryIn(this);
         }
     }
 

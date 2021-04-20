@@ -43,7 +43,7 @@ public abstract class UIOrdersIn : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.SetInventoryKitting(this);
+        UIManagerGame.Instance.SetInventoryKitting(this);
         if (_bORDERPREFAB == null)
             _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder_slot");
 
