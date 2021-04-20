@@ -13,7 +13,6 @@ public class QualityOverall : MonoBehaviour
     [SerializeField] int _currentQuality =0; /// Serialize for read outs in UI
     [SerializeField] int _maxQuality=0;  /// Serialize for read outs in UI
 
-   
 
     private void Awake()
     {

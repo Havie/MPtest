@@ -1,9 +1,8 @@
-﻿using System.Collections;
+﻿#pragma warning disable CS0649 // Ignore : "Field is never assigned to, and will always have its default value"
 using System.Collections.Generic;
 using UnityEngine;
-#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
-public class UIKitting : MonoBehaviour
+public abstract class UIOrdersIn : MonoBehaviour
 {
     ///TODO This class probably needs to be re-written to not use "Vertical LayoutGrp and content Size fitter
     ///to match our other inventories,
@@ -16,14 +15,12 @@ public class UIKitting : MonoBehaviour
     [SerializeField] int _startingY = 350;
     [SerializeField] int _yOffset = -39;  ///-65
 
-    [Header("Prevent stack batch from dropping")]
-    [SerializeField] WorkStationManager _stackBatchHack = default;
 
     private GameObject _bORDERPREFAB;
 
     private int _ORDERFREQUENCY;
     private float _timeToOrder = float.MaxValue;
-    private bool _shouldDropParts = true;
+    protected bool _shouldDropParts = true;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
 
@@ -46,18 +43,19 @@ public class UIKitting : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.SetInventoryKitting(this);
         if (_bORDERPREFAB == null)
             _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder_slot");
 
         _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
         _componentList = GameManager.Instance._componentList;
-        _shouldDropParts = GameManager.instance.CurrentWorkStationManager != _stackBatchHack;
+        _shouldDropParts = CheckShouldDropParts();
     }
+
+    protected abstract bool CheckShouldDropParts();
     /************************************************************************************************************************/
 
 
-    public void Update()
+    protected void Update()
     {
         /* if (Input.GetKeyDown(KeyCode.R))
              RemoveOrder(_OrderList[_OrderList.Count / 2]);*/
@@ -67,8 +65,6 @@ public class UIKitting : MonoBehaviour
         else
             _timeToOrder += Time.deltaTime;
     }
-
-
 
 
     public void AddOrder(int itemID)
@@ -175,6 +171,25 @@ public class UIKitting : MonoBehaviour
         }
     }
 
+    private float GetEstimatedDeliveryTime()
+    {
+        return Time.time + 600;  ///10min 
+    }
+
+    private void ButtonDestroyedCallback(OrderButton orderButton)
+    {
+        Destroy(orderButton.gameObject);
+
+        for (int i = 0; i < _orderList.Count; i++)
+        {
+            _orderList[i].transform.localPosition = FindPosition(i);
+        }
+    }
+
+    private Vector3 FindPosition(int index)
+    {
+        return new Vector3(_startingX, _startingY + (_yOffset * index), 0);
+    }
     private void printOrderList(ObjectRecord.eItemID[] componentOrder)
     {
         string s = "";
@@ -185,7 +200,6 @@ public class UIKitting : MonoBehaviour
 
         Debug.LogWarning($"NEW LIST: {s}");
     }
-
 
     private void GetRandomItemIDFromKitting()
     {
@@ -204,25 +218,5 @@ public class UIKitting : MonoBehaviour
         }
     }
 
-
-    private float GetEstimatedDeliveryTime()
-    {
-        return Time.time + 600;  ///10min 
-    }
-
-
-    private Vector3 FindPosition(int index)
-    {
-        return new Vector3(_startingX, _startingY + (_yOffset * index), 0);
-    }
-
-    private void ButtonDestroyedCallback(OrderButton orderButton)
-    {
-        Destroy(orderButton.gameObject);
-
-        for (int i = 0; i < _orderList.Count; i++)
-        {
-            _orderList[i].transform.localPosition = FindPosition(i);
-        }
-    }
 }
+

@@ -15,7 +15,7 @@ namespace UserInput
     {
         public static UserInputManager Instance { get; private set; }
 
-
+        [SerializeField] float _offsetFromFinger = 0.11f;
         [SerializeField] float _pressTimeMAX = 0.40f; ///was 1.2f
         private float _holdLeniency = 1.5f;
 
@@ -72,7 +72,7 @@ namespace UserInput
 
             _freeState = new FreeState(this);
             _rotationState = new RotationState(this, _holdLeniency, _pressTimeMAX);
-            _displacementState = new DisplacementState(this);
+            _displacementState = new DisplacementState(this, _offsetFromFinger);
             _uiState = new UIState(this);
             _previewState = new PreviewConstructionState(this);
         }

@@ -192,7 +192,11 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             {
                 if (count > 1)
                     Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
-                SendData(); // out only
+                ///Instead of sending the data manually via SendData(), we have to send through the batch event
+                ///in order for the server to trigger/track the batches for MP
+                OutInventory outInventory = _manager as OutInventory;
+                if (outInventory)
+                    outInventory.SendBatch();
             }
             else //non pull send
             {

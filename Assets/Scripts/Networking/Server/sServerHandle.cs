@@ -70,9 +70,9 @@ public class sServerHandle
     {
 
         int itemLvl = packet.ReadInt();
-        Debug.Log("[ServerHandle] itemLvl Read was : " + itemLvl);
+        Debug.Log("[ServerHandle] ItemReceived:  Read was : " + itemLvl);
         int stationID = packet.ReadInt();
-        Debug.Log("[ServerHandle] stationID Read was : " + stationID);
+        Debug.Log("[ServerHandle] ItemReceived: stationID Read was : " + stationID);
 
         List<int> qualities = new List<int>();
 
@@ -95,6 +95,7 @@ public class sServerHandle
             //if client workstation ID matches stationID 
             if (c._workStation == stationID)
             {
+                Debug.Log($"...SENT item to client # {c}");
                 //Send the item to their inventory:
                 c.SendItem(itemLvl, qualities);
             }
@@ -113,11 +114,11 @@ public class sServerHandle
         int batchSize = packet.ReadInt();
         bool wasShipped = packet.ReadBool();
 
-        Debug.Log("[sServerHandle] stationID Read was : " + stationID);
-        Debug.Log("[sServerHandle] batchSize Read was : " + batchSize);
+        Debug.Log("[sServerHandle] BatchReceived: stationID Read was : " + stationID);
+        Debug.Log("[sServerHandle] BatchReceived: batchSize Read was : " + batchSize);
 
-        if (fromClient != stationID)
-            Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
+        //if (fromClient != stationID)
+        //    Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
         sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
@@ -151,13 +152,13 @@ public class sServerHandle
         //    Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
 
-        Debug.Log("<color=orange>[sServerHandle]</color> itemID Read was : " + stationID);
-        Debug.Log("<color=orange>[sServerHandle]</color> createdTime Read was : " + itemID);
+        Debug.Log("<color=orange>[sServerHandle]</color>DEFECT itemID Read was : " + stationID);
+        Debug.Log("<color=orange>[sServerHandle]</color>DEFECT createdTime Read was : " + itemID);
 
         sServer._gameStatistics.AddedADefect(stationID, itemID);
 
 
-        Debug.Log($"Current Defects#={sServer._gameStatistics.Defects}");
+        Debug.Log($"Current DEFECTS#={sServer._gameStatistics.Defects}");
     }
 
     public static void RoundBegin(int fromClient, sPacket packet)
@@ -217,6 +218,8 @@ public class sServerHandle
         ///Print out and store our round results
         FileSaver.WriteToFile(rs);
     }
+
+    
 }
 
 //public static void PlayerMovement(int fromClient, sPacket packet)
