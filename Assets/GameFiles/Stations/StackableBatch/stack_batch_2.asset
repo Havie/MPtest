@@ -15,5 +15,7 @@ MonoBehaviour:
   _myStation: 2
   _sendOutputToStation: 3
   _myStationName: Pink/Yellow Topper
+  _myStationInstructions: {fileID: 21300000, guid: 41ab72b4f03674243b76d1471942271a,
+    type: 3}
   _tasks:
   - {fileID: 11400000, guid: 85e618b6c3f735540a7a70ddb5bdcb64, type: 2}
