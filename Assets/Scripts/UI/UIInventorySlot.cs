@@ -10,6 +10,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     [SerializeField] GameObject _greenCheckmark = default;
     [SerializeField] Sprite _defaultIconUsed = default;
     [SerializeField] Sprite _defaultIconEmpty = default;
+    [SerializeField] Animator _animator = default;
     private Sprite _currentBGSprite;
     private UIInventoryManager _manager;
     private bool _autoSend = false; //Only for OutINV, set by InventoryManager
@@ -305,6 +306,13 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             ///Just show the default ICON ontop instead of disabling
             AssignSprite(_currentBGSprite);
         }
+
+        if (_animator.GetBool("HasPlayed") == true)
+        {
+            _animator.SetBool("HasPlayed", false);
+            _animator.SetTrigger("Reset");
+        }
+            
     }
     private void SetLarger()
     {
