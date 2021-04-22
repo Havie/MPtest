@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class OrderButton : MonoBehaviour
 {
-    [SerializeField] Text _text = default;
+    TextMeshProUGUI _text;
     [SerializeField] UIInventorySlot _slot = default;
     [SerializeField] ColorManager _cm = default;
 
@@ -23,7 +24,7 @@ public class OrderButton : MonoBehaviour
     private void Awake()
     {
         if(!_text)
-            _text = this.GetComponentInChildren<Text>();
+            _text = this.GetComponentInChildren<TextMeshProUGUI>();
         //if(!_img)
         //    _img = this.GetComponentInChildren<Image>();
     }
