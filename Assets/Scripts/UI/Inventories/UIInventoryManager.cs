@@ -8,7 +8,7 @@ using TMPro;
 
 //https://www.youtube.com/watch?v=Oba1k4wRy-0 //Tutorial
 [DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
-public abstract class UIInventoryManager : MonoBehaviour
+public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
 {
     /// <summary>
     /// I realllly want to re-write this class with dependency injection,

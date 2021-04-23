@@ -1,8 +1,9 @@
 ﻿#pragma warning disable CS0649 // Ignore : "Field is never assigned to, and will always have its default value"
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class UIOrdersIn : MonoBehaviour
+public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
 {
     ///TODO This class probably needs to be re-written to not use "Vertical LayoutGrp and content Size fitter
     ///to match our other inventories,
@@ -78,7 +79,7 @@ public abstract class UIOrdersIn : MonoBehaviour
         bOrder.transform.SetParent(this.transform);
         bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
         bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
-
+        ob.SetManager(this);
         //Get data based off of the incoming value
         if (_orderCreated)
             _orderCreated.Raise(new OrderWrapper(itemID, Time.time, deliveryTime));
@@ -114,8 +115,8 @@ public abstract class UIOrdersIn : MonoBehaviour
         else
             Debug.LogError("how is this not in the list");
 
-        //TODO play animation then give the anim on.finish() this callback
-        ButtonDestroyedCallback(orderButton);
+        // play animation then give the anim on.finish() this callback
+        StartCoroutine(ButtonShipped(orderButton));
     }
 
 
@@ -178,6 +179,7 @@ public abstract class UIOrdersIn : MonoBehaviour
 
     private void ButtonDestroyedCallback(OrderButton orderButton)
     {
+        //Debug.Log($"Destroy: {orderButton}");
         Destroy(orderButton.gameObject);
 
         for (int i = 0; i < _orderList.Count; i++)
@@ -218,5 +220,28 @@ public abstract class UIOrdersIn : MonoBehaviour
         }
     }
 
+    public void ItemAssigned(UIInventorySlot slot)
+    {
+        var itemID = slot.GetItemID();
+        if (slot)
+            slot.RemoveItem();  ///prevent the anim from playing on wrong slot for FIFO, see ButtonShipped()
+        RemoveOrder(itemID); 
+
+    }
+    IEnumerator ButtonShipped(OrderButton orderButton)
+    {
+        ///Let animation play:
+        var slot = orderButton.Slot;
+        //slot.AssignItem(orderButton.ItemID, 1, null);
+        ///Need to fake in use, calling assign item will infite loop
+        ///A work around to our FIFO order system,
+        ///if someone assigns the item and tries to ship an order, it still takes the first order in queue out
+        ///so visually we have to fix this since we are only removing per ID, not physical order,
+        ///would have to re-write network layer to not be FIFO in version2
+        slot.FakeAssignSpriteHack(orderButton.ItemID);
+        slot.PlayCheckMarkAnim(true);
+        yield return new WaitForSeconds(1f);
+        ButtonDestroyedCallback(orderButton);
+    }
 }
 
