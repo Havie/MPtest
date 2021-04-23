@@ -93,8 +93,8 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             _myIcon.color = _INVALID;
             retVal = false;
         }
-        if (_manager)
-            _manager.SetImportant(this.gameObject);
+        //if (_manager)
+        //    _manager.SetImportant(this.gameObject);
         SetLarger();
         return retVal;
     }
@@ -203,7 +203,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             {
                 TellManager();
             }
-
+            Debug.Log($"myManager is ? {_manager}");
             ///Try encapsulating this here:
             SetNormal();
             return true;

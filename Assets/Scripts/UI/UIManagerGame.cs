@@ -33,6 +33,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] GameObject _defectBinInventory = default;
     [SerializeField] GameObject _defectBinObject = default;
     [SerializeField] GameObject _inBinObject = default;
+    [SerializeField] GameObject _outBinObject = default;
 
 
     ///TODO , why dont I just seralize these like everything else so its not circular?
@@ -150,11 +151,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         {
             _inBinObject.SetActive(!cond);
         }
-        if (cond)
-        {
-            ///This seems wrong now based on allthe logic in the StationItemParser
-            //GameManager.instance.IsStackableChanged(true);
-        }
 
     }
     private void HandleQAStation(WorkStation ws)
@@ -179,6 +175,10 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         }
         if (_normalOutInventory)
             _normalOutInventory.SetActive(!cond);
+        if(_outBinObject)
+        {
+            _outBinObject.SetActive(!cond);
+        }
     }
     public void ShowInInventory(bool cond)
     {

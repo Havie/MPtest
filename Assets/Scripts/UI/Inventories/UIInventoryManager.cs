@@ -55,12 +55,8 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     protected virtual void Start()
     {
-
-        ///THIS WONT WORK SINCE GO IS DISABLED, CANT FIND
         if (_gridLayoutGrp == null)
-            _gridLayoutGrp = this.GetComponentInChildren<GridLayoutGroup>();
-
-        ///TODO GLG.constraintCount and GLG.cellSize via incoming batchSize
+            _gridLayoutGrp = this.GetComponentInChildren<GridLayoutGroup>(false);
 
         ReconfigureGLG();
 
@@ -72,11 +68,6 @@ public abstract class UIInventoryManager : MonoBehaviour
         _ADDCHAOTIC = gm._addChaotic;
         _canAssignExtraSlots = gm._batchSize != 1;
         GenerateInventory(DetermineWorkStationBatchSize());
-
-        // text can be changed within label element
-        //if (_labelText)
-        //    _labelText.text = _prefix;
-
     }
 
     /************************************************************************************************************************/
