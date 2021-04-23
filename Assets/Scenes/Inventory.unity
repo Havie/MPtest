@@ -5894,6 +5894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee214fa279b60c84a883b3a70f1a242b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dropDelay: 0.2
 --- !u!1001 &1204019618
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10690,7 +10691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stationToInject: 1
+  _stationToInject: 6
   _developerInjections: 1
   _itemToInject: 17
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
@@ -10915,7 +10916,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 6
-  _batchSize: 2
+  _batchSize: 1
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0
@@ -12723,7 +12724,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -16544,7 +16545,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7769443276695009691
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17016,7 +17017,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 10}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &9184154835131426707
 RectTransform:

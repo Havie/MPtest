@@ -2,25 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PartDropper : MonoBehaviour
+public class PartDropper : MonoSingleton<PartDropper>
 {
-    public static PartDropper Instance;
-
-    ///Exposed for inspector debugging
-    //[SerializeField]
+    [Range(0.1f, 0.5f)]
+    [SerializeField] float _dropDelayBetweenParts = 0.2f;
+    
+    int _ORDERFREQUENCY;
     List<ObjectRecord.eItemID[]> _partOrders = new List<ObjectRecord.eItemID[]>();
-    float _dropDelay = 0;
     bool _routineIsRunning = false;
 
-    private int _ORDERFREQUENCY;
 
-    void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
-            Destroy(this);
-    }
 
     void Start()
     {
@@ -49,13 +40,11 @@ public class PartDropper : MonoBehaviour
     {
         _routineIsRunning = true;
         int count = componentOrder.Length;
-        _dropDelay = _ORDERFREQUENCY/((float)count) /5 ;
-       // Debug.Log($"The Drop Delay is :{_dropDelay}  becuz {_ORDERFREQUENCY} / {(float)count} ");
 
         for (int i = 0; i < count; i++)
         {
             ObjectManager.Instance.DropItemInWorld((int)componentOrder[i]);
-            yield return new WaitForSeconds(_dropDelay);
+            yield return new WaitForSeconds(_dropDelayBetweenParts);
         }
         _routineIsRunning = false;
     }
