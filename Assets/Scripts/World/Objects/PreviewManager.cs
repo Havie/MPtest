@@ -48,6 +48,9 @@ public static class PreviewManager
         _previewItem = obj;
        // CheckForSwitch();
         _inPreview = true;
+
+        PlayAudio(0.25f, 1.0f);           
+            
     }
 
 
@@ -92,8 +95,11 @@ public static class PreviewManager
             }
         }
 
+        PlayAudio(0.5f, 0.5f);
+
         ResetSelf();
         _inMiddleOfClear = false;
+
     }
 
     public static void UndoPreview()
@@ -105,6 +111,17 @@ public static class PreviewManager
         //CheckForSwitch();
         ObjectManager.Instance.DestroyObject(_previewItem);
         ResetSelf();
+    }
+
+    public static void PlayAudio(float volume, float pitch)
+    {
+        AudioSource audio = _previewItem.GetComponent<AudioSource>();
+        if (audio != null)
+        {
+            audio.volume = volume;
+            audio.pitch = pitch;
+            audio.Play();
+        }
     }
 
 
