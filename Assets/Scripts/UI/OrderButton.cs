@@ -30,6 +30,12 @@ public class OrderButton : MonoBehaviour
     }
 
     public int ItemID => _itemID;
+    public UIInventorySlot Slot => _slot;
+
+    public void SetManager(IInventoryManager manager)
+    {
+        _slot.SetManager(manager);
+    }
 
     public void SetOrder(int itemID, float timePromised)
     {
@@ -46,13 +52,14 @@ public class OrderButton : MonoBehaviour
         //if (_img)
         //    _img.sprite = img;
 
-        _slot.SetAutomatic(true);
+        _slot.SetAutomatic(false); ///Will force it to tell manager instead of send as OUT
         _slot.SetRequiredID(itemID);
 
         _itemID = itemID;
 
         _orderReceived = true;
     }
+
 
     void LateUpdate()
     {

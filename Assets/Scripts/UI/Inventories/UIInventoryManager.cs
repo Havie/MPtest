@@ -8,7 +8,7 @@ using TMPro;
 
 //https://www.youtube.com/watch?v=Oba1k4wRy-0 //Tutorial
 [DefaultExecutionOrder(10000)] ///make this load late to let other things get set up first
-public abstract class UIInventoryManager : MonoBehaviour
+public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
 {
     /// <summary>
     /// I realllly want to re-write this class with dependency injection,
@@ -55,12 +55,8 @@ public abstract class UIInventoryManager : MonoBehaviour
 
     protected virtual void Start()
     {
-
-        ///THIS WONT WORK SINCE GO IS DISABLED, CANT FIND
         if (_gridLayoutGrp == null)
-            _gridLayoutGrp = this.GetComponentInChildren<GridLayoutGroup>();
-
-        ///TODO GLG.constraintCount and GLG.cellSize via incoming batchSize
+            _gridLayoutGrp = this.GetComponentInChildren<GridLayoutGroup>(false);
 
         ReconfigureGLG();
 
@@ -72,11 +68,6 @@ public abstract class UIInventoryManager : MonoBehaviour
         _ADDCHAOTIC = gm._addChaotic;
         _canAssignExtraSlots = gm._batchSize != 1;
         GenerateInventory(DetermineWorkStationBatchSize());
-
-        // text can be changed within label element
-        //if (_labelText)
-        //    _labelText.text = _prefix;
-
     }
 
     /************************************************************************************************************************/

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1820462908647451251}
   - component: {fileID: 6180397628433165087}
   - component: {fileID: 6012034409057925240}
+  - component: {fileID: 9097009694428547381}
   m_Layer: 5
   m_Name: g_check
   m_TagString: Untagged
@@ -207,6 +208,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9097009694428547381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3568646004612352353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec95eb21431bc646a3973c9726594b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 0}
 --- !u!1 &7546707325249962751
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,10 +431,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _myIcon: {fileID: 7546707325249962745}
-  _greenCheckmark: {fileID: 3568646004612352353}
+  _greenCheckmark: {fileID: 9097009694428547381}
   _defaultIconUsed: {fileID: 5308747809085515294, guid: 4075b93eb647c45408378a84005eaddb,
     type: 3}
   _defaultIconEmpty: {fileID: 5204777658904197717, guid: 4075b93eb647c45408378a84005eaddb,
     type: 3}
-  _animator: {fileID: 1820462908647451251}
   _inUse: 0

@@ -15,4 +15,5 @@ public class UIKitting : UIOrdersIn
     {
         return GameManager.instance.CurrentWorkStationManager != _stackBatchHack;
     }
+
 }

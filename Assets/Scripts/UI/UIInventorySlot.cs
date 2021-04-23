@@ -7,12 +7,11 @@ using UnityEngine.UI;
 public class UIInventorySlot : MonoBehaviour, IAssignable
 {
     [SerializeField] Image _myIcon = default;
-    [SerializeField] GameObject _greenCheckmark = default;
+    [SerializeField] UICheckMark _greenCheckmark = default;
     [SerializeField] Sprite _defaultIconUsed = default;
     [SerializeField] Sprite _defaultIconEmpty = default;
-    [SerializeField] Animator _animator = default;
     private Sprite _currentBGSprite;
-    private UIInventoryManager _manager;
+    private IInventoryManager _manager;
     private bool _autoSend = false; //Only for OutINV, set by InventoryManager
     private bool _isOutSlot;
     int _itemID = -1;
@@ -36,10 +35,12 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     {
         ///DefaultToEmptyIcon
         SwapBackgroundIMGs(false);
+        if (_greenCheckmark == null)
+            _greenCheckmark = this.GetComponentInChildren<UICheckMark>(false);
     }
     /************************************************************************************************************************/
 
-    public void SetManager(UIInventoryManager manager) { _manager = manager; }
+    public void SetManager(IInventoryManager manager) { _manager = manager; }
     public void SetAutomatic(bool cond)
     {
         _autoSend = cond;
@@ -93,8 +94,8 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             _myIcon.color = _INVALID;
             retVal = false;
         }
-        if (_manager)
-            _manager.SetImportant(this.gameObject);
+        //if (_manager)
+        //    _manager.SetImportant(this.gameObject);
         SetLarger();
         return retVal;
     }
@@ -130,10 +131,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
                 _itemID = -1;
                 _inUse = false;
                 SetNormal();
-
-                if (_greenCheckmark != null)
-                    _greenCheckmark.SetActive(false);
-
+                PlayCheckMarkAnim(false);
             }
             else
                 RestoreDefault();
@@ -170,8 +168,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             }
             else if (_isOutSlot && id == RequiredID)
             {
-                if (_greenCheckmark != null)
-                    _greenCheckmark.SetActive(true);
+                PlayCheckMarkAnim(true);
             }
             AssignSpriteByID(id, false);
             SwapBackgroundIMGs(true);
@@ -199,7 +196,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
                 if (outInventory)
                     outInventory.SendBatch();
             }
-            else //non pull send
+            else //non pull send , Kitting/Shipping Menu
             {
                 TellManager();
             }
@@ -243,7 +240,16 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         return newList;
     }
 
+    public void PlayCheckMarkAnim(bool cond)
+    {
+        if (_greenCheckmark != null)
+            _greenCheckmark.gameObject.SetActive(cond);
+    }
 
+    public void FakeAssignSpriteHack(int id)
+    {
+        AssignSpriteByID(id, false);
+    }
     /************************************************************************************************************************/
 
     private void AssignSpriteByID(int id, bool transparent)
@@ -307,12 +313,8 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             AssignSprite(_currentBGSprite);
         }
 
-        if (_animator.GetBool("HasPlayed") == true)
-        {
-            _animator.SetBool("HasPlayed", false);
-            _animator.SetTrigger("Reset");
-        }
-            
+        if (_greenCheckmark != null)
+            _greenCheckmark.ResetState();
     }
     private void SetLarger()
     {
