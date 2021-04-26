@@ -9,23 +9,32 @@ public class UIStationInstructions : MonoBehaviour
     [SerializeField] Image _instructionIMG = default;
     [SerializeField] SoundHelper _soundHelper;
     bool _isOn;
-    
 
+
+    ///Called from button X / InventoryScene
     public void ToggleInstructions()
+    {
+        Sprite img = null;
+        var gmWorkStation = GameManager.instance._workStation;
+        if (gmWorkStation)
+        {
+            ///Get Most recent Instruction from GM
+            img = gmWorkStation.StationInstructions;
+        }
+        ToggleInstructions(img);
+    }
+
+    public void ToggleInstructions(Sprite img)
     {
         _isOn = !_isOn;
         this.gameObject.SetActive(_isOn);
         if (_isOn)
         {
-            ///Get Most recent Instruction from GM
-            Sprite img = GameManager.Instance._workStation.StationInstructions;
             AssignInstructions(img);
-
         }
 
         if (_soundHelper)
             _soundHelper.PlayAudio();
-
     }
 
     private void AssignInstructions(Sprite img)

@@ -54,8 +54,16 @@ public class LobbyRow : MonoBehaviour
             OnSelectionChanged?.Invoke(stationPair.Key);
         }
     }
-
-
+    
+    /// <summary> Called From Button </summary>
+    public void OnToggleInstructions()
+    {
+        var lobbyInstructions = LobbyInstructions.Instance;
+        if(lobbyInstructions)
+        {
+            lobbyInstructions.ToggleInstructions();
+        }
+    }
     //**************PRIVATE******************************************************************//
 
     private void SetInteractable(bool cond)

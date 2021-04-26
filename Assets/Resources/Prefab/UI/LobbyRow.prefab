@@ -1587,7 +1587,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4325931935704283156}
-        m_MethodName: OnDropDownEnabled
+        m_MethodName: OnToggleInstructions
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
