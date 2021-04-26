@@ -23,7 +23,7 @@ public class LobbyMenu : MonoBehaviour
 
     private void Awake()
     {
-        _lobbyRowPrefab = Resources.Load<GameObject>("UI/LobbyRow");
+        _lobbyRowPrefab = Resources.Load<GameObject>("Prefab/UI/LobbyRow");
         _rows = new List<LobbyRow>();
         _lockedDropdownIds = new List<int>();
     }
@@ -114,9 +114,13 @@ public class LobbyMenu : MonoBehaviour
     //**************PRIVATE******************************************************************//
     private LobbyRow CreateRow(string name, bool isInteractable, int stationID)
     {
-        LobbyRow row = Instantiate(_lobbyRowPrefab, _lobbyDiv).GetComponent<LobbyRow>();
-        row.initialize(++_rowNumber, name, _workstationManager, isInteractable, stationID);
-        _numPlayerText.text = $" {_rowNumber}/{sServer._maxPlayers}";
-        return row;
+        if (_lobbyRowPrefab)
+        {
+            LobbyRow row = Instantiate(_lobbyRowPrefab, _lobbyDiv).GetComponent<LobbyRow>();
+            row.initialize(++_rowNumber, name, _workstationManager, isInteractable, stationID);
+            _numPlayerText.text = $" {_rowNumber}/{sServer._maxPlayers}";
+            return row;
+        }
+        return null;
     }
 }
