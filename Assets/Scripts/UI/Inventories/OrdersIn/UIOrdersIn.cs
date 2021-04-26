@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
 {
@@ -16,6 +17,9 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     [SerializeField] int _startingY = 350;
     [SerializeField] int _yOffset = -39;  ///-65
 
+    [Header("Text Components")]
+    [SerializeField] TextMeshProUGUI _orderCountTxt = default;
+    [SerializeField] TextMeshProUGUI _shippedCountTxt = default;
 
     private GameObject _bORDERPREFAB;
 
@@ -24,7 +28,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     protected bool _shouldDropParts = true;
 
     private List<OrderButton> _orderList = new List<OrderButton>();
-
+    private int _shippedCount = 0;
 
     private ComponentList _componentList;
     List<int> _usedIndicies = new List<int>();
@@ -80,9 +84,12 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
         bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
         ob.SetManager(this);
+        UpdateOrderText();
         //Get data based off of the incoming value
         if (_orderCreated)
+        {
             _orderCreated.Raise(new OrderWrapper(itemID, Time.time, deliveryTime));
+        }
     }
 
 
@@ -100,6 +107,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
                 {
                     //Debug.LogWarning($"Item ID {itemID} found match");
                     RemoveOrder(order);
+                    UpdateShippedText();
                     return;
                 }
             }
@@ -111,6 +119,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         if (_orderList.Contains(orderButton))
         {
             _orderList.Remove(orderButton);
+            UpdateOrderText();
         }
         else
             Debug.LogError("how is this not in the list");
@@ -177,16 +186,6 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         return Time.time + 600;  ///10min 
     }
 
-    private void ButtonDestroyedCallback(OrderButton orderButton)
-    {
-        //Debug.Log($"Destroy: {orderButton}");
-        Destroy(orderButton.gameObject);
-
-        for (int i = 0; i < _orderList.Count; i++)
-        {
-            _orderList[i].transform.localPosition = FindPosition(i);
-        }
-    }
 
     private Vector3 FindPosition(int index)
     {
@@ -220,6 +219,22 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         }
     }
 
+    private void UpdateOrderText()
+    {
+        if (_orderCountTxt)
+        {
+            _orderCountTxt.text = _orderList.Count.ToString();
+        }
+    }
+    private void UpdateShippedText()
+    {
+        if (_shippedCountTxt)
+        {
+            _shippedCountTxt.text = (++_shippedCount).ToString();
+        }
+    }
+
+    /// <summary> Item is assigned manually by the bSlot</summary>
     public void ItemAssigned(UIInventorySlot slot)
     {
         var itemID = slot.GetItemID();
@@ -228,7 +243,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         RemoveOrder(itemID); 
 
     }
-    IEnumerator ButtonShipped(OrderButton orderButton)
+    protected virtual IEnumerator ButtonShipped(OrderButton orderButton)
     {
         ///Let animation play:
         var slot = orderButton.Slot;
@@ -242,6 +257,17 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         slot.PlayCheckMarkAnim(true);
         yield return new WaitForSeconds(1f);
         ButtonDestroyedCallback(orderButton);
+    }
+
+    protected void ButtonDestroyedCallback(OrderButton orderButton)
+    {
+        //Debug.Log($"Destroy: {orderButton}");
+        Destroy(orderButton.gameObject);
+
+        for (int i = 0; i < _orderList.Count; i++)
+        {
+            _orderList[i].transform.localPosition = FindPosition(i);
+        }
     }
 }
 
