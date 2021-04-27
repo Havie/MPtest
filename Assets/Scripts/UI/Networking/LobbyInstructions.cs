@@ -6,11 +6,19 @@ public class LobbyInstructions : StaticMonoBehaviour<LobbyInstructions>
 {
     [SerializeField] UIStationInstructions _instructions = default;
 
-    public void ToggleInstructions()
+    public void ToggleInstructions(Sprite img)
     {
         if(_instructions)
         {
-            _instructions.ToggleInstructions(null);
+            _instructions.ToggleInstructions(img);
+        }
+    }
+
+    public void ShowInstructions(bool cond)
+    {
+        if (_instructions)
+        {
+            _instructions.ShowInstructionsForced(false);
         }
     }
 }
