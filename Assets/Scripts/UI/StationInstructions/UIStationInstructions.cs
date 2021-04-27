@@ -27,6 +27,11 @@ public class UIStationInstructions : MonoBehaviour
     public void ToggleInstructions(Sprite img)
     {
         _isOn = !_isOn;
+        if(img == null )
+        {
+            Debug.Log($"<color=yellow> NULL img..</color> wont show");
+            _isOn = false;
+        }
         this.gameObject.SetActive(_isOn);
         if (_isOn)
         {
@@ -35,6 +40,12 @@ public class UIStationInstructions : MonoBehaviour
 
         if (_soundHelper)
             _soundHelper.PlayAudio();
+    }
+
+    public void ShowInstructionsForced(bool cond)
+    {
+        _isOn = !cond; ///Flip the key to what we dont want, then toggle will undo
+        ToggleInstructions();
     }
 
     private void AssignInstructions(Sprite img)
