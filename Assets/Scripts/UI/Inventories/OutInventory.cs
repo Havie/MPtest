@@ -12,6 +12,11 @@ public class OutInventory : UIInventoryManager
     [Header("Event")]
     [SerializeField] BatchEvent _batchSentEvent;
 
+
+    [Header("Dev Option")]
+    [SerializeField] bool _enableFirstSend;
+
+
     #region InitalSetup
     protected override void Start()
     {
@@ -30,6 +35,11 @@ public class OutInventory : UIInventoryManager
             _sendButton.onClick.RemoveAllListeners();
         }
         _sendButton.onClick.AddListener(SendBatch);
+        ///Disable SendButton till batch is ready:
+        if (!_enableFirstSend)
+        {
+            _sendButton.interactable = false;
+        }
         base.Start();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
