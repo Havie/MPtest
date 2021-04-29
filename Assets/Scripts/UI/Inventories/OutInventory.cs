@@ -12,6 +12,11 @@ public class OutInventory : UIInventoryManager
     [Header("Event")]
     [SerializeField] BatchEvent _batchSentEvent;
 
+
+    [Header("Dev Option")]
+    [SerializeField] bool _enableFirstSend;
+
+
     #region InitalSetup
     protected override void Start()
     {
@@ -30,6 +35,11 @@ public class OutInventory : UIInventoryManager
             _sendButton.onClick.RemoveAllListeners();
         }
         _sendButton.onClick.AddListener(SendBatch);
+        ///Disable SendButton till batch is ready:
+        if (!_enableFirstSend)
+        {
+            _sendButton.interactable = false;
+        }
         base.Start();
         //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
 
@@ -116,23 +126,18 @@ public class OutInventory : UIInventoryManager
     /** When an item gets assigned to the batch tell the manager*/
     public void CheckIfBatchIsReady()
     {
-        ///TMP off
-        /*
-         foreach (var slot in _slots)
-         {
-             if (!slot.GetInUse())
-             {
-                 if (_optionalSendButton)
-                     _optionalSendButton.interactable = false;
-                 return;
-             }
-         }
-        */
         //If all buttons hold the correct items , we can send
         if (_sendButton)
             _sendButton.interactable = true;
-
-
+        foreach (var slot in _slots)
+        {
+            if (!slot.GetInUse())
+            {
+                if (_sendButton)
+                    _sendButton.interactable = false;
+                return;
+            }
+        }
     }
 
     public void SendBatch()
