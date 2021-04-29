@@ -126,23 +126,18 @@ public class OutInventory : UIInventoryManager
     /** When an item gets assigned to the batch tell the manager*/
     public void CheckIfBatchIsReady()
     {
-        ///TMP off
-        /*
-         foreach (var slot in _slots)
-         {
-             if (!slot.GetInUse())
-             {
-                 if (_optionalSendButton)
-                     _optionalSendButton.interactable = false;
-                 return;
-             }
-         }
-        */
         //If all buttons hold the correct items , we can send
         if (_sendButton)
             _sendButton.interactable = true;
-
-
+        foreach (var slot in _slots)
+        {
+            if (!slot.GetInUse())
+            {
+                if (_sendButton)
+                    _sendButton.interactable = false;
+                return;
+            }
+        }
     }
 
     public void SendBatch()
