@@ -15,7 +15,7 @@ MonoBehaviour:
   _myStation: 5
   _sendOutputToStation: 6
   _myStationName: Quality
-  _myStationInstructions: {fileID: 21300000, guid: d3726d32022080f4ca62bb3391451cf6,
+  _myStationInstructions: {fileID: 21300000, guid: f53058905e8c5d44ebdfa5775d8a12f3,
     type: 3}
   _tasks:
   - {fileID: 11400000, guid: 6a5e7559aea2f1649aff741cb6763bff, type: 2}
