@@ -1909,7 +1909,7 @@ MonoBehaviour:
         m_CallState: 2
   _hostMenuManager: {fileID: 326037683}
   _myComponent: {fileID: 1401444794}
-  _defaultValue: 9999
+  _defaultValue: 300
 --- !u!1 &406432330
 GameObject:
   m_ObjectHideFlags: 0
