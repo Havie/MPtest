@@ -41,12 +41,10 @@ namespace UserInput
             bool inputDown = command.DOWN || command.HOLD;
             if (inputDown)
             {
-
                 _currentSelection = _brain.CheckForObjectAtLoc(pos);
-                //_brain._pressTimeCURR = 0;
+                // UIManager.DebugLog("FREE SELC= " + _currentSelection);    
                 if (_currentSelection != null) ///if you get an obj do rotation
                 {
-                    // Debug.Log("CURR SELC= " + _currentSelection.gameObject);    
                     _brain.SwitchState(_brain._rotationState, _currentSelection);
                 }
                 else ///if u get UI do UI 

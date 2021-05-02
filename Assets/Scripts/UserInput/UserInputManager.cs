@@ -17,7 +17,7 @@ namespace UserInput
 
         [SerializeField] float _offsetFromFinger = 0.11f;
         [SerializeField] float _pressTimeMAX = 0.40f; ///was 1.2f
-        private float _holdLeniency = 1.5f;
+        private float _holdLeniency = 1.5f; 
 
         private Vector3 _inputPos;
 
@@ -58,7 +58,7 @@ namespace UserInput
                 Destroy(this);
 
             if (Application.isMobilePlatform)
-                _holdLeniency = 5; ///Forgot what I had this set to
+                _holdLeniency = 15; //tablets very sensitive on touchinput
 
             _mainCamera = Camera.main;
             CreateStates();
