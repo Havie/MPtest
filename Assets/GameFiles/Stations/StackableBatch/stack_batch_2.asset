@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myStation: 2
   _sendOutputToStation: 3
-  _myStationName: Pink/Yellow Topper
+  _myStationName: Station 2
   _myStationInstructions: {fileID: 21300000, guid: fa61da0cec02e6246a498f2ede97c70c,
     type: 3}
   _tasks:

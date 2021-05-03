@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myStation: 1
   _sendOutputToStation: 2
-  _myStationName: stack_batch_1
+  _myStationName: Station 1
   _myStationInstructions: {fileID: 21300000, guid: e95f0af0245efbc4f85e101897f7299e,
     type: 3}
   _tasks:

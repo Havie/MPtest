@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myStation: 5
   _sendOutputToStation: 6
-  _myStationName: Quality
+  _myStationName: Station 5
   _myStationInstructions: {fileID: 21300000, guid: f53058905e8c5d44ebdfa5775d8a12f3,
     type: 3}
   _tasks:
