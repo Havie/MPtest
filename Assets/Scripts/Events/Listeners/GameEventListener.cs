@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
 /// Adapted from Ryan Hipples GDC talk:
 ///https://www.youtube.com/watch?v=iXNwWpG7EhM
-/// </summary>
-/// <typeparam name="T"></typeparam>
-/// 
+
 
 [DefaultExecutionOrder(-10000)] ///we need to have this load asap to counter race conditions 
 public abstract class GameEventListener<T, E, UER> : MonoBehaviour,

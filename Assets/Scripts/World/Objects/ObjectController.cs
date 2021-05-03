@@ -227,17 +227,18 @@ public class ObjectController : HighlightableObject, IConstructable
     }
     public void ResetPosition()
     {
-        ///Will move the table up from being below, but does not reset rotation
-        //Debug.Log("Calling ResetPosition for OBJ");
+        ///Will move the obj up from being below, but does not reset rotation
         var mpos = transform.position;
         transform.position = new Vector3(mpos.x, 0, mpos.z);
+        _hittingTable = false; ///Forwhatever reason this prevents us from calling OnTriggerExit
+        _resetOnChange = false;
     }
 
     public void ResetPositionHard(Vector3 objStartPos, Quaternion objStartRot)
     {
         transform.position = objStartPos;
         transform.rotation = _startingRotation;
-        //Debug.Log($"RESET rot={_startingRotation}");
+        UIManager.DebugLog($"RESET rot={_startingRotation}");
     }
     public bool IsPickedUp() => _pickedUp;
 
@@ -249,7 +250,7 @@ public class ObjectController : HighlightableObject, IConstructable
             0.75f * this.transform.localScale.y,
             0.75f * this.transform.localScale.z);
 
-        this.transform.localScale = smaller;
+        // this.transform.localScale = smaller;
 
         if (_handLocation)
             UIManager.ChangeHandSize(_handIndex, true);
@@ -324,7 +325,9 @@ public class ObjectController : HighlightableObject, IConstructable
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Table"))
+        {
             _hittingTable = false;
+        }
     }
 
     private void OnCollisionEnter(Collision other)
@@ -471,7 +474,6 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         if (_canFollow)
         {
-
             //this.transform.position = loc;
             // Debug.LogWarning("Told to go to:" + this.transform.position);
             if (!_hittingTable)
@@ -480,7 +482,10 @@ public class ObjectController : HighlightableObject, IConstructable
             {
                 // if were going up, allow it
                 if (loc.y > this.transform.position.y)
+                {
+                   // UIManager.DebugLog($"Trying to move UP from {this.transform.position.y} to <color=green> {loc.y} </color>");
                     this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
+                }
                 //else /if direction is going to go more into table prevent it,
             }
         }

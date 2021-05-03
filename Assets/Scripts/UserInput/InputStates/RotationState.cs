@@ -65,7 +65,7 @@ namespace UserInput
                 ///if no movement increment time 
                 float dis = Vector3.Distance(inputPos, _lastPos);
                 var objWhereMouseIs = _brain.CheckForObjectAtLoc(inputPos); ///Prevent bug simon found
-                UIManager.DebugLog($"{dis}<{_holdLeniency} == {dis < _holdLeniency} and sameObj= { objWhereMouseIs == _currentSelection} ");
+                //UIManager.DebugLog($"{dis}<{_holdLeniency} == {dis < _holdLeniency} and sameObj= { objWhereMouseIs == _currentSelection} ");
                 if (dis < _holdLeniency && objWhereMouseIs == _currentSelection)
                 {
                     _pressTimeCURR += Time.deltaTime;

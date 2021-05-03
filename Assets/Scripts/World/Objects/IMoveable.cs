@@ -15,7 +15,7 @@ public interface IMoveable :  IHighlightable
 
     void SetResetOnNextChange();
     void ResetPositionHard(Vector3 objStartPos, Quaternion objStartRot);
-    Quaternion GetDefaultOrientation();
+    //Quaternion GetDefaultOrientation();
     void ResetPosition();
 
     bool CanRotate();
