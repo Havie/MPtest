@@ -40,6 +40,8 @@ namespace UserInput
                     up = touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled;
                     holding = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary;
                     inputPos = touch.position;
+                    if(Input.touchCount>1)
+                        UIManager.DebugLog($"count={Input.touchCount} ..down={down} , up={up}, holding={holding}");
                 }
             }
             else

@@ -8,9 +8,10 @@ namespace UserInput
     {
         float _pressTimeCURR = 0;
         float _pressTimeMAX = 0.55f; ///was 1.2f
-        float _holdLeniency = 1.5f;
+        float _holdLeniency = 15f; ///was 1.5 but was real sensitive on tablet
         Vector2 _rotationAmount;
         Vector3 _lastPos; ///prior input loc
+        Vector3 _lastRotPos;
         bool _cacheInitalPos;
 
         public RotationState(UserInputManager input, float holdLeniency, float pressTimeMAX)
@@ -44,7 +45,7 @@ namespace UserInput
             //Debug.Log($"<color=orange> In RotationStation </color> inputDown={pos}");
             if (_cacheInitalPos)
             {
-                _lastPos = pos;
+                _lastRotPos= _lastPos = pos;
                 _cacheInitalPos = false;
             }
             TryRotation(command, pos);
@@ -64,6 +65,7 @@ namespace UserInput
                 ///if no movement increment time 
                 float dis = Vector3.Distance(inputPos, _lastPos);
                 var objWhereMouseIs = _brain.CheckForObjectAtLoc(inputPos); ///Prevent bug simon found
+                //UIManager.DebugLog($"{dis}<{_holdLeniency} == {dis < _holdLeniency} and sameObj= { objWhereMouseIs == _currentSelection} ");
                 if (dis < _holdLeniency && objWhereMouseIs == _currentSelection)
                 {
                     _pressTimeCURR += Time.deltaTime;
@@ -87,21 +89,13 @@ namespace UserInput
                     _pressTimeCURR = 0;
                     UIManager.HideTouchDisplay();
                     moveableObject.HandleInteractionTime(1);
+                    _lastPos = inputPos;
                 }
 
                 ///if holding down do displacement
                 if (_pressTimeCURR >= _pressTimeMAX)
                 {
-                    UIManager.HideTouchDisplay();
-
-                    ///Have to do this here because OnEnableState does have inputPos
-                    _currentSelection = _brain.CheckForObjectAtLoc(inputPos);
-                    IConstructable constructable = _currentSelection as IConstructable;
-
-                    if (constructable != null)
-                        _currentSelection = FindAbsoluteParent(_currentSelection as ObjectController);
-
-                    _brain.SwitchState(_brain._displacementState, _currentSelection);
+                    SwitchToDisplacement(inputPos);
                 }
                 else///Do rotation = we're not holding
                 {
@@ -109,9 +103,9 @@ namespace UserInput
                     if (moveableObject.CanRotate())
                     {
                         ///Store rotation amount
-                        Vector3 rotation = inputPos - _lastPos;
+                        Vector3 rotation = inputPos - _lastRotPos;
                         _rotationAmount += moveableObject.OnRotate(rotation);
-                        _lastPos = inputPos;
+                        _lastRotPos = inputPos;
                         HandleHighlightPreview(moveableObject);
                     }
                     return true;
@@ -119,7 +113,7 @@ namespace UserInput
 
 
             }
-            else if(command.UP)
+            else if (command.UP)
             {
                 if (_currentSelection != null)
                 {
@@ -142,6 +136,19 @@ namespace UserInput
 
         /************************************************************************************************************************/
 
+        private void SwitchToDisplacement(Vector3 inputPos)
+        {
+            UIManager.HideTouchDisplay();
+
+            ///Have to do this here because OnEnableState does have inputPos
+            _currentSelection = _brain.CheckForObjectAtLoc(inputPos);
+            IConstructable constructable = _currentSelection as IConstructable;
+
+            if (constructable != null)
+                _currentSelection = FindAbsoluteParent(_currentSelection as ObjectController);
+
+            _brain.SwitchState(_brain._displacementState, _currentSelection);
+        }
 
         private void HandleHighlightPreview(IMoveable moveableObject)
         {
