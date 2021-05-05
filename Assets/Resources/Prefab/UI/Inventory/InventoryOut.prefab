@@ -275,14 +275,15 @@ MonoBehaviour:
   _deadZone: {fileID: 4164277825861719764}
   _gridLayoutGrp: {fileID: 6053622778028008206}
   _labelText: {fileID: 9060786102692332761}
-  _maxHeight: 617
+  _maxHeight: 602
   _widthPadding: 73
   _heightPadding: 77
-  _minCellSize: 90
+  _minCellSize: 75
   _maxCellSize: 120
   _cellScaler: 5
   _sendButton: {fileID: 2942226847869692643}
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
+  _enableFirstSend: 0
 --- !u!225 &478019972156728307
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -330,6 +331,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102051194048759092, guid: 59a6c5a8d5a81784ead2f3c8cd96b064,
+        type: 3}
+      propertyPath: m_Vertical
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102051194048759092, guid: 59a6c5a8d5a81784ead2f3c8cd96b064,
+        type: 3}
+      propertyPath: m_MovementType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7912482170637924381, guid: 59a6c5a8d5a81784ead2f3c8cd96b064,
         type: 3}

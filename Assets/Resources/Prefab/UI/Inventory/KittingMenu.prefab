@@ -134,6 +134,8 @@ MonoBehaviour:
   _startingX: 16
   _startingY: 350
   _yOffset: -39
+  _orderCountTxt: {fileID: 0}
+  _shippedCountTxt: {fileID: 0}
   _stackBatchHack: {fileID: 11400000, guid: ed0ffb582f7914b4c9b3d70912b6e208, type: 2}
 --- !u!222 &5911962071277943568
 CanvasRenderer:
@@ -1580,9 +1582,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1174855489623409342}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
