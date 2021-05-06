@@ -7,16 +7,16 @@ using UnityEngine;
 public class sNetworkManager : MonoSingleton<sNetworkManager>
 {
 
-    public static int _defaultPort = 26951;
-    private int _maxPlayers = 6;
+    public readonly static int _defaultPort = 26951;
+    public readonly int maxPlayers = 6;
 
     public void HostNetwork()
     {
         ///Is it possible this port fails? If so we need to iterate through ports and tell others
 #if UNITY_EDITOR
-        sServer.Start(_maxPlayers, _defaultPort);
+        sServer.Start(maxPlayers, _defaultPort);
 #else
-         sServer.Start(_maxPlayers, _defaultPort);  
+         sServer.Start(maxPlayers, _defaultPort);  
 #endif
     }
 }

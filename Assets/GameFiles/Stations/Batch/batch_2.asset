@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myStation: 2
   _sendOutputToStation: 3
-  _myStationName: Plug Attachment
+  _myStationName: Station 2
   _myStationInstructions: {fileID: 21300000, guid: 41ab72b4f03674243b76d1471942271a,
     type: 3}
   _tasks:

@@ -116,6 +116,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
 
     public void RemoveOrder(OrderButton orderButton)
     {
+        Debug.Log($"..<color=blue>This is happening for: </color> {orderButton.Slot.gameObject.name}");
         if (_orderList.Contains(orderButton))
         {
             _orderList.Remove(orderButton);
@@ -237,6 +238,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     /// <summary> Item is assigned manually by the bSlot</summary>
     public void ItemAssigned(UIInventorySlot slot)
     {
+        Debug.Log($"..<color=green>This is happening for: </color> {slot.gameObject.name}");
         var itemID = slot.GetItemID();
         if (slot)
             slot.RemoveItem();  ///prevent the anim from playing on wrong slot for FIFO, see ButtonShipped()
@@ -247,13 +249,12 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     {
         ///Let animation play:
         var slot = orderButton.Slot;
-        //slot.AssignItem(orderButton.ItemID, 1, null);
         ///Need to fake in use, calling assign item will infite loop
         ///A work around to our FIFO order system,
         ///if someone assigns the item and tries to ship an order, it still takes the first order in queue out
         ///so visually we have to fix this since we are only removing per ID, not physical order,
         ///would have to re-write network layer to not be FIFO in version2
-        slot.FakeAssignSpriteHack(orderButton.ItemID);
+        slot.FakeSetSpriteAsInUse(orderButton.ItemID);
         slot.PlayCheckMarkAnim(true);
         yield return new WaitForSeconds(1f);
         ButtonDestroyedCallback(orderButton);

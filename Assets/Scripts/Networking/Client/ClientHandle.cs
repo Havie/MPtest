@@ -79,7 +79,6 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         List<QualityObject> qualities = new List<QualityObject>();
 
         var count = packet.ReadInt() / 2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
-        UIManager.DebugLog($"ClientHandle Count={count}");
 
         ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
@@ -87,12 +86,12 @@ public class ClientHandle : MonoSingleton<ClientHandle>
             var id = packet.ReadInt();
             var currQ = packet.ReadInt();
             qualities.Add(ObjectManager.Instance.BuildTempQualities(id, currQ));
-            Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
+           // Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
         }
 
 
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
-        UIManager.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
+       // UIManager.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
         UIManagerGame.Instance._invIN.AddItemToSlot(itemLvl, qualities, false);
@@ -103,7 +102,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
     {
 
         int itemID = packet.ReadInt();
-        Debug.Log($"[ClientHandle] itemIDShipped= {itemID}");
+        //Debug.Log($"[ClientHandle] itemIDShipped= {itemID}");
         ///Tell kitting menu or whoever else to remove order
         UIManagerGame.Instance.OrderShipped(itemID);
     }

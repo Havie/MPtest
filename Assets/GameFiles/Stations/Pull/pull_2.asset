@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myStation: 2
   _sendOutputToStation: 3
-  _myStationName: Top Disc Installation
+  _myStationName: Station 2
   _myStationInstructions: {fileID: 21300000, guid: 47350a069da22e3468bc0d70ee5ada68,
     type: 3}
   _tasks:

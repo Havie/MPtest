@@ -15,7 +15,8 @@ public class UIShipping : UIOrdersIn
     protected void ShipItem()
     {
         ///This is kind of hacky, but since bSlots do not auto send per item any more,
-        ///we have to mimic the OutStations batch send event
+        ///we have to mimic the OutStations batch send event,
+        ///this will have to evolve in lean version 2 to actually encode the proper batch data
         if (_batchSentEvent)
         {
             WorkStation ws = GameManager.Instance._workStation;

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myStation: 4
   _sendOutputToStation: 5
-  _myStationName: Cap Attachment
+  _myStationName: Station 4
   _myStationInstructions: {fileID: 21300000, guid: 3c4486e7401a54c4aba60f8a08955d26,
     type: 3}
   _tasks:

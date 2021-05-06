@@ -118,7 +118,7 @@ public class LobbyMenu : MonoBehaviour
         {
             LobbyRow row = Instantiate(_lobbyRowPrefab, _lobbyDiv).GetComponent<LobbyRow>();
             row.initialize(++_rowNumber, name, _workstationManager, isInteractable, stationID);
-            _numPlayerText.text = $" {_rowNumber}/{sServer._maxPlayers}";
+            _numPlayerText.text = $" {_rowNumber}/{sNetworkManager.Instance.maxPlayers}";
             return row;
         }
         return null;

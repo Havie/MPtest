@@ -289,7 +289,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         }        
         if (_invShipping)
         {
-            _invShipping.RemoveOrder(itemdID);
+            // the Inv Shipping is manually handling the removal of items in its menu.
+           // _invShipping.RemoveOrder(itemdID);
         }
     }
 

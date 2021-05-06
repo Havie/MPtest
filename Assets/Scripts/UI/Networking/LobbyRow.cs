@@ -17,10 +17,11 @@ public class LobbyRow : MonoBehaviour
 
     private WorkStationManager _wsManager;
     private WorkStation _lastKnownStation;
-
+    private bool _isActiveRow = false;
     //***************************************************************************************//
     public void initialize(int num, string name, WorkStationManager dropDownManager, bool isInteractable, int stationID)
     {
+        this.gameObject.name = "LobbyRow #" + num.ToString();
         _playerNumber.text = num.ToString();
         _wsManager = dropDownManager;
         _wsManager.SetupDropDown(_stationDropDown);
@@ -34,8 +35,8 @@ public class LobbyRow : MonoBehaviour
     public void UpdateData(string name, bool isInteractable, int stationID)
     {
         _playerName.text = name;
-        ManuallyChangeStation(stationID);
         SetInteractable(isInteractable);
+        ManuallyChangeStation(stationID);
     }
 
     /// <summary>Sets which values in the dropdown are interactable </summary>
@@ -44,27 +45,31 @@ public class LobbyRow : MonoBehaviour
         _stationDropDown.SetLockedDropDownIndicies(invalidIndicies);
     }
 
-    /// <summary> Called From Button </summary>
+    /// <summary> Called anytime DropDown component changes at all, by UserInput or ManuallyChangeStation() </summary>
     public void OnStationChanged()
     {
         //Update Output Label
         if (_wsManager)
         {
             var stationPair = _wsManager.GetStationPair(_stationDropDown);
+            var newKey = (int)stationPair.Key._myStation;
+            if (_isActiveRow && newKey != WorkStationID)
+            {
+                HideInstructions(); ///If changed we cant update as ezily, and if change to NONE cant show at all, so best to hide instead of update
+                OnSelectionChanged?.Invoke(stationPair.Key);
+            }
+            WorkStationID = newKey;
             _outputLabel.text = stationPair.Value;
-            WorkStationID = (int)stationPair.Key._myStation;
-            OnSelectionChanged?.Invoke(stationPair.Key);
-            HideInstructions(); ///If changed to NONE we cant show anything, so best to hide instead of update
         }
     }
-    
+
     /// <summary> Called From Button </summary>
     public void OnToggleInstructions()
     {
         var lobbyInstructions = LobbyInstructions.Instance;
-        if(lobbyInstructions)
+        if (lobbyInstructions)
         {
-            Sprite img = _lastKnownStation==null? null : _lastKnownStation.StationInstructions;
+            Sprite img = _lastKnownStation == null ? null : _lastKnownStation.StationInstructions;
             lobbyInstructions.ToggleInstructions(img);
         }
     }
@@ -73,14 +78,23 @@ public class LobbyRow : MonoBehaviour
     /// <summary> Used to enable/disable this row, useful so players cant edit other players settings </summary>
     private void SetInteractable(bool cond)
     {
+        _isActiveRow = cond;
         _stationDropDown.interactable = cond;
-        _taskInfo.interactable = cond;
+        if (_isActiveRow)
+        {
+            var stationPair = _wsManager.GetStationPair(_stationDropDown);
+            MonitorTaskInfoButton(stationPair.Key);
+        }
+        else
+        {
+            _taskInfo.interactable = cond;
+        }
     }
 
     /// <summary> StationIDs match dropdown Indicies, so its an easy correlation</summary>
     private void ManuallyChangeStation(int index)
     {
-        _stationDropDown.value = index; 
+        _stationDropDown.value = index;
     }
 
     /// <summary> Whether or not to show the task button based on valid task </summary>

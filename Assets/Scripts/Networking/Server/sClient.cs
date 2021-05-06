@@ -117,7 +117,7 @@ public class sClient
                         sServer._packetHandlers.TryGetValue(packetOperation, out sServer.PacketHandler _delegate);
                         _delegate?.Invoke(_id, packet);
 
-                        Debug.Log($"HandleData TCP id={_id}  packetOp={packetOperation}");
+                       // Debug.Log($"HandleData TCP id={_id}  packetOp={packetOperation}");
                     }
                 });
 
