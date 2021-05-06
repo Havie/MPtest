@@ -142,7 +142,7 @@ public class ObjectController : HighlightableObject, IConstructable
         _pickedUp = true;
         _handIndex = handIndex;
         ChangeHighLightColor(handIndex);
-        // Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
+        //Debug.Log($"Setting <color=blue>{this.gameObject.name}</color> to handIndex: <color=red>{handIndex} </color>");
     }
     public void PutDown()
     {
@@ -202,6 +202,15 @@ public class ObjectController : HighlightableObject, IConstructable
         ChangeAppearanceMoving();
         ResetHittingTable();
         HandManager.PickUpItem(this);
+
+        // this is a copy of the method used in PreviewManager, should maybe make an AudioManager or improve the helper
+        AudioSource audio = this.GetComponent<AudioSource>();
+        if (audio != null)
+        {
+            audio.volume = 0.5f;
+            audio.pitch = 1.0f;
+            audio.Play();
+        }
     }
     public void OnEndFollow() { ChangeAppearanceNormal(); }
     public bool OutOfBounds()

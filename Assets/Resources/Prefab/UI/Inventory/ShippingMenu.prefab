@@ -176,6 +176,9 @@ MonoBehaviour:
   _startingX: 16
   _startingY: 350
   _yOffset: -39
+  _orderCountTxt: {fileID: 0}
+  _shippedCountTxt: {fileID: 0}
+  _batchSentEvent: {fileID: 0}
 --- !u!1 &3323337997464165826
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,9 +688,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 2468654314842389466}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
