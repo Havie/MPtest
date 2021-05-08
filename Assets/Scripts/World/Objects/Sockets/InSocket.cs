@@ -6,7 +6,7 @@ using UserInput;
 public class InSocket : Socket
 {
     [Range(-0.5f, 0.5f)]
-     private float _attachmentSensitivity = 0.3f; ///Closeness Threshold
+     private float _attachmentSensitivity = 0.5f; ///Closeness Threshold
     [SerializeField] ObjectRecord.eItemID[] _requiredAttachmentID = default;
     [SerializeField] ObjectRecord.eItemID[] _createdID = default;
 
@@ -22,16 +22,18 @@ public class InSocket : Socket
 
     IEnumerator WaitDelay()
     {
-        yield return new WaitForSeconds(2);
+        /// I am not sure why i was doing this, perhaps some sub component werent init,
+        /// dont go to 2 seconds, or its possible first attachment fails
+        yield return new WaitForSeconds(1);
         _canCollide = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+
         if (!_canCollide)
             return;
 
-        //Debug.Log("Called ENTEr" +this.gameObject.name);
         if (_in) // only have the female sockets checking collisions 
         {
             //Debug.Log($"{this.transform.gameObject.name} triggered with {other.gameObject.name}");
@@ -144,12 +146,7 @@ public class InSocket : Socket
         if (!maleSocket)
             return false;
 
-        //float cosAngleBetween = Vector3.Dot(new Vector3(maleSocket.xVelocity, maleSocket.yVelocity, 0).normalized, maleSocket.transform.forward.normalized);
-        //bool roughlyAligned = Mathf.Abs(cosAngleBetween - 1) <= _attachmentSensitivity;
-        //bool roughlyOpposite = Mathf.Abs(cosAngleBetween + 1) <= _attachmentSensitivity;
-        //Debug.Log($" align={roughlyAligned} opp = {roughlyOpposite}  x: {maleSocket.transform.forward.x}");
-
-
+        ///This might not work for avg ppl during UX who just try to drop the part on another..
         if (maleSocket.AttachesHorizontal)
         {
             return Mathf.Sign(maleSocket.xVelocity) == Mathf.Sign(maleSocket.transform.forward.x);

@@ -1,7 +1,7 @@
 ﻿
 using UnityEditor;
 using UnityEngine;
-
+using System.Collections;
 
 
 [RequireComponent(typeof(ObjectController))]
@@ -11,39 +11,44 @@ public class QualityObject : MonoBehaviour
     private ParticleSystem _vfx;
     [SerializeField] QualityStep _qualityStep;
 
-  
+
     private int _currentActions;
     private float _rotationAmount;
-    private bool _isDummy;
+    public bool IsDummy { get; private set; }
 
 
     public int MaxQuality => _qualityStep._requiredActions;
     public int ID => _qualityStep.Identifier;
-    public int CurrentQuality => _currentActions <= MaxQuality ? _currentActions : 0 ;
+    public int CurrentQuality => _currentActions <= MaxQuality ? _currentActions : 0;
     public int CurrentActions => _currentActions;
     public QualityStep QualityStep => _qualityStep;
 
 
-    private void Awake()
+    void Awake()
     {
         if (_qualityVFXPREFAB == null)
             _qualityVFXPREFAB = Resources.Load<GameObject>("Prefab/VFX/Quality_increase");
+
+    }
+    IEnumerator Start()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.5f);
+        EncourageQualityActionHint();
     }
 
-    private void OnEnable()
-    {
-        //Test
-    }
+
 
     public void InitalizeAsDummy(QualityStep qs, int currentActions)
     {
         _qualityStep = qs;
         AssignCurrentActions(currentActions);
-        _isDummy = true;
+        IsDummy = true;
     }
     public void CloneQuality(QualityObject toCopy)
     {
-       // Debug.Log($"{this.gameObject.name} copying {toCopy}");
+        // Debug.Log($"{this.gameObject.name} copying {toCopy}");
         AssignCurrentActions(toCopy.CurrentQuality);
     }
 
@@ -51,17 +56,18 @@ public class QualityObject : MonoBehaviour
     public void AssignCurrentActions(int amount)
     {
         _currentActions = amount;
+        Debug.Log($"{this.gameObject.name}..Set {_qualityStep} actions to : {amount}");
     }
 
     public bool PerformAction(QualityAction action)
     {
         //Debug.Log($"Perform {action._actionType} on {this.gameObject.name} _isDummy={_isDummy}");
-        if (_isDummy)
+        if (IsDummy)
             return false;
 
         if (action._actionType == _qualityStep._qualityAction)
         {
-         
+
             HandleAction(action);
 
             //Debug.Log(GetQuality()+ "%");
@@ -76,14 +82,14 @@ public class QualityObject : MonoBehaviour
         if (_currentActions > _qualityStep._requiredActions)///we might want to require some type of tool is equipt
             return -1;
 
-          return (int)((((float)_currentActions / _qualityStep._requiredActions) *100f));
+        return (int)((((float)_currentActions / _qualityStep._requiredActions) * 100f));
     }
 
     private void HandleAction(QualityAction action)
-    {   
-     
+    {
+        Debug.Log($"Handle Action : " + action._rotation);
 
-        if(action._actionType == QualityAction.eActionType.ROTATE)
+        if (action._actionType == QualityAction.eActionType.ROTATE)
         {
             ///figure out the object we are ons rotation axis;
             ObjectController controller = GetComponent<ObjectController>();
@@ -100,16 +106,16 @@ public class QualityObject : MonoBehaviour
                 else
                     Debug.LogWarning("No implementation for keeping track of both rotations at the moment, shouldnt need to be a mechanic");
 
-               // Debug.Log($"_rotationAmount={_rotationAmount} from ( { action._rotation.x}, { action._rotation.y}) is >= {_qualityStep._requiredRotationThreshold} = { Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold}");
-                if( Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold)
+                // Debug.Log($"_rotationAmount={_rotationAmount} from ( { action._rotation.x}, { action._rotation.y}) is >= {_qualityStep._requiredRotationThreshold} = { Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold}");
+                if (Mathf.Abs(_rotationAmount) >= _qualityStep._requiredRotationThreshold)
                 {
-                    if (_rotationAmount>0)
+                    if (_rotationAmount > 0)
                         _rotationAmount -= _qualityStep._requiredRotationThreshold; ///reset 
                     else
                         _rotationAmount += _qualityStep._requiredRotationThreshold; ///reset 
 
                     IncreaseQuality();
-                 //   Debug.Log($"Successful rotation! reset to {_rotationAmount}");
+                    //   Debug.Log($"Successful rotation! reset to {_rotationAmount}");
                 }
 
             }
@@ -140,7 +146,41 @@ public class QualityObject : MonoBehaviour
         PerformEffect();
     }
 
+    private void EncourageQualityActionHint()
+    {
+        if (NeedToSetHint() == false)
+            return;
+        if (_qualityStep._qualityAction == QualityAction.eActionType.ROTATE)
+        {
+            ///rotate this piece -30 to allow easy QA
+            //this.transform.rotation = Quaternion.Euler(0, 0, -30);
+            this.transform.Rotate(new Vector3(0, 0, 1), -30);
+            Debug.Log($"{gameObject.name} <color=yellow> preview for {_qualityStep} actions = {_currentActions} </color> .");
+        }
+        else if (_qualityStep._qualityAction == QualityAction.eActionType.TAP)
+        {
+            //Push bolt out a bit somehow
+        }
 
+    }
+
+    private bool NeedToSetHint()
+    {
+        bool iAmParent = this.GetComponent<QualityOverall>();
+        if (!iAmParent)
+        {
+            var overall = this.GetComponentInParent<QualityOverall>();
+            foreach (var q in overall.Qualities)
+            {
+                if (q.QualityStep == this._qualityStep && q.IsDummy)
+                {
+                    Debug.Log($"We found matching QS");
+                    return q.CurrentActions < _qualityStep._requiredActions;
+                }
+            }
+        }
+        return true;
+    }
 
 
 #if UNITY_EDITOR
@@ -211,7 +251,7 @@ public class QualityObject : MonoBehaviour
         }
     }
 
-   
+
 
     #endregion
 #endif

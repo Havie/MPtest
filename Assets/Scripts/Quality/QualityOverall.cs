@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class QualityOverall : MonoBehaviour
 {
-    private List<QualityObject> _qualities = new List<QualityObject>();
+    public List<QualityObject> _qualities = new List<QualityObject>();
     public List<QualityObject> Qualities => _qualities;
 
     [SerializeField] float _lastKnownQuality; ///TMP for read outs in UI
