@@ -30,15 +30,6 @@ public class QualityObject : MonoBehaviour
             _qualityVFXPREFAB = Resources.Load<GameObject>("Prefab/VFX/Quality_increase");
 
     }
-    IEnumerator Start()
-    {
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForSeconds(0.5f);
-        EncourageQualityActionHint();
-    }
-
-
 
     public void InitalizeAsDummy(QualityStep qs, int currentActions)
     {
@@ -87,7 +78,7 @@ public class QualityObject : MonoBehaviour
 
     private void HandleAction(QualityAction action)
     {
-        Debug.Log($"Handle Action : " + action._rotation);
+        //Debug.Log($"Handle Action : " + action._rotation);
 
         if (action._actionType == QualityAction.eActionType.ROTATE)
         {
@@ -146,41 +137,6 @@ public class QualityObject : MonoBehaviour
         PerformEffect();
     }
 
-    private void EncourageQualityActionHint()
-    {
-        if (NeedToSetHint() == false)
-            return;
-        if (_qualityStep._qualityAction == QualityAction.eActionType.ROTATE)
-        {
-            ///rotate this piece -30 to allow easy QA
-            //this.transform.rotation = Quaternion.Euler(0, 0, -30);
-            this.transform.Rotate(new Vector3(0, 0, 1), -30);
-            Debug.Log($"{gameObject.name} <color=yellow> preview for {_qualityStep} actions = {_currentActions} </color> .");
-        }
-        else if (_qualityStep._qualityAction == QualityAction.eActionType.TAP)
-        {
-            //Push bolt out a bit somehow
-        }
-
-    }
-
-    private bool NeedToSetHint()
-    {
-        bool iAmParent = this.GetComponent<QualityOverall>();
-        if (!iAmParent)
-        {
-            var overall = this.GetComponentInParent<QualityOverall>();
-            foreach (var q in overall.Qualities)
-            {
-                if (q.QualityStep == this._qualityStep && q.IsDummy)
-                {
-                    Debug.Log($"We found matching QS");
-                    return q.CurrentActions < _qualityStep._requiredActions;
-                }
-            }
-        }
-        return true;
-    }
 
 
 #if UNITY_EDITOR

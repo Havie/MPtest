@@ -34,8 +34,6 @@ public class QualityOverall : MonoBehaviour
         _lastKnownQuality= GetPercent();///TMP for read outs in UI
     }
 
-
-
     public void ChangeQuality(int curr, int max)
     {
         _currentQuality = curr;

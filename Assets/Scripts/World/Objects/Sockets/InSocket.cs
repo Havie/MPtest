@@ -5,7 +5,7 @@ using UnityEngine;
 using UserInput;
 public class InSocket : Socket
 {
-    [Range(-0.5f, 0.5f)]
+    //[Range(-0.5f, 0.5f)]
      private float _attachmentSensitivity = 0.5f; ///Closeness Threshold
     [SerializeField] ObjectRecord.eItemID[] _requiredAttachmentID = default;
     [SerializeField] ObjectRecord.eItemID[] _createdID = default;
@@ -24,7 +24,7 @@ public class InSocket : Socket
     {
         /// I am not sure why i was doing this, perhaps some sub component werent init,
         /// dont go to 2 seconds, or its possible first attachment fails
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.75f);
         _canCollide = true;
     }
 
