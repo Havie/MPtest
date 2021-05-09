@@ -92,7 +92,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.75
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7775498879776801742
 MonoBehaviour:
@@ -320,6 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1d68c1baf5f34478705cd617a2be89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _qualities: []
   _lastKnownQuality: 0
   _currentQuality: 0
   _maxQuality: 0
@@ -447,7 +448,7 @@ GameObject:
   - component: {fileID: 6844134466715283895}
   - component: {fileID: 2809316620742741876}
   m_Layer: 0
-  m_Name: obj3
+  m_Name: OBJ10_top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -574,7 +575,7 @@ GameObject:
   - component: {fileID: 3298018432393426400}
   - component: {fileID: 1632408159947455461}
   m_Layer: 0
-  m_Name: obj4
+  m_Name: OBJ10_bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Bolt_bot
   m_EditorClassIdentifier: 
   Identifier: 2
-  _requiredActions: 3
+  _requiredActions: 1
   _qualityAction: 0
   _requiredRotationThreshold: 0

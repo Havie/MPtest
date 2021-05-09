@@ -88,6 +88,7 @@ public class VFXManager : MonoSingleton<VFXManager>
     }
 
 
+    /// <summary> Removes an item from and reorders the queue</summary>
     Queue<ParticleSystem> RemoveFromQueue(ParticleSystem toRemove)
     {
         _copyingQueue = true;
@@ -105,6 +106,7 @@ public class VFXManager : MonoSingleton<VFXManager>
 
     }
 
+    /// <summary> Determines whether its time to stop playing an effect from our queue</summary>
     void CheckIfTimeToStop()
     {
         if (_toBeStopped.Count != 0 && !_copyingQueue)
@@ -113,19 +115,25 @@ public class VFXManager : MonoSingleton<VFXManager>
             if (_timeSinceLastQueue < 0)
             {
                 var item = _toBeStopped.Dequeue();
-                item.Stop();
+                if (item)
+                {
+                    item.Stop();
+                }
+                else
+                {
+                    Debug.Log($"<color=yellow>vfx missing from queue</color>");
+                }
                 SetNextDuration();
-
             }
         }
     }
-
+    /// <summary>Sets the nextTime delay based off items in vfx queue </summary>
     void SetNextDuration()
     {
         if (_toBeStopped.Count != 0)
         {
             var next = _toBeStopped.Peek();
-            if (next.main.loop == false)
+            if (next.main.loop == false) //does VFX loop
             {
                 _timeSinceLastQueue = next.main.duration;
                 return;

@@ -28,6 +28,7 @@ public class QualityStep : ScriptableObject
 
         public override void OnInspectorGUI()
         {
+           // serializedObject.Update();
             _objQ.Identifier = EditorGUILayout.IntField("Identifier", _objQ.Identifier);
             _objQ._qualityAction = (QualityAction.eActionType)EditorGUILayout.EnumPopup("Quality Action Type", _objQ._qualityAction);
 
@@ -47,6 +48,12 @@ public class QualityStep : ScriptableObject
                         break;
                     }
             }
+
+            ///This isnt working for whatever reason
+            //serializedObject.ApplyModifiedProperties();
+            ///Have to set Dirty instead
+            EditorUtility.SetDirty(target);
+            
         }
 }
 

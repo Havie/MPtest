@@ -168,7 +168,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             }
             else if (_isOutSlot && id == RequiredID)
             {
-                Debug.Log("..Were playing checkAnim");
+               // Debug.Log("..Were playing checkAnim");
                 PlayCheckMarkAnim(true);
             }
             AssignSpriteByID(id, false);
