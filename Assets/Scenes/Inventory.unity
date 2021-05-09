@@ -5529,6 +5529,7 @@ MonoBehaviour:
   _safePlace: {fileID: 320965857}
   _extraPaddingX: 0
   _extraPaddingY: 0
+  _relatedInventory: {fileID: 0}
 --- !u!224 &1104353666
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8248,7 +8249,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -12672,6 +12673,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4382027254559713015, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: _relatedInventory
+      value: 
+      objectReference: {fileID: 2851103557932543175}
     - target: {fileID: 4382027255801294341, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -15249,6 +15255,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4164277825861719764, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+        type: 3}
+      propertyPath: _relatedInventory
+      value: 
+      objectReference: {fileID: 2602109608856965224}
     - target: {fileID: 4167118385257814314, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
       propertyPath: _orderCreated
