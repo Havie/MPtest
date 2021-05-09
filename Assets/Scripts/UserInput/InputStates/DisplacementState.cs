@@ -147,7 +147,7 @@ namespace UserInput
                 }
             }
             else if (command.UP)
-            {
+            { ///TODO REFACTOR THIS 
                 if (moveableObject != null)
                 {
                     bool assigned = false;
@@ -174,9 +174,17 @@ namespace UserInput
                             ///There is a problem where if the object came from UI, it
                             /// still gets set back behind it, even with deadzone check below?
                             var placedInDeadZone = _brain.CheckRayCastForDeadZoneAtWorldPos(trans.position);
-                            if(placedInDeadZone)
+                            if (placedInDeadZone)
                             {
-                                trans.position = _brain.GetCurrentWorldLocBasedOnPos(placedInDeadZone.GetSafePosition, _currentSelection);
+                                if (placedInDeadZone.TryAssignItem(moveableObject as ObjectController, 1))
+                                {
+                                    _brain.Destroy(moveableObject);
+                                }
+                                else
+                                {
+
+                                    trans.position = _brain.GetCurrentWorldLocBasedOnPos(placedInDeadZone.GetSafePosition, _currentSelection);
+                                }
                             }
 
                         }
@@ -185,9 +193,18 @@ namespace UserInput
                         var dz = _brain.CheckRayCastForDeadZone();
                         if (dz)
                         {
-                            ///If the item is dropped in a deadzone, reset it to a safe place
-                            moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition, _currentSelection);
+                            if (dz.TryAssignItem(moveableObject as ObjectController, 1))
+                            {
+                                _brain.Destroy(moveableObject);
+                            }
+                            else
+                            {
+
+                                ///If the item is dropped in a deadzone, reset it to a safe place
+                                moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition, _currentSelection);
+                            }
                         }
+
                         else
                         {
                             ///Check were not below the table

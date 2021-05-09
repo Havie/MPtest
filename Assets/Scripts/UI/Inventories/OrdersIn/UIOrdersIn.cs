@@ -270,5 +270,10 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
             _orderList[i].transform.localPosition = FindPosition(i);
         }
     }
+
+    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    {
+        throw new System.NotImplementedException();
+    }
 }
 
