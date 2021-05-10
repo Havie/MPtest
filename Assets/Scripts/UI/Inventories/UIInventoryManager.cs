@@ -212,7 +212,11 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         if (!IsInitalized)
             Start();
 
-        if (!_ADDCHAOTIC)
+        if (_ADDCHAOTIC)
+        {
+            return AddChaotic(itemID, qualities, makeRequired);
+        }
+        else //Normal add
         {
             foreach (UIInventorySlot slot in _slots)
             {
@@ -235,10 +239,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
                 SetSizeOfContentArea(); ///adjust scrollable area
                 return true;
             }
-        }
-        else
-        {
-           return AddChaotic(itemID, qualities, makeRequired);
+
         }
 
         return false;
@@ -383,6 +384,11 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         return retList;
     }
 
+    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    {
+        ///Some problems here with COUNT
+        return AddItemToSlot(id, qualities, false);
+    }
     #endregion
 }
 

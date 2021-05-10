@@ -1838,6 +1838,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dropper: {fileID: 1184130889}
   _inventory: {fileID: 2851103557932543175}
+--- !u!114 &271076039 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 529793431066239576, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7137717254717798794}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &289886723 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 413333976817165005, guid: abf9336134fa72d40a79d44d45f01e5e,
@@ -4757,6 +4769,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801467790}
   m_CullTransparentMesh: 0
+--- !u!114 &907940187 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1952175643476756558, guid: 44bc79d259e6ac749923fd029817b154,
+    type: 3}
+  m_PrefabInstance: {fileID: 1360056318}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &945556248
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5529,6 +5553,7 @@ MonoBehaviour:
   _safePlace: {fileID: 320965857}
   _extraPaddingX: 0
   _extraPaddingY: 0
+  _relatedInventory: {fileID: 0}
 --- !u!224 &1104353666
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8248,7 +8273,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -10950,7 +10975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stationToInject: 3
+  _stationToInject: 2
   _developerInjections: 1
   _itemToInject: 17
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
@@ -11266,6 +11291,8 @@ MonoBehaviour:
   _defectBinObject: {fileID: 2049207713}
   _inBinObject: {fileID: 209127081}
   _outBinObject: {fileID: 1759027929}
+  _sendButtonOut: {fileID: 271076039}
+  _sendButtonSmall: {fileID: 907940187}
 --- !u!1 &2080655771
 GameObject:
   m_ObjectHideFlags: 0
@@ -12672,6 +12699,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4382027254559713015, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: _relatedInventory
+      value: 
+      objectReference: {fileID: 2851103557932543175}
     - target: {fileID: 4382027255801294341, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -15249,6 +15281,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4164277825861719764, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+        type: 3}
+      propertyPath: _relatedInventory
+      value: 
+      objectReference: {fileID: 2602109608856965224}
     - target: {fileID: 4167118385257814314, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
       propertyPath: _orderCreated

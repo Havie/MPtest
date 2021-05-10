@@ -10,6 +10,9 @@ public class UIDeadZone : InventoryComponent
     [SerializeField] float _extraPaddingX = 0;
     [SerializeField] float _extraPaddingY = 0;
 
+    [Header("Inventory")] ///This is sort of hacky, but cant assign an Interface in inspector, and no shared base class
+    [SerializeField] Transform _inventoryGameObject;
+    private IInventoryManager _relatedInventory;
 
     public Transform GetSafePosition { get; private set; }
 
@@ -21,6 +24,33 @@ public class UIDeadZone : InventoryComponent
             GetSafePosition = _safePlace.transform;
         else
             UIManager.DebugLogWarning($"saFeplace not set up for {this.gameObject.transform.parent.gameObject.name}");
+
+        _relatedInventory = _inventoryGameObject.GetComponent<IInventoryManager>();
+    }
+
+    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    {
+       return _relatedInventory==null ?  false :  _relatedInventory.TryAssignItem(id, count, qualities);
+    }
+    public bool TryAssignItem(ObjectController oc, int count)
+    {
+        if (oc == null)
+            return false;
+
+        /// get ID from controller
+        int id = (int)oc._myID;
+
+        ///Get Object Quality from controller
+        QualityOverall overallQuality = oc.GetComponent<QualityOverall>();
+        if (overallQuality != null)
+        {
+            List<QualityObject> qualities = overallQuality.Qualities;
+
+            return TryAssignItem(id, count, qualities);
+        }
+
+
+        return false;
     }
 
 

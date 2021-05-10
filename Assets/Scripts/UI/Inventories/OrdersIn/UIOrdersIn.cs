@@ -93,7 +93,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     }
 
 
-    public void RemoveOrder(int itemID)
+    public bool RemoveOrder(int itemID)
     {
         //Debug.Log(_orderList.Count +" size  , Remove order with ItemID : " + itemID);
         /* for (int i = _orderList.Count-1; i >0 ; i--)*/
@@ -106,27 +106,28 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
                 if (order.ItemID == itemID)
                 {
                     //Debug.LogWarning($"Item ID {itemID} found match");
-                    RemoveOrder(order);
-                    UpdateShippedText();
-                    return;
+                    return RemoveOrder(order);
                 }
             }
         }
+        return false;
     }
 
-    public void RemoveOrder(OrderButton orderButton)
+    public bool RemoveOrder(OrderButton orderButton)
     {
+        bool removed = _orderList.Contains(orderButton);
         Debug.Log($"..<color=blue>This is happening for: </color> {orderButton.Slot.gameObject.name}");
-        if (_orderList.Contains(orderButton))
+        if (removed)
         {
             _orderList.Remove(orderButton);
             UpdateOrderText();
+            // play animation then give the anim on.finish() this callback
+            StartCoroutine(ButtonShipped(orderButton));
         }
         else
             Debug.LogError("how is this not in the list");
 
-        // play animation then give the anim on.finish() this callback
-        StartCoroutine(ButtonShipped(orderButton));
+        return removed;
     }
 
 
@@ -238,11 +239,10 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     /// <summary> Item is assigned manually by the bSlot</summary>
     public void ItemAssigned(UIInventorySlot slot)
     {
-        Debug.Log($"..<color=green>This is happening for: </color> {slot.gameObject.name}");
         var itemID = slot.GetItemID();
         if (slot)
             slot.RemoveItem();  ///prevent the anim from playing on wrong slot for FIFO, see ButtonShipped()
-        RemoveOrder(itemID); 
+        RemoveOrder(itemID);
 
     }
     protected virtual IEnumerator ButtonShipped(OrderButton orderButton)
@@ -257,6 +257,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         slot.FakeSetSpriteAsInUse(orderButton.ItemID);
         slot.PlayCheckMarkAnim(true);
         yield return new WaitForSeconds(1f);
+        UpdateShippedText();
         ButtonDestroyedCallback(orderButton);
     }
 
@@ -269,6 +270,12 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         {
             _orderList[i].transform.localPosition = FindPosition(i);
         }
+    }
+
+    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    {
+        Debug.Log($"Try this! ");
+        return RemoveOrder(id);
     }
 }
 
