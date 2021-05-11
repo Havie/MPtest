@@ -22,6 +22,7 @@ public class GameManager : MonoSingleton<GameManager>
     public bool _decreaseChangeOverTime = false;
     public bool _HUDManagement = false;
     public bool _HostDefectPausing = false;
+    public bool StartWithWIP = false;
     #endregion
 
     public bool RoundShouldStart { get; private set; } = false;
