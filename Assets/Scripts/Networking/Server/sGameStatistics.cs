@@ -10,7 +10,6 @@ public class sGameStatistics
     public int ShippedLate { get; private set; } = 0;
 
 
-    float _timeServerStarted; ///Just incase I wana do something w this?
     float _currentRoundTimeStart; /// Will correlate with when the host loaded in
     float _currentRoundEndtime;
     Queue<ItemOrder> _orders; ///For now we use a QUEUE and dont check item Type since we only have one
@@ -18,12 +17,12 @@ public class sGameStatistics
     Dictionary<int, Queue<float>> _cycleTimes;
     /************************************************************************************************************************/
 
-    public sGameStatistics(float timeServerStarted)
+    public sGameStatistics()
     {
-        _timeServerStarted = timeServerStarted;
         _orders = new Queue<ItemOrder>();
         _cycleTimes = new Dictionary<int, Queue<float>>();
     }
+
     /************************************************************************************************************************/
     public void RoundBegin(float startTime)
     {

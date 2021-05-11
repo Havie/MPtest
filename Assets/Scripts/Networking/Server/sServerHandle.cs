@@ -217,6 +217,7 @@ public class sServerHandle
         }
         ///Print out and store our round results
         FileSaver.WriteToFile(rs);
+        sServer.ResetStatistics();
     }
 
     
