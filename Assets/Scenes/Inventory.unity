@@ -13262,6 +13262,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5002715146147569988, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+        type: 3}
+      propertyPath: _inventoryGameObject
+      value: 
+      objectReference: {fileID: 5002715144352221966}
     - target: {fileID: 5120412811351830043, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -13328,6 +13333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &5002715144352221966 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1174855489623409342, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+    type: 3}
+  m_PrefabInstance: {fileID: 5002715144352221963}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &5259581909351719456
 BoxCollider:
   m_ObjectHideFlags: 0
