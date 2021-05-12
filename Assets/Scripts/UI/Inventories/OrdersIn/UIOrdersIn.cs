@@ -236,7 +236,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         }
     }
 
-    /// <summary> Item is assigned manually by the bSlot</summary>
+    /// <summary> Item is assigned manually by the bSlot, shuffle it for FIFO</summary>
     public void ItemAssigned(UIInventorySlot slot)
     {
         var itemID = slot.GetItemID();
@@ -272,9 +272,11 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         }
     }
 
+    /// <summary>
+    /// Interface version of assigning an item into the general inventory space, called from deadzone most likely
+    /// </summary>
     public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
     {
-        Debug.Log($"Try this! ");
         return RemoveOrder(id);
     }
 }

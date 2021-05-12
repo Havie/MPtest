@@ -71,7 +71,6 @@ public class ClientSend : MonoSingleton<ClientSend>
         Debug.Log($"<color=white>(ClientSend) Round Begin </color>");
         using (sPacket packet = new sPacket((int)ClientPackets.roundBegin))
         {
-
             packet.Write(Time.unscaledTime);
             ///other clients shud already have this, might be un-needed, if removed, remove on receieve too
             packet.Write(GameManager.Instance._roundDuration); 
