@@ -16,7 +16,8 @@ public class ClientSend : MonoSingleton<ClientSend>
     }
 
     #region packets
-    /// <summary> We heard back from the server, so send along our Info/// </summary>
+    /// <summary> We heard back from the server, so send along our Info
+    /// </summary>
     public void WelcomeReceived()
     {
         using (sPacket packet = new sPacket((int)ClientPackets.welcomeReceived))
@@ -34,7 +35,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
     public void SendWorkStationID(int stationID)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.stationID))
@@ -45,7 +45,6 @@ public class ClientSend : MonoSingleton<ClientSend>
 
         }
     }
-
     public void RequestMPData()
     {
         using (sPacket packet = new sPacket((int)ClientPackets.requestMpData))
@@ -77,7 +76,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
     public void RoundEnded()
     {
         ///TODO see RoundBegin Comment about this:
@@ -92,7 +90,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
 
 
     /***Gameplay***/
@@ -123,7 +120,6 @@ public class ClientSend : MonoSingleton<ClientSend>
 
         }
     }
-
     /// <summary>
     /// For now, this is only for tracking statistics across the network...Called from an InspectorEvent
     /// TODO: It would be really nice to encapsulate sending Items from this Batch, not the individual slots calling SendItem()
@@ -142,8 +138,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
-
     public void OrderCreated(OrderWrapper order)
     {
         Debug.Log($"<color=white>(ClientSend) Order Created</color>");
@@ -155,7 +149,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
     public void DefectAdded(DefectWrapper defect)
     {
         Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");
@@ -166,25 +159,7 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
     #endregion
 
-
-    #region OldFromTutorial
-    public void PlayerMovement(bool[] inputs)
-    {
-        using (sPacket packet = new sPacket((int)ClientPackets.playerMovement))
-        {
-            packet.Write(inputs.Length);
-            foreach (bool input in inputs)
-                packet.Write(input);
-
-            //use UDP cause we can afford to lose data (faster)
-            // packet.Write(GameManager._players[Client.instance._myId].transform.rotation);
-
-            SendUDPData(packet);
-        }
-    }
-    #endregion
 }
 

@@ -219,7 +219,13 @@ public class sServerHandle
         sServer.ResetStatistics();
     }
 
-    
+
+    public delegate void InventoryChanged(int caller, int needsToKnow, bool isEmpty);
+
+    public static void KanbanFlagChanged(int caller, int needsToKnow, bool isEmpty)
+    {
+        Debug.Log($"Heard the kanban flag for client:{caller} , client:{needsToKnow} cond:{isEmpty}");
+    }
 }
 
 //public static void PlayerMovement(int fromClient, sPacket packet)
