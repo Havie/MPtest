@@ -224,21 +224,47 @@ public class sServerHandle
         ///Print out and store our round results
         FileSaver.WriteToFile(rs);
         sServer.ResetStatistics();
+        sServer.ResetSharedInventories();
     }
 
     public static void ReceivedTransportData(int fromClient, sPacket packet)
     {
         var stationID = packet.ReadInt();
         var outStationID = packet.ReadInt();
-
+        var sharedInvs = sServer._sharedInventories;
         Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{stationID} to out:{outStationID}");
+        sharedInvs.RegisterClientToStationId(fromClient, stationID);
+        sharedInvs.BuildInventory(stationID, outStationID, KanbanFlagChanged);
     }
 
-    public delegate void InventoryChanged(int caller, int needsToKnow, bool isEmpty);
-
-    public static void KanbanFlagChanged(int caller, int needsToKnow, bool isEmpty)
+    public static void InventoryChanged(int fromClient, sPacket packet)
     {
-        Debug.Log($"Heard the kanban flag for client:{caller} , client:{needsToKnow} cond:{isEmpty}");
+        bool isInInventory = packet.ReadBool();
+        bool isRemovedItem = packet.ReadBool();
+        var sharedInvs = sServer._sharedInventories;
+        if (isRemovedItem)
+        {
+            sharedInvs.RemovedItem(isInInventory, fromClient);
+        }
+        else
+        {
+            sharedInvs.AddedItem(isInInventory, fromClient);
+        }
+
+    }
+
+    public delegate void KanbanChangedEvent(int caller, int needsToKnow, bool wasInInventory, bool isEmpty);
+
+    private static void KanbanFlagChanged(int callerStationID, int needsToKnowStationID, bool changedByInInventory, bool isEmpty)
+    {
+        Debug.Log($"Heard the kanban flag for client:{callerStationID} , client:{needsToKnowStationID} cond:{isEmpty}");
+        var sharedInvs = sServer._sharedInventories;
+        int clientID = sharedInvs.GetClientIDForStation(needsToKnowStationID);
+        if(clientID!=-1)
+        {
+            Debug.Log($"Tell Serverclient#:{clientID} to update inventory to = {isEmpty}");
+            sServerSend.SharedInventoryChanged(clientID, changedByInInventory, isEmpty);
+        }
     }
 }
 

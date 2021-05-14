@@ -117,49 +117,18 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     public void OrderShipped(sPacket packet)
     {
-
         int itemID = packet.ReadInt();
         //Debug.Log($"[ClientHandle] itemIDShipped= {itemID}");
         ///Tell kitting menu or whoever else to remove order
         UIManagerGame.Instance.OrderShipped(itemID);
     }
 
-    #region OldTutorial
-    //public  void SpawnPlayer(sPacket packet)
-    //{
-    //    int id = packet.ReadInt();
-    //    string username = packet.ReadString();
-    //    Vector3 pos = packet.ReadVector3();
-    //    Quaternion rot = packet.ReadQuaternion();
-
-    //    //GameManager.instance.SpawnPlayer(id, username, pos, rot);
-    //}
-
-    //public  void PlayerPosition(sPacket packet)
-    //{
-    //    int id = packet.ReadInt();
-    //    Vector3 position = packet.ReadVector3();
-
-    //    //if (GameManager._players.TryGetValue(id, out PlayerManager pm))
-    //    {
-    //        //   pm.transform.position = position;
-    //    }
-    //}
-
-    //public  void PlayerRotation(sPacket packet)
-    //{
-    //    int id = packet.ReadInt();
-    //    Quaternion rotation = packet.ReadQuaternion();
-
-
-    //    // if(GameManager._players.TryGetValue(id, out PlayerManager pm ))
-    //    {
-    //        //  pm.transform.rotation = rotation;
-    //    }
-
-    //}
-
-
-    #endregion
-
+    public void KanbanInventoryChanged(sPacket packet)
+    {
+        bool isInInventory = packet.ReadBool();
+        bool isEmpty = packet.ReadBool();
+        string inv = isInInventory ? "In" : "Out";
+        Debug.Log($"My Kanban {inv}::Inventory changed !  {isInInventory}  , {isEmpty}");
+        ///Tell someone
+    }
 }

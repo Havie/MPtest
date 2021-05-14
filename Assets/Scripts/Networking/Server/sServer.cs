@@ -21,7 +21,9 @@ public static class sServer
 
     public static event Action<string> OnHostIpFound = delegate { };
     public static bool _iAmHost;
+    ///Not loving all the public stuff , but the network code is written in this messy way everywhere so
     public static sGameStatistics _gameStatistics;
+    public static sSharedInventories _sharedInventories;
 
     public static void ListenForHostBroadCasts()
     {
@@ -52,6 +54,7 @@ public static class sServer
         BroadCastIP();
         _iAmHost = true;
         ResetStatistics();
+        ResetSharedInventories();
 
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
@@ -62,6 +65,10 @@ public static class sServer
     public static void ResetStatistics()
     {
         _gameStatistics = new sGameStatistics();
+    }
+    public static void ResetSharedInventories()
+    {
+        _sharedInventories = new sSharedInventories();
     }
 
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 
@@ -195,7 +202,8 @@ public static class sServer
                 { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded},
                 { (int)ClientPackets.roundBegin , sServerHandle.RoundBegin},
                 { (int)ClientPackets.roundEnd , sServerHandle.RoundEnded},
-                { (int)ClientPackets.receiveTransportData , sServerHandle.ReceivedTransportData}
+                { (int)ClientPackets.receiveTransportData , sServerHandle.ReceivedTransportData},
+                { (int)ClientPackets.inventoryChanged , sServerHandle.InventoryChanged}
 
             };
 

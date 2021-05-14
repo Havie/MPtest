@@ -345,7 +345,8 @@ public class Client : MonoSingleton<Client>
             { (int)ServerPackets.roundStart, ClientHandle.Instance.RoundStarted },
             { (int)ServerPackets.roundEnd, ClientHandle.Instance.RoundEnded },
             { (int)ServerPackets.orderShipped, ClientHandle.Instance.OrderShipped },
-            { (int)ServerPackets.requestTransportData, ClientHandle.Instance.RequestTransportData }
+            { (int)ServerPackets.requestTransportData, ClientHandle.Instance.RequestTransportData },
+            { (int)ServerPackets.sharedInventoryChanged, ClientHandle.Instance.KanbanInventoryChanged }
         };
 
        // Debug.Log("InitClientData packets ");

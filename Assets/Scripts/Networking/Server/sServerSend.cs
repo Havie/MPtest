@@ -159,6 +159,20 @@ public class sServerSend
             SendTCPDataToAll(packet);
         }
     }
+
+    public static void SharedInventoryChanged(int toClient, bool isInInventory, bool isEmpty)
+    {
+
+        using (sPacket packet = new sPacket((int)ServerPackets.sharedInventoryChanged))
+        {
+            packet.Write(isInInventory);
+            packet.Write(isEmpty);
+
+            SendTCPData(toClient, packet);
+        }
+
+    }
+
     #endregion
 }
 

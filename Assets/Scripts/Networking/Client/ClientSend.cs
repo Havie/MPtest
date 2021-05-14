@@ -161,11 +161,22 @@ public class ClientSend : MonoSingleton<ClientSend>
     }
     public void DefectAdded(DefectWrapper defect)
     {
-        Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");
+        //Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");
         using (sPacket packet = new sPacket((int)ClientPackets.defectAdded))
         {
             packet.Write(defect.StationId);
             packet.Write(defect.ItemId);
+            SendTCPData(packet);
+        }
+    }
+    
+    public void KanbanChanged(bool isInInventory, bool isRemoved)
+    {
+        Debug.Log($"<color=orange>(ClientSend) KanbanChanged</color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.inventoryChanged))
+        {
+            packet.Write(isInInventory);
+            packet.Write(isRemoved);
             SendTCPData(packet);
         }
     }
