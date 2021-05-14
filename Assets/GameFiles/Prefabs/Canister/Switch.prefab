@@ -49,6 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _switch: {fileID: 943250158344180111}
   _switchFlipped: {fileID: 9218884806350777991}
+  _lighteningVFXPREFAB: {fileID: 343847826371366596, guid: b59553020fe805342b7224afaabb5e23,
+    type: 3}
+  _lighteningVFXLocation: {fileID: 0}
 --- !u!114 &7309490286974700489
 MonoBehaviour:
   m_ObjectHideFlags: 0
