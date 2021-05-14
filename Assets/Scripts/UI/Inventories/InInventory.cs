@@ -36,11 +36,14 @@ public class InInventory : UIInventoryManager
         //ParseItems(GameManager.Instance.CurrentWorkStationManager, GameManager.Instance._workStation, true);
 
         var gm = GameManager.instance;
-
-        foreach (var itemID in StationItemParser.ParseItemsAsIN(gm._batchSize,gm._isStackable, gm.CurrentWorkStationManager, gm._workStation))
+        if (gm.StartWithWIP) ///TODO if pull, show as REQ item
         {
-            AddItemToSlot((int)itemID, null, false);
+            foreach (var itemID in StationItemParser.ParseItemsAsIN(gm._batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation))
+            {
+                AddItemToSlot((int)itemID, null, false);
+            }
         }
+        
     }
 
 

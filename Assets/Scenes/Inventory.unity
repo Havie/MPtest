@@ -5486,6 +5486,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1075118189}
   m_CullTransparentMesh: 0
+--- !u!224 &1081231016 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2468654314842389466, guid: 9a52b4508ee1edf49992b120c88d406d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5375752487553094561}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1096452716
 GameObject:
   m_ObjectHideFlags: 0
@@ -5553,7 +5559,7 @@ MonoBehaviour:
   _safePlace: {fileID: 320965857}
   _extraPaddingX: 0
   _extraPaddingY: 0
-  _relatedInventory: {fileID: 0}
+  _inventoryGameObject: {fileID: 1267863506}
 --- !u!224 &1104353666
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11209,6 +11215,7 @@ MonoBehaviour:
   _decreaseChangeOverTime: 0
   _HUDManagement: 0
   _HostDefectPausing: 0
+  StartWithWIP: 0
   _componentList: {fileID: 11400000, guid: d22a25fd5bbeb864b943c79a8b778f54, type: 2}
   _batchWorkStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
     type: 2}
@@ -11993,6 +12000,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -65
       objectReference: {fileID: 0}
+    - target: {fileID: 7004019817554495201, guid: eeff0920a4208af41bad73c4ee6f0bd3,
+        type: 3}
+      propertyPath: _inventoryGameObject
+      value: 
+      objectReference: {fileID: 8851129763559421237}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeff0920a4208af41bad73c4ee6f0bd3, type: 3}
 --- !u!114 &343088733307697296
@@ -12704,6 +12716,11 @@ PrefabInstance:
       propertyPath: _relatedInventory
       value: 
       objectReference: {fileID: 2851103557932543175}
+    - target: {fileID: 4382027254559713015, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: _inventoryGameObject
+      value: 
+      objectReference: {fileID: 3511560006304324890}
     - target: {fileID: 4382027255801294341, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -12923,6 +12940,12 @@ CanvasRenderer:
 --- !u!1 &3511560006304324887 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 894958115263443733, guid: ca58c9199303b3b43ba590d24a08378e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2344184567493047959}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &3511560006304324890 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 894958115263443734, guid: ca58c9199303b3b43ba590d24a08378e,
     type: 3}
   m_PrefabInstance: {fileID: 2344184567493047959}
   m_PrefabAsset: {fileID: 0}
@@ -13239,6 +13262,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5002715146147569988, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+        type: 3}
+      propertyPath: _inventoryGameObject
+      value: 
+      objectReference: {fileID: 5002715144352221966}
     - target: {fileID: 5120412811351830043, guid: c4f0fffa9f6e3ac40834e93334bedee8,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -13305,6 +13333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &5002715144352221966 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1174855489623409342, guid: c4f0fffa9f6e3ac40834e93334bedee8,
+    type: 3}
+  m_PrefabInstance: {fileID: 5002715144352221963}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &5259581909351719456
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13556,6 +13590,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5375752488378437892, guid: 9a52b4508ee1edf49992b120c88d406d,
+        type: 3}
+      propertyPath: _inventoryGameObject
+      value: 
+      objectReference: {fileID: 1081231016}
     - target: {fileID: 6525100364816833324, guid: 9a52b4508ee1edf49992b120c88d406d,
         type: 3}
       propertyPath: m_IsActive
@@ -15240,6 +15279,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7137717254717798794}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &6779161226590445792 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4402883475097983312, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7137717254717798794}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6853997422946891803 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4929095055796354548, guid: 466fd5417aed5fc4f8186432a5dd5b28,
@@ -15286,6 +15331,11 @@ PrefabInstance:
       propertyPath: _relatedInventory
       value: 
       objectReference: {fileID: 2602109608856965224}
+    - target: {fileID: 4164277825861719764, guid: 42c970f27fa9cb546b61ebf275ccb32f,
+        type: 3}
+      propertyPath: _inventoryGameObject
+      value: 
+      objectReference: {fileID: 6779161226590445792}
     - target: {fileID: 4167118385257814314, guid: 42c970f27fa9cb546b61ebf275ccb32f,
         type: 3}
       propertyPath: _orderCreated
