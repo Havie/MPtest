@@ -194,7 +194,11 @@ public class sClient
     {
         _workStation = workStation;
     }
-
+    public void RequestTransportInfo()
+    {
+        ///Tells the clients to send up and pair IN/OUT connection details
+        sServerSend.RequestTransportInfo(_id);
+    }
     public void StartRound(int roundDuration)
     {
         ///This is the SERVER client

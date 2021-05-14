@@ -91,6 +91,16 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
     }
 
+    public void SendTransportData(int myStationID, int outputStationID)
+    {
+        using (sPacket packet = new sPacket((int)ClientPackets.receiveTransportData))
+        {
+            packet.Write(myStationID);
+            packet.Write(outputStationID);
+            SendTCPData(packet);
+        }
+
+    }
 
     /***Gameplay***/
     public void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)

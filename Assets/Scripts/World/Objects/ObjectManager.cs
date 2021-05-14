@@ -136,7 +136,7 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
             controller.PutDown(); ///turn on physics 
         }
 
-        if (DebugItemsOnSpawn)
+        if (DebugItemsOnSpawn && FPSCounter.Instance)
             FPSCounter.Instance.ProfileAnObject(newObj);
 
         return newObj;

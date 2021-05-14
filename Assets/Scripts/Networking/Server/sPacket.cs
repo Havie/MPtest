@@ -15,7 +15,9 @@ public enum ServerPackets
     item,
     roundStart,
     roundEnd,
-    orderShipped
+    orderShipped,
+    requestTransportData,
+    receiveTransportData
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -31,7 +33,9 @@ public enum ClientPackets
     defectAdded,
     roundBegin,
     roundEnd,
-    orderShipped
+    orderShipped,
+    requestTransportData,
+    receiveTransportData
 }
 
 public class sPacket : IDisposable

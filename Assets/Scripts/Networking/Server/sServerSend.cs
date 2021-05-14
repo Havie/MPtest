@@ -93,6 +93,13 @@ public class sServerSend
 
     }
 
+    public static void RequestTransportInfo(int toClient)
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.requestTransportData))
+        {
+            SendTCPData(toClient, packet);
+        }
+    }
     public static void StartRound(int toClient, int roundDuration)
     {
         using (sPacket packet = new sPacket((int)ServerPackets.roundStart))

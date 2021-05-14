@@ -28,7 +28,7 @@ public class sServerHandle
     public static void StationIDReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
-        //Debug.Log("[ServerHandle] stationID Read was : " + stationID);
+        Debug.Log("[ServerHandle] stationID Read was : " + stationID);
         ///This is somewhat unsafe
         sClient client = sServer._clients[fromClient];
         if (client != null)
@@ -172,8 +172,15 @@ public class sServerHandle
         ///We could Tick on the sNetworkManager but feels wrong
 
         sServer._gameStatistics.RoundBegin(roundStart);
+        var batchSize = GameManager.Instance._batchSize;
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
+            if (batchSize == 1)
+            {
+                ///Set up the KanBan flags for pull
+                c.RequestTransportInfo();
+            }
+
             ///Tell all clients to start: (this sets the timer, and loads the scene)
             ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
            c.StartRound(roundDuration);
@@ -219,6 +226,13 @@ public class sServerHandle
         sServer.ResetStatistics();
     }
 
+    public static void ReceivedTransportData(int fromClient, sPacket packet)
+    {
+        var stationID = packet.ReadInt();
+        var outStationID = packet.ReadInt();
+
+        Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{stationID} to out:{outStationID}");
+    }
 
     public delegate void InventoryChanged(int caller, int needsToKnow, bool isEmpty);
 

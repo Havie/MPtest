@@ -194,7 +194,8 @@ public static class sServer
                 { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated},
                 { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded},
                 { (int)ClientPackets.roundBegin , sServerHandle.RoundBegin},
-                { (int)ClientPackets.roundEnd , sServerHandle.RoundEnded}
+                { (int)ClientPackets.roundEnd , sServerHandle.RoundEnded},
+                { (int)ClientPackets.receiveTransportData , sServerHandle.ReceivedTransportData}
 
             };
 

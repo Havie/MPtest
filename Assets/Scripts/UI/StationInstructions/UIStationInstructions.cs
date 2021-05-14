@@ -29,7 +29,7 @@ public class UIStationInstructions : MonoBehaviour
         _isOn = !_isOn;
         if(img == null )
         {
-            Debug.Log($"<color=yellow> NULL img..</color> wont show");
+            //Debug.Log($"<color=yellow> NULL img..</color> wont show");
             _isOn = false;
         }
         this.gameObject.SetActive(_isOn);

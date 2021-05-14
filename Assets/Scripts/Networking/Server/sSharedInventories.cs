@@ -9,10 +9,14 @@ public class sSharedInventories
 
     //TODO
     ///SomethingSomewhere ,looks at all the IN inventories and maps them by getting who they send to
-
-    public void BuildInventory(int inClientdID, int outClientID)
+    public void RegisterClientToStationId(int clientID, int stationID)
     {
-        _inventories.Add(new SharedInventory(inClientdID, outClientID, sServerHandle.KanbanFlagChanged));
+
+    }
+
+    public void BuildInventory(int inStationID, int outStationID)
+    {
+        _inventories.Add(new SharedInventory(inStationID, outStationID, sServerHandle.KanbanFlagChanged));
     }
 
 
