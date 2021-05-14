@@ -164,11 +164,11 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             if (_isOutSlot && id != RequiredID)
             {
                 //Debug.Log($"{id} does not match {RequiredID}");
-                return false;
+                return AskManagerIfSpaceForItem(id, count, qualities);
             }
             else if (_isOutSlot && id == RequiredID)
             {
-                Debug.Log("..Were playing checkAnim");
+               // Debug.Log("..Were playing checkAnim");
                 PlayCheckMarkAnim(true);
             }
             AssignSpriteByID(id, false);
@@ -178,11 +178,6 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
                 _qualities = qualities;
             else
                 _qualities.Clear();
-
-            //if (qualities != null)
-            //    DebugQualityIn();
-            //else
-            //    UIManager.DebugLog("Qualities Read was Null");
 
             _itemID = id;
             _numItemsStored = count;
@@ -206,7 +201,13 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             SetNormal();
             return true;
         }
-        return false;
+
+        return AskManagerIfSpaceForItem(id, count, qualities);
+    }
+
+    private bool AskManagerIfSpaceForItem(int id, int count, List<QualityObject> qualities)
+    {
+        return _manager.TryAssignItem(id, count, qualities);
     }
     public bool RequiresCertainID() => RequiredID != -1;
     #endregion

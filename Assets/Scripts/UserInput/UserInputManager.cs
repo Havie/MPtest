@@ -148,7 +148,7 @@ namespace UserInput
             var v3 = _mainCamera.ScreenToWorldPoint(adjustedForZVec);
 
             v3.z = currentSelection.Transform().position.z;
-            Debug.Log($"{safePlaceToGo.position}  -->{adjustedForZVec}  = RetValDeadZone= {v3}");
+            //Debug.Log($"{safePlaceToGo.position}  -->{adjustedForZVec}  = RetValDeadZone= {v3}");
             return v3;
         }
 

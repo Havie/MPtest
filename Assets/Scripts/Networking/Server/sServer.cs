@@ -51,12 +51,17 @@ public static class sServer
 
         BroadCastIP();
         _iAmHost = true;
-        _gameStatistics = new sGameStatistics(Time.unscaledTime);
+        ResetStatistics();
 
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
 
         UIManager.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
+    }
+
+    public static void ResetStatistics()
+    {
+        _gameStatistics = new sGameStatistics();
     }
 
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: b_Task_6
   m_EditorClassIdentifier: 
   _finalItemID: 0c000000
-  _requiredItemIDs: 0b00000006000000
+  _requiredItemIDs: 1500000004000000
   _stationType: 0

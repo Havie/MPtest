@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UserInput;
+using TMPro;
 
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
@@ -34,6 +35,12 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] GameObject _defectBinObject = default;
     [SerializeField] GameObject _inBinObject = default;
     [SerializeField] GameObject _outBinObject = default;
+
+
+    [Header("Buttons")]
+    [SerializeField] TextMeshProUGUI _sendButtonOut = default;
+    [SerializeField] TextMeshProUGUI _sendButtonSmall = default;
+
 
 
     ///TODO , why dont I just seralize these like everything else so its not circular?
@@ -166,8 +173,17 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     }
     private void HandleShippingStation(WorkStation ws)
     {
-        bool cond = ws.IsShippingStation() && GameManager.instance._batchSize == 1;
+        bool isShipping = ws.IsShippingStation();
+        if (isShipping)
+        {
+            _sendButtonOut.text = "Ship";
+            _sendButtonSmall.text = "Ship";
+        }
+        HandlePullShipping(isShipping && GameManager.instance._batchSize == 1);
+    }
 
+    private void HandlePullShipping(bool cond)
+    {
         if (_shippingInventory)
         {
             _shippingInventory.SetActive(cond);
@@ -175,11 +191,12 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         }
         if (_normalOutInventory)
             _normalOutInventory.SetActive(!cond);
-        if(_outBinObject)
+        if (_outBinObject)
         {
             _outBinObject.SetActive(!cond);
         }
     }
+
     public void ShowInInventory(bool cond)
     {
         if (_normalInInventory != null)

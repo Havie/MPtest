@@ -114,17 +114,16 @@ public class sServerHandle
         int batchSize = packet.ReadInt();
         bool wasShipped = packet.ReadBool();
 
-        Debug.Log("[sServerHandle] BatchReceived: stationID Read was : " + stationID);
-        Debug.Log("[sServerHandle] BatchReceived: batchSize Read was : " + batchSize);
+        // Debug.Log("[sServerHandle] BatchReceived: stationID Read was : " + stationID);
+        // Debug.Log("[sServerHandle] BatchReceived: batchSize Read was : " + batchSize);
 
         //if (fromClient != stationID)
         //    Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
         sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
-        //var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID, Time.time);
-
-        // Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
+        var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID);
+        Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
     public static void OrderCreated(int fromClient, sPacket packet)
@@ -200,7 +199,7 @@ public class sServerHandle
 
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
-            Debug.Log($"[ServerHandle] sees Client: {c} , {c._id} vs {c._workStation} ");
+           // Debug.Log($"[ServerHandle] sees Client: {c} , {c._id} vs {c._workStation} ");
             int workStationId = c._workStation;
             if (workStationId == 0)
             {
@@ -210,13 +209,14 @@ public class sServerHandle
             ///Cycle time is the only one unique to a station:
             float cycleTime = gameStats.GetCycleTimeForStation(workStationId);
             /// I am worried the workStationID frin Client doesnt correlate to the ingame WS
-            Debug.Log("[ServerHandle] stationID RoundEnd was : " + workStationId);
+           //Debug.Log("[ServerHandle] stationID RoundEnd was : " + workStationId);
             rs.SetCycleTime(workStationId, cycleTime);
             c.EndRound(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
 
         }
         ///Print out and store our round results
         FileSaver.WriteToFile(rs);
+        sServer.ResetStatistics();
     }
 
     
