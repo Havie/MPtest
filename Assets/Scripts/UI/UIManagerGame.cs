@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UserInput;
 using TMPro;
-
+using System.Collections.Generic;
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
@@ -239,6 +239,24 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     }
 
+    public void KanbanUpdateInventory(bool isInInventory, bool isEmpty)
+    {
+        if (isInInventory)
+        {
+            ///Tell left side UI
+            _invIN.KanbanInventoryChanged(isEmpty);
+        }
+        else
+        {
+            ///Tell right side UI
+            _invOUT.KanbanInventoryChanged(isEmpty);
+        }
+    }
+    
+    public void ItemReceived(int itemID, List<QualityObject> qualities)
+    {
+        _invIN.AddItemToSlot(itemID, qualities, false);
+    }
     #endregion
 
 

@@ -389,6 +389,11 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         ///Some problems here with COUNT
         return AddItemToSlot(id, qualities, false);
     }
+    
+    public void KanbanInventoryChanged(bool isEmpty)
+    {
+        _slots[0].SharedKanbanSlotChanged(isEmpty);
+    }
     #endregion
 }
 

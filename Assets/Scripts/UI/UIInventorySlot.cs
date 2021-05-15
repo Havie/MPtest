@@ -118,9 +118,11 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     }
     public void RemoveItem()
     {
+        RemoveItem(false);
+    }
+    private void RemoveItem(bool noCallback)
+    {
         --_numItemsStored;
-        //if (gameObject.name.Contains("#1"))
-        //    Debug.Log($"Removed Item for {this.gameObject.name} , new total={_numItemsStored}");
         if (_numItemsStored <= 0)
         {
             SwapBackgroundIMGs(false);
@@ -135,6 +137,23 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             }
             else
                 RestoreDefault();
+        }
+        if(! noCallback)
+        {
+            TellManager();
+        }
+    }
+    public void SharedKanbanSlotChanged(bool isEmpty)
+    {
+        if (isEmpty)
+        {
+            RemoveItem(true);
+        }
+        else
+        {
+            ///TODO?
+            List<QualityObject> qualities = new List<QualityObject>();
+            AssignItem(RequiredID, 1, null, true);
         }
     }
     public bool AssignItem(ObjectController oc, int count)
@@ -159,6 +178,11 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     }
     public bool AssignItem(int id, int count, List<QualityObject> qualities)
     {
+        return AssignItem(id, count, qualities, false);
+    }
+
+    private bool AssignItem(int id, int count, List<QualityObject> qualities, bool noCallBack)
+    {
         if (!_inUse)
         {
             if (_isOutSlot && id != RequiredID)
@@ -168,7 +192,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             }
             else if (_isOutSlot && id == RequiredID)
             {
-               // Debug.Log("..Were playing checkAnim");
+                // Debug.Log("..Were playing checkAnim");
                 PlayCheckMarkAnim(true);
             }
             AssignSpriteByID(id, false);
@@ -182,17 +206,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             _itemID = id;
             _numItemsStored = count;
             _inUse = true;
-            //if (_autoSend)
-            //{
-            //    if (count > 1)
-            //        Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
-            //    ///Instead of sending the data manually via SendData(), we have to send through the batch event
-            //    ///in order for the server to trigger/track the batches for MP
-            //    OutInventory outInventory = _manager as OutInventory;
-            //    if (outInventory)
-            //        outInventory.SendBatch();
-            //}
-            //else //non pull send , Kitting/Shipping Menu
+            if(!noCallBack)
             {
                 TellManager();
             }
@@ -322,17 +336,14 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     {
         this.transform.localScale = _LARGER;
     }
-    private void SetNormal() ///Shud get this private and abstracted
+    private void SetNormal() 
     {
         this.transform.localScale = _NORMAL;
     }
-
     public void SetSmaller()
     {
         this.transform.localScale = _SMALLER;
     }
-
-
     /** Find and remove an order from kittings in orders */
     private void CheckKitting()
     {

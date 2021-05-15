@@ -106,12 +106,11 @@ public class ClientHandle : MonoSingleton<ClientHandle>
            // Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
         }
 
-
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
        // UIManager.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
-        UIManagerGame.Instance._invIN.AddItemToSlot(itemLvl, qualities, false);
+        UIManagerGame.Instance.ItemReceived(itemLvl, qualities);
 
     }
 
@@ -130,13 +129,6 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         string inv = isInInventory ? "In" : "Out";
         UIManager.DebugLog($"My Kanban {inv}::Inventory changed !  {isInInventory}  , {isEmpty}");
         ///Tell someone to add the slot but not recall the server
-        if(isInInventory)
-        {
-            ///Tell left side UI
-        }
-        else
-        {
-            ///Tell right side UI
-        }
+        UIManagerGame.instance.KanbanUpdateInventory(isInInventory, isEmpty);
     }
 }
