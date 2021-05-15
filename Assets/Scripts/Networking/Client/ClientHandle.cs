@@ -128,7 +128,15 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         bool isInInventory = packet.ReadBool();
         bool isEmpty = packet.ReadBool();
         string inv = isInInventory ? "In" : "Out";
-        Debug.Log($"My Kanban {inv}::Inventory changed !  {isInInventory}  , {isEmpty}");
-        ///Tell someone
+        UIManager.DebugLog($"My Kanban {inv}::Inventory changed !  {isInInventory}  , {isEmpty}");
+        ///Tell someone to add the slot but not recall the server
+        if(isInInventory)
+        {
+            ///Tell left side UI
+        }
+        else
+        {
+            ///Tell right side UI
+        }
     }
 }

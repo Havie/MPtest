@@ -237,7 +237,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     }
 
     /// <summary> Item is assigned manually by the bSlot, shuffle it for FIFO</summary>
-    public void ItemAssigned(UIInventorySlot slot)
+    public void SlotStateChanged(UIInventorySlot slot)
     {
         var itemID = slot.GetItemID();
         if (slot)

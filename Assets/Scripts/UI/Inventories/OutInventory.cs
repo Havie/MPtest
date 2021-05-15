@@ -16,6 +16,7 @@ public class OutInventory : UIInventoryManager
     [Header("Dev Option")]
     [SerializeField] bool _enableFirstSend;
 
+    private int _batchSize;
 
     #region InitalSetup
     protected override void Start()
@@ -53,14 +54,14 @@ public class OutInventory : UIInventoryManager
     protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
-        int batchSize = gm._batchSize;
+        _batchSize = gm._batchSize;
         ///if batch size =1 , then IN = # of produced Items at station
-        if (batchSize == 1) ///assume batchsize=1 enabled stackable Inv and StationINV is turned on
+        if (_batchSize == 1) ///assume batchsize=1 enabled stackable Inv and StationINV is turned on
         {
             _sendButton.gameObject.SetActive(false); ///turn off the send button
         }
 
-        return StationItemParser.ParseItemsAsOUT(batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
+        return StationItemParser.ParseItemsAsOUT(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
         // return ParseItems(wm, myWS, false) * BATCHSIZE;
 
     }
@@ -117,8 +118,13 @@ public class OutInventory : UIInventoryManager
 
     /************************************************************************************************************/
 
-    public override void ItemAssigned(UIInventorySlot slot)
+    public override void SlotStateChanged(UIInventorySlot slot)
     {
+        if(_batchSize==1)
+        {
+            ClientSend.Instance.KanbanChanged(false, !slot.GetInUse());
+        }
+
         CheckIfBatchIsReady();
     }
 

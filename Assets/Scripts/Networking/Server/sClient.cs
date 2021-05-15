@@ -13,7 +13,7 @@ public class sClient
     public TCP _tcp;
     public UDP _udp;
     public sPlayer _player;
-    public int _workStation;
+    public int _workStationID;
 
     public sClient(int clientId)
     {
@@ -192,7 +192,7 @@ public class sClient
     /** can use WorkStation static dic to see where we send info to*/
     public void SetWorkStation(int workStation)
     {
-        _workStation = workStation;
+        _workStationID = workStation;
     }
     public void RequestTransportInfo()
     {

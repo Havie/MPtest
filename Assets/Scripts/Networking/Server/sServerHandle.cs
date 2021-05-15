@@ -33,7 +33,7 @@ public class sServerHandle
         sClient client = sServer._clients[fromClient];
         if (client != null)
         {
-            client._workStation = stationID;
+            client._workStationID = stationID;
             sPlayerData.SetStationDataForPlayer(stationID, fromClient);
 
         }
@@ -70,14 +70,12 @@ public class sServerHandle
     {
 
         int itemLvl = packet.ReadInt();
-        Debug.Log("[ServerHandle] ItemReceived:  Read was : " + itemLvl);
         int stationID = packet.ReadInt();
-        Debug.Log("[ServerHandle] ItemReceived: stationID Read was : " + stationID);
-
         List<int> qualities = new List<int>();
-
         var count = packet.ReadInt();
-        Debug.Log($"[ServerHandle] QualityCount={count}");
+        //Debug.Log("[ServerHandle] ItemReceived:  Read was : " + itemLvl);
+        Debug.Log("[ServerHandle] ItemReceived: stationID Read was : " + stationID);
+        //Debug.Log($"[ServerHandle] QualityCount={count}");
         // string info = "";
         ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
@@ -93,9 +91,9 @@ public class sServerHandle
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
             //if client workstation ID matches stationID 
-            if (c._workStation == stationID)
+            if (c._workStationID == stationID)
             {
-                Debug.Log($"...SENT item to client # {c}");
+                Debug.Log($"...SENT item to client # {c._id}");
                 //Send the item to their inventory:
                 c.SendItem(itemLvl, qualities);
             }
@@ -207,7 +205,7 @@ public class sServerHandle
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
            // Debug.Log($"[ServerHandle] sees Client: {c} , {c._id} vs {c._workStation} ");
-            int workStationId = c._workStation;
+            int workStationId = c._workStationID;
             if (workStationId == 0)
             {
                 ///Zero means one of the clients was never assigned a stationID (could be host?)
@@ -229,12 +227,12 @@ public class sServerHandle
 
     public static void ReceivedTransportData(int fromClient, sPacket packet)
     {
-        var stationID = packet.ReadInt();
-        var outStationID = packet.ReadInt();
+        var ownersStationID = packet.ReadInt();
+        var receiversStationID = packet.ReadInt();
         var sharedInvs = sServer._sharedInventories;
-        Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{stationID} to out:{outStationID}");
-        sharedInvs.RegisterClientToStationId(fromClient, stationID);
-        sharedInvs.BuildInventory(stationID, outStationID, KanbanFlagChanged);
+        Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{ownersStationID} to out:{receiversStationID}");
+        sharedInvs.RegisterClientToStationId(fromClient, ownersStationID);
+        sharedInvs.BuildInventory(ownersStationID, receiversStationID, KanbanFlagChanged);
     }
 
     public static void InventoryChanged(int fromClient, sPacket packet)
@@ -242,6 +240,7 @@ public class sServerHandle
         bool isInInventory = packet.ReadBool();
         bool isRemovedItem = packet.ReadBool();
         var sharedInvs = sServer._sharedInventories;
+        Debug.Log($"<color=white>[ServerHandle]</color> heard InvChanged for : clientID{fromClient} , to isIN={isInInventory} isEmpty={isRemovedItem} ");
         if (isRemovedItem)
         {
             sharedInvs.RemovedItem(isInInventory, fromClient);
@@ -255,16 +254,19 @@ public class sServerHandle
 
     public delegate void KanbanChangedEvent(int caller, int needsToKnow, bool wasInInventory, bool isEmpty);
 
-    private static void KanbanFlagChanged(int callerStationID, int needsToKnowStationID, bool changedByInInventory, bool isEmpty)
+    private static void KanbanFlagChanged(int callerStationID, int needsToKnowStationID, bool invType, bool isEmpty)
     {
-        Debug.Log($"Heard the kanban flag for client:{callerStationID} , client:{needsToKnowStationID} cond:{isEmpty}");
+        Debug.Log($"Heard the kanban flag for callerStation:{callerStationID} , NeedstoKnowStation:{needsToKnowStationID} cond:{isEmpty}");
         var sharedInvs = sServer._sharedInventories;
         int clientID = sharedInvs.GetClientIDForStation(needsToKnowStationID);
-        if(clientID!=-1)
+        if (clientID != -1)
         {
             Debug.Log($"Tell Serverclient#:{clientID} to update inventory to = {isEmpty}");
-            sServerSend.SharedInventoryChanged(clientID, changedByInInventory, isEmpty);
+            Debug.Log($"Changer was In = {invType}");
+            sServerSend.SharedInventoryChanged(clientID, invType, isEmpty);
         }
+        else
+            Debug.Log($"whoops no client found");
     }
 }
 

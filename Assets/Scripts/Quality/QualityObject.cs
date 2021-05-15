@@ -47,7 +47,7 @@ public class QualityObject : MonoBehaviour
     public void AssignCurrentActions(int amount)
     {
         _currentActions = amount;
-        Debug.Log($"{this.gameObject.name}..Set {_qualityStep} actions to : {amount}");
+        //Debug.Log($"{this.gameObject.name}..Set {_qualityStep} actions to : {amount}");
     }
 
     public bool PerformAction(QualityAction action)

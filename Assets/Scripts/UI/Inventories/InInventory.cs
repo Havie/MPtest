@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class InInventory : UIInventoryManager
 {
+
+    int _batchSize;
+
     #region InitalSetup
 
 
@@ -27,7 +30,8 @@ public class InInventory : UIInventoryManager
     protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
-        return StationItemParser.ParseItemsAsIN(gm._batchSize,gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
+        _batchSize = gm._batchSize;
+        return StationItemParser.ParseItemsAsIN(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
        // return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
 
@@ -83,4 +87,12 @@ public class InInventory : UIInventoryManager
     }
 
     #endregion
+
+    public override void SlotStateChanged(UIInventorySlot slot)
+    {
+        if (_batchSize == 1)
+        {
+            ClientSend.Instance.KanbanChanged(true, !slot.GetInUse());
+        }
+    }
 }

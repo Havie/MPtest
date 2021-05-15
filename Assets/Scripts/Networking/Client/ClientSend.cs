@@ -113,7 +113,7 @@ public class ClientSend : MonoSingleton<ClientSend>
             packet.Write(toStationID);
             ///How many qualities to parse in a for loop
             packet.Write(qualities.Count);
-            Debug.Log($"ClientSend QualityCount={qualities.Count}");
+            //Debug.Log($"ClientSend QualityCount={qualities.Count}");
             string info = "";
             for (int i = 0; i < qualities.Count; ++i)
             {
@@ -138,7 +138,7 @@ public class ClientSend : MonoSingleton<ClientSend>
     /// <param name="batch"></param>
     public void BatchSent(BatchWrapper batch)
     {
-        Debug.Log($"<color=yellow>Client Send BatchSent </color>{batch.StationId} , {batch.ItemCount}");
+        //Debug.Log($"<color=yellow>Client Send BatchSent </color>{batch.StationId} , {batch.ItemCount}");
 
         using (sPacket packet = new sPacket((int)ClientPackets.batch))
         {
@@ -172,7 +172,7 @@ public class ClientSend : MonoSingleton<ClientSend>
     
     public void KanbanChanged(bool isInInventory, bool isRemoved)
     {
-        Debug.Log($"<color=orange>(ClientSend) KanbanChanged</color>");
+        Debug.Log($"!!..<color=orange>(ClientSend) KanbanChanged</color>");
         using (sPacket packet = new sPacket((int)ClientPackets.inventoryChanged))
         {
             packet.Write(isInInventory);

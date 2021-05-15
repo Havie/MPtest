@@ -5,18 +5,20 @@ using UnityEngine;
 public class sSharedInventories
 {
     private enum eInventoryType { IN, OUT }
-    private List<SharedInventory> _inventories;
+    private List<SharedInventory> _inventories = new List<SharedInventory>();
 
     private Dictionary<int, int> _stationIdsToClientIds = new Dictionary<int, int>();
     private Dictionary<int, int> _clientIdsToStationIds = new Dictionary<int, int>();
 
     public void RegisterClientToStationId(int clientID, int stationID)
     {
+        Debug.Log($"..register client#:{clientID} to station#:{stationID}");
         _stationIdsToClientIds[stationID] = clientID;
         _clientIdsToStationIds[clientID] = stationID;
     }
     public int GetClientIDForStation(int stationID)
     {
+        //Debug.Log($"..trying to get client for stationID#:{stationID}");
         if (_stationIdsToClientIds.TryGetValue(stationID, out int clientID))
         {
             return clientID;
@@ -34,7 +36,8 @@ public class sSharedInventories
     ///Something  monitors all the inventories and maps them by getting who they send to
     public void BuildInventory(int inStationID, int outStationID, sServerHandle.KanbanChangedEvent onChanged)
     {
-        _inventories.Add(new SharedInventory(inStationID, outStationID, onChanged));
+        ///This is flipped because of how they are shared
+        _inventories.Add(new SharedInventory(outStationID, inStationID, onChanged));
     }
 
     public void AddedItem(bool isInInventory, int clientID)
@@ -52,11 +55,14 @@ public class sSharedInventories
     {
         int stationID = GetStationIDForClient(clientID);
         eInventoryType type = isInInventory ? eInventoryType.IN : eInventoryType.OUT;
+        Debug.Log($"..trying to get station for clientID#:{clientID} was : {stationID}:{type}");
         var inventory = FindAnInventory(type, stationID);
         if (inventory != null)
         {
             inventory.SetInUse(!isEmpty, stationID);
         }
+        else
+            Debug.Log($"<color=red>NO inventory found for</color>  clientID#:{clientID} was : {stationID}:{type}");
     }
     /// <summary>
     /// Finds the inventory where the typed is mapped to the clients ID, null if not found
@@ -65,7 +71,8 @@ public class sSharedInventories
     {
         foreach (var inv in _inventories)
         {
-            int idOwner = GetClientIDForInventoryByType(inv, type);
+            int idOwner = GetStationIDForInventoryByType(inv, type);
+            Debug.Log($"Gotten ID for type {type} was : {idOwner}");
             if (idOwner == stationID)
             {
                 return inv;
@@ -77,7 +84,7 @@ public class sSharedInventories
     /// <summary>
     /// Returns the ID for client for this inventories mapped type
     /// </summary>
-    private int GetClientIDForInventoryByType(SharedInventory inv, eInventoryType type)
+    private int GetStationIDForInventoryByType(SharedInventory inv, eInventoryType type)
     {
         if (type == eInventoryType.IN)
         {
@@ -121,8 +128,12 @@ public class SharedInventory
         int caller = changerWasInInventory ? _inID : _outID;
         ///Set the clientID for the client who needs to know of the state change
         int needsToKnow = !changerWasInInventory ? _inID : _outID;
-
-        _onChanged?.Invoke(caller, needsToKnow, changerWasInInventory, _isEmpty);
+        ///This is a hacky way that tells the receiving client which inventory L/R this correlates to
+        ///If the OUT client changed it, (R) then the client that will need the update is IN (L)
+        ///So on the receiving end, the bool they get is called "isInInventory" so its opposite,
+        ///since to change the next stations IN inventory, the changer was a clients OUT (on the server)
+        bool invType = ! changerWasInInventory;
+        _onChanged?.Invoke(caller, needsToKnow, invType, _isEmpty);
     }
 
 }

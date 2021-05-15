@@ -182,17 +182,17 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             _itemID = id;
             _numItemsStored = count;
             _inUse = true;
-            if (_autoSend)
-            {
-                if (count > 1)
-                    Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
-                ///Instead of sending the data manually via SendData(), we have to send through the batch event
-                ///in order for the server to trigger/track the batches for MP
-                OutInventory outInventory = _manager as OutInventory;
-                if (outInventory)
-                    outInventory.SendBatch();
-            }
-            else //non pull send , Kitting/Shipping Menu
+            //if (_autoSend)
+            //{
+            //    if (count > 1)
+            //        Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
+            //    ///Instead of sending the data manually via SendData(), we have to send through the batch event
+            //    ///in order for the server to trigger/track the batches for MP
+            //    OutInventory outInventory = _manager as OutInventory;
+            //    if (outInventory)
+            //        outInventory.SendBatch();
+            //}
+            //else //non pull send , Kitting/Shipping Menu
             {
                 TellManager();
             }
@@ -204,7 +204,6 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
 
         return AskManagerIfSpaceForItem(id, count, qualities);
     }
-
     private bool AskManagerIfSpaceForItem(int id, int count, List<QualityObject> qualities)
     {
         return _manager.TryAssignItem(id, count, qualities);
@@ -297,8 +296,9 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
 
     private void TellManager()
     {
-        _manager.ItemAssigned(this);
+        _manager.SlotStateChanged(this);
     }
+
     private void RestoreDefault()
     {
         SetNormal();

@@ -29,6 +29,8 @@ public class LobbyDropdown : Dropdown
     /// <summary> Prevent user from selecting an inuse option in the dropdown menu </summary>
     private void LockDropDownItems(Transform dropdownTransform)
     {
+        if (dropdownTransform == null)
+            return;
         ///The true here included inactive buttons!?
         var toggleArr = dropdownTransform.GetComponentsInChildren<Toggle>(true);
 

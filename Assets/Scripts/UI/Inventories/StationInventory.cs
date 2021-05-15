@@ -33,7 +33,7 @@ public class StationInventory : UIInventoryManager
         int batchSize = gm._batchSize;
         WorkStation myWS = gm._workStation;
         bool isStackable = gm._isStackable;
-        Debug.Log($"Station { gm._workStation}");
+       // Debug.Log($"Station { gm._workStation}");
         return StationItemParser.ParseItemsAsStation(batchSize, isStackable, wm, myWS);
     }
 

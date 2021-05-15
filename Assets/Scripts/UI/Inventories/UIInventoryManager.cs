@@ -347,7 +347,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         // button.transform.SetAsLastSibling();
     }
 
-    public virtual void ItemAssigned(UIInventorySlot slot) { }
+    public virtual void SlotStateChanged(UIInventorySlot slot) { }
 
     public int MaxSlots()
     {

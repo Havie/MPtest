@@ -212,8 +212,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             _invIN = _normalInInventory.GetComponentInChildren<UIInventoryManager>(true);
         if (_normalOutInventory)
             _invOUT = _normalOutInventory.GetComponentInChildren<UIInventoryManager>(true);
-
-        Debug.Log($" int:{_invIN}  ,    out:{_invOUT}");
     }
 
     public void RoundOutOfTime(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
