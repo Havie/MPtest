@@ -66,7 +66,7 @@ public class OutInventory : UIInventoryManager
 
     }
 
-    private void SetUpBatchOutput(List<int> itemIDs)
+    private void SetUpStartingItems(List<int> itemIDs)
     {
         foreach (var itemID in itemIDs)
         {
@@ -111,7 +111,7 @@ public class OutInventory : UIInventoryManager
             _slots[i].transform.localScale = new Vector3(1, 1, 1);
         }
 
-        SetUpBatchOutput(itemIDs);
+        SetUpStartingItems(itemIDs);
     }
 
 

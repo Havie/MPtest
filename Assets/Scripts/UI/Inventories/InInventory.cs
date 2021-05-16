@@ -40,11 +40,19 @@ public class InInventory : UIInventoryManager
         //ParseItems(GameManager.Instance.CurrentWorkStationManager, GameManager.Instance._workStation, true);
 
         var gm = GameManager.instance;
+        List<int> itemIDs = StationItemParser.ParseItemsAsIN(gm._batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
+        if (gm._batchSize==1)
+        {
+            ///if its pull count should only be one for Kanban
+            if (itemIDs.Count != 1)
+                Debug.Log($"Pull system item count is : <color=yellow> {itemIDs.Count} </color>, expecting 1");
+            AddItemToSlot(itemIDs[0], null, true);
+        }
         if (gm.StartWithWIP) ///TODO if pull, show as REQ item
         {
-            foreach (var itemID in StationItemParser.ParseItemsAsIN(gm._batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation))
+            foreach (int itemID in itemIDs)
             {
-                AddItemToSlot((int)itemID, null, false);
+                AddItemToSlot(itemID, null, false);
             }
         }
         

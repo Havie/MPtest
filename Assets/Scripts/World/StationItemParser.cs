@@ -148,6 +148,33 @@ public static class StationItemParser
         if (batchSize == 1 || isStackable)
         {
             ///look at the last tasks final items in the station before mine
+            AddLastTasksFinalitemsToList();
+        }
+        else  
+        {   ///look at all final items for station before me , and the basic items from kitting[1]
+            AddLastTasksFinalitemsAndBasicItemsToList();
+        }
+        //Debug.Log($"The # of INV items will be : {itemIDs.count}");
+        return itemIDs;
+
+        ///**********************LOCAL FUNCTIONS: *******************************
+        List<int> FindObjectsAtKittingStation(WorkStation ws)
+        {
+            if (!ws.isKittingStation())
+                Debug.LogError("Wrong order, kitting isnt @ index 1");
+
+            List<int> items = new List<int>();
+            foreach (Task t in ws._tasks)
+            {
+                foreach (var item in t._finalItemID)
+                    items.Add((int)item);
+            }
+
+            return items;
+        }
+
+        void AddLastTasksFinalitemsToList()
+        {
             if (startingIndex > 1) /// no kitting on pull, so second station
             {
                 WorkStation ws = stationList[startingIndex - 1];
@@ -164,7 +191,8 @@ public static class StationItemParser
 
             }
         }
-        else  ///look at all final items for station before me , and the basic items from kitting[1]
+
+        void AddLastTasksFinalitemsAndBasicItemsToList()
         {
             var listItems = FindObjectsAtKittingStation(stationList[1]);
             // Debug.Log("Staring index=+" + startingIndex);
@@ -179,7 +207,7 @@ public static class StationItemParser
                         foreach (var item in t._requiredItemIDs)
                         {
                             int itemId = (int)item;
-                           // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
+                            // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                             if (listItems.Contains(itemId))
                                 listItems.Remove(itemId);
                         }
@@ -215,26 +243,6 @@ public static class StationItemParser
                     }
                 }
             }
-
-
-        }
-        //Debug.Log($"The # of INV items will be : {itemIDs.count}");
-        return itemIDs;
-
-        ///LOCAL FUNCTIONS:
-        List<int> FindObjectsAtKittingStation(WorkStation ws)
-        {
-            if (!ws.isKittingStation())
-                Debug.LogError("Wrong order, kitting isnt @ index 1");
-
-            List<int> items = new List<int>();
-            foreach (Task t in ws._tasks)
-            {
-                foreach (var item in t._finalItemID)
-                    items.Add((int)item);
-            }
-
-            return items;
         }
     }
     public static List<int> ParseItemsAsStation(int batchSize, bool isStackable, WorkStationManager wm, WorkStation myWS)
