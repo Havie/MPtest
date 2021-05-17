@@ -101,27 +101,26 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
 
     }
-
     /***Gameplay***/
-    public void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
+    public void SendItem(int itemID, List<QualityObject> qualities, int toStationID)
     {
         UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
         {
-            packet.Write(itemLVL);
+            packet.Write(itemID);
             ///Who am I sending it to? (station/ClientID?)
             packet.Write(toStationID);
             ///How many qualities to parse in a for loop
             packet.Write(qualities.Count);
             //Debug.Log($"ClientSend QualityCount={qualities.Count}");
-            string info = "";
+            //string info = "";
             for (int i = 0; i < qualities.Count; ++i)
             {
                 QualityObject q = qualities[i];
                 packet.Write(q.ID);
                 packet.Write(q.CurrentQuality);
 
-                info += $" send:({q.ID},{q.CurrentQuality}) ";
+               // info += $" send:({q.ID},{q.CurrentQuality}) ";
             }
 
             //UIManager.DebugLog(info);
@@ -169,14 +168,21 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-    
-    public void KanbanChanged(bool isInInventory, bool isRemoved)
+    public void KanbanChanged(bool isInInventory, bool isRemoved, int itemID, List<QualityObject> qualities)
     {
         Debug.Log($"!!..<color=orange>(ClientSend) KanbanChanged</color>");
         using (sPacket packet = new sPacket((int)ClientPackets.inventoryChanged))
         {
             packet.Write(isInInventory);
             packet.Write(isRemoved);
+            packet.Write(itemID);
+            packet.Write(qualities.Count);
+            for (int i = 0; i < qualities.Count; ++i)
+            {
+                QualityObject q = qualities[i];
+                packet.Write(q.ID);
+                packet.Write(q.CurrentQuality);
+            }
             SendTCPData(packet);
         }
     }

@@ -12,7 +12,7 @@ public class sServerHandle
         int clientIdCheck = packet.ReadInt();
         string username = packet.ReadString();
 
-        Debug.Log($"[ServerHandle] <color=blue>{sServer._clients[fromClient]._tcp._socket.Client.RemoteEndPoint} </color> <color=green>{username}</color> connected successfully and is now player {fromClient}");
+        Debug.Log($"[ServerHandle] <color=blue>{sServer._clients[fromClient].Tcp._socket.Client.RemoteEndPoint} </color> <color=green>{username}</color> connected successfully and is now player {fromClient}");
         if (fromClient != clientIdCheck)
         {
             Debug.Log($"[ServerHandle] Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
@@ -33,7 +33,7 @@ public class sServerHandle
         sClient client = sServer._clients[fromClient];
         if (client != null)
         {
-            client._workStationID = stationID;
+            client.SetWorkStation(stationID);
             sPlayerData.SetStationDataForPlayer(stationID, fromClient);
 
         }
@@ -71,29 +71,14 @@ public class sServerHandle
 
         int itemLvl = packet.ReadInt();
         int stationID = packet.ReadInt();
-        List<int> qualities = new List<int>();
-        var count = packet.ReadInt();
-        //Debug.Log("[ServerHandle] ItemReceived:  Read was : " + itemLvl);
-        Debug.Log("[ServerHandle] ItemReceived: stationID Read was : " + stationID);
-        //Debug.Log($"[ServerHandle] QualityCount={count}");
-        // string info = "";
-        ///Reconstruct the Object Quality data
-        for (int i = 0; i < count; ++i)
-        {
-            var id = packet.ReadInt();
-            var curAction = packet.ReadInt();
-            qualities.Add(id); ///quality ID
-            qualities.Add(curAction); ///quality Count
+        List<int> qualities = ReconstructQualityData(packet);
 
-            //  info += $" server pack :({id},{curAction}) ";
-        }
-
-        foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
+        foreach (sClient c in sServer.GetClients()) 
         {
             //if client workstation ID matches stationID 
-            if (c._workStationID == stationID)
+            if (c.WorkStationID == stationID)
             {
-                Debug.Log($"...SENT item to client # {c._id}");
+                Debug.Log($"...SENT item to client # {c.ID}");
                 //Send the item to their inventory:
                 c.SendItem(itemLvl, qualities);
             }
@@ -103,6 +88,37 @@ public class sServerHandle
 
         }
 
+    }
+
+    private static List<int> ReconstructQualityData(sPacket packet)
+    {
+        List<int> qualities = new List<int>();
+        var count = packet.ReadInt();
+        ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var curAction = packet.ReadInt();
+            qualities.Add(id); ///quality ID
+            qualities.Add(curAction); ///quality Count
+        }
+        return qualities;
+    }
+    ///TODO test this
+    private static int[] ReconstructQualityDataArr(sPacket packet)
+    {
+        int count = packet.ReadInt();
+        int[] qualities = new int[count * 2];
+        ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var curAction = packet.ReadInt();
+            qualities[i] = (id); ///quality ID
+            ++i;
+            qualities[i] = (curAction); ///quality Count
+        }
+        return qualities;
     }
 
     public static void BatchReceived(int fromClient, sPacket packet)
@@ -144,16 +160,9 @@ public class sServerHandle
     {
         int stationID = packet.ReadInt();
         int itemID = packet.ReadInt();
-
-        //if (fromClient != stationID)
-        //    Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
-
-
-        Debug.Log("<color=orange>[sServerHandle]</color>DEFECT itemID Read was : " + stationID);
-        Debug.Log("<color=orange>[sServerHandle]</color>DEFECT createdTime Read was : " + itemID);
-
+       // Debug.Log("<color=orange>[sServerHandle]</color>DEFECT itemID Read was : " + stationID);
+       // Debug.Log("<color=orange>[sServerHandle]</color>DEFECT createdTime Read was : " + itemID);
         sServer._gameStatistics.AddedADefect(stationID, itemID);
-
 
         Debug.Log($"Current DEFECTS#={sServer._gameStatistics.Defects}");
     }
@@ -171,14 +180,13 @@ public class sServerHandle
 
         sServer._gameStatistics.RoundBegin(roundStart);
         var batchSize = GameManager.Instance._batchSize;
-        foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
+        foreach (sClient c in sServer.GetClients())
         {
             if (batchSize == 1)
             {
                 ///Set up the KanBan flags for pull
                 c.RequestTransportInfo();
             }
-
             ///Tell all clients to start: (this sets the timer, and loads the scene)
             ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
            c.StartRound(roundDuration);
@@ -205,7 +213,7 @@ public class sServerHandle
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
            // Debug.Log($"[ServerHandle] sees Client: {c} , {c._id} vs {c._workStation} ");
-            int workStationId = c._workStationID;
+            int workStationId = c.WorkStationID;
             if (workStationId == 0)
             {
                 ///Zero means one of the clients was never assigned a stationID (could be host?)
@@ -225,12 +233,22 @@ public class sServerHandle
         sServer.ResetSharedInventories();
     }
 
+    /// <summary>
+    /// The reason why this is slightly different from using sClient.WorkStationID is that
+    /// we dont necessarily have access to the info of who the workstations output is
+    /// and if we have this info we might as well store it in  a map for quicker access
+    /// I would like the entire client send system to move towards a map approach in time,
+    /// Behind on sprints right now, so no time to redesign
+    /// </summary>
     public static void ReceivedTransportData(int fromClient, sPacket packet)
     {
+
         var ownersStationID = packet.ReadInt();
         var receiversStationID = packet.ReadInt();
         var sharedInvs = sServer._sharedInventories;
-        Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{ownersStationID} to out:{receiversStationID}");
+        ///On a refactor we could do something like this, then w a bool flag, re-build the key properly
+        //KeyValuePair<int, int> _stationPair = new KeyValuePair<int, int>(receiversStationID, ownersStationID);
+        //Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{ownersStationID} to out:{receiversStationID}");
         sharedInvs.RegisterClientToStationId(fromClient, ownersStationID);
         sharedInvs.BuildInventory(ownersStationID, receiversStationID, KanbanFlagChanged);
     }
@@ -239,50 +257,29 @@ public class sServerHandle
     {
         bool isInInventory = packet.ReadBool();
         bool isRemovedItem = packet.ReadBool();
+        int itemID = packet.ReadInt();
+        List<int> qualities = ReconstructQualityData(packet);
         var sharedInvs = sServer._sharedInventories;
         Debug.Log($"<color=white>[ServerHandle]</color> heard InvChanged for : clientID{fromClient} , to isIN={isInInventory} isEmpty={isRemovedItem} ");
-        if (isRemovedItem)
-        {
-            sharedInvs.RemovedItem(isInInventory, fromClient);
-        }
-        else
-        {
-            sharedInvs.AddedItem(isInInventory, fromClient);
-        }
 
+        sharedInvs.UpdateInventories(isRemovedItem, isInInventory, fromClient, itemID, qualities);
     }
 
-    public delegate void KanbanChangedEvent(int caller, int needsToKnow, bool wasInInventory, bool isEmpty);
+    public delegate void KanbanChangedEvent(int caller, int needsToKnow, bool wasInInventory, bool isEmpty, int itemID, List<int> qualityData);
 
-    private static void KanbanFlagChanged(int callerStationID, int needsToKnowStationID, bool invType, bool isEmpty)
+    private static void KanbanFlagChanged(int callerStationID, int needsToKnowStationID, bool invType, bool isEmpty, int itemID, List<int> qualityData)
     {
         Debug.Log($"Heard the kanban flag for callerStation:{callerStationID} , NeedstoKnowStation:{needsToKnowStationID} cond:{isEmpty}");
         var sharedInvs = sServer._sharedInventories;
+        ///Should we instead do sServer.GetClients() way ?
         int clientID = sharedInvs.GetClientIDForStation(needsToKnowStationID);
         if (clientID != -1)
         {
             Debug.Log($"Tell Serverclient#:{clientID} to update inventory to = {isEmpty}");
             Debug.Log($"Changer was In = {invType}");
-            sServerSend.SharedInventoryChanged(clientID, invType, isEmpty);
+            sServerSend.SharedInventoryChanged(clientID, invType, isEmpty, itemID, qualityData);
         }
         else
             Debug.Log($"whoops no client found");
     }
 }
-
-//public static void PlayerMovement(int fromClient, sPacket packet)
-//{
-//    bool[] inputs = new bool[packet.ReadInt()];
-//    for (int i = 0; i < inputs.Length; ++i)
-//        inputs[i] = packet.ReadBool();
-
-//    Quaternion rotation = packet.ReadQuaternion();
-
-
-//    sClient client = sServer._clients[fromClient];
-//    if (client != null)
-//    {
-//        if (client._player != null)
-//            client._player.SetInput(inputs, rotation);
-//    }
-//}

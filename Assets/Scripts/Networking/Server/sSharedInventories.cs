@@ -40,18 +40,11 @@ public class sSharedInventories
         _inventories.Add(new SharedInventory(outStationID, inStationID, onChanged));
     }
 
-    public void AddedItem(bool isInInventory, int clientID)
-    {
-        AlterInventory(isInInventory, clientID, false);
-    }
-    public void RemovedItem(bool isInInventory, int clientID)
-    {
-        AlterInventory(isInInventory, clientID, true);
-    }
+
     /// <summary>
     /// If found, sets an inventory to either inUse or Empty
     /// </summary>
-    private void AlterInventory(bool isInInventory, int clientID, bool isEmpty)
+    public void UpdateInventories(bool isEmpty, bool isInInventory, int clientID, int itemID, List<int> qualityData)
     {
         int stationID = GetStationIDForClient(clientID);
         eInventoryType type = isInInventory ? eInventoryType.IN : eInventoryType.OUT;
@@ -59,7 +52,7 @@ public class sSharedInventories
         var inventory = FindAnInventory(type, stationID);
         if (inventory != null)
         {
-            inventory.SetInUse(!isEmpty, stationID);
+            inventory.SetInUse(!isEmpty, stationID, itemID, qualityData);
         }
         else
             Debug.Log($"<color=red>NO inventory found for</color>  clientID#:{clientID} was : {stationID}:{type}");
@@ -118,7 +111,7 @@ public class SharedInventory
     public bool IsEmpty => _isEmpty;
     public bool IsInUse => !IsEmpty;
 
-    public void SetInUse(bool cond, int changedByStationID)
+    public void SetInUse(bool cond, int changedByStationID, int itemID, List<int> qualityData)
     {
         _isEmpty = !cond;
 
@@ -133,7 +126,7 @@ public class SharedInventory
         ///So on the receiving end, the bool they get is called "isInInventory" so its opposite,
         ///since to change the next stations IN inventory, the changer was a clients OUT (on the server)
         bool invType = ! changerWasInInventory;
-        _onChanged?.Invoke(caller, needsToKnow, invType, _isEmpty);
+        _onChanged?.Invoke(caller, needsToKnow, invType, _isEmpty, itemID, qualityData);
     }
 
 }

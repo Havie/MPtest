@@ -11,6 +11,12 @@ public class UIPartCountDisplayOut : UIPartCountDisplay
 
     [SerializeField] GameObject _sendButton;
 
+    int _batchSize = 2;
+    private void Start()
+    {
+        _batchSize = GameManager.instance._batchSize;
+    }
+
     void LateUpdate()
     {
         if (_manager)
@@ -21,7 +27,7 @@ public class UIPartCountDisplayOut : UIPartCountDisplay
 
                 int current = _manager.SlotsInUse();
                 int max = _manager.MaxSlots();
-
+                UpdateText(current, max);
                 ShowButtonIfFull(current, max);
 
                 return;
@@ -37,6 +43,8 @@ public class UIPartCountDisplayOut : UIPartCountDisplay
     {
         if (current == max)
         {
+            if (_batchSize == 1)
+                return;
             DisableText(true);
             ///Show Send Button
             if (_sendButton)
@@ -45,11 +53,9 @@ public class UIPartCountDisplayOut : UIPartCountDisplay
         }
         else
         {
-            UpdateText(current, max); ///not sure?
             ///Don't Show SendButton
             if (_sendButton)
                 _sendButton.SetActive(false);
-
         }
     }
 

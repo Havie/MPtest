@@ -16,7 +16,6 @@ public class OutInventory : UIInventoryManager
     [Header("Dev Option")]
     [SerializeField] bool _enableFirstSend;
 
-    private int _batchSize;
 
     #region InitalSetup
     protected override void Start()
@@ -120,11 +119,10 @@ public class OutInventory : UIInventoryManager
 
     public override void SlotStateChanged(UIInventorySlot slot)
     {
-        if(_batchSize==1)
+        if (_batchSize == 1)
         {
-            ClientSend.Instance.KanbanChanged(false, !slot.GetInUse());
+            ClientSend.Instance.KanbanChanged(false, !slot.GetInUse(), slot.RequiredID, slot.Qualities);
         }
-
         CheckIfBatchIsReady();
     }
 

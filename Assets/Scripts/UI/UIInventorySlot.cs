@@ -123,6 +123,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     private void RemoveItem(bool noCallback)
     {
         --_numItemsStored;
+        UIManager.DebugLog($"Remove ITEM , new count = {_numItemsStored}");
         if (_numItemsStored <= 0)
         {
             SwapBackgroundIMGs(false);
@@ -143,7 +144,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             TellManager();
         }
     }
-    public void SharedKanbanSlotChanged(bool isEmpty)
+    public void SharedKanbanSlotChanged(bool isEmpty, List<QualityObject> qualities)
     {
         if (isEmpty)
         {
@@ -151,9 +152,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         }
         else
         {
-            ///TODO?
-            List<QualityObject> qualities = new List<QualityObject>();
-            AssignItem(RequiredID, 1, null, true);
+            AssignItem(RequiredID, 1, qualities, true);
         }
     }
     public bool AssignItem(ObjectController oc, int count)
@@ -190,9 +189,9 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
                 //Debug.Log($"{id} does not match {RequiredID}");
                 return AskManagerIfSpaceForItem(id, count, qualities);
             }
-            else if (_isOutSlot && id == RequiredID)
+            else if ( id == RequiredID)
             {
-                // Debug.Log("..Were playing checkAnim");
+                ///removed _isOutSlot check here so kanban flags can play check mark
                 PlayCheckMarkAnim(true);
             }
             AssignSpriteByID(id, false);
@@ -206,8 +205,9 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             _itemID = id;
             _numItemsStored = count;
             _inUse = true;
-            if(!noCallBack)
+            if(!noCallBack) ///Don't tell the manager about our stateChange
             {
+                ///We do this so we dont get circular network calls from network changes
                 TellManager();
             }
 

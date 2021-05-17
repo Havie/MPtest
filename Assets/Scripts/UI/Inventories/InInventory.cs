@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class InInventory : UIInventoryManager
 {
-
-    int _batchSize;
-
     #region InitalSetup
 
 
@@ -96,11 +93,14 @@ public class InInventory : UIInventoryManager
 
     #endregion
 
+
     public override void SlotStateChanged(UIInventorySlot slot)
     {
+        ///Has to be override cause no way to set the TorF flag on UIInventoryManager parent w 3 stations without an enum and were staying away from enums w inheritance like this
         if (_batchSize == 1)
         {
-            ClientSend.Instance.KanbanChanged(true, !slot.GetInUse());
+            ClientSend.Instance.KanbanChanged(true, !slot.GetInUse(), slot.RequiredID, slot.Qualities);
         }
     }
+
 }

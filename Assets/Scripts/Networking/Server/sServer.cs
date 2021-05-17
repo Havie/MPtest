@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 using System.Text;
+using System.Linq;
 
 public static class sServer
 {
@@ -85,9 +86,9 @@ public static class sServer
 
             for (int i = 1; i <= _maxPlayers; ++i)
             {
-                if (_clients[i]._tcp._socket == null)
+                if (_clients[i].Tcp._socket == null)
                 {
-                    _clients[i]._tcp.Connect(client);
+                    _clients[i].Tcp.Connect(client);
                     return;
                 }
             }
@@ -140,18 +141,18 @@ public static class sServer
 
                 if (_clients.ContainsKey(clientId))
                 {
-                    if (_clients[clientId]._udp._endPoint == null)
+                    if (_clients[clientId].Udp._endPoint == null)
                     {
-                        _clients[clientId]._udp.Connect(clientEndPoint); //first time through?
+                        _clients[clientId].Udp.Connect(clientEndPoint); //first time through?
                         return;
                     }
 
                     //Prevent hacker from impersonating someone by sending a different ID
                     //Convert to string because even when they match returns false?
                     // Debug.Log("Test val1: " + _clients[clientId]._udp._endPoint + " , val2: " + clientEndPoint + " comparison= " + (_clients[clientId]._udp._endPoint == clientEndPoint));
-                    if (_clients[clientId]._udp._endPoint.ToString().Equals(clientEndPoint.ToString()))
+                    if (_clients[clientId].Udp._endPoint.ToString().Equals(clientEndPoint.ToString()))
                     {
-                        _clients[clientId]._udp.HandleData(packet);
+                        _clients[clientId].Udp.HandleData(packet);
                     }
                 }
                 else
@@ -234,6 +235,14 @@ public static class sServer
         throw new Exception("No network adapters with an IPv4 address in the system!");
     }
 
+    /************************************************************************************************************/
+    //   My attempt at starting to rewrite this to following better programming principles
+    //   Theres far too many public accessors to what should be private data
+    /************************************************************************************************************/
 
+    public static List<sClient> GetClients()
+    {
+        return _clients.Values.ToList();
+    }
 }
 

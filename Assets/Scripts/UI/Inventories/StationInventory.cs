@@ -114,6 +114,11 @@ public class StationInventory : UIInventoryManager
         
     }
 
+    public override void SlotStateChanged(UIInventorySlot slot)
+    {
+        ///override todo nothing, (could count hardcore WIP here someday?)
+    }
+
     private void AssignInfiniteItem(int itemID)
     {
         foreach (UIInventorySlot slot in _slots)
