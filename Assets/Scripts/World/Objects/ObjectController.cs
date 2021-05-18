@@ -79,6 +79,33 @@ public class ObjectController : HighlightableObject, IConstructable
     }
 
 
+    void Start()
+    {
+        var mr = this.GetComponent<MeshRenderer>();
+        if(mr)
+            UpdateJoseMaterialColor(mr, 0, "_OutlineColor");
+
+    }
+    private void TempSetHighlighted(bool isTransparent)
+    {
+        var mr = this.GetComponent<MeshRenderer>();
+        if (mr)
+        {
+            if(isTransparent)
+            {
+                UpdateJoseMaterialColor(mr, 0.5f, "_Color");
+                UpdateJoseMaterialColor(mr, 1, "_OutlineColor");
+            }
+            else //Not transparent
+            {
+                UpdateJoseMaterialColor(mr, 1f, "_Color");
+                UpdateJoseMaterialColor(mr, 1, "_OutlineColor");
+            }
+
+           
+        }
+    }
+
     private eRotationAxis DetermineRotationAccess()
     {
         if (_parent != null && (_myID == ObjectRecord.eItemID.PinkTop || _myID == ObjectRecord.eItemID.RedBot))
@@ -124,6 +151,23 @@ public class ObjectController : HighlightableObject, IConstructable
             {
                 UIManager.UpdateHandLocation(_handIndex, _handLocation.position);
             }
+        }
+
+
+        System.Random rng = new System.Random();
+
+        bool even = rng.Next(0, 100) % 2 == 0;
+
+        ///TEMP
+        if (even)
+        {
+            TempSetHighlighted(true);
+
+        }
+        if (!even)
+        {
+            TempSetHighlighted(false);
+
         }
 
     }
@@ -373,13 +417,28 @@ public class ObjectController : HighlightableObject, IConstructable
 
         if (mr)
         {
-            Material m = mr.material;
-            Color color = m.color;
-            color.a = opacity;
-            m.color = color;
-            mr.material = m;
+            //UnityDefaultColorChange(mr, opacity);
+            UpdateJoseMaterialColor(mr, opacity, "_Color");
+
         }
     }
+    private void UpdateJoseMaterialColor(MeshRenderer mr, float opacity, string key)
+    {
+        var mat = mr.material;
+        Color old = mat.GetColor(key);
+        old.a = opacity;
+        mat.SetColor(key, old);
+    }
+
+    private  void UnityDefaultColorChange(MeshRenderer mr, float opacity)
+    {
+        Material m = mr.material;
+        Color color = m.color;
+        color.a = opacity;
+        m.color = color;
+        mr.material = m;
+    }
+
     private void ChangeHighLightColor(int handIndex)
     {
         Color color = handIndex == 1 ? ObjectManager.Instance._colorHand1 : ObjectManager.Instance._colorHand2;
@@ -395,11 +454,8 @@ public class ObjectController : HighlightableObject, IConstructable
         foreach (var mr in _childrenMeshRenderers)
         {
             mr.enabled = true;
-            Material m = mr.material;
-            Color color = m.color;
-            color.a = opacity;
-            m.color = color;
-            mr.material = m;
+            //UnityDefaultColorChange(mr, opacity);
+            UpdateJoseMaterialColor(mr, opacity, "_Color");
         }
     }
     protected Vector2 DoRotation(Vector3 dir)

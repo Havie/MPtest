@@ -33,6 +33,8 @@ public class HighlightableObject : InteractableObject, IHighlightable
     public bool IsHighlighted() => _isHighlighted;
     public void SetHighlighted(bool cond)
     {
+        return;
+
         if (_highlightTrigger)
             _highlightTrigger.Highlight(cond);
 
@@ -46,6 +48,7 @@ public class HighlightableObject : InteractableObject, IHighlightable
     }
     public void ChangeHighlightAmount(float intensity)
     {
+        return; 
         if (_highlightTrigger)
         {
             var effect = this.GetComponent<HighlightEffect>();
@@ -78,6 +81,7 @@ public class HighlightableObject : InteractableObject, IHighlightable
     }
     public void ChangeHighLightColor(Color color)
     {
+        return;
         if (_highlightTrigger)
         {
             var effect = this.GetComponent<HighlightEffect>();
