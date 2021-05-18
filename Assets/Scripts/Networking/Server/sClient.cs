@@ -13,6 +13,8 @@ public class sClient
     public TCP Tcp { get; private set; }
     public UDP Udp { get; private set; }
     public int WorkStationID { get; private set; }
+    public Vector3 WorldLocation { get; private set; }
+
 
     public sClient(int clientId)
     {
@@ -189,9 +191,13 @@ public class sClient
     }
 
     /** can use WorkStation static dic to see where we send info to*/
-    public void SetWorkStation(int workStation)
+    public void SetWorkStationInfo(int workStation)
     {
         WorkStationID = workStation;
+    }
+    public void SetWorldLocation(Vector3 location)
+    {
+        WorldLocation = location;
     }
     public void RequestTransportInfo()
     {

@@ -360,7 +360,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         int count = 0;
         foreach (var item in _slots)
         {
-            if (item !=null && item._inUse)
+            if (item !=null && item.GetInUse())
                 ++count;
         }
 

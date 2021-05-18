@@ -195,7 +195,7 @@ public static class sServer
             {
                 { (int)ClientPackets.welcomeReceived , sServerHandle.WelcomeReceived},
                 //{ (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
-                { (int)ClientPackets.stationID , sServerHandle.StationIDReceived},
+                { (int)ClientPackets.stationID , sServerHandle.StationInfoReceived},
                 { (int)ClientPackets.requestMpData , sServerHandle.RequestMultiPlayerData},
                 { (int)ClientPackets.item , sServerHandle.ItemReceived},
                 { (int)ClientPackets.batch , sServerHandle.BatchReceived},

@@ -24,16 +24,16 @@ public class sServerHandle
 
     }
 
-    ///TODO Need to call this more often when interacting w lobbyMenu
-    public static void StationIDReceived(int fromClient, sPacket packet)
+   
+    public static void StationInfoReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
-        Debug.Log("[ServerHandle] stationID Read was : " + stationID);
+        //Debug.Log($"[ServerHandle] stationID Read was :  {stationID} ");
         ///This is somewhat unsafe
         sClient client = sServer._clients[fromClient];
         if (client != null)
         {
-            client.SetWorkStation(stationID);
+            client.SetWorkStationInfo(stationID);
             sPlayerData.SetStationDataForPlayer(stationID, fromClient);
 
         }
@@ -251,6 +251,15 @@ public class sServerHandle
         //Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{ownersStationID} to out:{receiversStationID}");
         sharedInvs.RegisterClientToStationId(fromClient, ownersStationID);
         sharedInvs.BuildInventory(ownersStationID, receiversStationID, KanbanFlagChanged);
+        ///I would like to store this in the "sharedinventories" class but thats only batch==1
+        Vector3 stationLoc = packet.ReadVector3();
+        foreach (var client in sServer.GetClients())
+        {
+            if(client.WorkStationID == ownersStationID)
+            {
+                client.SetWorldLocation(stationLoc);
+            }
+        }
     }
 
     public static void InventoryChanged(int fromClient, sPacket packet)

@@ -35,14 +35,13 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-    public void SendWorkStationID(int stationID)
+    public void SendWorkStationID(int stationID, Vector3 stationLocation)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.stationID))
         {
             packet.Write(stationID);
-
+            packet.Write(stationLocation);
             SendTCPData(packet);
-
         }
     }
     public void RequestMPData()
@@ -91,12 +90,13 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
     }
 
-    public void SendTransportData(int myStationID, int outputStationID)
+    public void SendTransportData(int myStationID, int outputStationID, Vector3 stationLoc)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.receiveTransportData))
         {
             packet.Write(myStationID);
             packet.Write(outputStationID);
+            packet.Write(stationLoc);
             SendTCPData(packet);
         }
 

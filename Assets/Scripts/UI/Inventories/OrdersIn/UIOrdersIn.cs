@@ -140,7 +140,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         var manager = GameManager.instance.CurrentWorkStationManager;
         var list = manager.GetStationList();
         var lastStation = list[list.Count - 1];
-        var lastTaskList = lastStation._tasks;
+        var lastTaskList = lastStation.Tasks;
         var lastTask = lastTaskList[lastTaskList.Count - 1];
         var finalItemList = lastTask._finalItemID;
         var finalItem = finalItemList[Random.Range(0, finalItemList.Count)];
@@ -208,7 +208,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     {
         var workStation = GameManager.instance._workStation;
         //Get the kitting task (should be only task)
-        foreach (Task t in workStation._tasks)
+        foreach (Task t in workStation.Tasks)
         {
             if (t._stationType == Task.eStationType.Kitting)
             {

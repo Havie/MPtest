@@ -39,8 +39,6 @@ public class sSharedInventories
         ///This is flipped because of how they are shared
         _inventories.Add(new SharedInventory(outStationID, inStationID, onChanged));
     }
-
-
     /// <summary>
     /// If found, sets an inventory to either inUse or Empty
     /// </summary>
@@ -88,11 +86,8 @@ public class sSharedInventories
 
 }
 
-
-
 public class SharedInventory
 {
-
     private int _inID;
     private int _outID;
     private bool _isEmpty;

@@ -52,7 +52,7 @@ public class OrderButton : MonoBehaviour
         //if (_img)
         //    _img.sprite = img;
 
-        _slot.SetAutomatic(false); ///Will force it to tell manager instead of send as OUT
+        _slot.SetAsOutSlot(); ///Will force it to tell manager instead of send as OUT
         _slot.SetRequiredID(itemID);
 
         _itemID = itemID;

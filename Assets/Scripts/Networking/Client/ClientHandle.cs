@@ -64,7 +64,8 @@ public class ClientHandle : MonoSingleton<ClientHandle>
             UIManager.DebugLog($"The ws at time of request is : {ws._myStation}");
             int myStation = (int)ws._myStation;
             int output = (int)ws._sendOutputToStation;
-            ClientSend.Instance.SendTransportData(myStation, output);
+            Vector3 loc = ws.StationLocation;
+            ClientSend.Instance.SendTransportData(myStation, output, loc);
         }
         else
         {
