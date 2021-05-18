@@ -152,24 +152,6 @@ public class ObjectController : HighlightableObject, IConstructable
                 UIManager.UpdateHandLocation(_handIndex, _handLocation.position);
             }
         }
-
-
-        System.Random rng = new System.Random();
-
-        bool even = rng.Next(0, 100) % 2 == 0;
-
-        ///TEMP
-        if (even)
-        {
-            TempSetHighlighted(true);
-
-        }
-        if (!even)
-        {
-            TempSetHighlighted(false);
-
-        }
-
     }
     /************************************************************************************************************************/
     public void PickedUp(int handIndex)
