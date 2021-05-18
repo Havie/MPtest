@@ -24,7 +24,7 @@ public class sServerHandle
 
     }
 
-   
+
     public static void StationInfoReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
@@ -41,10 +41,10 @@ public class sServerHandle
             Debug.Log("Found an error w StationIDReceived");
 
         ///Refresh the other clients on the network with this change
-        foreach (var clientEntry in sServer._clients)
+        foreach (var clientEntry in sServer._clients) ///this needs help
         {
             var otherClient = clientEntry.Value;
-            if(otherClient != client)
+            if (otherClient != client)
             {
                 sServerSend.SendMultiPlayerData(clientEntry.Key);
             }
@@ -69,23 +69,17 @@ public class sServerHandle
     public static void ItemReceived(int fromClient, sPacket packet)
     {
 
-        int itemLvl = packet.ReadInt();
-        int stationID = packet.ReadInt();
+        int itemID = packet.ReadInt();
+        //int stationID = packet.ReadInt();
+        bool isInInventory = packet.ReadBool();
         List<int> qualities = ReconstructQualityData(packet);
-
-        foreach (sClient c in sServer.GetClients()) 
+        float transportDelay = 0;
+        int otherStationsID = sServer._sharedInventories.GetSharedStationID(isInInventory, fromClient, out transportDelay);
+        sClient client = FindClientForStationID(otherStationsID);
+        if (client != null)
         {
-            //if client workstation ID matches stationID 
-            if (c.WorkStationID == stationID)
-            {
-                Debug.Log($"...SENT item to client # {c.ID}");
-                //Send the item to their inventory:
-                c.SendItem(itemLvl, qualities);
-            }
-
-            //if (!info.Equals(""))
-            //    Debug.Log(info);
-
+            ///TODO use transportDelay
+            client.SendItem(itemID, qualities);
         }
 
     }
@@ -160,8 +154,8 @@ public class sServerHandle
     {
         int stationID = packet.ReadInt();
         int itemID = packet.ReadInt();
-       // Debug.Log("<color=orange>[sServerHandle]</color>DEFECT itemID Read was : " + stationID);
-       // Debug.Log("<color=orange>[sServerHandle]</color>DEFECT createdTime Read was : " + itemID);
+        // Debug.Log("<color=orange>[sServerHandle]</color>DEFECT itemID Read was : " + stationID);
+        // Debug.Log("<color=orange>[sServerHandle]</color>DEFECT createdTime Read was : " + itemID);
         sServer._gameStatistics.AddedADefect(stationID, itemID);
 
         Debug.Log($"Current DEFECTS#={sServer._gameStatistics.Defects}");
@@ -189,7 +183,7 @@ public class sServerHandle
             }
             ///Tell all clients to start: (this sets the timer, and loads the scene)
             ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
-           c.StartRound(roundDuration);
+            c.StartRound(roundDuration);
         }
 
     }
@@ -212,7 +206,7 @@ public class sServerHandle
 
         foreach (sClient c in sServer._clients.Values) ///This isnt great, its circular, i shud remove this if i wasnt so afraid to break the networking code
         {
-           // Debug.Log($"[ServerHandle] sees Client: {c} , {c._id} vs {c._workStation} ");
+            // Debug.Log($"[ServerHandle] sees Client: {c} , {c._id} vs {c._workStation} ");
             int workStationId = c.WorkStationID;
             if (workStationId == 0)
             {
@@ -245,21 +239,24 @@ public class sServerHandle
 
         var ownersStationID = packet.ReadInt();
         var receiversStationID = packet.ReadInt();
+        var distance = packet.ReadFloat();
         var sharedInvs = sServer._sharedInventories;
         ///On a refactor we could do something like this, then w a bool flag, re-build the key properly
         //KeyValuePair<int, int> _stationPair = new KeyValuePair<int, int>(receiversStationID, ownersStationID);
         //Debug.Log($"<color=white>!..!..! </color>{fromClient} sent us : stationID:{ownersStationID} to out:{receiversStationID}");
         sharedInvs.RegisterClientToStationId(fromClient, ownersStationID);
-        sharedInvs.BuildInventory(ownersStationID, receiversStationID, KanbanFlagChanged);
-        ///I would like to store this in the "sharedinventories" class but thats only batch==1
-        Vector3 stationLoc = packet.ReadVector3();
+        sharedInvs.BuildInventory(ownersStationID, receiversStationID, distance);
+    }
+
+    private static sClient FindClientForStationID(int stationID)
+    {
         foreach (var client in sServer.GetClients())
         {
-            if(client.WorkStationID == ownersStationID)
-            {
-                client.SetWorldLocation(stationLoc);
-            }
+            if (client.WorkStationID == stationID)
+                return client;
         }
+
+        return null;
     }
 
     public static void InventoryChanged(int fromClient, sPacket packet)
@@ -267,28 +264,16 @@ public class sServerHandle
         bool isInInventory = packet.ReadBool();
         bool isRemovedItem = packet.ReadBool();
         int itemID = packet.ReadInt();
-        List<int> qualities = ReconstructQualityData(packet);
+        List<int> qualityData = ReconstructQualityData(packet);
         var sharedInvs = sServer._sharedInventories;
         Debug.Log($"<color=white>[ServerHandle]</color> heard InvChanged for : clientID{fromClient} , to isIN={isInInventory} isEmpty={isRemovedItem} ");
-
-        sharedInvs.UpdateInventories(isRemovedItem, isInInventory, fromClient, itemID, qualities);
-    }
-
-    public delegate void KanbanChangedEvent(int caller, int needsToKnow, bool wasInInventory, bool isEmpty, int itemID, List<int> qualityData);
-
-    private static void KanbanFlagChanged(int callerStationID, int needsToKnowStationID, bool invType, bool isEmpty, int itemID, List<int> qualityData)
-    {
-        Debug.Log($"Heard the kanban flag for callerStation:{callerStationID} , NeedstoKnowStation:{needsToKnowStationID} cond:{isEmpty}");
-        var sharedInvs = sServer._sharedInventories;
-        ///Should we instead do sServer.GetClients() way ?
-        int clientID = sharedInvs.GetClientIDForStation(needsToKnowStationID);
-        if (clientID != -1)
+        int otherStationsID = sharedInvs.GetSharedStationID(isInInventory, fromClient, out float ignoreForKanban);
+        sClient client = FindClientForStationID(otherStationsID);
+        if(client !=null)
         {
-            Debug.Log($"Tell Serverclient#:{clientID} to update inventory to = {isEmpty}");
-            Debug.Log($"Changer was In = {invType}");
-            sServerSend.SharedInventoryChanged(clientID, invType, isEmpty, itemID, qualityData);
+            var invType = !isInInventory;
+            sServerSend.SharedInventoryChanged(client.ID, invType, isRemovedItem, itemID, qualityData);
         }
-        else
-            Debug.Log($"whoops no client found");
+
     }
 }

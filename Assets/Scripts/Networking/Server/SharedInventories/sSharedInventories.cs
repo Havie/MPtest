@@ -34,27 +34,38 @@ public class sSharedInventories
         return -1;
     }
     ///Something  monitors all the inventories and maps them by getting who they send to
-    public void BuildInventory(int inStationID, int outStationID, sServerHandle.KanbanChangedEvent onChanged)
+    public void BuildInventory(int inStationID, int outStationID, float distance)
     {
         ///This is flipped because of how they are shared
-        _inventories.Add(new SharedInventory(outStationID, inStationID, onChanged));
+        _inventories.Add(new SharedInventory(outStationID, inStationID, distance));
     }
     /// <summary>
-    /// If found, sets an inventory to either inUse or Empty
+    /// Returns the inventory correlated to this client for IN/OUT
     /// </summary>
-    public void UpdateInventories(bool isEmpty, bool isInInventory, int clientID, int itemID, List<int> qualityData)
+    public SharedInventory GetSharedInventory(bool isInInventory, int fromClientID)
     {
-        int stationID = GetStationIDForClient(clientID);
+        int stationID = GetStationIDForClient(fromClientID);
         eInventoryType type = isInInventory ? eInventoryType.IN : eInventoryType.OUT;
-        Debug.Log($"..trying to get station for clientID#:{clientID} was : {stationID}:{type}");
-        var inventory = FindAnInventory(type, stationID);
-        if (inventory != null)
-        {
-            inventory.SetInUse(!isEmpty, stationID, itemID, qualityData);
-        }
-        else
-            Debug.Log($"<color=red>NO inventory found for</color>  clientID#:{clientID} was : {stationID}:{type}");
+        Debug.Log($"..trying to get station for clientID#:{fromClientID} was : {stationID}:{type}");
+        return  FindAnInventory(type, stationID);
     }
+    public int GetSharedStationID(bool isInInventory, int fromClientID, out float delayTime)
+    {
+        int stationID = GetStationIDForClient(fromClientID);
+        eInventoryType type = isInInventory ? eInventoryType.IN : eInventoryType.OUT;
+        Debug.Log($"..trying to get station for clientID#:{fromClientID} was : {stationID}:{type}");
+        var inv= FindAnInventory(type, stationID);
+        if (inv != null)
+        {
+            delayTime = inv.TransportDelay;
+            return isInInventory ? inv.OutOwnerID : inv.InOwnerID;
+        }
+        delayTime = 0;
+        return -1;
+    }
+    /************************************************************************************************************************/
+
+
     /// <summary>
     /// Finds the inventory where the typed is mapped to the clients ID, null if not found
     /// </summary>
@@ -82,46 +93,6 @@ public class sSharedInventories
             return inv.InOwnerID;
         }
         return inv.OutOwnerID;
-    }
-
-}
-
-public class SharedInventory
-{
-    private int _inID;
-    private int _outID;
-    private bool _isEmpty;
-    private sServerHandle.KanbanChangedEvent _onChanged;
-
-    public SharedInventory(int inID, int outID, sServerHandle.KanbanChangedEvent onChanged)
-    {
-        _inID = inID;
-        _outID = outID;
-        _isEmpty = false;
-        _onChanged = onChanged;
-    }
-
-    public int InOwnerID => _inID;
-    public int OutOwnerID => _outID;
-    public bool IsEmpty => _isEmpty;
-    public bool IsInUse => !IsEmpty;
-
-    public void SetInUse(bool cond, int changedByStationID, int itemID, List<int> qualityData)
-    {
-        _isEmpty = !cond;
-
-
-        bool changerWasInInventory = changedByStationID == _inID;
-        ///Set the clientID for the caller who changed the inventory state
-        int caller = changerWasInInventory ? _inID : _outID;
-        ///Set the clientID for the client who needs to know of the state change
-        int needsToKnow = !changerWasInInventory ? _inID : _outID;
-        ///This is a hacky way that tells the receiving client which inventory L/R this correlates to
-        ///If the OUT client changed it, (R) then the client that will need the update is IN (L)
-        ///So on the receiving end, the bool they get is called "isInInventory" so its opposite,
-        ///since to change the next stations IN inventory, the changer was a clients OUT (on the server)
-        bool invType = ! changerWasInInventory;
-        _onChanged?.Invoke(caller, needsToKnow, invType, _isEmpty, itemID, qualityData);
     }
 
 }

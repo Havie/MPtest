@@ -96,20 +96,22 @@ public class ClientSend : MonoSingleton<ClientSend>
         {
             packet.Write(myStationID);
             packet.Write(outputStationID);
-            packet.Write(stationLoc);
+            packet.Write(1.2f); // TODO distance between stations on client end
             SendTCPData(packet);
         }
 
     }
     /***Gameplay***/
-    public void SendItem(int itemID, List<QualityObject> qualities, int toStationID)
+    public void SendItem(int itemID, List<QualityObject> qualities, bool isInInventory)
     {
         UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
         {
             packet.Write(itemID);
             ///Who am I sending it to? (station/ClientID?)
-            packet.Write(toStationID);
+            //packet.Write(toStationID);
+            ///Am I the In out OUT inventory
+            packet.Write(isInInventory);
             ///How many qualities to parse in a for loop
             packet.Write(qualities.Count);
             //Debug.Log($"ClientSend QualityCount={qualities.Count}");

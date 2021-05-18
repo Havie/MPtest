@@ -56,21 +56,13 @@ public class ClientHandle : MonoSingleton<ClientHandle>
     public void RequestTransportData(sPacket packet)
     {
         var gm = GameManager.Instance;
-        ///We only need to send this data if we are doing a pull system:
-        ///(Server also checks this)
-        if (gm._batchSize == 1)
-        {
-            WorkStation ws = gm._workStation;
-            UIManager.DebugLog($"The ws at time of request is : {ws._myStation}");
-            int myStation = (int)ws._myStation;
-            int output = (int)ws._sendOutputToStation;
-            Vector3 loc = ws.StationLocation;
-            ClientSend.Instance.SendTransportData(myStation, output, loc);
-        }
-        else
-        {
-            UIManager.DebugLogWarning($"<color=red>!!!</color> The Server requested kanban info but batchsize= {gm._batchSize}");
-        }
+        WorkStation ws = gm._workStation;
+        UIManager.DebugLog($"The ws at time of request is : {ws._myStation}");
+        int myStation = (int)ws._myStation;
+        int output = (int)ws._sendOutputToStation;
+        Vector3 loc = ws.StationLocation;
+        ClientSend.Instance.SendTransportData(myStation, output, loc);
+
     }
 
     public void RoundStarted(sPacket packet)

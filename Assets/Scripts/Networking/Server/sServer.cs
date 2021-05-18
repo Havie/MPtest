@@ -25,6 +25,10 @@ public static class sServer
     ///Not loving all the public stuff , but the network code is written in this messy way everywhere so
     public static sGameStatistics _gameStatistics;
     public static sSharedInventories _sharedInventories;
+    public static int BatchSize { get; private set; }
+
+
+    /************************************************************************************************************************/
 
     public static void ListenForHostBroadCasts()
     {
