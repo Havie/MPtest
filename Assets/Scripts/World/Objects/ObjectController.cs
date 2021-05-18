@@ -398,25 +398,11 @@ public class ObjectController : HighlightableObject, IConstructable
 
         if (mr)
         {
+            ///TODO cache this
+            CustomShaderController shaderController = this.GetComponent<CustomShaderController>();
+            shaderController.ChangeMaterialColor(opacity);
             //UpdateUnityDefaultMaterialColor(mr, opacity);
-            UpdateJoseMaterialColor(mr, opacity, "_Color");
         }
-    }
-    private void UpdateJoseMaterialColor(MeshRenderer mr, float opacity, string key)
-    {
-        var mat = mr.material;
-        Color old = mat.GetColor(key);
-        old.a = opacity;
-        mat.SetColor(key, old);
-    }
-
-    private  void UpdateUnityDefaultMaterialColor(MeshRenderer mr, float opacity)
-    {
-        Material m = mr.material;
-        Color color = m.color;
-        color.a = opacity;
-        m.color = color;
-        mr.material = m;
     }
 
     private void ChangeHighLightColor(int handIndex)
@@ -435,7 +421,9 @@ public class ObjectController : HighlightableObject, IConstructable
         {
             mr.enabled = true;
             //UnityDefaultColorChange(mr, opacity);
-            UpdateJoseMaterialColor(mr, opacity, "_Color");
+            CustomShaderController shaderController = mr.GetComponent<CustomShaderController>();
+            if(shaderController)
+                shaderController.ChangeMaterialColor(opacity);
         }
     }
     protected Vector2 DoRotation(Vector3 dir)

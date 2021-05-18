@@ -90,4 +90,13 @@ public class CustomShaderController : MonoBehaviour
             UpdateJoseMaterialAlpha(0, OUTLINE_COLOR);
         }
     }
+
+    private void UpdateUnityDefaultMaterialColor(MeshRenderer mr, float opacity)
+    {
+        Material m = mr.material;
+        Color color = m.color;
+        color.a = opacity;
+        m.color = color;
+        mr.material = m;
+    }
 }
