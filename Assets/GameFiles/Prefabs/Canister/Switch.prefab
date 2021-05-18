@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2973127960646220174}
   - component: {fileID: 51474524301132115}
-  - component: {fileID: 7309490286974700489}
   - component: {fileID: 7363025487209405021}
   m_Layer: 0
   m_Name: Switch
@@ -52,24 +51,6 @@ MonoBehaviour:
   _lighteningVFXPREFAB: {fileID: 343847826371366596, guid: b59553020fe805342b7224afaabb5e23,
     type: 3}
   _lighteningVFXLocation: {fileID: 0}
---- !u!114 &7309490286974700489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1002379840073671385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0a85beb1089a064d8d801eae5192895, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _myID: 0
-  _rotateAroundAxis: 0
-  _canFollow: 1
-  _parent: {fileID: 0}
-  _handLocation: {fileID: 0}
-  _handIndex: 1
 --- !u!65 &7363025487209405021
 BoxCollider:
   m_ObjectHideFlags: 0
