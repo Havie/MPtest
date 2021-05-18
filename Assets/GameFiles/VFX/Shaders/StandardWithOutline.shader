@@ -4,9 +4,9 @@ Shader "StandardWithOutline"
 {
 	Properties
 	{
+		_Cutoff( "Mask Clip Value", Float ) = 0.05
 		_Albedo("Albedo", 2D) = "white" {}
 		_Metallic("Metallic", 2D) = "white" {}
-		_Cutoff( "Mask Clip Value", Float ) = 0.05
 		_Normal("Normal", 2D) = "bump" {}
 		_MetallicMultiply("Metallic Multiply", Float) = 1
 		_EmissiveColor("Emissive Color", Color) = (0,0,0,0)
@@ -27,11 +27,11 @@ Shader "StandardWithOutline"
 
 	SubShader
 	{
-		Tags{ "RenderType" = "Transparent"  "Queue" = "Transparent+0"}
+		Tags{ "RenderType" = "TransparentCutout"  "Queue" = "AlphaTest+0"}
 		Cull Front
 		CGPROGRAM
 		#pragma target 3.0
-		#pragma surface outlineSurf Outline nofog alpha:fade  keepalpha noshadow noambient novertexlights nolightmap nodynlightmap nodirlightmap nometa noforwardadd vertex:outlineVertexDataFunc 
+		#pragma surface outlineSurf Outline nofog  keepalpha noshadow noambient novertexlights nolightmap nodynlightmap nodirlightmap nometa noforwardadd vertex:outlineVertexDataFunc 
 		
 		void outlineVertexDataFunc( inout appdata_full v, out Input o )
 		{
@@ -48,7 +48,7 @@ Shader "StandardWithOutline"
 				float staticSwitch82 = _OutlineColor.a;
 			#endif
 			o.Emission = _OutlineColor.rgb;
-			o.Alpha = staticSwitch82;
+			clip( staticSwitch82 - _Cutoff );
 		}
 		ENDCG
 		
@@ -233,7 +233,7 @@ Shader "StandardWithOutline"
 }
 /*ASEBEGIN
 Version=18900
-1199;73;720;966;545.9169;71.20093;1.3;True;False
+1199;73;720;966;-321.2026;1170.75;2.712337;True;False
 Node;AmplifyShaderEditor.CommentaryNode;62;-888.3665,-1116.173;Inherit;False;1315.474;1294.505;Standard Lit Parameters. ;19;32;27;43;34;16;19;30;29;44;14;2;26;36;17;42;35;7;71;76;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;64;-785.0101,437.7632;Inherit;False;1712.322;1409.261;Outline / Highlight;8;56;40;55;58;61;70;83;82;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.ColorNode;43;-586.0056,-1066.173;Inherit;False;Property;_Color;Color;12;0;Create;True;0;0;0;False;0;False;1,1,1,1;1,1,1,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -242,42 +242,43 @@ Node;AmplifyShaderEditor.CommentaryNode;56;-735.0101,1132.12;Inherit;False;1008.
 Node;AmplifyShaderEditor.ColorNode;32;-550.5456,-302.8423;Inherit;False;Property;_EmissiveColor;Emissive Color;6;0;Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;34;-323.4932,-250.1809;Inherit;False;Property;_EmissiveValue;Emissive Value;8;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;83;-159.3057,498.0612;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;36;-10.22319,-447.0416;Inherit;False;Constant;_Float1;Float 1;9;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;76;-14.54172,-296.7983;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RangedFloatNode;41;-331.3619,1182.12;Inherit;False;Property;_OutlineWidth;OutlineWidth;11;0;Create;True;0;0;0;False;0;False;0.1;1;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;78;721.3063,-98.31715;Inherit;False;Property;_MaskedOpacityDitherIntensity;MaskedOpacityDitherIntensity;13;0;Create;True;0;0;0;False;0;False;0.2;0.2;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;29;-384.8593,-42.66781;Inherit;False;Property;_MetallicMultiply;Metallic Multiply;5;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.StaticSwitch;82;-4.044233,496.6455;Inherit;False;Property;_GeometryFadeWithOutline;GeometryFadeWithOutline;14;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;36;-10.22319,-447.0416;Inherit;False;Constant;_Float1;Float 1;9;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;78;721.3063,-98.31715;Inherit;False;Property;_MaskedOpacityDitherIntensity;MaskedOpacityDitherIntensity;13;0;Create;True;0;0;0;False;0;False;0.2;0.2;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SamplerNode;19;-701.7455,-53.04371;Inherit;True;Property;_Metallic;Metallic;1;0;Create;True;0;0;0;False;0;False;-1;85001e1a64aec8a48a92409cd861b597;85001e1a64aec8a48a92409cd861b597;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;30;-400.8593,62.33212;Inherit;False;Property;_RoughnessMultiply;Roughness Multiply;7;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;55;381.5925,487.7632;Inherit;False;495.7196;238.2709;Use this instead to get less jaggy outlines, but might not line up 100%.;1;38;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.SamplerNode;14;-676.1929,-879.2922;Inherit;True;Property;_Albedo;Albedo;0;0;Create;True;0;0;0;False;0;False;-1;db83870432c993a4a844832e0278b5cc;db83870432c993a4a844832e0278b5cc;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.DynamicAppendNode;44;-340.1593,-1039.287;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;58;364.4046,749.9774;Inherit;False;511.7326;399.8456;Use this for completely transparent outlines;3;67;57;69;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;55;381.5925,487.7632;Inherit;False;495.7196;238.2709;Use this instead to get less jaggy outlines, but might not line up 100%.;1;38;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.SamplerNode;14;-676.1929,-879.2922;Inherit;True;Property;_Albedo;Albedo;0;0;Create;True;0;0;0;False;0;False;-1;db83870432c993a4a844832e0278b5cc;db83870432c993a4a844832e0278b5cc;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.StickyNoteNode;84;1612.457,4.025948;Inherit;False;983.1051;197.4446;Material Properties to Focusu on;;1,1,1,1;_Color (Alpha Channel controls geometry opacity, does not work with opaque mode)$$_OutlineColor (Alpha Channel controls outline opacity, behaves different if using a masked/transparent outline but generally toggles its visibility if you use 0-1)$$_EmissiveValue (Only works if the emissive Toggle is ON)$$_MaskedOpacityDitherIntensity (If you wish to use the transparent cutout dither method this takes an opacity vaue of 0-1);0;0
+Node;AmplifyShaderEditor.OutlineNode;38;425.7142,558.2557;Inherit;False;1;True;Masked;0;0;Front;3;0;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StickyNoteNode;66;1231.2,1.528697;Inherit;False;356;177;How to: Make geometry opaque/transparent.;;1,1,1,1;Click an empty area, then go to the output node menu on the left and change the blend mode to transparent.$$The outline blend mode is changed in each individual "outline" node.;0;0
 Node;AmplifyShaderEditor.StickyNoteNode;70;421.4509,1460.775;Inherit;False;351.8929;161.288;Note;;1,1,1,1;If node had alpha input then it is transparent. $$If it says Opacity Mask then it is "masked" which is essentially opaque except you can make it visible/not visible more cheaply than transparent.;0;0
 Node;AmplifyShaderEditor.StickyNoteNode;72;1274.552,223.2922;Inherit;False;292.3044;186.399;Performance Notes:;;1,1,1,1;Most performant solution would be opaque geometry  with masked outline.$$Transparent geometry should probably use the scaled (non-custom) transparent outline.$$;0;0
-Node;AmplifyShaderEditor.NormalVertexDataNode;48;-482.2308,1361.419;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.OutlineNode;67;430.9066,971.6449;Inherit;False;1;True;Transparent;0;0;Front;3;0;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.UnityObjToClipPosHlpNode;46;-475.8294,1640.024;Inherit;False;1;0;FLOAT3;0,0,0;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.OutlineNode;57;438.1628,801.9571;Inherit;False;2;True;Transparent;0;0;Front;3;0;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.OutlineNode;67;430.9066,971.6449;Inherit;False;1;True;Transparent;0;0;Front;3;0;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.OutlineNode;38;425.7142,558.2557;Inherit;False;1;True;Masked;0;0;Front;3;0;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.OutlineNode;52;20.67698,1182.225;Inherit;False;2;True;Masked;0;0;Front;3;0;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.StickyNoteNode;69;656.381,842.5164;Inherit;False;178.0542;188.1703;Cost;;1,1,1,1;These are more expensive but without them you get a solid color (the outlines) when you fade out the transparent geometry. Not as helpful if geometry is opaque.;0;0
 Node;AmplifyShaderEditor.StickyNoteNode;71;141.2727,-1034.76;Inherit;False;241.1173;196.931;What are these?;;1,1,1,1;These nodes recreate the base function / inputs used in Unity's standard lit shader. Consider this entire shader an "extension" of the default Unity standard shader.$;0;0
-Node;AmplifyShaderEditor.SamplerNode;27;-838.3665,-380.1629;Inherit;True;Property;_DetailMask;DetailMask;4;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.NormalVertexDataNode;48;-482.2308,1361.419;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.DynamicAppendNode;61;179.5201,793.9053;Inherit;False;FLOAT4;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.StickyNoteNode;66;1231.2,1.528697;Inherit;False;356;177;How to: Make geometry opaque/transparent.;;1,1,1,1;Click an empty area, then go to the output node menu on the left and change the blend mode to transparent.$$The outline blend mode is changed in each individual "outline" node.;0;0
 Node;AmplifyShaderEditor.StaticSwitch;35;204.1077,-394.3349;Inherit;False;Property;_Emissive;Emissive;9;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;50;-148.4616,1331.101;Inherit;False;3;3;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;42;-69.45338,-869.4263;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT3;0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;16;-311.7807,-376.3372;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SamplerNode;26;-668.7062,-635.0732;Inherit;True;Property;_Normal;Normal;3;0;Create;True;0;0;0;False;0;False;-1;d0483f22007cf2f419e2707453b3e367;d0483f22007cf2f419e2707453b3e367;True;0;True;bump;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.StickyNoteNode;73;1278.484,441.5019;Inherit;False;313.1045;346.399;For programmers;;1,1,1,1;To make the geometry more transparent you tweak the _Color material property in the alpha channel (0-1). $$(Note: This only works if the blendmode is set to transparent)$$$$To tweak the color and transparency of the outline you tweak the _OutlineColor material property. $$(Note: This only works if the outline nodes using the transparent method are plugged in.)$$;0;0
 Node;AmplifyShaderEditor.PosVertexDataNode;47;-685.0101,1640.026;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.DitheringNode;77;1009.44,-98.93774;Inherit;False;1;False;4;0;FLOAT;0;False;1;SAMPLER2D;;False;2;FLOAT4;0,0,0,0;False;3;SAMPLERSTATE;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;7;-146.5642,40.12345;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;2;-134.9451,-61.04365;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;50;-148.4616,1331.101;Inherit;False;3;3;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;17;-138.0162,-375.3052;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;2;-134.9451,-61.04365;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.DitheringNode;77;1009.44,-98.93774;Inherit;False;1;False;4;0;FLOAT;0;False;1;SAMPLER2D;;False;2;FLOAT4;0,0,0,0;False;3;SAMPLERSTATE;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StickyNoteNode;73;1278.484,441.5019;Inherit;False;313.1045;346.399;For programmers;;1,1,1,1;To make the geometry more transparent you tweak the _Color material property in the alpha channel (0-1). $$(Note: This only works if the blendmode is set to transparent)$$$$To tweak the color and transparency of the outline you tweak the _OutlineColor material property. $$(Note: This only works if the outline nodes using the transparent method are plugged in.)$$;0;0
+Node;AmplifyShaderEditor.SamplerNode;26;-668.7062,-635.0732;Inherit;True;Property;_Normal;Normal;3;0;Create;True;0;0;0;False;0;False;-1;d0483f22007cf2f419e2707453b3e367;d0483f22007cf2f419e2707453b3e367;True;0;True;bump;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleAddOpNode;16;-311.7807,-376.3372;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;42;-69.45338,-869.4263;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT3;0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SamplerNode;27;-838.3665,-380.1629;Inherit;True;Property;_DetailMask;DetailMask;4;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;7;-146.5642,40.12345;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;1325.758,-443.599;Float;False;True;-1;2;ASEMaterialInspector;0;0;Standard;StandardWithOutline;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;True;True;False;Back;0;False;-1;0;False;-1;False;0;False;-1;0;False;-1;False;0;Custom;0.05;True;True;0;True;TransparentCutout;;Geometry;ForwardOnly;14;all;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;0;4;10;25;False;0.5;True;2;5;False;-1;10;False;-1;0;0;False;-1;0;False;-1;1;False;-1;1;False;-1;0;False;19.67;0,0,0,0;VertexOffset;True;False;Cylindrical;False;Relative;0;;2;-1;-1;-1;0;False;0;0;False;-1;-1;0;False;-1;0;0;0;False;0.1;False;-1;0;False;-1;False;16;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
 WireConnection;83;0;43;3
 WireConnection;83;1;40;4
@@ -288,16 +289,16 @@ WireConnection;82;0;83;0
 WireConnection;44;0;43;1
 WireConnection;44;1;43;2
 WireConnection;44;2;43;3
+WireConnection;38;0;40;0
+WireConnection;38;2;82;0
+WireConnection;38;1;41;0
+WireConnection;67;0;40;0
+WireConnection;67;2;82;0
+WireConnection;67;1;41;0
 WireConnection;46;0;47;0
 WireConnection;57;0;61;0
 WireConnection;57;2;82;0
 WireConnection;57;1;50;0
-WireConnection;67;0;40;0
-WireConnection;67;2;82;0
-WireConnection;67;1;41;0
-WireConnection;38;0;40;0
-WireConnection;38;2;82;0
-WireConnection;38;1;41;0
 WireConnection;52;0;40;0
 WireConnection;52;2;82;0
 WireConnection;52;1;50;0
@@ -308,17 +309,17 @@ WireConnection;35;0;76;0
 WireConnection;50;0;48;0
 WireConnection;50;1;41;0
 WireConnection;50;2;46;4
-WireConnection;42;0;14;0
-WireConnection;42;1;44;0
-WireConnection;16;0;27;0
-WireConnection;16;1;32;0
-WireConnection;77;0;78;0
-WireConnection;7;0;19;4
-WireConnection;7;1;30;0
-WireConnection;2;0;19;0
-WireConnection;2;1;29;0
 WireConnection;17;0;16;0
 WireConnection;17;1;34;0
+WireConnection;2;0;19;0
+WireConnection;2;1;29;0
+WireConnection;77;0;78;0
+WireConnection;16;0;27;0
+WireConnection;16;1;32;0
+WireConnection;42;0;14;0
+WireConnection;42;1;44;0
+WireConnection;7;0;19;4
+WireConnection;7;1;30;0
 WireConnection;0;0;42;0
 WireConnection;0;1;26;0
 WireConnection;0;2;35;0
@@ -326,6 +327,6 @@ WireConnection;0;3;2;0
 WireConnection;0;4;7;0
 WireConnection;0;9;43;4
 WireConnection;0;10;77;0
-WireConnection;0;11;67;0
+WireConnection;0;11;38;0
 ASEEND*/
-//CHKSM=29AD50D2EF162EBD3E404A93066412C5956C7E1B
+//CHKSM=F26DA06A09B056D293CA77B4E00AE41F49E8D973
