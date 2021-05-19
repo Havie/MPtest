@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: m_CanisterWithOutline
-  m_Shader: {fileID: 4800000, guid: 0b71188a8bde1fe4c8e5f796dd581475, type: 3}
+  m_Name: m_CanisterWithOutlineVariation2
+  m_Shader: {fileID: 4800000, guid: 8f3e2bf3e81a3234384bbb68c8fefdf3, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
@@ -101,7 +101,7 @@ Material:
     - _MetallicMultiply: 1
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.02
+    - _OutlineWidth: 0.04
     - _Parallax: 0.02
     - _RoughnessMultiply: 1
     - _ScaledOutline: 0
