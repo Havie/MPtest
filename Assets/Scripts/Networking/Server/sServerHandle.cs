@@ -24,7 +24,6 @@ public class sServerHandle
 
     }
 
-
     public static void StationInfoReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
@@ -82,37 +81,6 @@ public class sServerHandle
             client.SendItem(itemID, qualities);
         }
 
-    }
-
-    private static List<int> ReconstructQualityData(sPacket packet)
-    {
-        List<int> qualities = new List<int>();
-        var count = packet.ReadInt();
-        ///Reconstruct the Object Quality data
-        for (int i = 0; i < count; ++i)
-        {
-            var id = packet.ReadInt();
-            var curAction = packet.ReadInt();
-            qualities.Add(id); ///quality ID
-            qualities.Add(curAction); ///quality Count
-        }
-        return qualities;
-    }
-    ///TODO test this
-    private static int[] ReconstructQualityDataArr(sPacket packet)
-    {
-        int count = packet.ReadInt();
-        int[] qualities = new int[count * 2];
-        ///Reconstruct the Object Quality data
-        for (int i = 0; i < count; ++i)
-        {
-            var id = packet.ReadInt();
-            var curAction = packet.ReadInt();
-            qualities[i] = (id); ///quality ID
-            ++i;
-            qualities[i] = (curAction); ///quality Count
-        }
-        return qualities;
     }
 
     public static void BatchReceived(int fromClient, sPacket packet)
@@ -248,17 +216,6 @@ public class sServerHandle
         sharedInvs.BuildInventory(ownersStationID, receiversStationID, distance);
     }
 
-    private static sClient FindClientForStationID(int stationID)
-    {
-        foreach (var client in sServer.GetClients())
-        {
-            if (client.WorkStationID == stationID)
-                return client;
-        }
-
-        return null;
-    }
-
     public static void InventoryChanged(int fromClient, sPacket packet)
     {
         bool isInInventory = packet.ReadBool();
@@ -269,11 +226,56 @@ public class sServerHandle
         Debug.Log($"<color=white>[ServerHandle]</color> heard InvChanged for : clientID{fromClient} , to isIN={isInInventory} isEmpty={isRemovedItem} ");
         int otherStationsID = sharedInvs.GetSharedStationID(isInInventory, fromClient, out float ignoreForKanban);
         sClient client = FindClientForStationID(otherStationsID);
-        if(client !=null)
+        if (client != null)
         {
             var invType = !isInInventory;
             sServerSend.SharedInventoryChanged(client.ID, invType, isRemovedItem, itemID, qualityData);
         }
 
     }
+
+    /************************************************************************************************************************/
+
+    private static sClient FindClientForStationID(int stationID)
+    {
+        foreach (var client in sServer.GetClients())
+        {
+            if (client.WorkStationID == stationID)
+                return client;
+        }
+
+        return null;
+    }
+    private static List<int> ReconstructQualityData(sPacket packet)
+    {
+        List<int> qualities = new List<int>();
+        var count = packet.ReadInt();
+        ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var curAction = packet.ReadInt();
+            qualities.Add(id); ///quality ID
+            qualities.Add(curAction); ///quality Count
+        }
+        return qualities;
+    }
+    ///TODO test this
+    private static int[] ReconstructQualityDataArr(sPacket packet)
+    {
+        int count = packet.ReadInt();
+        int[] qualities = new int[count * 2];
+        ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var curAction = packet.ReadInt();
+            qualities[i] = (id); ///quality ID
+            ++i;
+            qualities[i] = (curAction); ///quality Count
+        }
+        return qualities;
+    }
+
+   
 }
