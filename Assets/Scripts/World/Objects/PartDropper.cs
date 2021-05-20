@@ -58,7 +58,7 @@ public class PartDropper : MonoSingleton<PartDropper>
         foreach (UIInventorySlot slot  in inUseSlots)
         {
             int itemID = slot.GetItemID();
-            var qualityList = slot.RebuildQualities();
+            List<QualityData> qualityList = slot.RebuildQualities();
             slot.RemoveItem();
             ObjectManager.Instance.DropItemInWorld(itemID, qualityList);
         }

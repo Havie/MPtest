@@ -239,7 +239,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     }
 
-    public void KanbanUpdateInventory(bool isInInventory, bool isEmpty, int itemID, List<QualityObject> qualityData)
+    public void KanbanUpdateInventory(bool isInInventory, bool isEmpty, int itemID, List<QualityData> qualityData)
     {
         var whichInventory = isInInventory ? _invIN : _invOUT;
         if (whichInventory)
@@ -250,7 +250,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             UIManager.DebugLog($"..fatal no Inventory for : isIN={isInInventory} ");
     }
     
-    public void ItemReceived(int itemID, List<QualityObject> qualities)
+    public void ItemReceived(int itemID, List<QualityData> qualities)
     {
         _invIN.AddItemToSlot(itemID, qualities, false);
     }

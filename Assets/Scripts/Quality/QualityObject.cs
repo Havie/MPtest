@@ -37,12 +37,23 @@ public class QualityObject : MonoBehaviour
         AssignCurrentActions(currentActions);
         IsDummy = true;
     }
+    public void InitalizeAsDummy(int qualityStepID, int currentActions)
+    {
+        _qualityStep = ObjectManager.Instance._qualityPresets[qualityStepID];
+        Debug.Log($"<color=red> TODO</color> Get QS via ID");
+        AssignCurrentActions(currentActions);
+        IsDummy = true;
+    }
     public void CloneQuality(QualityObject toCopy)
     {
         // Debug.Log($"{this.gameObject.name} copying {toCopy}");
         AssignCurrentActions(toCopy.CurrentQuality);
     }
-
+    public void CloneQuality(QualityData toCopy)
+    {
+        // Debug.Log($"{this.gameObject.name} copying {toCopy}");
+        AssignCurrentActions(toCopy.Actions);
+    }
     /// used between item creations to carry data
     public void AssignCurrentActions(int amount)
     {

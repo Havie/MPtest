@@ -11,8 +11,8 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     [SerializeField] Sprite _defaultIconUsed = default;
     [SerializeField] Sprite _defaultIconEmpty = default;
     public int RequiredID { get; private set; } = -1;
-    public List<QualityObject> Qualities => _qualities;
-    private List<QualityObject> _qualities = new List<QualityObject>();
+    public List<QualityData> Qualities => _qualities;
+    private List<QualityData> _qualities = new List<QualityData>();
     
     private bool _inUse;
     private Sprite _currentBGSprite;
@@ -116,7 +116,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     {
         RemoveItem(false);
     }
-    public void SharedKanbanSlotChanged(bool isEmpty, List<QualityObject> qualities)
+    public void SharedKanbanSlotChanged(bool isEmpty, List<QualityData> qualities)
     {
         if (isEmpty)
         {
@@ -140,14 +140,18 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         if (overallQuality != null)
         {
             List<QualityObject> qualities = overallQuality.Qualities;
-
-            return AssignItem(id, count, qualities);
+            List<QualityData> qualityData = new List<QualityData>();
+            foreach (var item in qualities)
+            {
+                qualityData.Add(QualityConvertor.ConvertToData(item));
+            }
+            return AssignItem(id, count, qualityData);
         }
 
 
         return false;
     }
-    public bool AssignItem(int id, int count, List<QualityObject> qualities)
+    public bool AssignItem(int id, int count, List<QualityData> qualities)
     {
         return AssignItem(id, count, qualities, false);
     }
@@ -172,14 +176,19 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         return false;
     }
 
-    public List<QualityObject> RebuildQualities()
+    public List<QualityData> RebuildQualities()
     {
-        List<QualityObject> newList = new List<QualityObject>();
+        List<QualityData> newList = new List<QualityData>();
         if (Qualities != null)
         {
             foreach (var q in Qualities)
-                newList.Add(q);
+            {
+                newList.Add(new QualityData(q.ID, q.Actions));
+                Debug.Log($"<color=green> added {q} </color>");
+            }
         }
+        else
+            Debug.Log($"<color=red> NULL QUALITIES!?</color>");
 
         return newList;
     }
@@ -222,7 +231,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         // Debug.Log($"{this.gameObject.name} AssigndSprite = <color=green>{img.name}</color>");
 
     }
-    private bool AssignItem(int id, int count, List<QualityObject> qualities, bool noCallBack)
+    private bool AssignItem(int id, int count, List<QualityData> qualities, bool noCallBack)
     {
         if (!_inUse)
         {
@@ -238,11 +247,13 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             }
             AssignSpriteByID(id, false);
             SwapBackgroundIMGs(true);
-            ///Might have to clone it, but lets see if we can store it
+            _qualities.Clear();
             if (qualities != null)
+            {
                 _qualities = qualities;
-            else
-                _qualities.Clear();
+                DebugQualities.DebugQualitySlot(_qualities);
+            }
+
 
             _itemID = id;
             _numItemsStored = count;
@@ -260,7 +271,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
 
         return AskManagerIfSpaceForItem(id, count, qualities);
     }
-    private bool AskManagerIfSpaceForItem(int id, int count, List<QualityObject> qualities)
+    private bool AskManagerIfSpaceForItem(int id, int count, List<QualityData> qualities)
     {
         return _manager.TryAssignItem(id, count, qualities);
     }
@@ -296,7 +307,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         {
             foreach (var q in _qualities)
             {
-                UIManager.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.CurrentQuality} </color>");
+                UIManager.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.Actions} </color>");
             }
         }
     }

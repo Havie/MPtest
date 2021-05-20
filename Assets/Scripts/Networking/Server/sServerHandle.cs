@@ -222,6 +222,7 @@ public class sServerHandle
         bool isRemovedItem = packet.ReadBool();
         int itemID = packet.ReadInt();
         List<int> qualityData = ReconstructQualityData(packet);
+        DebugQualities.DebugQuality(qualityData);
         var sharedInvs = sServer._sharedInventories;
         Debug.Log($"<color=white>[ServerHandle]</color> heard InvChanged for : clientID{fromClient} , to isIN={isInInventory} isEmpty={isRemovedItem} ");
         int otherStationsID = sharedInvs.GetSharedStationID(isInInventory, fromClient, out float ignoreForKanban);

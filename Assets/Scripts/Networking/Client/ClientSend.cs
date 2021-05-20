@@ -102,7 +102,7 @@ public class ClientSend : MonoSingleton<ClientSend>
 
     }
     /***Gameplay***/
-    public void SendItem(int itemID, List<QualityObject> qualities, bool isInInventory)
+    public void SendItem(int itemID, List<QualityData> qualities, bool isInInventory)
     {
         UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
@@ -116,14 +116,7 @@ public class ClientSend : MonoSingleton<ClientSend>
             packet.Write(qualities.Count);
             //Debug.Log($"ClientSend QualityCount={qualities.Count}");
             //string info = "";
-            for (int i = 0; i < qualities.Count; ++i)
-            {
-                QualityObject q = qualities[i];
-                packet.Write(q.ID);
-                packet.Write(q.CurrentQuality);
-
-               // info += $" send:({q.ID},{q.CurrentQuality}) ";
-            }
+            PackQualities(qualities, packet);
 
             //UIManager.DebugLog(info);
 
@@ -170,7 +163,7 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-    public void KanbanChanged(bool isInInventory, bool isRemoved, int itemID, List<QualityObject> qualities)
+    public void KanbanChanged(bool isInInventory, bool isRemoved, int itemID, List<QualityData> qualities)
     {
         Debug.Log($"!!..<color=orange>(ClientSend) KanbanChanged</color>");
         using (sPacket packet = new sPacket((int)ClientPackets.inventoryChanged))
@@ -179,13 +172,18 @@ public class ClientSend : MonoSingleton<ClientSend>
             packet.Write(isRemoved);
             packet.Write(itemID);
             packet.Write(qualities.Count);
-            for (int i = 0; i < qualities.Count; ++i)
-            {
-                QualityObject q = qualities[i];
-                packet.Write(q.ID);
-                packet.Write(q.CurrentQuality);
-            }
+            PackQualities(qualities, packet);
             SendTCPData(packet);
+        }
+    }
+
+    private static void PackQualities(List<QualityData> qualities, sPacket packet)
+    {
+        for (int i = 0; i < qualities.Count; ++i)
+        {
+            QualityData q = qualities[i];
+            packet.Write(q.ID);
+            packet.Write(q.Actions);
         }
     }
     #endregion

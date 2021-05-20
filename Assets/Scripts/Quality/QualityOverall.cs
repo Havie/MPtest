@@ -79,6 +79,31 @@ public class QualityOverall : MonoBehaviour
         AddAsNewQuality(pastObject);
       
     }
+    public void ReadOutQuality(QualityData pastObject)
+    {
+        //Debug.Log($"We are reading out : {pastObject} its not null? {pastObject.ID}, {pastObject.CurrentQuality}/{pastObject.MaxQuality}");
+
+        foreach (var item in _qualities)
+        {
+            if (item.ID == pastObject.ID) ///gets the ID from shared scriptable asset
+            {
+                if (pastObject.Actions != item.MaxQuality)
+                {
+                    item.CloneQuality(pastObject);
+                    return;
+                }
+            }
+        }
+
+        ///This if fine, just a warning, it will keep track of it on the base obj
+       // Debug.LogWarning($"Couldnt find {pastObject.QualityStep } #{pastObject.ID} on new item {this.gameObject.name}'s children");
+
+        ///We never found a match so assume you can no longer perform this actions ,
+        /// spoof the preview manager by adding this dummy to our list so it keeps getting passed along
+        AddAsNewQuality(pastObject);
+
+    }
+
 
     /** Have to add a new instance as its getting destroyed on last OBJ*/
     /** An example of this would be the blue bolts are only available on the first prefabs */
@@ -86,6 +111,12 @@ public class QualityOverall : MonoBehaviour
     {
         var qs = this.transform.gameObject.AddComponent<QualityObject>();
         qs.InitalizeAsDummy(pastObject.QualityStep, pastObject.CurrentQuality);
+        _qualities.Add(qs);
+    }
+    private void AddAsNewQuality(QualityData pastObject)
+    {
+        var qs = this.transform.gameObject.AddComponent<QualityObject>();
+        qs.InitalizeAsDummy(pastObject.ID, pastObject.Actions);
         _qualities.Add(qs);
     }
 

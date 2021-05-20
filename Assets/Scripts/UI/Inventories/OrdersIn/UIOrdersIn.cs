@@ -275,7 +275,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     /// <summary>
     /// Interface version of assigning an item into the general inventory space, called from deadzone most likely
     /// </summary>
-    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    public bool TryAssignItem(int id, int count, List<QualityData> qualities)
     {
         return RemoveOrder(id);
     }

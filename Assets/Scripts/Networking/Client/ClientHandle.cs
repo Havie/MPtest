@@ -85,7 +85,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
     public void ItemReceived(sPacket packet)
     {
         int itemID = packet.ReadInt();
-        List<QualityObject> qualities = ReadQualityData(packet);
+        List<QualityData> qualities = ReadQualityData(packet);
 
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
        // UIManager.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
@@ -95,17 +95,18 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     }
 
-    private List<QualityObject> ReadQualityData(sPacket packet)
+    private List<QualityData> ReadQualityData(sPacket packet)
     {
-        List<QualityObject> qualities = new List<QualityObject>();
+        List<QualityData> qualities = new List<QualityData>();
         var count = packet.ReadInt() / 2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
                                            ///Reconstruct the Object Quality data
         for (int i = 0; i < count; ++i)
         {
             var id = packet.ReadInt();
             var currQ = packet.ReadInt();
-            qualities.Add(ObjectManager.Instance.BuildTempQualities(id, currQ));
-            // Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
+            //qualities.Add(ObjectManager.Instance.BuildTempQualities(id, currQ));
+            qualities.Add(new QualityData(id, currQ));
+            UIManager.DebugLog($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
         }
         return qualities;
     }
@@ -123,7 +124,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         bool isInInventory = packet.ReadBool();
         bool isEmpty = packet.ReadBool();
         int itemID = packet.ReadInt();
-        List<QualityObject> qualities = ReadQualityData(packet);
+        List<QualityData> qualities = ReadQualityData(packet);
         string inv = isInInventory ? "In" : "Out";
         UIManager.DebugLog($"My Kanban {inv}::Inventory changed !  {isInInventory}  , {isEmpty}");
         ///Tell someone to add the slot but not recall the server
