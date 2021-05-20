@@ -61,8 +61,11 @@ public class CustomShaderController : MonoBehaviour
     {
         var mat = GetMaterial();
         Color old = mat.GetColor(key);
-        old.a = opacity;
-        mat.SetColor(key, old);
+        if (old != null)
+        {
+            old.a = opacity;
+            mat.SetColor(key, old);
+        }
     }
 
     private void SetMaterialHighlighted(bool cond)

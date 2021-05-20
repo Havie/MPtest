@@ -26,6 +26,7 @@ public class Switch : InteractableObject
 
     public override void OnInteract()
     {
+        Debug.Log($"What actt");
         _on = !On;
         ToggleChildren(On);
         CheckQualityConditions(On);
@@ -108,6 +109,7 @@ public class Switch : InteractableObject
 
     private void ChangeMaterialColor(float opacity)
     {
+
         if (opacity > 1)
             Debug.LogWarning("Setting opacity > 1. Needs to be 0.0 - 1.0f");
 
