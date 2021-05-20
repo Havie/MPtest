@@ -3765,7 +3765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
+  m_Color: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5165,8 +5165,7 @@ MonoBehaviour:
   m_text: Buzz Digital
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 93067b90353ea594ca02d0ad1216cd49, type: 2}
-  m_sharedMaterial: {fileID: -5400585206759885545, guid: 93067b90353ea594ca02d0ad1216cd49,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 58f8d927639344f48958187c6cb2210b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6257,14 +6256,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 0.5}
+  m_Color: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: e65164b1d1d85664796992dfe14917b2, type: 3}
+    m_Font: {fileID: 12800000, guid: 246fcd5092125ba4d8ff80ecb2cfaf96, type: 3}
     m_FontSize: 32
     m_FontStyle: 2
     m_BestFit: 0
