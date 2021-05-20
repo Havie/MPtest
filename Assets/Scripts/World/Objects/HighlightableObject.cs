@@ -5,24 +5,18 @@ using UnityEngine;
 
 public class HighlightableObject : InteractableObject, IHighlightable
 {
-    protected HighlightTrigger _highlightTrigger;
 
-
+    private CustomShaderController _controller;
+    private CustomShaderController[] _childrenControllers;
 
     protected virtual void Awake()
     {
-        SetUpHighlightComponent(); 
+        _controller = this.gameObject.AddComponent<CustomShaderController>();
     }
 
-
-    private void SetUpHighlightComponent()
+    protected void Start()
     {
-        var effect = transform.gameObject.AddComponent<HighlightEffect>();
-        var profile = Resources.Load<HighlightProfile>("Shaders/Highlight Plus Profile");
-        if (profile != null)
-            effect.ProfileLoad(profile);
-        _highlightTrigger = this.gameObject.AddComponent<HighlightTrigger>();
-
+        _childrenControllers = GetComponentsInChildren<CustomShaderController>();
     }
 
 
@@ -33,62 +27,62 @@ public class HighlightableObject : InteractableObject, IHighlightable
     public bool IsHighlighted() => _isHighlighted;
     public void SetHighlighted(bool cond)
     {
-        if (_highlightTrigger)
-            _highlightTrigger.Highlight(cond);
+        _isHighlighted = cond;
+        if (_controller)
+            _controller.Highlight(cond);
+        if (_childrenControllers == null)
+            return;
 
-        var childrenHighlights = GetComponentsInChildren<HighlightTrigger>();
-        foreach (var item in childrenHighlights)
+        foreach (var item in _childrenControllers)
         {
             item.Highlight(cond);
         }
-
-        _isHighlighted = cond;
     }
     public void ChangeHighlightAmount(float intensity)
     {
-        if (_highlightTrigger)
+        if (_controller)
         {
-            var effect = this.GetComponent<HighlightEffect>();
-            effect.outline = intensity;
-
-            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
-            foreach (var item in childrenEffects)
-            {
-                item.outline = intensity;
-            }
+            _controller.SetOutlineIntensity(intensity);
         }
+        if (_childrenControllers == null)
+            return;
+
+        foreach (var item in _childrenControllers)
+        {
+            item.SetOutlineIntensity(intensity);
+        }
+
     }
     public float GetHighlightIntensity()
     {
-        if (_highlightTrigger)
+        if (_controller)
         {
-            var effect = this.GetComponent<HighlightEffect>();
-            return effect.outline;
+            return _controller.GetOutlineIntensity();
         }
         return 0;
     }
     public Color GetHighLightColor()
     {
-        if (_highlightTrigger)
+        if (_controller)
         {
-            var effect = this.GetComponent<HighlightEffect>();
-            return effect.outlineColor;
+            return _controller.GetOutlineColor();
         }
         return Color.white;
     }
     public void ChangeHighLightColor(Color color)
     {
-        if (_highlightTrigger)
+        if (_controller)
         {
-            var effect = this.GetComponent<HighlightEffect>();
-            effect.outlineColor = color;
-
-            var childrenEffects = GetComponentsInChildren<HighlightEffect>();
-            foreach (var item in childrenEffects)
-            {
-                item.outlineColor = color;
-            }
+            _controller.SetOutlineColor(color);
         }
+        if (_childrenControllers == null)
+            return;
+
+        foreach (var item in _childrenControllers)
+        {
+            item.SetOutlineColor(color);
+        }
+
     }
     public virtual void HandleHighlightPreview()
     {

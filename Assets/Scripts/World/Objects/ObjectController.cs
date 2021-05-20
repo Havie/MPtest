@@ -79,6 +79,31 @@ public class ObjectController : HighlightableObject, IConstructable
     }
 
 
+    //void Start()
+    //{
+    //    if(_meshRenderer)
+    //        UpdateJoseMaterialColor(_meshRenderer, 0, "_OutlineColor");
+    //}
+    //private void TempSetHighlighted(bool isTransparent)
+    //{
+    //    var mr = this.GetComponent<MeshRenderer>();
+    //    if (mr)
+    //    {
+    //        if(isTransparent)
+    //        {
+    //            UpdateJoseMaterialColor(mr, 0.5f, "_Color");
+    //            UpdateJoseMaterialColor(mr, 1, "_OutlineColor");
+    //        }
+    //        else //Not transparent
+    //        {
+    //            UpdateJoseMaterialColor(mr, 1f, "_Color");
+    //            UpdateJoseMaterialColor(mr, 1, "_OutlineColor");
+    //        }
+
+           
+    //    }
+    //}
+
     private eRotationAxis DetermineRotationAccess()
     {
         if (_parent != null && (_myID == ObjectRecord.eItemID.PinkTop || _myID == ObjectRecord.eItemID.RedBot))
@@ -125,7 +150,6 @@ public class ObjectController : HighlightableObject, IConstructable
                 UIManager.UpdateHandLocation(_handIndex, _handLocation.position);
             }
         }
-
     }
     /************************************************************************************************************************/
     public void PickedUp(int handIndex)
@@ -148,6 +172,7 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         ToggleRB(false);
         SetHighlighted(false);
+        ChangeAppearanceNormal(); ///Did this fix the dropping reset issue
         //HandManager.OrderChanged -= UpdateHand;
         _pickedUp = false;
     }
@@ -373,13 +398,13 @@ public class ObjectController : HighlightableObject, IConstructable
 
         if (mr)
         {
-            Material m = mr.material;
-            Color color = m.color;
-            color.a = opacity;
-            m.color = color;
-            mr.material = m;
+            ///TODO cache this
+            CustomShaderController shaderController = this.GetComponent<CustomShaderController>();
+            shaderController.ChangeMaterialColor(opacity);
+            //UpdateUnityDefaultMaterialColor(mr, opacity);
         }
     }
+
     private void ChangeHighLightColor(int handIndex)
     {
         Color color = handIndex == 1 ? ObjectManager.Instance._colorHand1 : ObjectManager.Instance._colorHand2;
@@ -395,11 +420,10 @@ public class ObjectController : HighlightableObject, IConstructable
         foreach (var mr in _childrenMeshRenderers)
         {
             mr.enabled = true;
-            Material m = mr.material;
-            Color color = m.color;
-            color.a = opacity;
-            m.color = color;
-            mr.material = m;
+            //UnityDefaultColorChange(mr, opacity);
+            CustomShaderController shaderController = mr.GetComponent<CustomShaderController>();
+            if(shaderController)
+                shaderController.ChangeMaterialColor(opacity);
         }
     }
     protected Vector2 DoRotation(Vector3 dir)

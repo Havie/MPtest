@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: m_ClickCircle
   m_Shader: {fileID: 4800000, guid: e6825fa889774c3469c8981a92d8f4f3, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _PARTICLECONTROLSALPHA_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: acb2458e1a4d41c4f9cbac87a0ebd048, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3ebdd3cdb2a40bc41a6455906dcb394c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
@@ -60,7 +60,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureDissolve:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 424dd4eeb22d2a84e8838d9c048d9f99, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
@@ -72,6 +72,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _AlphaThreshold: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -80,10 +81,12 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _InvFade: 1
+    - _LerpMethod: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _ParticleControlsAlpha: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
