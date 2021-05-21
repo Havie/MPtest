@@ -44,7 +44,7 @@ public class InSocket : Socket
                 if (socket && CheckConditions(socket, requiredAttachmentID))
                 {
                    // Debug.Log($"match for  {socket.gameObject}:{this.gameObject.name} and {socket.gameObject}:{socket}");
-                    PreviewManager.ShowPreview(Controller, socket.Controller, (int)_createdID[i], _snapVfxPREFAB);
+                    PreviewManager.ShowPreview(Controller, socket.Controller, (int)_createdID[i], _snapVfxPREFAB, transform);
                 }
                 /* else if (socket)  ///for debugging to get more info 
                  {
