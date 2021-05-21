@@ -15,7 +15,7 @@ public static class PreviewManager
     private static GameObject _switchOGParent;
 
 
-    public static void ShowPreview(ObjectController controller, ObjectController otherController, int createdID)
+    public static void ShowPreview(ObjectController controller, ObjectController otherController, int createdID, GameObject vfxPREFAB)
     {
         if (_inPreview)
         {
@@ -48,7 +48,8 @@ public static class PreviewManager
         _previewItem = obj;
        // CheckForSwitch();
         _inPreview = true;
-
+        Transform vfxLoc = controller.transform.GetComponentInChildren<Socket>().transform;
+        VFXManager.Instance.PerformEffect(vfxPREFAB, vfxLoc, false);
         PlayAudio(0.25f, 1.0f);           
             
     }
