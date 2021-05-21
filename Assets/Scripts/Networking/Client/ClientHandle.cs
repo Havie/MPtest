@@ -57,11 +57,14 @@ public class ClientHandle : MonoSingleton<ClientHandle>
     {
         var gm = GameManager.Instance;
         WorkStation ws = gm._workStation;
-        UIManager.DebugLog($"The ws at time of request is : {ws._myStation}");
+        //UIManager.DebugLog($"The ws at time of request is : {ws._myStation}");
         int myStation = (int)ws._myStation;
         int output = (int)ws._sendOutputToStation;
         Vector3 loc = ws.StationLocation;
-        ClientSend.Instance.SendTransportData(myStation, output, loc);
+        Vector3 endLoc = gm.CurrentWorkStationManager.GetStationByEnumIndex(output).StationLocation;
+        float distance = Mathf.Abs(Vector3.Distance(loc, endLoc));
+
+        ClientSend.Instance.SendTransportData(myStation, output, distance);
 
     }
 

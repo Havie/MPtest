@@ -90,13 +90,13 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
     }
 
-    public void SendTransportData(int myStationID, int outputStationID, Vector3 stationLoc)
+    public void SendTransportData(int myStationID, int outputStationID, float distance)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.receiveTransportData))
         {
             packet.Write(myStationID);
             packet.Write(outputStationID);
-            packet.Write(1.2f); // TODO distance between stations on client end
+            packet.Write(distance); // distance between stations on client end
             SendTCPData(packet);
         }
 

@@ -77,8 +77,8 @@ public class sServerHandle
         sClient client = FindClientForStationID(otherStationsID);
         if (client != null)
         {
-            Debug.Log($"Shipping Item w a delay of: {transportDelay}");
-            ThreadManager.Instance.ExecuteOnMainThreadWithDelay(()=> client.SendItem(itemID, qualities), transportDelay);
+            //Debug.Log($"Shipping Item w a delay of: {transportDelay}");
+            ThreadManager.Instance.ExecuteOnMainThreadWithDelay(() => client.SendItem(itemID, qualities), transportDelay);
         }
 
     }
@@ -144,11 +144,8 @@ public class sServerHandle
         var batchSize = GameManager.Instance._batchSize;
         foreach (sClient c in sServer.GetClients())
         {
-            if (batchSize == 1)
-            {
-                ///Set up the KanBan flags for pull
-                c.RequestTransportInfo();
-            }
+            ///Set up the KanBan flags for pull and shared inv for batch
+            c.RequestTransportInfo();
             ///Tell all clients to start: (this sets the timer, and loads the scene)
             ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
             c.StartRound(roundDuration);
@@ -224,7 +221,7 @@ public class sServerHandle
         List<int> qualityData = ReconstructQualityData(packet);
         DebugQualities.DebugQuality(qualityData);
         var sharedInvs = sServer._sharedInventories;
-        Debug.Log($"<color=white>[ServerHandle]</color> heard InvChanged for : clientID{fromClient} , to isIN={isInInventory} isEmpty={isRemovedItem} ");
+        //Debug.Log($"<color=white>[ServerHandle]</color> heard InvChanged for : clientID{fromClient} , to isIN={isInInventory} isEmpty={isRemovedItem} ");
         int otherStationsID = sharedInvs.GetSharedStationID(isInInventory, fromClient, out float ignoreForKanban);
         sClient client = FindClientForStationID(otherStationsID);
         if (client != null)
@@ -278,5 +275,5 @@ public class sServerHandle
         return qualities;
     }
 
-   
+
 }

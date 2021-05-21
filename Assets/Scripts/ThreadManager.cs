@@ -52,7 +52,9 @@ public class ThreadManager : MonoSingleton<ThreadManager>
         }
     }
 
-
+    /// <summary> Sets an action to be executed on the main thread with a delay </summary>
+    /// <param name="action">The Action to be executed</param>
+    /// <param name="delay">The time in seconds to wait befor executing the action</param>
     public void ExecuteOnMainThreadWithDelay(Action action, float delay)
     {
         StartCoroutine(RunActionWithDelay(delay, action)); 
@@ -62,7 +64,6 @@ public class ThreadManager : MonoSingleton<ThreadManager>
     {
         yield return new WaitForSeconds(delay);
         ExecuteOnMainThread(action);
-        Debug.Log($"<color=green>Finished delay</color>");
     }
 
 }
