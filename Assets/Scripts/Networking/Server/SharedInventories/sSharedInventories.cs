@@ -12,7 +12,7 @@ public class sSharedInventories
 
     public void RegisterClientToStationId(int clientID, int stationID)
     {
-        Debug.Log($"..register client#:{clientID} to station#:{stationID}");
+        //Debug.Log($"<color=green>..register </color>client#:{clientID} to station#:{stationID}");
         _stationIdsToClientIds[stationID] = clientID;
         _clientIdsToStationIds[clientID] = stationID;
     }
@@ -46,14 +46,14 @@ public class sSharedInventories
     {
         int stationID = GetStationIDForClient(fromClientID);
         eInventoryType type = isInInventory ? eInventoryType.IN : eInventoryType.OUT;
-        Debug.Log($"..trying to get station for clientID#:{fromClientID} was : {stationID}:{type}");
+        //Debug.Log($"..trying to get station for clientID#:{fromClientID} was : {stationID}:{type}");
         return  FindAnInventory(type, stationID);
     }
     public int GetSharedStationID(bool isInInventory, int fromClientID, out float delayTime)
     {
         int stationID = GetStationIDForClient(fromClientID);
         eInventoryType type = isInInventory ? eInventoryType.IN : eInventoryType.OUT;
-        Debug.Log($"..trying to get station for clientID#:{fromClientID} was : {stationID}:{type}");
+        //Debug.Log($"..trying to get station for clientID#:{fromClientID} was : {stationID}:{type}");
         var inv= FindAnInventory(type, stationID);
         if (inv != null)
         {

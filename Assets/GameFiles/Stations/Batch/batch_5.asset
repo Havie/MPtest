@@ -19,3 +19,4 @@ MonoBehaviour:
     type: 3}
   _tasks:
   - {fileID: 11400000, guid: f366fc44d10318248a1d80730b560b85, type: 2}
+  _location: {x: 3, y: 1, z: 2}

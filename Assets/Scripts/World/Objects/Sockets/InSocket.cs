@@ -9,15 +9,15 @@ public class InSocket : Socket
      private float _attachmentSensitivity = 0.5f; ///Closeness Threshold
     [SerializeField] ObjectRecord.eItemID[] _requiredAttachmentID = default;
     [SerializeField] ObjectRecord.eItemID[] _createdID = default;
-
+    GameObject _snapVfxPREFAB;
 
     private bool _canCollide;
 
     private void Awake()
     {
         _in = true;
+        _snapVfxPREFAB = Resources.Load<GameObject>("Prefab/VFX/FX_Snap");
         StartCoroutine(WaitDelay());
-     
     }
 
     IEnumerator WaitDelay()
@@ -44,7 +44,7 @@ public class InSocket : Socket
                 if (socket && CheckConditions(socket, requiredAttachmentID))
                 {
                    // Debug.Log($"match for  {socket.gameObject}:{this.gameObject.name} and {socket.gameObject}:{socket}");
-                    PreviewManager.ShowPreview(Controller, socket.Controller, (int)_createdID[i]);
+                    PreviewManager.ShowPreview(Controller, socket.Controller, (int)_createdID[i], _snapVfxPREFAB, transform);
                 }
                 /* else if (socket)  ///for debugging to get more info 
                  {
