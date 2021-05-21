@@ -251,7 +251,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
             if (qualities != null)
             {
                 _qualities = qualities;
-                DebugQualities.DebugQualitySlot(_qualities);
+                //DebugQualities.DebugQualitySlot(_qualities);
             }
 
 

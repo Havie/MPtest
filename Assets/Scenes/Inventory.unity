@@ -11056,7 +11056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stationToInject: 2
+  _stationToInject: 1
   _developerInjections: 1
   _itemToInject: 17
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
@@ -11281,7 +11281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 2
-  _batchSize: 1
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0

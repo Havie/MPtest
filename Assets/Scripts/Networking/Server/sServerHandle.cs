@@ -77,8 +77,8 @@ public class sServerHandle
         sClient client = FindClientForStationID(otherStationsID);
         if (client != null)
         {
-            ///TODO use transportDelay
-            client.SendItem(itemID, qualities);
+            Debug.Log($"Shipping Item w a delay of: {transportDelay}");
+            ThreadManager.Instance.ExecuteOnMainThreadWithDelay(()=> client.SendItem(itemID, qualities), transportDelay);
         }
 
     }
