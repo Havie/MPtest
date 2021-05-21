@@ -46,8 +46,9 @@ namespace UserInput
                 {
                     //Debug.LogWarning($"Slot found= {slot.name}");
                     int itemID = slot.GetItemID();
-                    // Debug.Log($"Removing ItemID{itemID} from {slot.name}");
+                     Debug.Log($"<color=red>!!!!!..</color>Removing ItemID{itemID} from {slot.name}");
                     var qualityList = slot.RebuildQualities();
+                    DebugQualities.DebugQuality(qualityList);
                     slot.RemoveItem(); 
                     var obj = ObjectManager.Instance.SpawnObject(itemID, _brain.GetInputWorldPos(_zDepth), qualityList).GetComponent<ObjectController>();
                     _currentSelection = obj;

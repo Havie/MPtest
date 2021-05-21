@@ -40,11 +40,11 @@ public class WorkStationManager : ScriptableObject
         if (ws != null)
         {
             GameManager.instance.AssignWorkStation(ws);
-            ClientSend.Instance.SendWorkStationID((int)ws._myStation);
+            ClientSend.Instance.SendWorkStationID((int)ws._myStation, ws.StationLocation);
         }
         else
         {
-            ClientSend.Instance.SendWorkStationID(0);
+            ClientSend.Instance.SendWorkStationID(0, Vector3.zero);
         }    
     }
     public KeyValuePair<WorkStation, string> GetStationPair(Dropdown dropdown)

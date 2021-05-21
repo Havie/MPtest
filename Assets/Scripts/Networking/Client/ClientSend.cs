@@ -16,7 +16,8 @@ public class ClientSend : MonoSingleton<ClientSend>
     }
 
     #region packets
-    /// <summary> We heard back from the server, so send along our Info/// </summary>
+    /// <summary> We heard back from the server, so send along our Info
+    /// </summary>
     public void WelcomeReceived()
     {
         using (sPacket packet = new sPacket((int)ClientPackets.welcomeReceived))
@@ -34,18 +35,15 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
-    public void SendWorkStationID(int stationID)
+    public void SendWorkStationID(int stationID, Vector3 stationLocation)
     {
         using (sPacket packet = new sPacket((int)ClientPackets.stationID))
         {
             packet.Write(stationID);
-
+            packet.Write(stationLocation);
             SendTCPData(packet);
-
         }
     }
-
     public void RequestMPData()
     {
         using (sPacket packet = new sPacket((int)ClientPackets.requestMpData))
@@ -77,7 +75,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
     public void RoundEnded()
     {
         ///TODO see RoundBegin Comment about this:
@@ -93,29 +90,33 @@ public class ClientSend : MonoSingleton<ClientSend>
         }
     }
 
+    public void SendTransportData(int myStationID, int outputStationID, Vector3 stationLoc)
+    {
+        using (sPacket packet = new sPacket((int)ClientPackets.receiveTransportData))
+        {
+            packet.Write(myStationID);
+            packet.Write(outputStationID);
+            packet.Write(1.2f); // TODO distance between stations on client end
+            SendTCPData(packet);
+        }
 
-
+    }
     /***Gameplay***/
-    public void SendItem(int itemLVL, List<QualityObject> qualities, int toStationID)
+    public void SendItem(int itemID, List<QualityData> qualities, bool isInInventory)
     {
         UIManager.DebugLog("(ClientSend): Sending Item on channel : " + (int)ClientPackets.item);
         using (sPacket packet = new sPacket((int)ClientPackets.item))
         {
-            packet.Write(itemLVL);
+            packet.Write(itemID);
             ///Who am I sending it to? (station/ClientID?)
-            packet.Write(toStationID);
+            //packet.Write(toStationID);
+            ///Am I the In out OUT inventory
+            packet.Write(isInInventory);
             ///How many qualities to parse in a for loop
             packet.Write(qualities.Count);
-            Debug.Log($"ClientSend QualityCount={qualities.Count}");
-            string info = "";
-            for (int i = 0; i < qualities.Count; ++i)
-            {
-                QualityObject q = qualities[i];
-                packet.Write(q.ID);
-                packet.Write(q.CurrentQuality);
-
-                info += $" send:({q.ID},{q.CurrentQuality}) ";
-            }
+            //Debug.Log($"ClientSend QualityCount={qualities.Count}");
+            //string info = "";
+            PackQualities(qualities, packet);
 
             //UIManager.DebugLog(info);
 
@@ -123,7 +124,6 @@ public class ClientSend : MonoSingleton<ClientSend>
 
         }
     }
-
     /// <summary>
     /// For now, this is only for tracking statistics across the network...Called from an InspectorEvent
     /// TODO: It would be really nice to encapsulate sending Items from this Batch, not the individual slots calling SendItem()
@@ -132,7 +132,7 @@ public class ClientSend : MonoSingleton<ClientSend>
     /// <param name="batch"></param>
     public void BatchSent(BatchWrapper batch)
     {
-        Debug.Log($"<color=yellow>Client Send BatchSent </color>{batch.StationId} , {batch.ItemCount}");
+        //Debug.Log($"<color=yellow>Client Send BatchSent </color>{batch.StationId} , {batch.ItemCount}");
 
         using (sPacket packet = new sPacket((int)ClientPackets.batch))
         {
@@ -142,8 +142,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
-
     public void OrderCreated(OrderWrapper order)
     {
         Debug.Log($"<color=white>(ClientSend) Order Created</color>");
@@ -155,10 +153,9 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
     public void DefectAdded(DefectWrapper defect)
     {
-        Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");
+        //Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");
         using (sPacket packet = new sPacket((int)ClientPackets.defectAdded))
         {
             packet.Write(defect.StationId);
@@ -166,25 +163,30 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-
-    #endregion
-
-
-    #region OldFromTutorial
-    public void PlayerMovement(bool[] inputs)
+    public void KanbanChanged(bool isInInventory, bool isRemoved, int itemID, List<QualityData> qualities)
     {
-        using (sPacket packet = new sPacket((int)ClientPackets.playerMovement))
+        Debug.Log($"!!..<color=orange>(ClientSend) KanbanChanged</color>");
+        using (sPacket packet = new sPacket((int)ClientPackets.inventoryChanged))
         {
-            packet.Write(inputs.Length);
-            foreach (bool input in inputs)
-                packet.Write(input);
+            packet.Write(isInInventory);
+            packet.Write(isRemoved);
+            packet.Write(itemID);
+            packet.Write(qualities.Count);
+            PackQualities(qualities, packet);
+            SendTCPData(packet);
+        }
+    }
 
-            //use UDP cause we can afford to lose data (faster)
-            // packet.Write(GameManager._players[Client.instance._myId].transform.rotation);
-
-            SendUDPData(packet);
+    private static void PackQualities(List<QualityData> qualities, sPacket packet)
+    {
+        for (int i = 0; i < qualities.Count; ++i)
+        {
+            QualityData q = qualities[i];
+            packet.Write(q.ID);
+            packet.Write(q.Actions);
         }
     }
     #endregion
+
 }
 

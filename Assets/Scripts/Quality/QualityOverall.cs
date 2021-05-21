@@ -10,13 +10,13 @@ public class QualityOverall : MonoBehaviour
     public List<QualityObject> Qualities => _qualities;
 
     [SerializeField] float _lastKnownQuality; ///TMP for read outs in UI
-    [SerializeField] int _currentQuality =0; /// Serialize for read outs in UI
-    [SerializeField] int _maxQuality=0;  /// Serialize for read outs in UI
+    [SerializeField] int _currentQuality = 0; /// Serialize for read outs in UI
+    [SerializeField] int _maxQuality = 0;  /// Serialize for read outs in UI
 
 
     private void Awake()
     {
-       _qualities= FindQualities();
+        _qualities = FindQualities();
 
 
     }
@@ -31,7 +31,9 @@ public class QualityOverall : MonoBehaviour
 
     private void LateUpdate()
     {
-        _lastKnownQuality= GetPercent();///TMP for read outs in UI
+#if UNITY_EDITOR
+        _lastKnownQuality = GetPercent();///TMP for read outs in UI
+#endif
     }
 
     public void ChangeQuality(int curr, int max)
@@ -50,7 +52,6 @@ public class QualityOverall : MonoBehaviour
             _currentQuality += q.CurrentQuality;
             _maxQuality += q.MaxQuality;
         }
-        _lastKnownQuality = (float)_currentQuality / (float)_maxQuality;   ///TMP for read outs in UI
         return (float)_currentQuality / (float)_maxQuality;
     }
 
@@ -61,7 +62,7 @@ public class QualityOverall : MonoBehaviour
 
         foreach (var item in _qualities)
         {
-            if(item.ID == pastObject.ID) ///gets the ID from shared scriptable asset
+            if (item.ID == pastObject.ID) ///gets the ID from shared scriptable asset
             {
                 if (pastObject.CurrentQuality != item.MaxQuality)
                 {
@@ -77,8 +78,29 @@ public class QualityOverall : MonoBehaviour
         ///We never found a match so assume you can no longer perform this actions ,
         /// spoof the preview manager by adding this dummy to our list so it keeps getting passed along
         AddAsNewQuality(pastObject);
-      
+
     }
+    public void ReadOutQuality(QualityData pastObject)
+    {
+        //Debug.Log($"We are reading out : {pastObject} its not null? {pastObject.ID}, {pastObject.CurrentQuality}/{pastObject.MaxQuality}");
+
+        foreach (var item in _qualities)
+        {
+            if (item.ID == pastObject.ID) ///gets the ID from shared scriptable asset
+            {
+                item.CloneQuality(pastObject);
+                return;
+            }
+        }
+
+        ///This if fine, just a warning, it will keep track of it on the base obj
+       // Debug.Log($"<color=yellow>..!..!.</color>Couldnt find {pastObject.ID} on new item {this.gameObject.name}'s children");
+
+        ///We never found a match so assume you can no longer perform this actions ,
+        /// spoof the preview manager by adding this dummyComponent to our list so it keeps getting passed along
+        AddAsNewQuality(pastObject);
+    }
+
 
     /** Have to add a new instance as its getting destroyed on last OBJ*/
     /** An example of this would be the blue bolts are only available on the first prefabs */
@@ -88,14 +110,20 @@ public class QualityOverall : MonoBehaviour
         qs.InitalizeAsDummy(pastObject.QualityStep, pastObject.CurrentQuality);
         _qualities.Add(qs);
     }
+    private void AddAsNewQuality(QualityData pastObject)
+    {
+        var qs = this.transform.gameObject.AddComponent<QualityObject>();
+        qs.InitalizeAsDummy(pastObject.ID, pastObject.Actions);
+        _qualities.Add(qs);
+    }
 
     public QualityObject FindObjectQualityOfType(int id)
     {
-        foreach(QualityObject q in this.GetComponentsInChildren<QualityObject>())
+        foreach (QualityObject q in this.GetComponentsInChildren<QualityObject>())
         {
             if (q.ID == id)
                 return q;
-        }    
+        }
 
         return null;
     }

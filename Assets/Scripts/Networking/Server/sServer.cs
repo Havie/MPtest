@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 using System.Text;
+using System.Linq;
 
 public static class sServer
 {
@@ -21,7 +22,13 @@ public static class sServer
 
     public static event Action<string> OnHostIpFound = delegate { };
     public static bool _iAmHost;
+    ///Not loving all the public stuff , but the network code is written in this messy way everywhere so
     public static sGameStatistics _gameStatistics;
+    public static sSharedInventories _sharedInventories;
+    public static int BatchSize { get; private set; }
+
+
+    /************************************************************************************************************************/
 
     public static void ListenForHostBroadCasts()
     {
@@ -52,6 +59,7 @@ public static class sServer
         BroadCastIP();
         _iAmHost = true;
         ResetStatistics();
+        ResetSharedInventories();
 
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
@@ -62,6 +70,10 @@ public static class sServer
     public static void ResetStatistics()
     {
         _gameStatistics = new sGameStatistics();
+    }
+    public static void ResetSharedInventories()
+    {
+        _sharedInventories = new sSharedInventories();
     }
 
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 
@@ -78,9 +90,9 @@ public static class sServer
 
             for (int i = 1; i <= _maxPlayers; ++i)
             {
-                if (_clients[i]._tcp._socket == null)
+                if (_clients[i].Tcp._socket == null)
                 {
-                    _clients[i]._tcp.Connect(client);
+                    _clients[i].Tcp.Connect(client);
                     return;
                 }
             }
@@ -133,18 +145,18 @@ public static class sServer
 
                 if (_clients.ContainsKey(clientId))
                 {
-                    if (_clients[clientId]._udp._endPoint == null)
+                    if (_clients[clientId].Udp._endPoint == null)
                     {
-                        _clients[clientId]._udp.Connect(clientEndPoint); //first time through?
+                        _clients[clientId].Udp.Connect(clientEndPoint); //first time through?
                         return;
                     }
 
                     //Prevent hacker from impersonating someone by sending a different ID
                     //Convert to string because even when they match returns false?
                     // Debug.Log("Test val1: " + _clients[clientId]._udp._endPoint + " , val2: " + clientEndPoint + " comparison= " + (_clients[clientId]._udp._endPoint == clientEndPoint));
-                    if (_clients[clientId]._udp._endPoint.ToString().Equals(clientEndPoint.ToString()))
+                    if (_clients[clientId].Udp._endPoint.ToString().Equals(clientEndPoint.ToString()))
                     {
-                        _clients[clientId]._udp.HandleData(packet);
+                        _clients[clientId].Udp.HandleData(packet);
                     }
                 }
                 else
@@ -187,14 +199,16 @@ public static class sServer
             {
                 { (int)ClientPackets.welcomeReceived , sServerHandle.WelcomeReceived},
                 //{ (int)ClientPackets.playerMovement , sServerHandle.PlayerMovement},
-                { (int)ClientPackets.stationID , sServerHandle.StationIDReceived},
+                { (int)ClientPackets.stationID , sServerHandle.StationInfoReceived},
                 { (int)ClientPackets.requestMpData , sServerHandle.RequestMultiPlayerData},
                 { (int)ClientPackets.item , sServerHandle.ItemReceived},
                 { (int)ClientPackets.batch , sServerHandle.BatchReceived},
                 { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated},
                 { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded},
                 { (int)ClientPackets.roundBegin , sServerHandle.RoundBegin},
-                { (int)ClientPackets.roundEnd , sServerHandle.RoundEnded}
+                { (int)ClientPackets.roundEnd , sServerHandle.RoundEnded},
+                { (int)ClientPackets.receiveTransportData , sServerHandle.ReceivedTransportData},
+                { (int)ClientPackets.inventoryChanged , sServerHandle.InventoryChanged}
 
             };
 
@@ -225,6 +239,14 @@ public static class sServer
         throw new Exception("No network adapters with an IPv4 address in the system!");
     }
 
+    /************************************************************************************************************/
+    //   My attempt at starting to rewrite this to following better programming principles
+    //   Theres far too many public accessors to what should be private data
+    /************************************************************************************************************/
 
+    public static List<sClient> GetClients()
+    {
+        return _clients.Values.ToList();
+    }
 }
 

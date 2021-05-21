@@ -28,7 +28,6 @@ public class QualityObject : MonoBehaviour
     {
         if (_qualityVFXPREFAB == null)
             _qualityVFXPREFAB = Resources.Load<GameObject>("Prefab/VFX/Quality_increase");
-
     }
 
     public void InitalizeAsDummy(QualityStep qs, int currentActions)
@@ -37,12 +36,23 @@ public class QualityObject : MonoBehaviour
         AssignCurrentActions(currentActions);
         IsDummy = true;
     }
+    public void InitalizeAsDummy(int qualityStepID, int currentActions)
+    {
+        ///Dont like this hack but its working
+        _qualityStep = ObjectManager.Instance._qualityPresets[qualityStepID];
+        AssignCurrentActions(currentActions);
+        IsDummy = true;
+    }
     public void CloneQuality(QualityObject toCopy)
     {
         // Debug.Log($"{this.gameObject.name} copying {toCopy}");
         AssignCurrentActions(toCopy.CurrentQuality);
     }
-
+    public void CloneQuality(QualityData toCopy)
+    {
+        // Debug.Log($"{this.gameObject.name} copying {toCopy}");
+        AssignCurrentActions(toCopy.Actions);
+    }
     /// used between item creations to carry data
     public void AssignCurrentActions(int amount)
     {

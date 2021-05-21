@@ -9,17 +9,18 @@ using System;
 public class sClient
 {
     public static int _dataBufferSize = 4096;
-    public int _id;
-    public TCP _tcp;
-    public UDP _udp;
-    public sPlayer _player;
-    public int _workStation;
+    public int ID { get; private set; }
+    public TCP Tcp { get; private set; }
+    public UDP Udp { get; private set; }
+    public int WorkStationID { get; private set; }
+    public Vector3 WorldLocation { get; private set; }
+
 
     public sClient(int clientId)
     {
-        _id = clientId;
-        _tcp = new TCP(_id);
-        _udp = new UDP(_id);
+        ID = clientId;
+        Tcp = new TCP(ID);
+        Udp = new UDP(ID);
     }
 
     public class TCP
@@ -190,58 +191,42 @@ public class sClient
     }
 
     /** can use WorkStation static dic to see where we send info to*/
-    public void SetWorkStation(int workStation)
+    public void SetWorkStationInfo(int workStation)
     {
-        _workStation = workStation;
+        WorkStationID = workStation;
     }
-
+    public void SetWorldLocation(Vector3 location)
+    {
+        WorldLocation = location;
+    }
+    public void RequestTransportInfo()
+    {
+        ///Tells the clients to send up and pair IN/OUT connection details
+        sServerSend.RequestTransportInfo(ID);
+    }
     public void StartRound(int roundDuration)
     {
         ///This is the SERVER client
-        sServerSend.StartRound(_id, roundDuration);
+        sServerSend.StartRound(ID, roundDuration);
     }
 
     public void EndRound(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
     {
-       sServerSend.EndRound(_id,  cycleTime,  thruPut,  shippedOnTime,  shippedLate,  wip);
+       sServerSend.EndRound(ID,  cycleTime,  thruPut,  shippedOnTime,  shippedLate,  wip);
     }
 
     public void SendItem(int itemId, List<int> qualityData)
     {
-        sServerSend.SendItem(_id, itemId, qualityData);
+        sServerSend.SendItem(ID, itemId, qualityData);
     }
 
 
     public void Disconnect()
     {
-        Debug.Log($"{_tcp._socket.Client.RemoteEndPoint} has disconnected");
-        //UnityEngine.Object.Destroy(_player.gameObject);
-        _player = null;
-        _tcp.Disconnect();
-        _udp.Disconnect();
+        Debug.Log($"{Tcp._socket.Client.RemoteEndPoint} has disconnected");
+        Tcp.Disconnect();
+        Udp.Disconnect();
     }
 
-
-    #region Old TUtorialCode
-    //public void SendIntoGame(string playerName)
-    //{
-
-    //    _player = sNetworkManager.instance.InstantiatePlayer();
-    //    _player.Init(_id, playerName);
-    //    //Tell the other players about new player
-    //    foreach (sClient client in sServer._clients.Values)
-    //    {
-    //        if (client._player != null)
-    //        {
-    //            if (client._id != _id)
-    //            {
-    //                sServerSend.SpawnPlayer(_id, client._player);
-    //            }
-    //            //including urself
-    //            sServerSend.SpawnPlayer(client._id, _player);
-    //        }
-    //    }
-    //}
-    #endregion
 
 }

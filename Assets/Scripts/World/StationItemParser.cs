@@ -11,7 +11,7 @@ public static class StationItemParser
         if (batchSize == 1 || isStackable) /// PULL SYSTEM
         {
             ///get last task at my station and put in its final item:
-            Task t = myWS._tasks[myWS._tasks.Count - 1];
+            Task t = myWS.Tasks[myWS.TaskCount - 1];
             ///Have to wrap this incase stackable batch inventory is enabled:
             for (int i = 0; i < batchSize; ++i)
             {
@@ -36,9 +36,9 @@ public static class StationItemParser
         {
             WorkStation ws = stationList[i];
             //Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws._stationName}");
-            for (int taskIndex = 0; taskIndex < ws._tasks.Count; ++taskIndex)
+            for (int taskIndex = 0; taskIndex < ws.TaskCount; ++taskIndex)
             {
-                Task t = ws._tasks[taskIndex]; ///get the current task 
+                Task t = ws.Tasks[taskIndex]; ///get the current task 
                 if (!isKittingStation && ws == myWS)  ///Exit early
                 {
                     ///look at the immediate output for next station final ID, then pass on basic items for others
@@ -63,7 +63,7 @@ public static class StationItemParser
         void AddSelfItems(WorkStation local_ws, int local_count, Task local_task)
         {
             //Debug.Log($"..<color=green>We are parsing self items for task:</color> {local_task}");
-            if (local_count == local_ws._tasks.Count - 1 && !isStackable) // look at the last task at this station and add its produced items
+            if (local_count == local_ws.TaskCount - 1 && !isStackable) // look at the last task at this station and add its produced items
             {
                 foreach (var item in local_task._finalItemID) /// final produced items
                 {
@@ -148,10 +148,37 @@ public static class StationItemParser
         if (batchSize == 1 || isStackable)
         {
             ///look at the last tasks final items in the station before mine
+            AddLastTasksFinalitemsToList();
+        }
+        else  
+        {   ///look at all final items for station before me , and the basic items from kitting[1]
+            AddLastTasksFinalitemsAndBasicItemsToList();
+        }
+        //Debug.Log($"The # of INV items will be : {itemIDs.count}");
+        return itemIDs;
+
+        ///**********************LOCAL FUNCTIONS: *******************************
+        List<int> FindObjectsAtKittingStation(WorkStation ws)
+        {
+            if (!ws.isKittingStation())
+                Debug.LogError("Wrong order, kitting isnt @ index 1");
+
+            List<int> items = new List<int>();
+            foreach (Task t in ws.Tasks)
+            {
+                foreach (var item in t._finalItemID)
+                    items.Add((int)item);
+            }
+
+            return items;
+        }
+
+        void AddLastTasksFinalitemsToList()
+        {
             if (startingIndex > 1) /// no kitting on pull, so second station
             {
                 WorkStation ws = stationList[startingIndex - 1];
-                Task lastTask = ws._tasks[ws._tasks.Count - 1];
+                Task lastTask = ws.Tasks[ws.TaskCount - 1];
                 // Debug.Log($"# of items at Task:{lastTask} is {lastTask._finalItemID.Count}");
                 ///Have to wrap this incase stackable batch inventory is enabled:
                 for (int i = 0; i < batchSize; ++i)
@@ -164,7 +191,8 @@ public static class StationItemParser
 
             }
         }
-        else  ///look at all final items for station before me , and the basic items from kitting[1]
+
+        void AddLastTasksFinalitemsAndBasicItemsToList()
         {
             var listItems = FindObjectsAtKittingStation(stationList[1]);
             // Debug.Log("Staring index=+" + startingIndex);
@@ -174,12 +202,12 @@ public static class StationItemParser
                 for (int i = 0; i < startingIndex; i++)
                 {
                     WorkStation ws = stationList[i];
-                    foreach (Task t in ws._tasks)
+                    foreach (Task t in ws.Tasks)
                     {
                         foreach (var item in t._requiredItemIDs)
                         {
                             int itemId = (int)item;
-                           // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
+                            // Debug.Log($"_requiredItems.. Station::{ws} --> Task::{t}  --> Item{item} #{itemId}");
                             if (listItems.Contains(itemId))
                                 listItems.Remove(itemId);
                         }
@@ -215,26 +243,6 @@ public static class StationItemParser
                     }
                 }
             }
-
-
-        }
-        //Debug.Log($"The # of INV items will be : {itemIDs.count}");
-        return itemIDs;
-
-        ///LOCAL FUNCTIONS:
-        List<int> FindObjectsAtKittingStation(WorkStation ws)
-        {
-            if (!ws.isKittingStation())
-                Debug.LogError("Wrong order, kitting isnt @ index 1");
-
-            List<int> items = new List<int>();
-            foreach (Task t in ws._tasks)
-            {
-                foreach (var item in t._finalItemID)
-                    items.Add((int)item);
-            }
-
-            return items;
         }
     }
     public static List<int> ParseItemsAsStation(int batchSize, bool isStackable, WorkStationManager wm, WorkStation myWS)
@@ -242,7 +250,7 @@ public static class StationItemParser
         List<int> seenItems = new List<int>();
         if (batchSize == 1 || isStackable) ///PULL & Stackable Batch, works for now if 1 task per station
         {
-            foreach (Task t in myWS._tasks)
+            foreach (Task t in myWS.Tasks)
             {
                 foreach (var item in t._requiredItemIDs)
                 {
@@ -289,7 +297,7 @@ public static class StationItemParser
             for (int i = sindex; i < sSequence.Length; i++)
             {
                 WorkStation ws = sList[i]; /// think this is in order?
-                foreach (Task t in ws._tasks)
+                foreach (Task t in ws.Tasks)
                 {
                     //verify no duplicates
                     foreach (var item in t._requiredItemIDs)
@@ -310,7 +318,7 @@ public static class StationItemParser
         }
         void LookAtOwnStationItems(WorkStation ws, List<int> sItems)
         {
-            foreach (var task in ws._tasks)
+            foreach (var task in ws.Tasks)
             {
                 foreach (var item in task._requiredItemIDs)
                 {
@@ -426,7 +434,7 @@ public static class StationItemParser
         for (int i = startingIndex; i < stationSequence.Length; i++)
         {
             WorkStation ws = stationList[i]; /// think this is in order?
-            foreach (Task t in ws._tasks)
+            foreach (Task t in ws.Tasks)
             {
                 if (reqItemsOverFinalItems)
                 {

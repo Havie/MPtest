@@ -74,7 +74,7 @@ public class DefectInventory : UIInventoryManager
 
     }
 
-    public override void ItemAssigned(UIInventorySlot slot)
+    public override void SlotStateChanged(UIInventorySlot slot)
     {
         //FireEvent
         _defectEvent.Raise(new DefectWrapper((int)GameManager.instance._workStation._myStation, slot.GetItemID()));

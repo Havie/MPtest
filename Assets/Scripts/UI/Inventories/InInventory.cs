@@ -27,7 +27,8 @@ public class InInventory : UIInventoryManager
     protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
-        return StationItemParser.ParseItemsAsIN(gm._batchSize,gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
+        _batchSize = gm._batchSize;
+        return StationItemParser.ParseItemsAsIN(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
        // return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
 
@@ -36,11 +37,19 @@ public class InInventory : UIInventoryManager
         //ParseItems(GameManager.Instance.CurrentWorkStationManager, GameManager.Instance._workStation, true);
 
         var gm = GameManager.instance;
+        List<int> itemIDs = StationItemParser.ParseItemsAsIN(gm._batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
+        if (gm._batchSize==1)
+        {
+            ///if its pull count should only be one for Kanban
+            if (itemIDs.Count != 1)
+                Debug.Log($"Pull system item count is : <color=yellow> {itemIDs.Count} </color>, expecting 1");
+            AddItemToSlot(itemIDs[0], null, true);
+        }
         if (gm.StartWithWIP) ///TODO if pull, show as REQ item
         {
-            foreach (var itemID in StationItemParser.ParseItemsAsIN(gm._batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation))
+            foreach (int itemID in itemIDs)
             {
-                AddItemToSlot((int)itemID, null, false);
+                AddItemToSlot(itemID, null, false);
             }
         }
         
@@ -83,4 +92,15 @@ public class InInventory : UIInventoryManager
     }
 
     #endregion
+
+
+    public override void SlotStateChanged(UIInventorySlot slot)
+    {
+        ///Has to be override cause no way to set the TorF flag on UIInventoryManager parent w 3 stations without an enum and were staying away from enums w inheritance like this
+        if (_batchSize == 1)
+        {
+            ClientSend.Instance.KanbanChanged(true, !slot.GetInUse(), slot.RequiredID, slot.Qualities);
+        }
+    }
+
 }

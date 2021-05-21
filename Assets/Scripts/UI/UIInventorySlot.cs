@@ -10,17 +10,17 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     [SerializeField] UICheckMark _greenCheckmark = default;
     [SerializeField] Sprite _defaultIconUsed = default;
     [SerializeField] Sprite _defaultIconEmpty = default;
+    public int RequiredID { get; private set; } = -1;
+    public List<QualityData> Qualities => _qualities;
+    private List<QualityData> _qualities = new List<QualityData>();
+    
+    private bool _inUse;
     private Sprite _currentBGSprite;
     private IInventoryManager _manager;
-    private bool _autoSend = false; //Only for OutINV, set by InventoryManager
     private bool _isOutSlot;
-    int _itemID = -1;
-    public bool _inUse;
-    int _numItemsStored = 0;
-    List<QualityObject> _qualities = new List<QualityObject>();
+    private int _itemID = -1;
+    private int _numItemsStored = 0;
 
-    public List<QualityObject> Qualities => _qualities;
-    public int RequiredID { get; private set; } = -1;
 
     private Vector3 _LARGER = new Vector3(1.15f, 1.15f, 1.15f);
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
@@ -41,11 +41,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     /************************************************************************************************************************/
 
     public void SetManager(IInventoryManager manager) { _manager = manager; }
-    public void SetAutomatic(bool cond)
-    {
-        _autoSend = cond;
-        _isOutSlot = true; // only OUT-INV calls this method so safe to assume
-    }
+    public void SetAsOutSlot(){ _isOutSlot = true;   }
     public void SetRequiredID(int itemID)
     {
         RequiredID = itemID;
@@ -118,23 +114,17 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     }
     public void RemoveItem()
     {
-        --_numItemsStored;
-        //if (gameObject.name.Contains("#1"))
-        //    Debug.Log($"Removed Item for {this.gameObject.name} , new total={_numItemsStored}");
-        if (_numItemsStored <= 0)
+        RemoveItem(false);
+    }
+    public void SharedKanbanSlotChanged(bool isEmpty, List<QualityData> qualities)
+    {
+        if (isEmpty)
         {
-            SwapBackgroundIMGs(false);
-            _qualities.Clear();
-            if (RequiredID != -1)
-            {
-                AssignSpriteByID(RequiredID, true);
-                _itemID = -1;
-                _inUse = false;
-                SetNormal();
-                PlayCheckMarkAnim(false);
-            }
-            else
-                RestoreDefault();
+            RemoveItem(true);
+        }
+        else
+        {
+            AssignItem(RequiredID, 1, qualities, true);
         }
     }
     public bool AssignItem(ObjectController oc, int count)
@@ -150,66 +140,22 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         if (overallQuality != null)
         {
             List<QualityObject> qualities = overallQuality.Qualities;
-
-            return AssignItem(id, count, qualities);
+            List<QualityData> qualityData = new List<QualityData>();
+            foreach (var item in qualities)
+            {
+                qualityData.Add(QualityConvertor.ConvertToData(item));
+            }
+            return AssignItem(id, count, qualityData);
         }
 
 
         return false;
     }
-    public bool AssignItem(int id, int count, List<QualityObject> qualities)
+    public bool AssignItem(int id, int count, List<QualityData> qualities)
     {
-        if (!_inUse)
-        {
-            if (_isOutSlot && id != RequiredID)
-            {
-                //Debug.Log($"{id} does not match {RequiredID}");
-                return AskManagerIfSpaceForItem(id, count, qualities);
-            }
-            else if (_isOutSlot && id == RequiredID)
-            {
-               // Debug.Log("..Were playing checkAnim");
-                PlayCheckMarkAnim(true);
-            }
-            AssignSpriteByID(id, false);
-            SwapBackgroundIMGs(true);
-            ///Might have to clone it, but lets see if we can store it
-            if (qualities != null)
-                _qualities = qualities;
-            else
-                _qualities.Clear();
-
-            _itemID = id;
-            _numItemsStored = count;
-            _inUse = true;
-            if (_autoSend)
-            {
-                if (count > 1)
-                    Debug.LogWarning("Trying to autosend more than 1 item? shouldnt happen");
-                ///Instead of sending the data manually via SendData(), we have to send through the batch event
-                ///in order for the server to trigger/track the batches for MP
-                OutInventory outInventory = _manager as OutInventory;
-                if (outInventory)
-                    outInventory.SendBatch();
-            }
-            else //non pull send , Kitting/Shipping Menu
-            {
-                TellManager();
-            }
-
-            ///Try encapsulating this here:
-            SetNormal();
-            return true;
-        }
-
-        return AskManagerIfSpaceForItem(id, count, qualities);
+        return AssignItem(id, count, qualities, false);
     }
-
-    private bool AskManagerIfSpaceForItem(int id, int count, List<QualityObject> qualities)
-    {
-        return _manager.TryAssignItem(id, count, qualities);
-    }
-    public bool RequiresCertainID() => RequiredID != -1;
+     public bool RequiresCertainID() => RequiredID != -1;
     #endregion
     public bool SendData()
     {
@@ -220,7 +166,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         {
             //int StationToSend = WorkStation._stationFlow[(int)myStation._myStation];
             UIManager.DebugLog($"(UIInventorySlot) sending: <color=green>{_itemID}</color> to Station: <color=blue>{(int)myStation._sendOutputToStation}</color>");
-            ClientSend.Instance.SendItem(_itemID, _qualities, (int)myStation._sendOutputToStation);
+            ClientSend.Instance.SendItem(_itemID, _qualities, !_isOutSlot);
             CheckKitting();
             RemoveItem(); // should always call RestoreDefault;
             return true;
@@ -230,14 +176,19 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         return false;
     }
 
-    public List<QualityObject> RebuildQualities()
+    public List<QualityData> RebuildQualities()
     {
-        List<QualityObject> newList = new List<QualityObject>();
+        List<QualityData> newList = new List<QualityData>();
         if (Qualities != null)
         {
             foreach (var q in Qualities)
-                newList.Add(q);
+            {
+                newList.Add(new QualityData(q.ID, q.Actions));
+                Debug.Log($"<color=green> added {q} </color>");
+            }
         }
+        else
+            Debug.Log($"<color=red> NULL QUALITIES!?</color>");
 
         return newList;
     }
@@ -280,8 +231,74 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         // Debug.Log($"{this.gameObject.name} AssigndSprite = <color=green>{img.name}</color>");
 
     }
+    private bool AssignItem(int id, int count, List<QualityData> qualities, bool noCallBack)
+    {
+        if (!_inUse)
+        {
+            if (_isOutSlot && id != RequiredID)
+            {
+                //Debug.Log($"{id} does not match {RequiredID}");
+                return AskManagerIfSpaceForItem(id, count, qualities);
+            }
+            else if (id == RequiredID)
+            {
+                ///removed _isOutSlot check here so kanban flags can play check mark
+                PlayCheckMarkAnim(true);
+            }
+            AssignSpriteByID(id, false);
+            SwapBackgroundIMGs(true);
+            _qualities.Clear();
+            if (qualities != null)
+            {
+                _qualities = qualities;
+                DebugQualities.DebugQualitySlot(_qualities);
+            }
 
 
+            _itemID = id;
+            _numItemsStored = count;
+            _inUse = true;
+            if (!noCallBack) ///Don't tell the manager about our stateChange
+            {
+                ///We do this so we dont get circular network calls from network changes
+                TellManager();
+            }
+
+            ///Try encapsulating this here:
+            SetNormal();
+            return true;
+        }
+
+        return AskManagerIfSpaceForItem(id, count, qualities);
+    }
+    private bool AskManagerIfSpaceForItem(int id, int count, List<QualityData> qualities)
+    {
+        return _manager.TryAssignItem(id, count, qualities);
+    }
+    private void RemoveItem(bool noCallback)
+    {
+        --_numItemsStored;
+        UIManager.DebugLog($"Remove ITEM , new count = {_numItemsStored}");
+        if (_numItemsStored <= 0)
+        {
+            SwapBackgroundIMGs(false);
+            _qualities.Clear();
+            if (RequiredID != -1)
+            {
+                AssignSpriteByID(RequiredID, true);
+                _itemID = -1;
+                _inUse = false;
+                SetNormal();
+                PlayCheckMarkAnim(false);
+            }
+            else
+                RestoreDefault();
+        }
+        if (!noCallback)
+        {
+            TellManager();
+        }
+    }
     private void DebugQualityIn()
     {
         if (_qualities.Count == 0)
@@ -290,14 +307,13 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
         {
             foreach (var q in _qualities)
             {
-                UIManager.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.CurrentQuality} </color>");
+                UIManager.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.Actions} </color>");
             }
         }
     }
-
     private void TellManager()
     {
-        _manager.ItemAssigned(this);
+        _manager.SlotStateChanged(this);
     }
     private void RestoreDefault()
     {
@@ -322,17 +338,14 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     {
         this.transform.localScale = _LARGER;
     }
-    private void SetNormal() ///Shud get this private and abstracted
+    private void SetNormal() 
     {
         this.transform.localScale = _NORMAL;
     }
-
     public void SetSmaller()
     {
         this.transform.localScale = _SMALLER;
     }
-
-
     /** Find and remove an order from kittings in orders */
     private void CheckKitting()
     {

@@ -42,6 +42,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
     protected int _INVENTORYSIZE;
     protected bool _STACKABLE;
     protected bool _ADDCHAOTIC;
+    protected int _batchSize;
     #endregion
 
     protected UIInventorySlot[] _slots = new UIInventorySlot[0];
@@ -206,7 +207,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
     }
 
     /**Used by all inventories initially to make required, and by IN-inventory with no specific slot in mind */
-    public bool AddItemToSlot(int itemID, List<QualityObject> qualities, bool makeRequired)
+    public bool AddItemToSlot(int itemID, List<QualityData> qualities, bool makeRequired)
     {
 
         if (!IsInitalized)
@@ -245,7 +246,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         return false;
     }
 
-    protected bool AddChaotic(int itemID, List<QualityObject> qualities, bool makeRequired)
+    protected bool AddChaotic(int itemID, List<QualityData> qualities, bool makeRequired)
     {
         List<UIInventorySlot> _available = new List<UIInventorySlot>();
         //Search through our initial slots and save any that can accept this itemID
@@ -308,7 +309,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         return false;
     }
 
-    protected bool TryToAdd(UIInventorySlot slot, int itemID, List<QualityObject> qualities, bool makeRequired)
+    protected bool TryToAdd(UIInventorySlot slot, int itemID, List<QualityData> qualities, bool makeRequired)
     {
         if (!slot.GetInUse())
         {
@@ -347,7 +348,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         // button.transform.SetAsLastSibling();
     }
 
-    public virtual void ItemAssigned(UIInventorySlot slot) { }
+    public virtual void SlotStateChanged(UIInventorySlot slot) { }
 
     public int MaxSlots()
     {
@@ -359,7 +360,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         int count = 0;
         foreach (var item in _slots)
         {
-            if (item !=null && item._inUse)
+            if (item !=null && item.GetInUse())
                 ++count;
         }
 
@@ -384,10 +385,17 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         return retList;
     }
 
-    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    public bool TryAssignItem(int id, int count, List<QualityData> qualities)
     {
         ///Some problems here with COUNT
         return AddItemToSlot(id, qualities, false);
+    }
+    
+    public void KanbanInventoryChanged(bool isEmpty, int itemID, List<QualityData> qualityData)
+    {
+        ///NB: should only have 1 slot in kanban , but if sim changes, we can use the itemID to look
+        ///thru the other slots and find the one with the right slot.RequiredItemID
+        _slots[0].SharedKanbanSlotChanged(isEmpty, qualityData);
     }
     #endregion
 }

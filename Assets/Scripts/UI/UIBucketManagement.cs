@@ -19,9 +19,9 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     int _itemID = -1;
     public bool _inUse;
 
-    List<QualityObject> _qualities = new List<QualityObject>();
+    List<QualityData> _qualities = new List<QualityData>();
 
-    public List<QualityObject> Qualities => _qualities;
+    public List<QualityData> Qualities => _qualities;
 
     private Vector3 _LARGER = new Vector3(1.25f, 1.25f, 1.25f);
     private Vector3 _NORMAL = new Vector3(1, 1, 1);
@@ -91,14 +91,18 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         if (overallQuality != null)
         {
             List<QualityObject> qualities = overallQuality.Qualities;
-
-            return AssignItem(id, count, qualities);
+            List<QualityData> qualityData = new List<QualityData>();
+            foreach (var item in qualities)
+            {
+                qualityData.Add(QualityConvertor.ConvertToData(item));
+            }
+            return AssignItem(id, count, qualityData);
         }
 
 
         return false;
     }
-    public virtual bool AssignItem(int id, int count, List<QualityObject> qualities)
+    public virtual bool AssignItem(int id, int count, List<QualityData> qualities)
     {
         //Debug.Log($"ASsign Item in BUCKET! }");
 
@@ -164,12 +168,12 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         {
             foreach (var q in _qualities)
             {
-                UIManager.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.CurrentQuality} </color>");
+                UIManager.DebugLog($"{this.gameObject.name} has quality id {q.ID} ,<color=green> {q.Actions} </color>");
             }
         }
     }
 
-    private bool CheckWithManager(int itemID, List<QualityObject> qualities)
+    private bool CheckWithManager(int itemID, List<QualityData> qualities)
     {
         return _inventory.AddItemToSlot(itemID, qualities, false);
     }

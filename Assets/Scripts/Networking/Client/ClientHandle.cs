@@ -42,7 +42,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         List<LobbyPlayer> _players = new List<LobbyPlayer>();
         var count = packet.ReadInt();
 
-        for(int i=0; i<count; ++i)
+        for (int i = 0; i < count; ++i)
         {
             int id = packet.ReadInt();
             string userName = packet.ReadString();
@@ -53,7 +53,17 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
         UIManagerNetwork.Instance.ReceieveMPData(_players);
     }
+    public void RequestTransportData(sPacket packet)
+    {
+        var gm = GameManager.Instance;
+        WorkStation ws = gm._workStation;
+        UIManager.DebugLog($"The ws at time of request is : {ws._myStation}");
+        int myStation = (int)ws._myStation;
+        int output = (int)ws._sendOutputToStation;
+        Vector3 loc = ws.StationLocation;
+        ClientSend.Instance.SendTransportData(myStation, output, loc);
 
+    }
 
     public void RoundStarted(sPacket packet)
     {
@@ -74,75 +84,50 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     public void ItemReceived(sPacket packet)
     {
-        int itemLvl = packet.ReadInt(); //get rid of the first btye data?
-
-        List<QualityObject> qualities = new List<QualityObject>();
-
-        var count = packet.ReadInt() / 2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
-
-        ///Reconstruct the Object Quality data
-        for (int i = 0; i < count; ++i)
-        {
-            var id = packet.ReadInt();
-            var currQ = packet.ReadInt();
-            qualities.Add(ObjectManager.Instance.BuildTempQualities(id, currQ));
-           // Debug.Log($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
-        }
-
+        int itemID = packet.ReadInt();
+        List<QualityData> qualities = ReadQualityData(packet);
 
         ///UNSURE IF I CAN DO UIMANAGER print logs in here, might be on wrong thread 
        // UIManager.DebugLog($"(ClientHandle):Item Received , item=<color=green>{itemLvl}</color>");
 
         //Tell the leftSide UI 
-        UIManagerGame.Instance._invIN.AddItemToSlot(itemLvl, qualities, false);
+        UIManagerGame.Instance.ItemReceived(itemID, qualities);
 
+    }
+
+    private List<QualityData> ReadQualityData(sPacket packet)
+    {
+        List<QualityData> qualities = new List<QualityData>();
+        var count = packet.ReadInt() / 2;  ///Divide by 2 because its (ID,CurrAction) per thing encoded
+                                           ///Reconstruct the Object Quality data
+        for (int i = 0; i < count; ++i)
+        {
+            var id = packet.ReadInt();
+            var currQ = packet.ReadInt();
+            //qualities.Add(ObjectManager.Instance.BuildTempQualities(id, currQ));
+            qualities.Add(new QualityData(id, currQ));
+            UIManager.DebugLog($"..Reconstructed {qualities[qualities.Count - 1]} with ({id} , {currQ})");
+        }
+        return qualities;
     }
 
     public void OrderShipped(sPacket packet)
     {
-
         int itemID = packet.ReadInt();
         //Debug.Log($"[ClientHandle] itemIDShipped= {itemID}");
         ///Tell kitting menu or whoever else to remove order
         UIManagerGame.Instance.OrderShipped(itemID);
     }
 
-    #region OldTutorial
-    //public  void SpawnPlayer(sPacket packet)
-    //{
-    //    int id = packet.ReadInt();
-    //    string username = packet.ReadString();
-    //    Vector3 pos = packet.ReadVector3();
-    //    Quaternion rot = packet.ReadQuaternion();
-
-    //    //GameManager.instance.SpawnPlayer(id, username, pos, rot);
-    //}
-
-    //public  void PlayerPosition(sPacket packet)
-    //{
-    //    int id = packet.ReadInt();
-    //    Vector3 position = packet.ReadVector3();
-
-    //    //if (GameManager._players.TryGetValue(id, out PlayerManager pm))
-    //    {
-    //        //   pm.transform.position = position;
-    //    }
-    //}
-
-    //public  void PlayerRotation(sPacket packet)
-    //{
-    //    int id = packet.ReadInt();
-    //    Quaternion rotation = packet.ReadQuaternion();
-
-
-    //    // if(GameManager._players.TryGetValue(id, out PlayerManager pm ))
-    //    {
-    //        //  pm.transform.rotation = rotation;
-    //    }
-
-    //}
-
-
-    #endregion
-
+    public void KanbanInventoryChanged(sPacket packet)
+    {
+        bool isInInventory = packet.ReadBool();
+        bool isEmpty = packet.ReadBool();
+        int itemID = packet.ReadInt();
+        List<QualityData> qualities = ReadQualityData(packet);
+        string inv = isInInventory ? "In" : "Out";
+        UIManager.DebugLog($"My Kanban {inv}::Inventory changed !  {isInInventory}  , {isEmpty}");
+        ///Tell someone to add the slot but not recall the server
+        UIManagerGame.instance.KanbanUpdateInventory(isInInventory, isEmpty, itemID, qualities);
+    }
 }

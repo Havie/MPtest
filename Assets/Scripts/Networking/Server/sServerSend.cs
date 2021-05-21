@@ -7,20 +7,20 @@ public class sServerSend
     private static void SendTCPData(int toClient, sPacket packet)
     {
         packet.WriteLength();
-        sServer._clients[toClient]._tcp.SendData(packet);
+        sServer._clients[toClient].Tcp.SendData(packet);
     }
 
     private static void SendUDPData(int toClient, sPacket packet)
     {
         packet.WriteLength();
-        sServer._clients[toClient]._udp.SendData(packet);
+        sServer._clients[toClient].Udp.SendData(packet);
     }
     #region Packets
     private static void SendTCPDataToAll(sPacket packet)
     {
         packet.WriteLength();
         for (int i = 1; i <= sServer._maxPlayers; ++i)
-            sServer._clients[i]._tcp.SendData(packet);
+            sServer._clients[i].Tcp.SendData(packet);
     }
 
     private static void SendTCPDataToAll(int exceptClient, sPacket packet)
@@ -29,14 +29,14 @@ public class sServerSend
         for (int i = 1; i <= sServer._maxPlayers; ++i)
         {
             if (i != exceptClient)
-                sServer._clients[i]._tcp.SendData(packet);
+                sServer._clients[i].Tcp.SendData(packet);
         }
     }
     private static void SendUDPDataToAll(sPacket packet)
     {
         packet.WriteLength();
         for (int i = 1; i <= sServer._maxPlayers; ++i)
-            sServer._clients[i]._udp.SendData(packet);
+            sServer._clients[i].Udp.SendData(packet);
     }
 
     private static void SendUDPDataToAll(int exceptClient, sPacket packet)
@@ -45,7 +45,7 @@ public class sServerSend
         for (int i = 1; i <= sServer._maxPlayers; ++i)
         {
             if (i != exceptClient)
-                sServer._clients[i]._udp.SendData(packet);
+                sServer._clients[i].Udp.SendData(packet);
         }
     }
 
@@ -93,6 +93,13 @@ public class sServerSend
 
     }
 
+    public static void RequestTransportInfo(int toClient)
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.requestTransportData))
+        {
+            SendTCPData(toClient, packet);
+        }
+    }
     public static void StartRound(int toClient, int roundDuration)
     {
         using (sPacket packet = new sPacket((int)ServerPackets.roundStart))
@@ -123,26 +130,29 @@ public class sServerSend
     {
         using (sPacket packet = new sPacket((int)ServerPackets.item))
         {
-            packet.Write(itemID);
-            if (qualityData != null)
-            {
-                packet.Write(qualityData.Count);
-                ///pass along the quality Data
-                for (int i = 0; i < qualityData.Count; ++i)
-                {
-                    packet.Write(qualityData[i]);
-                }
-            }
-            else
-                packet.Write(0);
-
-
+            WriteQualityData(itemID, qualityData, packet);
 
             SendTCPData(toClient, packet);
 
         }
     }
 
+    ///TODO make sure this is thread safe?
+    private static void WriteQualityData(int itemID, List<int> qualityData, sPacket packet)
+    {
+        packet.Write(itemID);
+        if (qualityData != null)
+        {
+            packet.Write(qualityData.Count);
+            ///pass along the quality Data
+            for (int i = 0; i < qualityData.Count; ++i)
+            {
+                packet.Write(qualityData[i]);
+            }
+        }
+        else
+            packet.Write(0);
+    }
 
     public static void OrderShipped(int itemID)
     {
@@ -152,6 +162,20 @@ public class sServerSend
             SendTCPDataToAll(packet);
         }
     }
+
+    public static void SharedInventoryChanged(int toClient, bool isInInventory, bool isEmpty, int itemID, List<int> qualityData)
+    {
+
+        using (sPacket packet = new sPacket((int)ServerPackets.sharedInventoryChanged))
+        {
+            packet.Write(isInInventory);
+            packet.Write(isEmpty);
+            WriteQualityData(itemID, qualityData, packet);
+            SendTCPData(toClient, packet);
+        }
+
+    }
+
     #endregion
 }
 

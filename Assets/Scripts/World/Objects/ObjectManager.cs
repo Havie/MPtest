@@ -48,7 +48,7 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
         return SpawnObject(itemID, Vector3.zero, null);
     }
 
-    public GameObject SpawnObject(int itemID, Vector3 pos, List<QualityObject> qualities)
+    public GameObject SpawnObject(int itemID, Vector3 pos, List<QualityData> qualities)
     {
 
         //Debug.Log($"The spawn loc heard is {pos} and itemID={itemID}." );
@@ -58,10 +58,20 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
         if (!prefab)
             return null; ///Prevent any NPEs
 
-        GameObject newObj = InstantiateObjectProperly( prefab, pos, Vector3.left);
+        GameObject newObj = InstantiateObjectProperly(prefab, pos, Vector3.left);
 
         //Could I do  LoadQualitiesOntoObject(qualities, newObj); here? 
 
+        CopyQualitiesOntoObject(qualities, newObj);
+
+        if (DebugItemsOnSpawn)
+            FPSCounter.Instance.ProfileAnObject(newObj);
+
+        return newObj;
+    }
+
+    private static void CopyQualitiesOntoObject(List<QualityData> qualities, GameObject newObj)
+    {
         if (qualities != null && qualities.Count > 0)
         {
             var overallQuality = newObj.GetComponent<QualityOverall>();
@@ -70,25 +80,20 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
                 foreach (var q in qualities)
                 {
                     overallQuality.ReadOutQuality(q);
-                    Destroy(q);
+                    //Destroy(q);
                     Debug.Log("Copied and removed A quality");
                 }
             }
             else
                 Debug.LogWarning($"Somehow theres qualities associated w a prefab without an OverallQualityManager {newObj.name}");
         }
-
-
-        if (DebugItemsOnSpawn)
-            FPSCounter.Instance.ProfileAnObject(newObj);
-
-        return newObj;
     }
 
     public void SpawnFinalPower(ObjectController toReplace, List<QualityObject> qualities)
     {
         Transform location = toReplace.transform;
-        GameObject newObj = SpawnObject((int)ObjectRecord.eItemID.finalPower, location.position, qualities);
+        List<QualityData> qualityData = QualityConvertor.ConvertListToData(qualities);
+        GameObject newObj = SpawnObject((int)ObjectRecord.eItemID.finalPower, location.position, qualityData);
         if (newObj)
         {
             newObj.transform.rotation = location.rotation;
@@ -136,12 +141,12 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
             controller.PutDown(); ///turn on physics 
         }
 
-        if (DebugItemsOnSpawn)
+        if (DebugItemsOnSpawn && FPSCounter.Instance)
             FPSCounter.Instance.ProfileAnObject(newObj);
 
         return newObj;
     }
-    public GameObject DropItemInWorld(int itemID, List<QualityObject> qualities)
+    public GameObject DropItemInWorld(int itemID, List<QualityData> qualities)
     {
         var prefab = _manager.GetObject(itemID);
         if (!prefab || !_spawnPoint)
@@ -182,7 +187,7 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
 
         return new Vector3(x, y, z);
     }
-    private void LoadQualitiesOntoObject(List<QualityObject> qualities, GameObject newObj)
+    private void LoadQualitiesOntoObject(List<QualityData> qualities, GameObject newObj)
     {
         if (qualities != null && qualities.Count > 0)
         {
@@ -190,20 +195,20 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
             if (overallQuality)
             {
                 List<QualityObject> childrenQualities = newObj.GetComponentsInChildren<QualityObject>().ToList();
-                foreach (QualityObject clonedQuality in qualities)
+                foreach (QualityData clonedQuality in qualities)
                 {
                     foreach (QualityObject currQuality in childrenQualities)
                     {
-                        if (clonedQuality.QualityStep == currQuality.QualityStep)
+                        if (clonedQuality.ID == currQuality.QualityStep.Identifier)
                         {
-                            currQuality.AssignCurrentActions(clonedQuality.CurrentActions);
+                            currQuality.AssignCurrentActions(clonedQuality.Actions);
                         }
                         else
                         {
                             overallQuality.ReadOutQuality(clonedQuality);
                         }
                         //Debug.Log("Copied and removed A quality");
-                        Destroy(clonedQuality);///This is the dummy component being stored
+                        //Destroy(clonedQuality);///This is the dummy component being stored
                     }
                 }
             }
