@@ -53,19 +53,19 @@ public class OutInventory : UIInventoryManager
     protected override List<int> DetermineWorkStationBatchSize()
     {
         var gm = GameManager.instance;
-        int batchSize = gm._batchSize;
+        _batchSize = gm._batchSize;
         ///if batch size =1 , then IN = # of produced Items at station
-        if (batchSize == 1) ///assume batchsize=1 enabled stackable Inv and StationINV is turned on
+        if (_batchSize == 1) ///assume batchsize=1 enabled stackable Inv and StationINV is turned on
         {
             _sendButton.gameObject.SetActive(false); ///turn off the send button
         }
 
-        return StationItemParser.ParseItemsAsOUT(batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
+        return StationItemParser.ParseItemsAsOUT(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
         // return ParseItems(wm, myWS, false) * BATCHSIZE;
 
     }
 
-    private void SetUpBatchOutput(List<int> itemIDs)
+    private void SetUpStartingItems(List<int> itemIDs)
     {
         foreach (var itemID in itemIDs)
         {
@@ -106,19 +106,23 @@ public class OutInventory : UIInventoryManager
         {
             //Add slot component to our list
             _slots[i] = CreateNewSlot();
-            _slots[i].SetAutomatic(cond);
+            _slots[i].SetAsOutSlot();
             _slots[i].transform.localScale = new Vector3(1, 1, 1);
         }
 
-        SetUpBatchOutput(itemIDs);
+        SetUpStartingItems(itemIDs);
     }
 
 
 
     /************************************************************************************************************/
 
-    public override void ItemAssigned(UIInventorySlot slot)
+    public override void SlotStateChanged(UIInventorySlot slot)
     {
+        if (_batchSize == 1)
+        {
+            ClientSend.Instance.KanbanChanged(false, !slot.GetInUse(), slot.RequiredID, slot.Qualities);
+        }
         CheckIfBatchIsReady();
     }
 

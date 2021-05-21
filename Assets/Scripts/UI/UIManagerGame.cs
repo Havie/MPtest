@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UserInput;
 using TMPro;
-
+using System.Collections.Generic;
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
@@ -212,8 +212,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             _invIN = _normalInInventory.GetComponentInChildren<UIInventoryManager>(true);
         if (_normalOutInventory)
             _invOUT = _normalOutInventory.GetComponentInChildren<UIInventoryManager>(true);
-
-        Debug.Log($" int:{_invIN}  ,    out:{_invOUT}");
     }
 
     public void RoundOutOfTime(float cycleTime, float thruPut, int shippedOnTime, int shippedLate, int wip)
@@ -241,6 +239,21 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     }
 
+    public void KanbanUpdateInventory(bool isInInventory, bool isEmpty, int itemID, List<QualityData> qualityData)
+    {
+        var whichInventory = isInInventory ? _invIN : _invOUT;
+        if (whichInventory)
+        {
+            whichInventory.KanbanInventoryChanged(isEmpty, itemID, qualityData);
+        }
+        else
+            UIManager.DebugLog($"..fatal no Inventory for : isIN={isInInventory} ");
+    }
+    
+    public void ItemReceived(int itemID, List<QualityData> qualities)
+    {
+        _invIN.AddItemToSlot(itemID, qualities, false);
+    }
     #endregion
 
 

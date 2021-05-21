@@ -140,7 +140,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         var manager = GameManager.instance.CurrentWorkStationManager;
         var list = manager.GetStationList();
         var lastStation = list[list.Count - 1];
-        var lastTaskList = lastStation._tasks;
+        var lastTaskList = lastStation.Tasks;
         var lastTask = lastTaskList[lastTaskList.Count - 1];
         var finalItemList = lastTask._finalItemID;
         var finalItem = finalItemList[Random.Range(0, finalItemList.Count)];
@@ -208,7 +208,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     {
         var workStation = GameManager.instance._workStation;
         //Get the kitting task (should be only task)
-        foreach (Task t in workStation._tasks)
+        foreach (Task t in workStation.Tasks)
         {
             if (t._stationType == Task.eStationType.Kitting)
             {
@@ -237,7 +237,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     }
 
     /// <summary> Item is assigned manually by the bSlot, shuffle it for FIFO</summary>
-    public void ItemAssigned(UIInventorySlot slot)
+    public void SlotStateChanged(UIInventorySlot slot)
     {
         var itemID = slot.GetItemID();
         if (slot)
@@ -275,7 +275,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     /// <summary>
     /// Interface version of assigning an item into the general inventory space, called from deadzone most likely
     /// </summary>
-    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    public bool TryAssignItem(int id, int count, List<QualityData> qualities)
     {
         return RemoveOrder(id);
     }

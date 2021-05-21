@@ -9,7 +9,7 @@ public class GameManager : MonoSingleton<GameManager>
 {
 
     [Header("Game Modifiers")]
-    ///TODO make these all accessors with priv set:
+    ///TODO make these all accessors with priv set or Serialized:
     #region Game Modifiers
     public int _roundDuration = 10; //In SECONDS  --> 60 =1 min
     public int _orderFrequency = 3;
@@ -36,8 +36,8 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] WorkStationManager _stackBatchWorkStationManager = default;
     [SerializeField] WorkStationManager _pullWorkStationManager = default;
     [SerializeField] PartAssemblyBook _assemblyBook = default;
-    public WorkStationManager CurrentWorkStationManager { get; private set; }
     public PartAssemblyBook AssemblyBook => _assemblyBook;
+    public WorkStationManager CurrentWorkStationManager { get; private set; }
    
     
     protected override void Awake()
@@ -53,7 +53,6 @@ public class GameManager : MonoSingleton<GameManager>
         Debug.unityLogger.logEnabled=false;
 #endif
     }
-
     private void AutomaticChecks()
     {
         if (_batchSize == 1)

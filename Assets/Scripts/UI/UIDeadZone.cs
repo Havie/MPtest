@@ -28,7 +28,7 @@ public class UIDeadZone : InventoryComponent
         _relatedInventory = _inventoryGameObject.GetComponent<IInventoryManager>();
     }
 
-    public bool TryAssignItem(int id, int count, List<QualityObject> qualities)
+    public bool TryAssignItem(int id, int count, List<QualityData> qualities)
     {
        return _relatedInventory==null ?  false :  _relatedInventory.TryAssignItem(id, count, qualities);
     }
@@ -45,8 +45,12 @@ public class UIDeadZone : InventoryComponent
         if (overallQuality != null)
         {
             List<QualityObject> qualities = overallQuality.Qualities;
-
-            return TryAssignItem(id, count, qualities);
+            List<QualityData> qualityData = new List<QualityData>();
+            foreach (var item in qualities)
+            {
+                qualityData.Add(QualityConvertor.ConvertToData(item));
+            }
+            return TryAssignItem(id, count, qualityData);
         }
 
 

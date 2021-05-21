@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -22,11 +23,16 @@ public class WorkStation : ScriptableObject
     public Sprite StationInstructions => _myStationInstructions;
     [SerializeField] Sprite _myStationInstructions;
 
-    public List<Task> _tasks;
+    ///Clone the list so no one gains access to our dataset
+    public List<Task> Tasks => _tasks.Select(item => (Task) item).ToList();
+    [SerializeField] List<Task> _tasks;
+    public int TaskCount => _tasks.Count; //Because cloning the list isnt always a good idea
+
+    ///A made up worldspace location for the server to use to calculate distance for transport times
+    public Vector3 StationLocation => _location;
+    [SerializeField] Vector3 _location;
 
     /************************************************************************************************************************/
-
-
     public bool isKittingStation()
     {
         return IsTaskType(Task.eStationType.Kitting);
@@ -35,21 +41,16 @@ public class WorkStation : ScriptableObject
     {
         return IsTaskType(Task.eStationType.StackedKitting);
     }
-
     public bool IsQAStation()
     {
         return IsTaskType(Task.eStationType.QA);
     }
-
     public bool IsShippingStation()
     {
         return IsTaskType(Task.eStationType.Shipping);
     }
 
     /************************************************************************************************************************/
-
-
-
     private bool IsTaskType(Task.eStationType type)
     {
 

@@ -10,7 +10,7 @@ public interface IAssignable
     void RemoveItem();
     bool  AssignItem(ObjectController oc, int count);
 
-    bool AssignItem(int id, int count, List<QualityObject> qualities);
+    bool AssignItem(int id, int count, List<QualityData> qualities);
 
     bool RequiresCertainID();
 }

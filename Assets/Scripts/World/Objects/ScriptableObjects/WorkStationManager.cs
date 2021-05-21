@@ -9,7 +9,25 @@ public class WorkStationManager : ScriptableObject
 {
     [SerializeField] List<WorkStation> _workStations = default;
 
+    public WorkStation GetStationByEnumIndex(int index)
+    {
+        foreach (var item in GetStationList())
+        {
+            if ((int)item._myStation == index)
+                return item;
+        }
+        return null;
+    }
 
+    public WorkStation GetStationByEnum(WorkStation.eStation station)
+    {
+        foreach (var item in GetStationList())
+        {
+            if (item._myStation == station)
+                return item;
+        }
+        return null;
+    }
 
     //for testing injections
     public List<WorkStation> GetStationList() => _workStations;
@@ -40,11 +58,11 @@ public class WorkStationManager : ScriptableObject
         if (ws != null)
         {
             GameManager.instance.AssignWorkStation(ws);
-            ClientSend.Instance.SendWorkStationID((int)ws._myStation);
+            ClientSend.Instance.SendWorkStationID((int)ws._myStation, ws.StationLocation);
         }
         else
         {
-            ClientSend.Instance.SendWorkStationID(0);
+            ClientSend.Instance.SendWorkStationID(0, Vector3.zero);
         }    
     }
     public KeyValuePair<WorkStation, string> GetStationPair(Dropdown dropdown)
