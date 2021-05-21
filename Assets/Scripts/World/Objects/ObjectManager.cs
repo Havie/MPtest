@@ -11,7 +11,6 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
     [SerializeField] Transform _spawnPoint = default;
 
     public QualityStep[] _qualityPresets;
-
     private ObjectRecord _manager;
 
 
