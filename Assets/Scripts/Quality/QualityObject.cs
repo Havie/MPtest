@@ -28,7 +28,6 @@ public class QualityObject : MonoBehaviour
     {
         if (_qualityVFXPREFAB == null)
             _qualityVFXPREFAB = Resources.Load<GameObject>("Prefab/VFX/Quality_increase");
-
     }
 
     public void InitalizeAsDummy(QualityStep qs, int currentActions)
@@ -39,8 +38,8 @@ public class QualityObject : MonoBehaviour
     }
     public void InitalizeAsDummy(int qualityStepID, int currentActions)
     {
+        ///Dont like this hack but its working
         _qualityStep = ObjectManager.Instance._qualityPresets[qualityStepID];
-        Debug.Log($"<color=red> TODO</color> Get QS via ID");
         AssignCurrentActions(currentActions);
         IsDummy = true;
     }
