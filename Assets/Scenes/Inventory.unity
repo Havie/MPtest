@@ -8114,6 +8114,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5394208262448427697}
     m_Modifications:
+    - target: {fileID: 2915276864180271549, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: fc0889acfa9af0e41b74ba9d44bf848d, type: 2}
     - target: {fileID: 5937615717507127953, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: m_textInfo.characterCount

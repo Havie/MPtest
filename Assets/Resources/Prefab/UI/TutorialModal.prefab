@@ -740,6 +740,7 @@ GameObject:
   - component: {fileID: 7232850377928448551}
   - component: {fileID: 7232850377928448545}
   - component: {fileID: 4023127058892192126}
+  - component: {fileID: 2915276864180271549}
   m_Layer: 5
   m_Name: TutorialModal
   m_TagString: Untagged
@@ -804,6 +805,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &2915276864180271549
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7232850377928448548}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc0889acfa9af0e41b74ba9d44bf848d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7627992198251810702
 GameObject:
   m_ObjectHideFlags: 0
@@ -816,6 +836,7 @@ GameObject:
   - component: {fileID: 8597344811177547847}
   - component: {fileID: 1899130388704260354}
   - component: {fileID: 873038638565102043}
+  - component: {fileID: 6013335264586502004}
   m_Layer: 5
   m_Name: Modal
   m_TagString: Untagged
@@ -907,6 +928,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.75
+--- !u!225 &6013335264586502004
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7627992198251810702}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8919621254458947632
 GameObject:
   m_ObjectHideFlags: 0
