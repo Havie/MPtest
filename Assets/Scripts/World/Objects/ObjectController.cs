@@ -100,7 +100,7 @@ public class ObjectController : HighlightableObject, IConstructable
     //            UpdateJoseMaterialColor(mr, 1, "_OutlineColor");
     //        }
 
-           
+
     //    }
     //}
 
@@ -422,7 +422,7 @@ public class ObjectController : HighlightableObject, IConstructable
             mr.enabled = true;
             //UnityDefaultColorChange(mr, opacity);
             CustomShaderController shaderController = mr.GetComponent<CustomShaderController>();
-            if(shaderController)
+            if (shaderController)
                 shaderController.ChangeMaterialColor(opacity);
         }
     }
@@ -510,13 +510,15 @@ public class ObjectController : HighlightableObject, IConstructable
             //this.transform.position = loc;
             // Debug.LogWarning("Told to go to:" + this.transform.position);
             if (!_hittingTable)
+            {
                 this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
+            }
             else
             {
                 // if were going up, allow it
                 if (loc.y > this.transform.position.y)
                 {
-                   // UIManager.DebugLog($"Trying to move UP from {this.transform.position.y} to <color=green> {loc.y} </color>");
+                    // UIManager.DebugLog($"Trying to move UP from {this.transform.position.y} to <color=green> {loc.y} </color>");
                     this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
                 }
                 //else /if direction is going to go more into table prevent it,
