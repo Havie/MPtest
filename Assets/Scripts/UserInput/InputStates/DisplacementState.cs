@@ -92,7 +92,6 @@ namespace UserInput
             }
         }
 
-
         /// <summary>
         /// Shows the Icon of the picked up obj above your finger when moving an object
         /// </summary>
@@ -136,6 +135,9 @@ namespace UserInput
                 box.enabled = true;
             }
         }
+       /// <summary>
+       /// Changes the objects appearance to unhidden and undoes any slot previews
+       /// </summary>
         private void ResetObjectAndSlot(IConstructable moveableObject, Vector3 inputPos)
         {
             if (moveableObject != null)
@@ -150,7 +152,6 @@ namespace UserInput
 
             UIManager.ShowPreviewInvSlot(false, inputPos, null);
         }
-
         private void MoveObject(Vector3 inputPos, IMoveable moveableObject, IAssignable slot)
         {
             //Vector3 worldLoc = _brain.GetCurrentWorldLocBasedOnMouse(moveableObject.Transform());
@@ -158,14 +159,20 @@ namespace UserInput
             worldLoc.z = moveableObject.DesiredSceneDepth();
             moveableObject.OnFollowInput(worldLoc);
             ShowMovingPreviewIcon(moveableObject, inputPos);
+
             if (slot != null) ///we are hovering over a slot 
             {
                 MoveOverSlot(inputPos, moveableObject, slot);
             }
             else if (PreviewManager._inPreview)
+            {
                 _brain.SwitchState(_brain._previewState, _currentSelection); ///dont want to reset the Object while in preview or it wont be hidden
+            }
             else
+            {
+                ///Show the objects mesh again and undo any slot icon previews
                 ResetObjectAndSlot(moveableObject as IConstructable, inputPos);
+            }
         }
         private void MoveOverSlot(Vector3 inputPos, IMoveable moveableObject, IAssignable slot)
         {
@@ -234,7 +241,7 @@ namespace UserInput
         }
         private void HandleDropInInvalidSlot(Vector3 inputPos, IMoveable moveableObject, IAssignable slot)
         {
-            //Debug.Log($"Try putting it back: {_brain.ObjStartPos}");
+            //Debug.Log($"<color=red>Try putting it back:</color> {_brain.ObjStartPos}");
             var trans = moveableObject.GetGameObject().transform;
             trans.position = _brain.ObjStartPos;
             trans.rotation = _brain.ObjStartRot;
@@ -248,6 +255,10 @@ namespace UserInput
             {
                 HandleDeadZoneCheck(moveableObject, placedInDeadZone);
             }
+            else
+            {
+                ResetObjectAndSlot(moveableObject as IConstructable, inputPos);
+            }    
         }
         private void HandleDeadZoneCheck(IMoveable moveableObject, UIDeadZone dz)
         {
@@ -260,7 +271,7 @@ namespace UserInput
             {
                 ///If the item is dropped in a deadzone, reset it to a safe place
                 moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition, _currentSelection);
-                moveableObject.ChangeAppearanceNormal(); ///ToDo abstract this somehow
+                moveableObject.ChangeAppearanceNormal();
             }
 
         }

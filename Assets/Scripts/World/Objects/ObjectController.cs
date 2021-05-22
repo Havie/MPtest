@@ -100,7 +100,7 @@ public class ObjectController : HighlightableObject, IConstructable
     //            UpdateJoseMaterialColor(mr, 1, "_OutlineColor");
     //        }
 
-           
+
     //    }
     //}
 
@@ -219,7 +219,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
     }
 
-    ///IMoveable (should make a base class to inherit from )
+    ///IMoveable (should make a base class to inherit from but have to combine IHighlightable in it)
     public void OnFollowInput(Vector3 worldPos) { Follow(worldPos); }
     public Vector2 OnRotate(Vector3 dot) { return DoRotation(dot); }
     public void OnBeginFollow()
@@ -332,6 +332,15 @@ public class ObjectController : HighlightableObject, IConstructable
             foreach (var mr in _childrenMeshRenderers)
                 mr.enabled = !cond;
 
+        ///TURN OFF ANY VFX associated w lightening
+        if (cond && _myID == ObjectRecord.eItemID.finalPower)
+        {
+            var aSwitch = this.GetComponentInChildren<Switch>();
+            if (aSwitch)
+            {
+                aSwitch.TurnOff();
+            }
+        }
     }
     public void ChangeAppearancePreview()
     {
@@ -422,7 +431,7 @@ public class ObjectController : HighlightableObject, IConstructable
             mr.enabled = true;
             //UnityDefaultColorChange(mr, opacity);
             CustomShaderController shaderController = mr.GetComponent<CustomShaderController>();
-            if(shaderController)
+            if (shaderController)
                 shaderController.ChangeMaterialColor(opacity);
         }
     }
@@ -510,13 +519,15 @@ public class ObjectController : HighlightableObject, IConstructable
             //this.transform.position = loc;
             // Debug.LogWarning("Told to go to:" + this.transform.position);
             if (!_hittingTable)
+            {
                 this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
+            }
             else
             {
                 // if were going up, allow it
                 if (loc.y > this.transform.position.y)
                 {
-                   // UIManager.DebugLog($"Trying to move UP from {this.transform.position.y} to <color=green> {loc.y} </color>");
+                    // UIManager.DebugLog($"Trying to move UP from {this.transform.position.y} to <color=green> {loc.y} </color>");
                     this.transform.position = Vector3.Lerp(transform.position, loc, 0.5f);
                 }
                 //else /if direction is going to go more into table prevent it,

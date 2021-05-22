@@ -42,11 +42,10 @@ namespace UserInput
             {
                 ///If found slot in use spawn obj and go to displacement 
                 var slot = _brain.RayCastForInvSlot() as UIInventorySlot;
-                if (slot != null)
+                if (slot != null && slot.GetInUse())
                 {
                     //Debug.LogWarning($"Slot found= {slot.name}");
                     int itemID = slot.GetItemID();
-                     Debug.Log($"<color=red>!!!!!..</color>Removing ItemID{itemID} from {slot.name}");
                     var qualityList = slot.RebuildQualities();
                     DebugQualities.DebugQuality(qualityList);
                     slot.RemoveItem(); 
@@ -58,7 +57,7 @@ namespace UserInput
                     {
                         _brain._mOffset = Vector3.zero; /// it spawns here so no difference
                         _brain.SetObjectStartPos(new Vector3(0, 0, _zDepth));
-                        _brain.SetObjectStartRot(Quaternion.identity);
+                        _brain.SetObjectStartRot(obj.transform.rotation);  //Quaternion.identity
 
                         IConstructable moveableObject = _currentSelection as IConstructable;
                         if (moveableObject != null)
@@ -67,12 +66,8 @@ namespace UserInput
                         _brain.SwitchState(_brain._displacementState, _currentSelection);
 
                     }
-                    else
-                        Debug.LogWarning("This happened?1");
 
                 }
-                else
-                    Debug.LogWarning("This happened?2");
             }
             else if (command.UP)
                 _brain.SwitchState(_brain._freeState, _currentSelection);

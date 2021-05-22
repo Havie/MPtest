@@ -12,12 +12,12 @@ public class VFXManager : MonoSingleton<VFXManager>
     float _timeSinceLastQueue = 0;
     float _delay = 25f;
 
+    /************************************************************************************************************************/
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         CheckIfTimeToStop();
     }
-
 
     public void PerformEffect(GameObject prefab, Transform location, bool isLooping)
     {
@@ -87,9 +87,10 @@ public class VFXManager : MonoSingleton<VFXManager>
         }
     }
 
+    /************************************************************************************************************************/
 
     /// <summary> Removes an item from and reorders the queue</summary>
-    Queue<ParticleSystem> RemoveFromQueue(ParticleSystem toRemove)
+    private Queue<ParticleSystem> RemoveFromQueue(ParticleSystem toRemove)
     {
         _copyingQueue = true;
         Queue<ParticleSystem> copy = new Queue<ParticleSystem>();
@@ -107,7 +108,7 @@ public class VFXManager : MonoSingleton<VFXManager>
     }
 
     /// <summary> Determines whether its time to stop playing an effect from our queue</summary>
-    void CheckIfTimeToStop()
+    private void CheckIfTimeToStop()
     {
         if (_toBeStopped.Count != 0 && !_copyingQueue)
         {
@@ -128,7 +129,7 @@ public class VFXManager : MonoSingleton<VFXManager>
         }
     }
     /// <summary>Sets the nextTime delay based off items in vfx queue </summary>
-    void SetNextDuration()
+    private void SetNextDuration()
     {
         if (_toBeStopped.Count != 0)
         {
