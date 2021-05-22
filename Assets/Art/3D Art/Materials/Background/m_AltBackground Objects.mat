@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: m_Alt Background Objects
+  m_Name: m_AltBackground Objects
   m_Shader: {fileID: 4800000, guid: 0b71188a8bde1fe4c8e5f796dd581475, type: 3}
   m_ShaderKeywords: _METALLICGLOSSMAP _NORMALMAP
   m_LightmapFlags: 4
