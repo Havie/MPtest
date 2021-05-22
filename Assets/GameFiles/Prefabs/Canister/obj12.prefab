@@ -937,6 +937,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_PowerSphere
       objectReference: {fileID: 0}
+    - target: {fileID: 343847826371366596, guid: be0c789a11c2a354285c7b1db30c0d88,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2073499870427708554, guid: be0c789a11c2a354285c7b1db30c0d88,
         type: 3}
       propertyPath: m_LocalPosition.x
