@@ -241,7 +241,7 @@ namespace UserInput
         }
         private void HandleDropInInvalidSlot(Vector3 inputPos, IMoveable moveableObject, IAssignable slot)
         {
-            Debug.Log($"<color=red>Try putting it back:</color> {_brain.ObjStartPos}");
+            //Debug.Log($"<color=red>Try putting it back:</color> {_brain.ObjStartPos}");
             var trans = moveableObject.GetGameObject().transform;
             trans.position = _brain.ObjStartPos;
             trans.rotation = _brain.ObjStartRot;
@@ -271,7 +271,7 @@ namespace UserInput
             {
                 ///If the item is dropped in a deadzone, reset it to a safe place
                 moveableObject.GetGameObject().transform.position = _brain.GetCurrentWorldLocBasedOnPos(dz.GetSafePosition, _currentSelection);
-                moveableObject.ChangeAppearanceNormal(); ///ToDo abstract this somehow
+                moveableObject.ChangeAppearanceNormal();
             }
 
         }

@@ -219,7 +219,7 @@ public class ObjectController : HighlightableObject, IConstructable
 
     }
 
-    ///IMoveable (should make a base class to inherit from )
+    ///IMoveable (should make a base class to inherit from but have to combine IHighlightable in it)
     public void OnFollowInput(Vector3 worldPos) { Follow(worldPos); }
     public Vector2 OnRotate(Vector3 dot) { return DoRotation(dot); }
     public void OnBeginFollow()
@@ -332,6 +332,15 @@ public class ObjectController : HighlightableObject, IConstructable
             foreach (var mr in _childrenMeshRenderers)
                 mr.enabled = !cond;
 
+        ///TURN OFF ANY VFX associated w lightening
+        if (cond && _myID == ObjectRecord.eItemID.finalPower)
+        {
+            var aSwitch = this.GetComponentInChildren<Switch>();
+            if (aSwitch)
+            {
+                aSwitch.TurnOff();
+            }
+        }
     }
     public void ChangeAppearancePreview()
     {

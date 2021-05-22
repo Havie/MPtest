@@ -32,6 +32,14 @@ public class Switch : InteractableObject
         CheckQualityConditions(On);
     }
 
+    public void TurnOff()
+    {
+        if (_on)
+        {
+            OnInteract();
+        }
+    }
+
     private void CheckQualityConditions(bool On)
     {
         QualityOverall quality = this.GetComponentInParent<QualityOverall>();
