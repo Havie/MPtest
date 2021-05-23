@@ -1,4 +1,5 @@
 ﻿#pragma warning disable CS0649 // Ignore : "Field is never assigned to, and will always have its default value"
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
@@ -11,6 +12,7 @@ public class TutorialItem : ScriptableObject
     [SerializeField] string _title;
 
     public string bodyTxt => _description;
+    [ResizableTextArea]
     [SerializeField] string _description;
 
     public VideoClip VideoGif => _video;
