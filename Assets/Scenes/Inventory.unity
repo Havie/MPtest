@@ -8117,6 +8117,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
+      propertyPath: _tutorialSequence.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
       propertyPath: _bgIMG
       value: 
       objectReference: {fileID: 1488601528}
@@ -8130,6 +8135,18 @@ PrefabInstance:
       propertyPath: _modal
       value: 
       objectReference: {fileID: 2092828470}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d904b161bc1b2d4c9af6efe932527b9,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9c4c5eadd1ac55e40bae18c379c31b12,
+        type: 2}
     - target: {fileID: 2915276864180271549, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: m_Controller
@@ -8148,27 +8165,33 @@ PrefabInstance:
     - target: {fileID: 5937615717507127953, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 0
+      value: 133
       objectReference: {fileID: 0}
     - target: {fileID: 5937615717507127953, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 0
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 5937615717507127953, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 0
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 5937615717507127953, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5937615717507127953, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937615717507127953, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: m_text
+      value: "Welcome to the lean manufacturing tutorial ! \r\n\r\nHere we will guide
+        you through a few steps to help you interact with the simulation."
       objectReference: {fileID: 0}
     - target: {fileID: 7232850376825811755, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
