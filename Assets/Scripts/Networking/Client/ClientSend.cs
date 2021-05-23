@@ -165,7 +165,7 @@ public class ClientSend : MonoSingleton<ClientSend>
     }
     public void KanbanChanged(bool isInInventory, bool isRemoved, int itemID, List<QualityData> qualities)
     {
-        Debug.Log($"!!..<color=orange>(ClientSend) KanbanChanged</color>");
+        //Debug.Log($"!!..<color=orange>(ClientSend) KanbanChanged</color>");
         using (sPacket packet = new sPacket((int)ClientPackets.inventoryChanged))
         {
             packet.Write(isInInventory);

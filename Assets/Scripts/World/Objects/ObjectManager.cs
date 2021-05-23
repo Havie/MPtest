@@ -80,7 +80,7 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
                 {
                     overallQuality.ReadOutQuality(q);
                     //Destroy(q);
-                    Debug.Log("Copied and removed A quality");
+                    //Debug.Log("Copied and removed A quality");
                 }
             }
             else

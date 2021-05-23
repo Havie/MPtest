@@ -42,9 +42,9 @@ namespace UserInput
         public InputState _uiState { get; private set; }
         public InputState _previewState { get; private set; }
         public InputState _currentState { get; private set; }
-
         #endregion
 
+        public bool AcceptInput = true;
 
         /************************************************************************************************************************/
         //         Init
@@ -99,7 +99,7 @@ namespace UserInput
         public void SetInputCommand(InputCommand command)
         {
             _inputPos = command.Position; /// Want to get rid of this but states on enable want this and some helpers
-            if (_currentState != null)
+            if (_currentState != null && AcceptInput)
                 _currentState.Execute(command);
         }
         /************************************************************************************************************************/
