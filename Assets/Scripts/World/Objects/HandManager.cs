@@ -39,9 +39,12 @@ public static class HandManager
         _handArray[0].PickedUp(1);
         item.SetHandPreviewingMode(false);
 
-
         CheckHandPositions();
         CancelIntensityChangePreview();
+        if(GameManager.Instance.IsTutorial)
+        {
+            TutorialEvents.Instance.CallOnPartPickedUp();
+        }
     }
     public static void DropItem(ObjectController item)
     {
@@ -71,6 +74,11 @@ public static class HandManager
                 item.SetHandPreviewingMode(false);
                 CheckHandPositions();
                 CancelIntensityChangePreview();
+            }
+
+            if (GameManager.Instance.IsTutorial)
+            {
+                TutorialEvents.Instance.CallOnPartDropped();
             }
         }
 

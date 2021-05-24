@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Video;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 {
@@ -64,15 +65,24 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
         _txtBody.text = t.bodyTxt;
         _video.clip = t.VideoGif;
         /// Set next listener for completed action
-        _eventManager.RegisterForTutorialEvent(_tutorialIndex, TutorialActionSuccess);
+        _eventManager.RegisterForTutorialEvent(t.EventKey, TutorialActionSuccess);
 
     }
 
-    private void TutorialActionSuccess(Void empty)
+    private void TutorialActionSuccess(Void cond)
     {
         Debug.Log($"Event happened!");
+        ///Give the player a second to see the results of their actions
+        var currTutorial = _tutorialSequence[_tutorialIndex];
+         _eventManager.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
 
-        _eventManager.UnRegisterForTutorialEvent(_tutorialIndex, TutorialActionSuccess);
+        StartCoroutine(NextStepDelay(currTutorial.TimeDelayBeforeNextInstruction));
+
+    }
+
+    IEnumerator NextStepDelay(float delayInSeconds)
+    {
+         yield return new WaitForSeconds(delayInSeconds);
         /// setup for the next event
         LoadNextTutorialData();
         ShowPopup(true);

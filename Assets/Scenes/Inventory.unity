@@ -5449,9 +5449,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94dfc7a171c3f347bda6ed78da7ed10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _invOpen: {fileID: 11400000, guid: 918b3894c65897d4ebc26f2ed2f813a1, type: 2}
-  _instructionClicked: {fileID: 11400000, guid: f082bab6feebb5046b696a034a2b6a91,
-    type: 2}
 --- !u!1 &1075118189
 GameObject:
   m_ObjectHideFlags: 0
@@ -6444,7 +6441,7 @@ PrefabInstance:
     - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
@@ -6469,6 +6466,31 @@ PrefabInstance:
     - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1062856192}
+    - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: CallOnInventoryOpened
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2555038399314430292, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
@@ -8165,7 +8187,7 @@ PrefabInstance:
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.size
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
@@ -8193,6 +8215,30 @@ PrefabInstance:
       propertyPath: _tutorialSequence.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: 9c4c5eadd1ac55e40bae18c379c31b12,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d2f69cccfb5a8841ac862a65970cf74,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 40e6ed46fd3b93f4e9e9644bd37b73f9,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 4d142b66c4fbd07449a10d878267234a,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7fb3e497cf9187d4d8f6a85137fc2f78,
         type: 2}
     - target: {fileID: 2915276864180271549, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
@@ -11669,6 +11715,7 @@ MonoBehaviour:
   _HUDManagement: 0
   _HostDefectPausing: 0
   StartWithWIP: 1
+  IsTutorial: 1
   _componentList: {fileID: 11400000, guid: d22a25fd5bbeb864b943c79a8b778f54, type: 2}
   _batchWorkStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
     type: 2}

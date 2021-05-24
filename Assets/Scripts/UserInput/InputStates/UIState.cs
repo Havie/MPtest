@@ -63,6 +63,11 @@ namespace UserInput
                         if (moveableObject != null)
                             moveableObject.ChangeAppearanceHidden(true); ///spawn it invisible till were not hovering over UI
 
+                        if(GameManager.Instance.IsTutorial)
+                        {
+                            TutorialEvents.Instance.CallOnPartRemovedFromSlot();
+                        }
+
                         _brain.SwitchState(_brain._displacementState, _currentSelection);
 
                     }

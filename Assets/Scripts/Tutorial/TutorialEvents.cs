@@ -3,84 +3,104 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
 public class TutorialEvents : MonoSingleton<TutorialEvents>
 {
-    [SerializeField] VoidEvent _invOpen;
-    [SerializeField] VoidEvent _instructionClicked;
-
-    List<Action<Void>> _tutorialEvents = new List<Action<Void>>();
+    public enum eTutorialEvent { FIRST_CONTINUE, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED}
 
     /************************************************************************************************************************/
 
-    protected override void Awake()
-    {
-        base.Awake();
-        RegisterEventCallbacks();
-        SetUpEventArray();
-    }
-
-    private void RegisterEventCallbacks()
-    {
-        //if (_invOpen)
-        //    _invOpen.OnEventRaised += CallOnInventoryOpened;
-
-        if (_instructionClicked)
-            _instructionClicked.OnEventRaised += CallOnStationInstructionsClicked;
-
-    }
-    private void SetUpEventArray()
-    {
-        _tutorialEvents = new List<Action<Void>>();
-        _tutorialEvents.Add(OnFirstContinueClicked);
-
-        Debug.Log($"<color=blue>Event Arr set</color>");
-    }
-
-    public void RegisterForTutorialEvent(int index, Action<Void> callback)
+    public void RegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)
     {
         Debug.Log($"<color=green>Registered</color> tut event at index : {index}");
+        ///Arrays dont seem to work, somethings wrong with += assignment operator,
+        ///doesnt seem to be the same thing in memory, under the hood conversions to delegates?
         //OnFirstContinueClicked += callback;
-       //_tutorialEvents[index] += callback;
+        //_tutorialEvents[(int)index] += callback;
+        AlterEvent(index, callback, true);
+    }
+    public void UnRegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)
+    {
+        Debug.Log($"<color=red>Unregistered</color> tut event at index : {index}");
+        //_tutorialEvents[index] -= callback;
+        AlterEvent(index, callback, false);
+    }
 
-        switch(index)
+    private Action<bool> AlterEvent(eTutorialEvent index, Action<Void> callback, bool add)
+    {
+        switch (index)
         {
-            case 0:
+            case eTutorialEvent.FIRST_CONTINUE:
                 {
-                    OnFirstContinueClicked += callback;
+                    if (add)
+                        OnFirstContinueClicked += callback;
+                    else
+                        OnFirstContinueClicked -= callback;
+                    break;
+                }
+            case eTutorialEvent.INV_OPEN:
+                {
+                    if (add)
+                        OnInventoryOpen += callback;
+                    else
+                        OnInventoryOpen -= callback;
+                    break;
+                }
+            case eTutorialEvent.INSTRUCTIONS:
+                {
+                    if (add)
+                        OnStationInstructionsClicked += callback;
+                    else
+                        OnStationInstructionsClicked -= callback;
+                    break;
+                }
+            case eTutorialEvent.UIPART_REMOVED:
+                {
+                    if (add)
+                        OnPartRemovedFromSlot += callback;
+                    else
+                        OnPartRemovedFromSlot -= callback;
+                    break;
+                }
+            case eTutorialEvent.PART_PICKEDUP:
+                {
+                    if (add)
+                        OnPartPickedUp += callback;
+                    else
+                        OnPartPickedUp -= callback;
+                    break;
+                }
+            case eTutorialEvent.PART_DROPPED:
+                {
+                    if (add)
+                        OnPartDropped += callback;
+                    else
+                        OnPartDropped -= callback;
                     break;
                 }
         }
-    }
-    public void UnRegisterForTutorialEvent(int index, Action<Void> callback)
-    {
-        Debug.Log($"<color=red>UnRegistered</color> tut event at index : {index}");
-        _tutorialEvents[index] -= callback;
+
+        return null;
     }
 
     /************************************************************************************************************************/
-    public void CallOnFirstContinueClicked() 
-    {
-        Debug.Log($"called first button : regi? {OnFirstContinueClicked == null}");
-        OnFirstContinueClicked?.Invoke(new Void());
-    }
-    static event Action<Void> OnFirstContinueClicked;
+    public void CallOnFirstContinueClicked() { OnFirstContinueClicked?.Invoke(new Void()); }
+    static Action<Void> OnFirstContinueClicked;
 
     public void CallOnInventoryOpened() { OnInventoryOpen?.Invoke(new Void()); }
     static event Action<Void> OnInventoryOpen;
 
-    void CallOnStationInstructionsClicked(Void empty) { OnStationInstructionsClicked?.Invoke(empty); }
+    ///Called from HudButton under Timer on Canvas
+    public void CallOnStationInstructionsClicked() {OnStationInstructionsClicked?.Invoke(new Void()); }
     static event Action<Void> OnStationInstructionsClicked;
 
-
-    void CallOnPartRemovedFromSlot(Void empty) { OnPartRemovedFromSlot?.Invoke(empty); }
+    public void CallOnPartRemovedFromSlot( ) { OnPartRemovedFromSlot?.Invoke(new Void()); }
     static event Action<Void> OnPartRemovedFromSlot;
 
-
-    void CallOnPartPickedUp(Void empty) { OnPartPickedUp?.Invoke(empty); }
+    public void CallOnPartPickedUp( ) { OnPartPickedUp?.Invoke(new Void()); }
     static event Action<Void> OnPartPickedUp;
 
-
-    void CallOnPartDropped(Void empty) { OnPartDropped?.Invoke(empty); }
+    public void CallOnPartDropped( ) { OnPartDropped?.Invoke(new Void()); }
     static event Action<Void> OnPartDropped;
 
 
