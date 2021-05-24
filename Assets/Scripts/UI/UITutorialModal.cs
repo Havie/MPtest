@@ -18,16 +18,19 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     [SerializeField] TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
     private bool _firstTimeWelcomeMsg = true;
-    TutorialEvents _eventManager;
     private void Start()
     {
-        _eventManager = TutorialEvents.Instance;
-        if (_userInput==null)
+        if (GameManager.Instance.IsTutorial)
         {
-            _userInput = FindObjectOfType<UserInput.UserInputManager>();
+            if (_userInput == null)
+            {
+                _userInput = FindObjectOfType<UserInput.UserInputManager>();
+            }
+            _userInput.AcceptInput = false;
+            LoadNextTutorialData();
         }
-        _userInput.AcceptInput = false;
-        LoadNextTutorialData();
+        else
+            ShowPopup(false);
     }
 
     /// <summary>
@@ -37,7 +40,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     {
         if (_firstTimeWelcomeMsg)
         {
-            _eventManager.CallOnFirstContinueClicked();
+            TutorialEvents.CallOnFirstContinueClicked();
             _firstTimeWelcomeMsg = false;
             return;
         }
@@ -65,7 +68,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
         _txtBody.text = t.bodyTxt;
         _video.clip = t.VideoGif;
         /// Set next listener for completed action
-        _eventManager.RegisterForTutorialEvent(t.EventKey, TutorialActionSuccess);
+        TutorialEvents.RegisterForTutorialEvent(t.EventKey, TutorialActionSuccess);
 
     }
 
@@ -74,7 +77,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
         Debug.Log($"Event happened!");
         ///Give the player a second to see the results of their actions
         var currTutorial = _tutorialSequence[_tutorialIndex];
-         _eventManager.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
+        TutorialEvents.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
 
         StartCoroutine(NextStepDelay(currTutorial.TimeDelayBeforeNextInstruction));
 

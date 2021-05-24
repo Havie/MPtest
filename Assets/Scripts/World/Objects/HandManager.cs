@@ -41,9 +41,9 @@ public static class HandManager
 
         CheckHandPositions();
         CancelIntensityChangePreview();
-        if(GameManager.Instance.IsTutorial)
+        if(GameManager.Instance && GameManager.Instance.IsTutorial)
         {
-            TutorialEvents.Instance.CallOnPartPickedUp();
+            TutorialEvents.CallOnPartPickedUp();
         }
     }
     public static void DropItem(ObjectController item)
@@ -76,9 +76,9 @@ public static class HandManager
                 CancelIntensityChangePreview();
             }
 
-            if (GameManager.Instance.IsTutorial)
+            if (GameManager.Instance && GameManager.Instance.IsTutorial)
             {
-                TutorialEvents.Instance.CallOnPartDropped();
+                TutorialEvents.CallOnPartDropped();
             }
         }
 

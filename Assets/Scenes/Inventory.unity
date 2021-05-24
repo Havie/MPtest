@@ -5406,49 +5406,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025718889}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1062856190
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1062856191}
-  - component: {fileID: 1062856192}
-  m_Layer: 0
-  m_Name: TutorialEvents
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1062856191
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1062856190}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1141904581}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1062856192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1062856190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c94dfc7a171c3f347bda6ed78da7ed10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1075118189
 GameObject:
   m_ObjectHideFlags: 0
@@ -5864,7 +5821,6 @@ Transform:
   - {fileID: 2067033042}
   - {fileID: 2065194974}
   - {fileID: 2020454031}
-  - {fileID: 1062856191}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6482,11 +6438,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1062856192}
+      objectReference: {fileID: 2067033043}
     - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: CallOnInventoryOpened
+      value: UIInstructionsClicked
       objectReference: {fileID: 0}
     - target: {fileID: 1667011267822052134, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
@@ -11714,14 +11670,16 @@ MonoBehaviour:
   _decreaseChangeOverTime: 0
   _HUDManagement: 0
   _HostDefectPausing: 0
-  StartWithWIP: 1
-  IsTutorial: 1
+  StartWithWIP: 0
+  IsTutorial: 0
   _componentList: {fileID: 11400000, guid: d22a25fd5bbeb864b943c79a8b778f54, type: 2}
   _batchWorkStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
     type: 2}
   _stackBatchWorkStationManager: {fileID: 11400000, guid: ed0ffb582f7914b4c9b3d70912b6e208,
     type: 2}
   _pullWorkStationManager: {fileID: 11400000, guid: d1cb6a9cde483834ba58e689f501ea85,
+    type: 2}
+  _tutorialWorkStationManager: {fileID: 11400000, guid: d4eb30e8e40016c49ae49e1b71701db8,
     type: 2}
   _assemblyBook: {fileID: 11400000, guid: 3f89a0b3b15196041ba06985c236953d, type: 2}
 --- !u!4 &2065194974

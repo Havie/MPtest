@@ -35,7 +35,7 @@ public static class StationItemParser
         for (int i = startingIndex; i < stationSequence.Length; i++)
         {
             WorkStation ws = stationList[i];
-            //Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws._stationName}");
+            Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws.StationName}");
             for (int taskIndex = 0; taskIndex < ws.TaskCount; ++taskIndex)
             {
                 Task t = ws.Tasks[taskIndex]; ///get the current task 
@@ -114,7 +114,6 @@ public static class StationItemParser
                 }
             }
         }
-
         void ParseRequiredItems(Task local_task, bool isKitting)
         {
             //Debug.Log($"..<color=blue>We are parsing required basic items for task:</color> {local_task}");
@@ -125,7 +124,7 @@ public static class StationItemParser
                     if (ObjectManager.Instance.IsBasicItem(item)) ///decide if basic item 
                     {
                         int itemId = (int)item;
-
+                        Debug.Log($"{local_task}<color=orange> Addng basic item : </color> {itemId}");
                         for (int j = 0; j < batchSize; j++)
                         {
                             itemIDs.Add((int)item);

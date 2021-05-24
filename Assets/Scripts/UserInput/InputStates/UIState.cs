@@ -65,7 +65,7 @@ namespace UserInput
 
                         if(GameManager.Instance.IsTutorial)
                         {
-                            TutorialEvents.Instance.CallOnPartRemovedFromSlot();
+                            TutorialEvents.CallOnPartRemovedFromSlot();
                         }
 
                         _brain.SwitchState(_brain._displacementState, _currentSelection);

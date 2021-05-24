@@ -30,6 +30,9 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
     [Header("MPLobby Components")]
     [SerializeField] LobbyMenu _lobbyMenu;
 
+    [Header("Tutorial")]
+    [SerializeField] WorkStationManager _tutorialWSManager;
+
 
     public delegate void ConnectionResult(bool cond);
     public ConnectionResult OnConnectionResult;
@@ -146,12 +149,9 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
 
     public void ConfirmWorkStation()
     {
-        Debug.LogWarning("This is called");
         ///Get the ID before leaving the Scene 
         var stationID = _lobbyMenu.GetStationSelectionID();
-        SceneLoader.LoadLevel(_inventorySceneName);
-        BeginLevel(stationID);
-        GameManager.instance.SetRoundShouldStart(true);
+        LoadInventoryScene(stationID, false);
     }
     public void RequestRefresh() 
     {
@@ -192,7 +192,6 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
         
     }
 
-
     public void LoadLobbyScene()
     {
         Debug.Log("load scene");
@@ -228,7 +227,26 @@ public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
     {
         FileSaver.WriteToFileTest("test");
     }
+    
+    public void LoadTutorial()
+    {
+        GameManager.Instance.BatchChanged(2);
+        GameManager.Instance.ForceTutorialWSM();
+        var stationID = 2; ///tutorial station needs to not be kitting
+        LoadInventoryScene(stationID, true);
+
+    }
     #endregion
+
+
+    private void LoadInventoryScene(int stationIndex, bool isTutorial)
+    {
+        GameManager.Instance.IsTutorial = isTutorial;
+        GameManager.Instance.StartWithWIP = isTutorial;
+        SceneLoader.LoadLevel(_inventorySceneName);
+        BeginLevel(stationIndex);
+        GameManager.instance.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
+    }
 
     private void OnDisable()
     {

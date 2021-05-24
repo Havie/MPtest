@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
     //[Header("Scene Loading Info")]
-     string _networkingSceneName = "MP_Lobby";
+    string _networkingSceneName = "MP_Lobby";
 
     [Header("Game Components")]
     public GameObject _inventoryCanvas;  ///TODO fix this ref being public
@@ -94,7 +94,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     {
         if (_inventoryCanvas)
             _inventoryCanvas.SetActive(true); ///when we turn on the world canvas we should some knowledge of our station and set up the UI accordingly 
-        
+
         if (_endResultsCanvas)
             _endResultsCanvas.SetActive(false);
         //Setup the proper UI for our workStation:
@@ -208,7 +208,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     private void FindAndCacheInventories()
     {
-        if(_normalInInventory)
+        if (_normalInInventory)
             _invIN = _normalInInventory.GetComponentInChildren<UIInventoryManager>(true);
         if (_normalOutInventory)
             _invOUT = _normalOutInventory.GetComponentInChildren<UIInventoryManager>(true);
@@ -221,16 +221,16 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         {
             _endResultsCanvas.SetActive(true);
             UIEndResults endResults = _endResultsCanvas.GetComponentInChildren<UIEndResults>();
-            if(endResults)
+            if (endResults)
             {
                 endResults.SetResults(cycleTime, thruPut, shippedOnTime, shippedLate, wip);
             }
         }
 
         if (_inventoryCanvas)
-            _inventoryCanvas.SetActive(false); 
+            _inventoryCanvas.SetActive(false);
     }
-    
+
     ///Called from end results modal
     public void ContinueFromEndResults()
     {
@@ -249,7 +249,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         else
             UIManager.DebugLog($"..fatal no Inventory for : isIN={isInInventory} ");
     }
-    
+
     public void ItemReceived(int itemID, List<QualityData> qualities)
     {
         _invIN.AddItemToSlot(itemID, qualities, false);
@@ -316,20 +316,23 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (_invKITTING)
         {
             _invKITTING.RemoveOrder(itemdID);
-        }        
+        }
         if (_invShipping)
         {
             // the Inv Shipping is manually handling the removal of items in its menu.
-           // _invShipping.RemoveOrder(itemdID);
+            // _invShipping.RemoveOrder(itemdID);
         }
     }
-
     ///Extra button for clear when in debug mode for Inv scene
     public void ClearDebugLogger()
     {
         UIManager.ClearDebugLog();
     }
-
+    ///Called from HudButton under Timer on Canvas
+    public void UIInstructionsClicked()
+    {
+        TutorialEvents.CallOnStationInstructionsClicked();
+    }
     #endregion
     /************************************************************************************************************************/
 

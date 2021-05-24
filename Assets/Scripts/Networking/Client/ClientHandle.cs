@@ -61,7 +61,11 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         int myStation = (int)ws._myStation;
         int output = (int)ws._sendOutputToStation;
         Vector3 loc = ws.StationLocation;
-        Vector3 endLoc = gm.CurrentWorkStationManager.GetStationByEnumIndex(output).StationLocation;
+        Vector3 endLoc = Vector3.zero;
+
+        if(ws._sendOutputToStation != WorkStation.eStation.NONE)
+            endLoc = gm.CurrentWorkStationManager.GetStationByEnumIndex(output).StationLocation;
+
         float distance = Mathf.Abs(Vector3.Distance(loc, endLoc));
 
         ClientSend.Instance.SendTransportData(myStation, output, distance);

@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 977898da102ecb5469631e2fc21fe578, type: 3}
-  m_Name: Self
+  m_Name: Tutorial 2
   m_EditorClassIdentifier: 
-  _myStation: 0
-  _sendOutputToStation: 0
-  _myStationName: None
-  _myStationInstructions: {fileID: 0}
-  _tasks: []
+  _myStation: 2
+  _sendOutputToStation: 3
+  _myStationName: Tutorial 2
+  _myStationInstructions: {fileID: 21300000, guid: 1c9b60b941f383a469d47a486e532cff,
+    type: 3}
+  _tasks:
+  - {fileID: 11400000, guid: d01faacdb4fb201409a3df1b82727aa9, type: 2}
   _location: {x: 0, y: 0, z: 0}

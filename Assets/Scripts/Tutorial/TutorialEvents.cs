@@ -4,13 +4,13 @@ using UnityEngine;
 using System;
 
 
-public class TutorialEvents : MonoSingleton<TutorialEvents>
+public static class TutorialEvents 
 {
     public enum eTutorialEvent { FIRST_CONTINUE, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED}
 
     /************************************************************************************************************************/
 
-    public void RegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)
+    public static void RegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)
     {
         Debug.Log($"<color=green>Registered</color> tut event at index : {index}");
         ///Arrays dont seem to work, somethings wrong with += assignment operator,
@@ -19,14 +19,14 @@ public class TutorialEvents : MonoSingleton<TutorialEvents>
         //_tutorialEvents[(int)index] += callback;
         AlterEvent(index, callback, true);
     }
-    public void UnRegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)
+    public static void UnRegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)
     {
         Debug.Log($"<color=red>Unregistered</color> tut event at index : {index}");
         //_tutorialEvents[index] -= callback;
         AlterEvent(index, callback, false);
     }
 
-    private Action<bool> AlterEvent(eTutorialEvent index, Action<Void> callback, bool add)
+    private static Action<bool> AlterEvent(eTutorialEvent index, Action<Void> callback, bool add)
     {
         switch (index)
         {
@@ -84,23 +84,22 @@ public class TutorialEvents : MonoSingleton<TutorialEvents>
     }
 
     /************************************************************************************************************************/
-    public void CallOnFirstContinueClicked() { OnFirstContinueClicked?.Invoke(new Void()); }
+    public static void CallOnFirstContinueClicked() { OnFirstContinueClicked?.Invoke(new Void()); }
     static Action<Void> OnFirstContinueClicked;
 
-    public void CallOnInventoryOpened() { OnInventoryOpen?.Invoke(new Void()); }
+    public static void CallOnInventoryOpened() { OnInventoryOpen?.Invoke(new Void()); }
     static event Action<Void> OnInventoryOpen;
 
-    ///Called from HudButton under Timer on Canvas
-    public void CallOnStationInstructionsClicked() {OnStationInstructionsClicked?.Invoke(new Void()); }
+    public static void CallOnStationInstructionsClicked() {OnStationInstructionsClicked?.Invoke(new Void()); }
     static event Action<Void> OnStationInstructionsClicked;
 
-    public void CallOnPartRemovedFromSlot( ) { OnPartRemovedFromSlot?.Invoke(new Void()); }
+    public static void CallOnPartRemovedFromSlot( ) { OnPartRemovedFromSlot?.Invoke(new Void()); }
     static event Action<Void> OnPartRemovedFromSlot;
 
-    public void CallOnPartPickedUp( ) { OnPartPickedUp?.Invoke(new Void()); }
+    public static void CallOnPartPickedUp( ) { OnPartPickedUp?.Invoke(new Void()); }
     static event Action<Void> OnPartPickedUp;
 
-    public void CallOnPartDropped( ) { OnPartDropped?.Invoke(new Void()); }
+    public static void CallOnPartDropped( ) { OnPartDropped?.Invoke(new Void()); }
     static event Action<Void> OnPartDropped;
 
 

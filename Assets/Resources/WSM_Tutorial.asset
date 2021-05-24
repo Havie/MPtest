@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e731bbfe9e30742b7bdf712c41ff94, type: 3}
+  m_Name: WSM_Tutorial
+  m_EditorClassIdentifier: 
+  _workStations:
+  - {fileID: 11400000, guid: 83ee4cd14e2c033479dd73f9080cec19, type: 2}
+  - {fileID: 11400000, guid: ca3e65acd570e634cbdcf977c9f78e4c, type: 2}
+  - {fileID: 11400000, guid: af3c5dba06e849540a81b846f970d108, type: 2}
+  - {fileID: 11400000, guid: 5dfec03e7392a8041ba1cc29d24cc7d7, type: 2}
+  - {fileID: 11400000, guid: 52ac021f39f937946b697465ba257985, type: 2}
