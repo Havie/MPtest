@@ -8170,13 +8170,13 @@ PrefabInstance:
         type: 3}
       propertyPath: _tutorialSequence.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: 9c4c5eadd1ac55e40bae18c379c31b12,
+      objectReference: {fileID: 11400000, guid: 8d2f69cccfb5a8841ac862a65970cf74,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: 8d2f69cccfb5a8841ac862a65970cf74,
+      objectReference: {fileID: 11400000, guid: 9c4c5eadd1ac55e40bae18c379c31b12,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
