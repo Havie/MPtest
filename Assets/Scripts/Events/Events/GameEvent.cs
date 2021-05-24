@@ -10,6 +10,7 @@ using UnityEngine;
 
 public abstract class GameEvent<T> : ScriptableObject
 {
+    public System.Action<T> OnEventRaised;
 
     private readonly List<IGameEventListener<T>> _listeners = new List<IGameEventListener<T>>();
 
@@ -34,6 +35,8 @@ public abstract class GameEvent<T> : ScriptableObject
         {
             _listeners[i].OnEventRaised(type);
         }
+
+        OnEventRaised?.Invoke(type);
     }
 
 }

@@ -32,6 +32,11 @@ public class PartBin : HighlightableObject
         _isSelected = !_isSelected;
         SetHighlighted(_isSelected);
         _toggle.ClickToShowObject();
+        if(GameManager.Instance.IsTutorial)
+        {
+        Debug.Log($"CLICKED TGE THING");
+            TutorialEvents.Instance.CallOnInventoryOpened();
+        }
     }
 
 

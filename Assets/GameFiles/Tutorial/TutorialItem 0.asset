@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TutorialItem 0
   m_EditorClassIdentifier: 
   _title: Tutorial
-  _description: 'Welcome to the lean manufacturing tutorial !
+  _description: 'Welcome to the Buzz Digital tutorial !
 
 
-    Here we will
-    guide you through a few steps to help you interact with the simulation.'
+    Here we will guide
+    you through a few steps to help you interact with the simulation.'
   _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}

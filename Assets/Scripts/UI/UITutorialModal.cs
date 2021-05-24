@@ -15,16 +15,18 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     [SerializeField] UserInput.UserInputManager _userInput;
 
     [SerializeField] TutorialItem[] _tutorialSequence = default;
-    private int _tutorialIndex = 0;
-
+    private int _tutorialIndex = -1; //Start below 0 so we can progress right away
+    private bool _firstTimeWelcomeMsg = true;
+    TutorialEvents _eventManager;
     private void Start()
     {
-        if(_userInput==null)
+        _eventManager = TutorialEvents.Instance;
+        if (_userInput==null)
         {
             _userInput = FindObjectOfType<UserInput.UserInputManager>();
         }
         _userInput.AcceptInput = false;
-        LoadTutorialData();
+        LoadNextTutorialData();
     }
 
     /// <summary>
@@ -32,15 +34,14 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     /// </summary>
     public void ProgressTutorial()
     {
-
-        ///TOD Set next listener for completed action
-
-        ///Increase the index
-        ++_tutorialIndex;
+        if (_firstTimeWelcomeMsg)
+        {
+            _eventManager.CallOnFirstContinueClicked();
+            _firstTimeWelcomeMsg = false;
+            return;
+        }
         ///Close the Menu
         ShowPopup(false);
-
-
     }
 
     public void ShowPopup(bool cond)
@@ -51,15 +52,30 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     }
 
 
-    private void LoadTutorialData()
-    {
+    private void LoadNextTutorialData()
+    {   
+        ///Increase the index
+        ++_tutorialIndex;
+
         if (_tutorialIndex >= _tutorialSequence.Length)
             return;
-
         TutorialItem t = _tutorialSequence[_tutorialIndex];
         _txtTitle.text = t.TitleTxt;
         _txtBody.text = t.bodyTxt;
         _video.clip = t.VideoGif;
+        /// Set next listener for completed action
+        _eventManager.RegisterForTutorialEvent(_tutorialIndex, TutorialActionSuccess);
+
+    }
+
+    private void TutorialActionSuccess(Void empty)
+    {
+        Debug.Log($"Event happened!");
+
+        _eventManager.UnRegisterForTutorialEvent(_tutorialIndex, TutorialActionSuccess);
+        /// setup for the next event
+        LoadNextTutorialData();
+        ShowPopup(true);
 
     }
 }

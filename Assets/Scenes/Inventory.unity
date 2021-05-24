@@ -5406,6 +5406,52 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025718889}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1062856190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1062856191}
+  - component: {fileID: 1062856192}
+  m_Layer: 0
+  m_Name: TutorialEvents
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1062856191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1062856190}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1141904581}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1062856192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1062856190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94dfc7a171c3f347bda6ed78da7ed10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _invOpen: {fileID: 11400000, guid: 918b3894c65897d4ebc26f2ed2f813a1, type: 2}
+  _instructionClicked: {fileID: 11400000, guid: f082bab6feebb5046b696a034a2b6a91,
+    type: 2}
 --- !u!1 &1075118189
 GameObject:
   m_ObjectHideFlags: 0
@@ -5821,6 +5867,7 @@ Transform:
   - {fileID: 2067033042}
   - {fileID: 2065194974}
   - {fileID: 2020454031}
+  - {fileID: 1062856191}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11387,7 +11434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stationToInject: 5
+  _stationToInject: 2
   _developerInjections: 1
   _itemToInject: 17
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
