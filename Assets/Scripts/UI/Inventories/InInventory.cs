@@ -28,17 +28,21 @@ public class InInventory : UIInventoryManager
     {
         var gm = GameManager.instance;
         _batchSize = gm._batchSize;
+        if (gm.IsTutorial)
+        {
+            ///Force the output to only be these items (not possible w batch==2)
+            return new List<int>() { 1, 2, 2};
+        }
         return StationItemParser.ParseItemsAsIN(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
-       // return ParseItems(wm, myWS, false) * BATCHSIZE;
+        // return ParseItems(wm, myWS, false) * BATCHSIZE;
     }
 
-    private void SetUpStartingItems()
+    private void SetUpStartingItems(List<int> itemIDs)
     {
         //ParseItems(GameManager.Instance.CurrentWorkStationManager, GameManager.Instance._workStation, true);
 
         var gm = GameManager.instance;
-        List<int> itemIDs = StationItemParser.ParseItemsAsIN(gm._batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
-        if (gm._batchSize==1)
+        if (gm._batchSize == 1)
         {
             ///if its pull count should only be one for Kanban
             if (itemIDs.Count != 1)
@@ -52,7 +56,7 @@ public class InInventory : UIInventoryManager
                 AddItemToSlot(itemID, null, false);
             }
         }
-        
+
     }
 
 
@@ -65,20 +69,10 @@ public class InInventory : UIInventoryManager
         _INVENTORYSIZE = itemIDs.Count;
         _slots = new UIInventorySlot[_INVENTORYSIZE];
         IsInitalized = true;
-
-        //Debug.LogError($"{_inventoryType} slotsize ={ _slots.Length}");
-
-        ///Determine layout
-
-        //Debug.Log($"{this.transform.gameObject.name}{_inventoryType}, {_INVENTORYSIZE} resulted in {_xMaxRows}");
-
         ///Size matters for the vert/hori scrollbars
         SetSizeOfContentArea();
-
         ///getAPrefix for naming our buttons in scene Hierarchy
         _prefix = "In";
-
-
         ///Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount
         _extraSlots = new List<UIInventorySlot>(); //Instantiated before for loop becuz CreateNewslot uses its Count
 
@@ -88,7 +82,7 @@ public class InInventory : UIInventoryManager
             _slots[i] = CreateNewSlot();
         }
 
-        SetUpStartingItems();
+        SetUpStartingItems(itemIDs);
     }
 
     #endregion

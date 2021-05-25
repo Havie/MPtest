@@ -5,7 +5,7 @@ using System;
 
 public static class TutorialEvents 
 {
-    public enum eTutorialEvent { CONTINUE_BUTTON, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED, PART_ROTATED ,HOLDING_HANDLE_BOLT, PART_CONSTRUCTED}
+    public enum eTutorialEvent { CONTINUE_BUTTON, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED, PART_ROTATED ,HOLDING_HANDLE_BOLT, PART_CONSTRUCTED, QUALITY_ACTION_TAP, QUALITY_ACTION_ROTATE}
 
     /************************************************************************************************************************/
 
@@ -101,6 +101,22 @@ public static class TutorialEvents
                         OnHoldingHandleAndBolt -= callback;
                     break;
                 }
+            case eTutorialEvent.QUALITY_ACTION_TAP:
+                {
+                    if (add)
+                        OnQATap += callback;
+                    else
+                        OnQATap -= callback;
+                    break;
+                }
+            case eTutorialEvent.QUALITY_ACTION_ROTATE:
+                {
+                    if (add)
+                        OnQARotate += callback;
+                    else
+                        OnQARotate -= callback;
+                    break;
+                }
         }
 
         return null;
@@ -132,5 +148,9 @@ public static class TutorialEvents
     static event Action<Void> OnPartConstructed;
     public static void CallOnHoldingHandleAndBolt() { OnHoldingHandleAndBolt?.Invoke(new Void()); }
     static event Action<Void> OnHoldingHandleAndBolt;
+    public static void CallOnQATap() { OnQATap?.Invoke(new Void()); }
+    static event Action<Void> OnQATap;
+    public static void CallOnQARotate() { OnQARotate?.Invoke(new Void()); }
+    static event Action<Void> OnQARotate;
 }
 

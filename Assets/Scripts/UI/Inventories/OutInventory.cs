@@ -57,6 +57,12 @@ public class OutInventory : UIInventoryManager
         {
             _sendButton.gameObject.SetActive(false); ///turn off the send button
         }
+        if(gm.IsTutorial)
+        {
+            ///Force the output to only be 1 item (not possible w batch==2)
+            return new List<int>()
+            { 13};
+        }
         return StationItemParser.ParseItemsAsOUT(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
     }
 

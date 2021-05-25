@@ -117,6 +117,10 @@ public class QualityObject : MonoBehaviour
 
                     IncreaseQuality();
                     //   Debug.Log($"Successful rotation! reset to {_rotationAmount}");
+                    if(GameManager.Instance.IsTutorial)
+                    {
+                        TutorialEvents.CallOnQARotate();
+                    }
                 }
 
             }
@@ -127,6 +131,10 @@ public class QualityObject : MonoBehaviour
         {
             IncreaseQuality();
             //Debug.Log("Successful TAP");
+            if (GameManager.Instance.IsTutorial)
+            {
+                TutorialEvents.CallOnQATap();
+            }
         }
     }
     private void PerformEffect()
