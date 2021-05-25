@@ -21,6 +21,7 @@ public static class HandManager
 
     public static void PickUpItem(ObjectController item)
     {
+        Debug.Log($"<color=green>pickup item</color> {item}");
         if (HandContains(item))
             return; ///might have to reorder queue instead if this is possible?
 
@@ -50,7 +51,6 @@ public static class HandManager
     {
         if (item)
         {
-
             bool weHaveItem = false;
 
             if (_handArray[0] == item)
@@ -61,6 +61,7 @@ public static class HandManager
                 if (_handArray[0] != null)
                     _handArray[0].PickedUp(1); ///reset our hand index
                 _handArray[1] = null;
+                Debug.Log($"droped item");
             }
             else if (_handArray[1] == item)
             {
@@ -70,7 +71,7 @@ public static class HandManager
             if (weHaveItem)
             {
                 item.PutDown();
-                // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
+                Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
                 item.SetHandPreviewingMode(false);
                 CheckHandPositions();
                 CancelIntensityChangePreview();
@@ -82,6 +83,16 @@ public static class HandManager
             }
         }
 
+    }
+
+    public static void DropAllItems()
+    {
+        Debug.Log($"static call heard");
+        for (int i = 0; i < _handArray.Length; i++)
+        {
+            Debug.Log($"saying to drop: {_handArray[i]}");
+            DropItem(_handArray[i]);
+        }
     }
 
 

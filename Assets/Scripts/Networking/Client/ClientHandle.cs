@@ -34,8 +34,6 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         //give UDP the same port our tcp connection is using 
         Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
     }
-
-
     public void ReceivedMpData(sPacket packet)
     {
         //Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");

@@ -34,7 +34,6 @@ public class PartBin : HighlightableObject
         _toggle.ClickToShowObject();
         if(GameManager.Instance.IsTutorial)
         {
-        Debug.Log($"CLICKED TGE THING");
             TutorialEvents.CallOnInventoryOpened();
         }
     }

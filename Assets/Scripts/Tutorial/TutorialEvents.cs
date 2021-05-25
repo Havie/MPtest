@@ -85,7 +85,7 @@ public static class TutorialEvents
 
     /************************************************************************************************************************/
     public static void CallOnFirstContinueClicked() { OnFirstContinueClicked?.Invoke(new Void()); }
-    static Action<Void> OnFirstContinueClicked;
+    static event Action<Void> OnFirstContinueClicked;
 
     public static void CallOnInventoryOpened() { OnInventoryOpen?.Invoke(new Void()); }
     static event Action<Void> OnInventoryOpen;

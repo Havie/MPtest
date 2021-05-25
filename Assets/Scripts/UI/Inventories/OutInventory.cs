@@ -41,8 +41,6 @@ public class OutInventory : UIInventoryManager
             _sendButton.interactable = false;
         }
         base.Start();
-        //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
-
     }
 
 
@@ -59,12 +57,7 @@ public class OutInventory : UIInventoryManager
         {
             _sendButton.gameObject.SetActive(false); ///turn off the send button
         }
-
-        Debug.Log($"OUTs WSM : {gm.CurrentWorkStationManager}");
-
         return StationItemParser.ParseItemsAsOUT(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
-        // return ParseItems(wm, myWS, false) * BATCHSIZE;
-
     }
 
     private void SetUpStartingItems(List<int> itemIDs)

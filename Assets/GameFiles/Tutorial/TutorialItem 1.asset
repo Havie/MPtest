@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: TutorialItem 1
   m_EditorClassIdentifier: 
   _eventKey: 2
+  _onCompleteResponse: 1
   _title: Station Instructions
-  _description: ...todo
+  _description: "Each station has a set of tasks they are expected to perform.\n\nYou
+    can view these tasks by clicking the \"?\" icon next to the timer, at the top
+    of the screen. \n\nGo ahead and try it."
   _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
   _timeInSecondsBeforeNextInstruction: 1

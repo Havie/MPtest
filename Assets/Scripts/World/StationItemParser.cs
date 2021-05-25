@@ -37,7 +37,7 @@ public static class StationItemParser
         for (int i = startingIndex; i < stationSequence.Length; i++)
         {
             WorkStation ws = stationList[i];
-            Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws.StationName}");
+            //Debug.Log($"<color=white>Looking at workstation:</color> {ws}::{ws.StationName}");
             for (int taskIndex = 0; taskIndex < ws.TaskCount; ++taskIndex)
             {
                 Task t = ws.Tasks[taskIndex]; ///get the current task 

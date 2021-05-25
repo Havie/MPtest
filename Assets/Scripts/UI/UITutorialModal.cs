@@ -8,13 +8,14 @@ using System.Collections;
 
 public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 {
+
     [SerializeField] TextMeshProUGUI _txtTitle;
     [SerializeField] TextMeshProUGUI _txtBody;
     [SerializeField] VideoPlayer _video;
     [SerializeField] Image _bgIMG;
     [SerializeField] GameObject _modal;
     [SerializeField] UserInput.UserInputManager _userInput;
-
+    [SerializeField] GameObject _tab;
     [SerializeField] TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
     private bool _firstTimeWelcomeMsg = true;
@@ -55,14 +56,18 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
         _userInput.AcceptInput = !cond;
     }
 
-
     private void LoadNextTutorialData()
     {   
         ///Increase the index
         ++_tutorialIndex;
 
         if (_tutorialIndex >= _tutorialSequence.Length)
+        {
+            ShowPopup(false);
+            Destroy(this);
+            Debug.Log($"END OF TUTORIAL");
             return;
+        }
         TutorialItem t = _tutorialSequence[_tutorialIndex];
         _txtTitle.text = t.TitleTxt;
         _txtBody.text = t.bodyTxt;
@@ -74,11 +79,9 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 
     private void TutorialActionSuccess(Void cond)
     {
-        Debug.Log($"Event happened!");
-        ///Give the player a second to see the results of their actions
         var currTutorial = _tutorialSequence[_tutorialIndex];
         TutorialEvents.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
-
+        ///Give the player a second to see the results of their actions
         StartCoroutine(NextStepDelay(currTutorial.TimeDelayBeforeNextInstruction));
 
     }
@@ -87,8 +90,15 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     {
          yield return new WaitForSeconds(delayInSeconds);
         /// setup for the next event
-        LoadNextTutorialData();
         ShowPopup(true);
+        LoadNextTutorialData();
 
+    }
+
+    private void OnDestroy()
+    {
+        ShowPopup(false);
+        if(_tab)
+            Destroy(_tab);
     }
 }
