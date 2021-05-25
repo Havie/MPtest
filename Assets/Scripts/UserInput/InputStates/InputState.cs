@@ -15,11 +15,11 @@ namespace UserInput
         protected float _partDepth => SceneDepthInitalizer.Instance.DepthOfParts; //-9ishf;
         /************************************************************************************************************************/
 
-        public abstract void EnableState(IInteractable currentSelection);
+        public virtual void EnableState(IInteractable currentSelection) { }
 
-        public abstract bool CanExitState(InputState nextState);
+        public virtual bool CanExitState(InputState nextState) => true;
 
-        public abstract void DisableState();
+        public virtual void DisableState() { }
 
         /************************************************************************************************************************/
 

@@ -39,14 +39,9 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     /// </summary>
     public void ProgressTutorial()
     {
-        if (_firstTimeWelcomeMsg)
-        {
-            TutorialEvents.CallOnFirstContinueClicked();
-            _firstTimeWelcomeMsg = false;
-            return;
-        }
         ///Close the Menu
         ShowPopup(false);
+        TutorialEvents.CallOnContinueClicked();
     }
 
     public void ShowPopup(bool cond)
@@ -57,7 +52,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     }
 
     private void LoadNextTutorialData()
-    {   
+    {
         ///Increase the index
         ++_tutorialIndex;
 
@@ -88,7 +83,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 
     IEnumerator NextStepDelay(float delayInSeconds)
     {
-         yield return new WaitForSeconds(delayInSeconds);
+        yield return new WaitForSeconds(delayInSeconds);
         /// setup for the next event
         ShowPopup(true);
         LoadNextTutorialData();
@@ -98,7 +93,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     private void OnDestroy()
     {
         ShowPopup(false);
-        if(_tab)
+        if (_tab)
             Destroy(_tab);
     }
 }

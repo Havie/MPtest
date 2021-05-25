@@ -23,13 +23,6 @@ namespace UserInput
 
         /************************************************************************************************************************/
 
-        public override bool CanExitState(InputState nextState) { return true; }
-
-        public override void DisableState()
-        {
-
-        }
-
         public override void EnableState(IInteractable currentSelection)
         {
             _currentSelection = currentSelection;
@@ -45,14 +38,13 @@ namespace UserInput
             //Debug.Log($"<color=orange> In RotationStation </color> inputDown={pos}");
             if (_cacheInitalPos)
             {
-                _lastRotPos= _lastPos = pos;
+                _lastRotPos = _lastPos = pos;
                 _cacheInitalPos = false;
             }
             TryRotation(command, pos);
         }
 
         /************************************************************************************************************************/
-
 
         /** Player is rotating the object in the scene or pressing and holding to begin displacement */
         private bool TryRotation(InputCommand command, Vector3 inputPos)
@@ -61,7 +53,6 @@ namespace UserInput
             bool inputDown = command.DOWN || command.HOLD;
             if (inputDown && moveableObject != null)
             {
-
                 ///if no movement increment time 
                 float dis = Vector3.Distance(inputPos, _lastPos);
                 var objWhereMouseIs = _brain.CheckForObjectAtLoc(inputPos); ///Prevent bug simon found
@@ -70,26 +61,11 @@ namespace UserInput
                 {
                     _pressTimeCURR += Time.deltaTime;
 
-                    ///Try Show Pickup Wheel
-                    if (_pressTimeCURR > _pressTimeMAX / 10) ///dont show this instantly 10%filled
-                    {
-                        ///Show the UI wheel for our TouchPhase 
-                        UIManager.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX, inputPos);
-
-                        ///Cap our mats transparency fade to 0.5f
-                        float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
-                        changeVal = Mathf.Lerp(1, changeVal, 0.5f);
-                        moveableObject.HandleInteractionTime(changeVal);
-
-                        //Vibration.Vibrate(100); ///No haptic feedback on WiFi version of TabS5E :(
-                    }
+                    ShowPickupWheel(inputPos, moveableObject);
                 }
-                else ///reset pickup timer
+                else /// not pressing on obj 
                 {
-                    _pressTimeCURR = 0;
-                    UIManager.HideTouchDisplay();
-                    moveableObject.HandleInteractionTime(1);
-                    _lastPos = inputPos;
+                    ResetPickupTimer(inputPos, moveableObject);
                 }
 
                 ///if holding down do displacement
@@ -99,15 +75,7 @@ namespace UserInput
                 }
                 else///Do rotation = we're not holding
                 {
-                    ///Prevent us from rotating not picked up items
-                    if (moveableObject.CanRotate())
-                    {
-                        ///Store rotation amount
-                        Vector3 rotation = inputPos - _lastRotPos;
-                        _rotationAmount += moveableObject.OnRotate(rotation);
-                        _lastRotPos = inputPos;
-                        HandleHighlightPreview(moveableObject);
-                    }
+                    RotatePart(inputPos, moveableObject);
                     return true;
                 }
 
@@ -115,18 +83,7 @@ namespace UserInput
             }
             else if (command.UP)
             {
-                if (_currentSelection != null)
-                {
-                    //Debug.Log($"<color=blue> TryQualityAction</color>-->{_currentSelection} ");
-                    TryPerformAction(QualityAction.eActionType.ROTATE, inputPos, _rotationAmount);
-                    TryPerformAction(QualityAction.eActionType.TAP, inputPos, _rotationAmount);
-                    _currentSelection.OnInteract();
-                    if (moveableObject != null)
-                        CancelHighLightPreview(moveableObject);
-
-                    UIManager.HideTouchDisplay();
-                    _currentSelection.HandleInteractionTime(1);
-                }
+                HandleExitConditionsOnMouseUp(inputPos, moveableObject);
                 _brain.SwitchState(_brain._freeState, _currentSelection);
             }
 
@@ -134,6 +91,66 @@ namespace UserInput
 
         }
 
+        private void ResetPickupTimer(Vector3 inputPos, IMoveable moveableObject)
+        {
+            _pressTimeCURR = 0;
+            UIManager.HideTouchDisplay();
+            moveableObject.HandleInteractionTime(1);
+            _lastPos = inputPos;
+        }
+
+        private void ShowPickupWheel(Vector3 inputPos, IMoveable moveableObject)
+        {
+            ///Try Show Pickup Wheel
+            if (_pressTimeCURR > _pressTimeMAX / 10) ///dont show this instantly 10%filled
+            {
+                ///Show the UI wheel for our TouchPhase 
+                UIManager.ShowTouchDisplay(_pressTimeCURR, _pressTimeMAX, inputPos);
+
+                ///Cap our mats transparency fade to 0.5f
+                float changeVal = (_pressTimeMAX - _pressTimeCURR) / _pressTimeMAX;
+                changeVal = Mathf.Lerp(1, changeVal, 0.5f);
+                moveableObject.HandleInteractionTime(changeVal);
+                //Vibration.Vibrate(100); ///No haptic feedback on WiFi version of TabS5E :(
+            }
+        }
+
+        private void RotatePart(Vector3 inputPos, IMoveable moveableObject)
+        {
+            ///Prevent us from rotating not picked up items
+            if (moveableObject.CanRotate())
+            {
+                ///Store rotation amount
+                Vector3 rotation = inputPos - _lastRotPos;
+                _rotationAmount += moveableObject.OnRotate(rotation);
+                _lastRotPos = inputPos;
+                HandleHighlightPreview(moveableObject);
+
+                if (GameManager.Instance.IsTutorial)
+                {
+                    if (rotation.sqrMagnitude > 7) //5-10 works
+                    {
+                        TutorialEvents.CallOnPartRotated();
+                    }
+                }
+            }
+        }
+
+        private void HandleExitConditionsOnMouseUp(Vector3 inputPos, IMoveable moveableObject)
+        {
+            if (_currentSelection != null)
+            {
+                //Debug.Log($"<color=blue> TryQualityAction</color>-->{_currentSelection} ");
+                TryPerformAction(QualityAction.eActionType.ROTATE, inputPos, _rotationAmount);
+                TryPerformAction(QualityAction.eActionType.TAP, inputPos, _rotationAmount);
+                _currentSelection.OnInteract();
+                if (moveableObject != null)
+                    CancelHighLightPreview(moveableObject);
+
+                UIManager.HideTouchDisplay();
+                _currentSelection.HandleInteractionTime(1);
+            }
+        }
         /************************************************************************************************************************/
 
         private void SwitchToDisplacement(Vector3 inputPos)
@@ -168,8 +185,6 @@ namespace UserInput
 
         }
 
-
-
         #region QualityActions
         public bool TryPerformAction(QualityAction.eActionType type, Vector3 inputPos, Vector2 rotationAmount)
         {
@@ -183,7 +198,7 @@ namespace UserInput
 
             return false;
         }
-
+        
         public ObjectController FindAbsoluteParent(ObjectController startingObj)
         {
             if (startingObj == null)

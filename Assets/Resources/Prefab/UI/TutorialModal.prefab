@@ -843,6 +843,18 @@ MonoBehaviour:
   _bgIMG: {fileID: 4023127058892192126}
   _modal: {fileID: 7627992198251810702}
   _userInput: {fileID: 0}
+  _tab: {fileID: 0}
+  _tutorialSequence:
+  - {fileID: 11400000, guid: 8d904b161bc1b2d4c9af6efe932527b9, type: 2}
+  - {fileID: 11400000, guid: 8d2f69cccfb5a8841ac862a65970cf74, type: 2}
+  - {fileID: 11400000, guid: 2b14c36410ef5444eb890b70622343a4, type: 2}
+  - {fileID: 11400000, guid: 9c4c5eadd1ac55e40bae18c379c31b12, type: 2}
+  - {fileID: 11400000, guid: 40e6ed46fd3b93f4e9e9644bd37b73f9, type: 2}
+  - {fileID: 11400000, guid: 5a14ba447ac843e4cb98ceba9d54a740, type: 2}
+  - {fileID: 11400000, guid: 809e66d864789d84888137fc8fb035f0, type: 2}
+  - {fileID: 11400000, guid: 4d142b66c4fbd07449a10d878267234a, type: 2}
+  - {fileID: 11400000, guid: bec9dd9895053a54394daa10f63f31ae, type: 2}
+  - {fileID: 11400000, guid: 81260d87147c8dc438ee0ad5cf6bc574, type: 2}
 --- !u!1 &7627992198251810702
 GameObject:
   m_ObjectHideFlags: 0

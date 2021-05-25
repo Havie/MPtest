@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 public static class TutorialEvents 
 {
-    public enum eTutorialEvent { FIRST_CONTINUE, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED}
+    public enum eTutorialEvent { CONTINUE_BUTTON, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED, PART_ROTATED ,HOLDING_HANDLE_BOLT, PART_CONSTRUCTED}
 
     /************************************************************************************************************************/
 
@@ -30,7 +29,7 @@ public static class TutorialEvents
     {
         switch (index)
         {
-            case eTutorialEvent.FIRST_CONTINUE:
+            case eTutorialEvent.CONTINUE_BUTTON:
                 {
                     if (add)
                         OnFirstContinueClicked += callback;
@@ -78,13 +77,37 @@ public static class TutorialEvents
                         OnPartDropped -= callback;
                     break;
                 }
+            case eTutorialEvent.PART_ROTATED:
+                {
+                    if (add)
+                        OnPartRotated += callback;
+                    else
+                        OnPartRotated -= callback;
+                    break;
+                }
+            case eTutorialEvent.PART_CONSTRUCTED:
+                {
+                    if (add)
+                        OnPartConstructed += callback;
+                    else
+                        OnPartConstructed -= callback;
+                    break;
+                } 
+            case eTutorialEvent.HOLDING_HANDLE_BOLT:
+                {
+                    if (add)
+                        OnHoldingHandleAndBolt += callback;
+                    else
+                        OnHoldingHandleAndBolt -= callback;
+                    break;
+                }
         }
 
         return null;
     }
 
     /************************************************************************************************************************/
-    public static void CallOnFirstContinueClicked() { OnFirstContinueClicked?.Invoke(new Void()); }
+    public static void CallOnContinueClicked() { OnFirstContinueClicked?.Invoke(new Void()); }
     static event Action<Void> OnFirstContinueClicked;
 
     public static void CallOnInventoryOpened() { OnInventoryOpen?.Invoke(new Void()); }
@@ -102,5 +125,12 @@ public static class TutorialEvents
     public static void CallOnPartDropped( ) { OnPartDropped?.Invoke(new Void()); }
     static event Action<Void> OnPartDropped;
 
+    public static void CallOnPartRotated() { OnPartRotated?.Invoke(new Void()); }
+    static event Action<Void> OnPartRotated;
 
+    public static void CallOnPartConstructed() { OnPartConstructed?.Invoke(new Void()); }
+    static event Action<Void> OnPartConstructed;
+    public static void CallOnHoldingHandleAndBolt() { OnHoldingHandleAndBolt?.Invoke(new Void()); }
+    static event Action<Void> OnHoldingHandleAndBolt;
 }
+
