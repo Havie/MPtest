@@ -8174,7 +8174,7 @@ PrefabInstance:
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.size
-      value: 5
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
@@ -8195,31 +8195,31 @@ PrefabInstance:
         type: 3}
       propertyPath: _tutorialSequence.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 4d142b66c4fbd07449a10d878267234a,
+      objectReference: {fileID: 11400000, guid: 8d904b161bc1b2d4c9af6efe932527b9,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: bec9dd9895053a54394daa10f63f31ae,
+      objectReference: {fileID: 11400000, guid: 8d2f69cccfb5a8841ac862a65970cf74,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: 81260d87147c8dc438ee0ad5cf6bc574,
+      objectReference: {fileID: 11400000, guid: 2b14c36410ef5444eb890b70622343a4,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.data[3]
       value: 
-      objectReference: {fileID: 11400000, guid: cb631ae8f769dc64396f500352f6fd5a,
+      objectReference: {fileID: 11400000, guid: 9c4c5eadd1ac55e40bae18c379c31b12,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.data[4]
       value: 
-      objectReference: {fileID: 11400000, guid: 0f7cccf6fef266e4091ea2f8c2669f21,
+      objectReference: {fileID: 11400000, guid: 40e6ed46fd3b93f4e9e9644bd37b73f9,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
@@ -8237,7 +8237,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _tutorialSequence.Array.data[7]
       value: 
-      objectReference: {fileID: 11400000, guid: 4d142b66c4fbd07449a10d878267234a,
+      objectReference: {fileID: 11400000, guid: 4eba66b8453350d47b24be02ba608aac,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
@@ -8248,13 +8248,37 @@ PrefabInstance:
         type: 3}
       propertyPath: _tutorialSequence.Array.data[8]
       value: 
-      objectReference: {fileID: 11400000, guid: bec9dd9895053a54394daa10f63f31ae,
+      objectReference: {fileID: 11400000, guid: 4d142b66c4fbd07449a10d878267234a,
         type: 2}
     - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
       propertyPath: _tutorialSequence.Array.data[9]
       value: 
+      objectReference: {fileID: 11400000, guid: bec9dd9895053a54394daa10f63f31ae,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[10]
+      value: 
       objectReference: {fileID: 11400000, guid: 81260d87147c8dc438ee0ad5cf6bc574,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[11]
+      value: 
+      objectReference: {fileID: 11400000, guid: cb631ae8f769dc64396f500352f6fd5a,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[12]
+      value: 
+      objectReference: {fileID: 11400000, guid: 0f7cccf6fef266e4091ea2f8c2669f21,
+        type: 2}
+    - target: {fileID: 740975429758617263, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: _tutorialSequence.Array.data[13]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9ff61fbeb199e334e92c0ea989284197,
         type: 2}
     - target: {fileID: 2915276864180271549, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}
@@ -11733,7 +11757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 2
-  _batchSize: 1
+  _batchSize: 2
   _autoSend: 0
   _addChaotic: 0
   _isStackable: 0

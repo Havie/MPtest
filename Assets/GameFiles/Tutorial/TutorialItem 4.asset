@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: TutorialItem 4
   m_EditorClassIdentifier: 
   _eventKey: 3
-  _onCompleteResponse: 2
   _title: Removing Parts from UI
   _description: Parts can be removed from an inventory slot by tapping and holding
-    on the item you wish to withdraw,then dragging your finger into the game space
+    on the item you wish to withdraw, then dragging your finger into the game space
   _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
   _timeInSecondsBeforeNextInstruction: 1

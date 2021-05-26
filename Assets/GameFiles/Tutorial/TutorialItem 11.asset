@@ -14,10 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _eventKey: 8
   _title: Constructing Parts
-  _description: 'Nice work!
+  _description: 'Next make sure the objects are lined up with similar attachment
+    angles like seen in the video. Rotate them as needed.
 
 
-    Do the same thing again and attach another blue
-    bolt to the 2nd hole on the green handle'
+    Attachment must be
+    met with a certain forward velocity just like in real life!
+
+    So make sure
+    you line up the attachment angles and come in with a bit of momentum !
+
+
+    Give
+    it a try!'
   _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
   _timeInSecondsBeforeNextInstruction: 1

@@ -18,7 +18,6 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     [SerializeField] GameObject _tab;
     [SerializeField] TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
-    private bool _firstTimeWelcomeMsg = true;
     private void Start()
     {
         if (GameManager.Instance.IsTutorial)
@@ -31,7 +30,9 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
             LoadNextTutorialData();
         }
         else
-            ShowPopup(false);
+        {
+            Destroy(this);
+        }
     }
 
     /// <summary>

@@ -12,21 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5bd67e969c34594ba569d82e2e863fc, type: 3}
   m_Name: TutorialItem 12
   m_EditorClassIdentifier: 
-  _eventKey: 9
-  _title: Quality Actions
-  _description: 'Certain work stations will require you to perform an action to increase
-    the objects quality.
-
-    This info will be displayed on your station instructions.
+  _eventKey: 8
+  _title: Constructing Parts
+  _description: 'Nice work!
 
 
-    A
-    quality action can be performed on the handle with bolts attached by rotating
-    the handle to see the butt end of the bolt.
-
-    Then tapping on the bolt. Confirmation
-    can be see with a green checkmark.
-
-'
+    Do the same thing again and attach another blue
+    bolt to the 2nd hole on the green handle'
   _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
   _timeInSecondsBeforeNextInstruction: 1
