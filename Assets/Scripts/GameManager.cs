@@ -92,6 +92,7 @@ public class GameManager : MonoSingleton<GameManager>
     ///Things are reliant on batchsize
     private void ValidateBatchSize(int amnt)
     {
+        Debug.Log($"<color=orange> BATCH CHANGED TO:</color> {amnt}");
         _batchSize = amnt;
         ValidateAutoSend();
         DetermineCurrentWorkStation();

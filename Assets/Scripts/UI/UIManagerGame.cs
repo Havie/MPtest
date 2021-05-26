@@ -9,7 +9,8 @@ using System.Collections.Generic;
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
     //[Header("Scene Loading Info")]
-    string _networkingSceneName = "MP_Lobby";
+    const string _lobbyScene = "MP_Lobby";
+    const string _mainMentSceneName = "Networking Scene";
 
     [Header("Game Components")]
     public GameObject _inventoryCanvas;  ///TODO fix this ref being public
@@ -231,12 +232,17 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             _inventoryCanvas.SetActive(false);
     }
 
-    ///Called from end results modal
+    ///Called from end results modal 
     public void ContinueFromEndResults()
     {
         //TODO?- reload to main menu and let them reconnect with new host settings / start over?
-        SceneLoader.LoadLevel(_networkingSceneName);
+        SceneLoader.LoadLevel(_lobbyScene);
 
+    }
+
+    public void ReturnToMainMenu()
+    {
+        SceneLoader.LoadLevel(_mainMentSceneName);
     }
 
     public void KanbanUpdateInventory(bool isInInventory, bool isEmpty, int itemID, List<QualityData> qualityData)

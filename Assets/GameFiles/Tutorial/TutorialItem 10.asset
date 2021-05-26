@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 10
   m_EditorClassIdentifier: 
   _eventKey: 7
+  _onCompleteResponse: 4
   _title: Constructing Parts
   _description: 'Parts held in your hands can be combined to make new parts.
 

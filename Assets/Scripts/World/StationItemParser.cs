@@ -126,7 +126,7 @@ public static class StationItemParser
                     if (ObjectManager.Instance.IsBasicItem(item)) ///decide if basic item 
                     {
                         int itemId = (int)item;
-                        Debug.Log($"{local_task}<color=orange> Addng basic item : </color> {itemId}");
+                        //Debug.Log($"{local_task}<color=orange> Addng basic item : </color> {itemId}");
                         for (int j = 0; j < batchSize; j++)
                         {
                             itemIDs.Add((int)item);

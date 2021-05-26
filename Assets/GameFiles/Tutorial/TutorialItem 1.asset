@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 1
   m_EditorClassIdentifier: 
   _eventKey: 2
-  _onCompleteResponse: 1
+  _onCompleteResponse: 0
   _title: Station Instructions
   _description: "Each station has a set of tasks they are expected to perform.\n\nYou
     can view these tasks by clicking the \"?\" icon next to the timer, at the top

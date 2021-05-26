@@ -5,8 +5,9 @@ using System;
 
 public static class TutorialEvents 
 {
-    public enum eTutorialEvent { CONTINUE_BUTTON, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED, PART_ROTATED ,HOLDING_HANDLE_BOLT, PART_CONSTRUCTED, QUALITY_ACTION_TAP, QUALITY_ACTION_ROTATE}
-
+    public enum eTutorialEvent { CONTINUE_BUTTON, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED, PART_ROTATED ,HOLDING_HANDLE_BOLT, PART_CONSTRUCTED, QUALITY_ACTION_TAP, QUALITY_ACTION_ROTATE, SWITCH, ITEMASSIGNED, SHIP}
+    public static bool ConstructionLocked { get; private set; }
+    public static void LockConstruction(bool cond) { ConstructionLocked = cond; }
     /************************************************************************************************************************/
 
     public static void RegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)
@@ -117,6 +118,30 @@ public static class TutorialEvents
                         OnQARotate -= callback;
                     break;
                 }
+            case eTutorialEvent.SWITCH:
+                {
+                    if (add)
+                        OnSwitch += callback;
+                    else
+                        OnSwitch -= callback;
+                    break;
+                }
+            case eTutorialEvent.ITEMASSIGNED:
+                {
+                    if (add)
+                        OnItemAssigned += callback;
+                    else
+                        OnItemAssigned -= callback;
+                    break;
+                }
+            case eTutorialEvent.SHIP:
+                {
+                    if (add)
+                        OnShip += callback;
+                    else
+                        OnShip -= callback;
+                    break;
+                }
         }
 
         return null;
@@ -152,5 +177,15 @@ public static class TutorialEvents
     static event Action<Void> OnQATap;
     public static void CallOnQARotate() { OnQARotate?.Invoke(new Void()); }
     static event Action<Void> OnQARotate;
+
+    public static void CallOnSwitch() { OnSwitch?.Invoke(new Void()); }
+    static event Action<Void> OnSwitch;
+
+    public static void CallOnItemAssigned() { OnItemAssigned?.Invoke(new Void()); }
+    static event Action<Void> OnItemAssigned;
+
+    public static void CallOnShip() { OnShip?.Invoke(new Void()); }
+    static event Action<Void> OnShip;
+
 }
 

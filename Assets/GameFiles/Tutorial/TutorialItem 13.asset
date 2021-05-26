@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 13
   m_EditorClassIdentifier: 
   _eventKey: 9
+  _onCompleteResponse: 1
   _title: Quality Actions
   _description: 'Certain work stations will require you to perform an action to increase
     the objects quality.

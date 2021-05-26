@@ -8,7 +8,7 @@ using dataTracking;
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
-public class UIManagerNetwork : MonoSingleton<UIManagerNetwork>
+public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 {
     WorkStationManager _workstationManager;
 

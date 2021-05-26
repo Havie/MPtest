@@ -8,7 +8,8 @@ using System.Collections;
 
 public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 {
-
+    public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU , LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION}
+    
     [SerializeField] TextMeshProUGUI _txtTitle;
     [SerializeField] TextMeshProUGUI _txtBody;
     [SerializeField] VideoPlayer _video;
@@ -59,7 +60,6 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 
         if (_tutorialIndex >= _tutorialSequence.Length)
         {
-            ShowPopup(false);
             Destroy(this);
             Debug.Log($"END OF TUTORIAL");
             return;
@@ -77,6 +77,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     {
         var currTutorial = _tutorialSequence[_tutorialIndex];
         TutorialEvents.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
+        HandleFollowUpActions(currTutorial.FollowUpResponse);
         ///Give the player a second to see the results of their actions
         StartCoroutine(NextStepDelay(currTutorial.TimeDelayBeforeNextInstruction));
 
@@ -89,6 +90,39 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
         ShowPopup(true);
         LoadNextTutorialData();
 
+    }
+
+    private void HandleFollowUpActions(eFollowUpActions action)
+    {
+        switch (action)
+        {
+            case eFollowUpActions.SPAWNPARTS:
+                {
+                    ObjectRecord.eItemID[] tutorialOrder = new ObjectRecord.eItemID[2]
+                    {
+                        ObjectRecord.eItemID.PinkwPurplePlug,
+                        ObjectRecord.eItemID.RedBot
+                    };
+                    PartDropper.Instance.SendInOrder(tutorialOrder);
+                    break;
+                }
+            case eFollowUpActions.MAINMENU:
+                {
+                    GameManager.Instance.IsTutorial = false;
+                    UIManagerGame.Instance.ReturnToMainMenu();
+                    break;
+                }
+            case eFollowUpActions.LOCK_CONSTRUCTION:
+                {
+                    TutorialEvents.LockConstruction(true);
+                    break;
+                }
+            case eFollowUpActions.UNLOCK_CONSTRUCTION:
+                {
+                    TutorialEvents.LockConstruction(false);
+                    break;
+                }
+        }
     }
 
     private void OnDestroy()

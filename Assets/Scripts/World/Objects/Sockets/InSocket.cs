@@ -30,8 +30,10 @@ public class InSocket : Socket
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (!_canCollide)
+            return;
+
+        if (GameManager.Instance.IsTutorial && TutorialEvents.ConstructionLocked)
             return;
 
         if (_in) // only have the female sockets checking collisions 

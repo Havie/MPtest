@@ -11,8 +11,8 @@ public class TutorialItem : ScriptableObject
     public TutorialEvents.eTutorialEvent EventKey => _eventKey;
     [SerializeField] TutorialEvents.eTutorialEvent _eventKey;
 
-    //public UITutorialModal.eFollowUpActions FollowUpResponse => _onCompleteResponse;
-    //[SerializeField] UITutorialModal.eFollowUpActions _onCompleteResponse;
+    public UITutorialModal.eFollowUpActions FollowUpResponse => _onCompleteResponse;
+    [SerializeField] UITutorialModal.eFollowUpActions _onCompleteResponse;
     public string TitleTxt => _title;
     [SerializeField] string _title;
 

@@ -143,6 +143,11 @@ public class OutInventory : UIInventoryManager
                 return;
             }
         }
+        ///Only 1 item in the tutorial batch, so do this here, verse in ambigious bSlot
+        if(GameManager.instance.IsTutorial)
+        {
+            TutorialEvents.CallOnItemAssigned();
+        }
     }
 
     public void SendBatch()
@@ -178,6 +183,11 @@ public class OutInventory : UIInventoryManager
         }
         ///If any items in extra slots, should be assigned to the next batch
         ParseExtraSlotsAndReassignIfNeeded();
+
+        if (GameManager.instance.IsTutorial)
+        {
+            TutorialEvents.CallOnShip();
+        }
     }
 
     private void ParseExtraSlotsAndReassignIfNeeded()

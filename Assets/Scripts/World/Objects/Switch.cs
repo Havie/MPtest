@@ -52,6 +52,10 @@ public class Switch : InteractableObject
                 ///SPAWN OBJ 13 in exact position
                 ///Play VFX on OBJ 13
                 ObjectManager.Instance.SpawnFinalPower(oc, quality.Qualities);
+                if(GameManager.Instance.IsTutorial)
+                {
+                    TutorialEvents.CallOnSwitch();
+                }
             }
             else
             {
@@ -85,8 +89,6 @@ public class Switch : InteractableObject
         else
             Debug.Log("<color=yellow>no vfx?</color>");
     }
-
-
 
 
     private void ToggleChildren(bool cond)

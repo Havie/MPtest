@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 0
   m_EditorClassIdentifier: 
   _eventKey: 0
+  _onCompleteResponse: 3
   _title: Tutorial
   _description: 'Welcome to the Buzz Digital tutorial !
 
