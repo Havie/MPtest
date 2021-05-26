@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5bd67e969c34594ba569d82e2e863fc, type: 3}
+  m_Name: TutorialItem 8
+  m_EditorClassIdentifier: 
+  _eventKey: 4
+  _title: Picking Up Parts
+  _description: "Parts can be picked up by tapping and holding for a short duration.\n\nAs
+    you begin to pick up an object, \nyou will begin to see a white radial wheel
+    begin to fill.\n\nOn completion the part will turn slightly transparent and begin
+    to follow your fingers dragging motion."
+  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _timeInSecondsBeforeNextInstruction: 1

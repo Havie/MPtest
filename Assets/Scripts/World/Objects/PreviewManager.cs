@@ -100,6 +100,10 @@ public static class PreviewManager
         ResetSelf();
         _inMiddleOfClear = false;
 
+        if(GameManager.Instance.IsTutorial)
+        {
+            TutorialEvents.CallOnPartConstructed();
+        }
     }
 
     public static void UndoPreview()

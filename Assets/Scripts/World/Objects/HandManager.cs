@@ -21,6 +21,7 @@ public static class HandManager
 
     public static void PickUpItem(ObjectController item)
     {
+        //Debug.Log($"<color=green>pickup item</color> {item}");
         if (HandContains(item))
             return; ///might have to reorder queue instead if this is possible?
 
@@ -30,7 +31,7 @@ public static class HandManager
         _handArray[1] = _handArray[0];
         _handArray[0] = item;
 
-        if (_handArray[1]!=null)
+        if (_handArray[1] != null)
         {
             _handArray[1].PickedUp(2);
             _handArray[1].SetHandPreviewingMode(false);
@@ -39,15 +40,15 @@ public static class HandManager
         _handArray[0].PickedUp(1);
         item.SetHandPreviewingMode(false);
 
-
         CheckHandPositions();
         CancelIntensityChangePreview();
+        HandleEvents();
     }
+
     public static void DropItem(ObjectController item)
     {
         if (item)
         {
-
             bool weHaveItem = false;
 
             if (_handArray[0] == item)
@@ -58,6 +59,7 @@ public static class HandManager
                 if (_handArray[0] != null)
                     _handArray[0].PickedUp(1); ///reset our hand index
                 _handArray[1] = null;
+                Debug.Log($"droped item");
             }
             else if (_handArray[1] == item)
             {
@@ -67,15 +69,29 @@ public static class HandManager
             if (weHaveItem)
             {
                 item.PutDown();
-                // Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
+                Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
                 item.SetHandPreviewingMode(false);
                 CheckHandPositions();
                 CancelIntensityChangePreview();
+            }
+
+            if (GameManager.Instance && GameManager.Instance.IsTutorial)
+            {
+                TutorialEvents.CallOnPartDropped();
             }
         }
 
     }
 
+    public static void DropAllItems()
+    {
+        Debug.Log($"static call heard");
+        for (int i = 0; i < _handArray.Length; i++)
+        {
+            Debug.Log($"saying to drop: {_handArray[i]}");
+            DropItem(_handArray[i]);
+        }
+    }
 
     public static void StartToHandleIntensityChange(IHighlightable potentialItemToBePickedUp)
     {
@@ -109,14 +125,14 @@ public static class HandManager
         // (UserInput.Instance._pressTimeCURR/UserInput.Instance._pressTimeMAX)/2));
 
         ///If we are already picking this item up, we dont wana do anything
-        if (numItemsInhand < 2|| potentialItemToBePickedUp == _handArray[0] || potentialItemToBePickedUp == _handArray[1])
+        if (numItemsInhand < 2 || potentialItemToBePickedUp == _handArray[0] || potentialItemToBePickedUp == _handArray[1])
             return;
         ///start to fade out next item to be dropped
         ObjectController ItemToBeDroppedNext = _handArray[1];
         var currentIntensity2 = ItemToBeDroppedNext.GetHighlightIntensity();
         ItemToBeDroppedNext.ChangeHighlightAmount(currentIntensity2 - _intensityChange);
 
- 
+
         if (!_previewingAChange)
         {
             SetHandPreviewMode(true);
@@ -143,13 +159,13 @@ public static class HandManager
 
     public static void CancelIntensityChangePreview()
     {
-        if (CountPickedUpItems()==0)
+        if (CountPickedUpItems() == 0)
             return;
-        if(_previewingAChange)
+        if (_previewingAChange)
             SetHandPreviewMode(false);
     }
 
-  
+
     /// <summary> If object is about to be deleted use this instead </summary>
     public static void RemoveDeletedItem(ObjectController item)
     {
@@ -221,7 +237,6 @@ public static class HandManager
 
     }
 
-
     private static void CheckHandPositions()
     {
         if (CountPickedUpItems() < 2)
@@ -236,5 +251,22 @@ public static class HandManager
         Debug.LogWarning(q);
     }
 
+    private static void HandleEvents()
+    {
+        if (GameManager.Instance && GameManager.Instance.IsTutorial)
+        {
+            TutorialEvents.CallOnPartPickedUp();
+            ObjectController obj1 = _handArray[0];
+            ObjectController obj2 = _handArray[1];
+            if (obj1 != null && obj2 != null)
+            {
+                if (obj2._myID == ObjectRecord.eItemID.GreenRect1
+                     && obj1._myID == ObjectRecord.eItemID.BlueBolt)
+                {
+                    TutorialEvents.CallOnHoldingHandleAndBolt();
+                }
+            }
+        }
+    }
 
 }

@@ -23,6 +23,7 @@ public class GameManager : MonoSingleton<GameManager>
     public bool _HUDManagement = false;
     public bool _HostDefectPausing = false;
     public bool StartWithWIP = false;
+    public bool IsTutorial = false;
     #endregion
 
     public bool RoundShouldStart { get; private set; } = false;
@@ -35,6 +36,7 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] WorkStationManager _batchWorkStationManager = default;
     [SerializeField] WorkStationManager _stackBatchWorkStationManager = default;
     [SerializeField] WorkStationManager _pullWorkStationManager = default;
+    [SerializeField] WorkStationManager _tutorialWorkStationManager = default;
     [SerializeField] PartAssemblyBook _assemblyBook = default;
     public PartAssemblyBook AssemblyBook => _assemblyBook;
     public WorkStationManager CurrentWorkStationManager { get; private set; }
@@ -70,9 +72,15 @@ public class GameManager : MonoSingleton<GameManager>
             CurrentWorkStationManager = _pullWorkStationManager;
         else if (_isStackable)
             CurrentWorkStationManager = _stackBatchWorkStationManager;
-        else
+        else if (!IsTutorial)
             CurrentWorkStationManager = _batchWorkStationManager;
+        else
+            CurrentWorkStationManager = _tutorialWorkStationManager;
 
+    }
+    public void ForceTutorialWSM()
+    {
+        CurrentWorkStationManager = _tutorialWorkStationManager;
     }
     /** Work station is used to identify what items are produced here and where items are sent to */
     public void AssignWorkStation(WorkStation station)
@@ -84,6 +92,7 @@ public class GameManager : MonoSingleton<GameManager>
     ///Things are reliant on batchsize
     private void ValidateBatchSize(int amnt)
     {
+        Debug.Log($"<color=orange> BATCH CHANGED TO:</color> {amnt}");
         _batchSize = amnt;
         ValidateAutoSend();
         DetermineCurrentWorkStation();

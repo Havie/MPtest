@@ -59,9 +59,6 @@ public class sClient
                 if (_socket != null)
                 {
                     _stream.BeginWrite(packet.ToArray(), 0, packet.Length(), null, null);
-
-                    System.Net.Sockets.Socket client = new System.Net.Sockets.Socket(AddressFamily.InterNetwork,SocketType.Stream, ProtocolType.Tcp);
-                    client.SendFile("path");
                 }
             }
             catch (Exception e)

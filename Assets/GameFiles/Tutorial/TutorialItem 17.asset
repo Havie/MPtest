@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5bd67e969c34594ba569d82e2e863fc, type: 3}
+  m_Name: TutorialItem 17
+  m_EditorClassIdentifier: 
+  _eventKey: 13
+  _onCompleteResponse: 0
+  _title: Sending Items
+  _description: 'Once your OUT bin is full , the SEND option will appear.
+
+
+    Click
+    this to send the items in your bin to the next station.'
+  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _timeInSecondsBeforeNextInstruction: 0.25

@@ -5,16 +5,20 @@ namespace UserInput
 {
     public class InputHandler : MonoBehaviour
     {
-        private bool _IsMobileMode;
-        
 
+        [SerializeField] Texture2D _customMouseCursor;
+        private bool _IsMobileMode;
         private UserInputManager _userInput;
 
         /************************************************************************************************************************/
 
         void Awake() { _IsMobileMode = Application.isMobilePlatform; }
 
-        void Start(){ _userInput = UserInputManager.Instance; }
+        void Start()
+        { 
+            _userInput = UserInputManager.Instance;
+            Cursor.SetCursor(_customMouseCursor, Vector2.zero, CursorMode.Auto);
+        }
         /************************************************************************************************************************/
 
         void Update()

@@ -82,8 +82,8 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
             return;
 
         var slotCount = _slots.Length + _extraSlots.Count;
-        var batchSize = GameManager.instance._batchSize;
-
+        //var batchSize = GameManager.instance._batchSize;
+        int extraPaddingY = 1 ;
         if (slotCount == 1)
         {
             _gridLayoutGrp.constraintCount = 1;
@@ -91,11 +91,14 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         }
         else
         {
-            float cellSize = 0;
+            //float cellSize = 0;
+            ///If its not divisible by 2, we need to add another row of padding
+            bool isEven = slotCount % 2 == 0;
+            if(!isEven)
+                extraPaddingY = 2;
 
             _gridLayoutGrp.constraintCount = 2;
-            cellSize = _minCellSize;
-
+ 
             //Debug.Log($"SlotCount={slotCount}");
             //if (slotCount < 5)
             //{
@@ -113,13 +116,14 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
             //if (cellSize < _minCellSize)
             //    cellSize = _minCellSize;
 
-            _gridLayoutGrp.cellSize = new Vector2(cellSize, cellSize);
+            _gridLayoutGrp.cellSize = new Vector2(_minCellSize, _minCellSize);
             //Debug.Log($"Set cellSize to {cellSize}");
         }
 
+
         _numberOfColumns = _gridLayoutGrp.constraintCount;
         _gridCellWidth = _gridLayoutGrp.cellSize.x;
-        _gridCellHeight = _gridLayoutGrp.cellSize.y;
+        _gridCellHeight = _gridLayoutGrp.cellSize.y * extraPaddingY;
     }
     /**Determines the size of the content area based on how many items/rows we have. The overall size affects scrolling */
     protected virtual void SetSizeOfContentArea()

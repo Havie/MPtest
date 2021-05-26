@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Red Bot
   m_EditorClassIdentifier: 
   Identifier: 4
-  _requiredActions: 2
+  _requiredActions: 1
   _qualityAction: 1
-  _requiredRotationThreshold: 90
+  _requiredRotationThreshold: 359

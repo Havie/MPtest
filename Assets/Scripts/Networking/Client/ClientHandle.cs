@@ -34,8 +34,6 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         //give UDP the same port our tcp connection is using 
         Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
     }
-
-
     public void ReceivedMpData(sPacket packet)
     {
         //Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
@@ -61,7 +59,11 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         int myStation = (int)ws._myStation;
         int output = (int)ws._sendOutputToStation;
         Vector3 loc = ws.StationLocation;
-        Vector3 endLoc = gm.CurrentWorkStationManager.GetStationByEnumIndex(output).StationLocation;
+        Vector3 endLoc = Vector3.zero;
+
+        if(ws._sendOutputToStation != WorkStation.eStation.NONE)
+            endLoc = gm.CurrentWorkStationManager.GetStationByEnumIndex(output).StationLocation;
+
         float distance = Mathf.Abs(Vector3.Distance(loc, endLoc));
 
         ClientSend.Instance.SendTransportData(myStation, output, distance);

@@ -33,7 +33,6 @@ public static class UIManager
         StationToInject = stationID;
     }
 
-
     public static void ShowPreviewInvSlot(bool cond, Vector3 pos, Sprite img)
     {
         if (_invManager)
@@ -46,12 +45,8 @@ public static class UIManager
             _invManager.ShowPreviewMovingIcon(cond, pos, img);
     }
 
-
     public static void BeginLevel()
     {
-        LoadedFromMenu = true;
-        //Debug.Log($"<color=purple> LoadedFromMenu</color> ={LoadedFromMenu}");
-     
         if (_invManager)
             _invManager.BeginLevel();
     }

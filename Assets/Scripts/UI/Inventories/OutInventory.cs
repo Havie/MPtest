@@ -41,8 +41,6 @@ public class OutInventory : UIInventoryManager
             _sendButton.interactable = false;
         }
         base.Start();
-        //Debug.LogWarning("(s)SLOTS SIZE=" + _slots.Length);
-
     }
 
 
@@ -59,10 +57,13 @@ public class OutInventory : UIInventoryManager
         {
             _sendButton.gameObject.SetActive(false); ///turn off the send button
         }
-
+        if(gm.IsTutorial)
+        {
+            ///Force the output to only be 1 item (not possible w batch==2)
+            return new List<int>()
+            { 13};
+        }
         return StationItemParser.ParseItemsAsOUT(_batchSize, gm._isStackable, gm.CurrentWorkStationManager, gm._workStation);
-        // return ParseItems(wm, myWS, false) * BATCHSIZE;
-
     }
 
     private void SetUpStartingItems(List<int> itemIDs)
@@ -142,6 +143,11 @@ public class OutInventory : UIInventoryManager
                 return;
             }
         }
+        ///Only 1 item in the tutorial batch, so do this here, verse in ambigious bSlot
+        if(GameManager.instance.IsTutorial)
+        {
+            TutorialEvents.CallOnItemAssigned();
+        }
     }
 
     public void SendBatch()
@@ -177,6 +183,11 @@ public class OutInventory : UIInventoryManager
         }
         ///If any items in extra slots, should be assigned to the next batch
         ParseExtraSlotsAndReassignIfNeeded();
+
+        if (GameManager.instance.IsTutorial)
+        {
+            TutorialEvents.CallOnShip();
+        }
     }
 
     private void ParseExtraSlotsAndReassignIfNeeded()
