@@ -23,5 +23,5 @@ MonoBehaviour:
     Try
     picking up a part, removing your finger from the screen. Then swipping across
     the part to rotate it. '
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: b0dfe330fde31204ea90f0102250ff55, type: 3}
   _timeInSecondsBeforeNextInstruction: 2

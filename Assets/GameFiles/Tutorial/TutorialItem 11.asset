@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 11
   m_EditorClassIdentifier: 
   _eventKey: 8
+  _onCompleteResponse: 0
   _title: Constructing Parts
   _description: 'Next make sure the objects are lined up with similar attachment
     angles like seen in the video. Rotate them as needed.
@@ -27,5 +28,5 @@ MonoBehaviour:
 
     Give
     it a try!'
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: e7351d968e45f774e96fdfb883575972, type: 3}
   _timeInSecondsBeforeNextInstruction: 1

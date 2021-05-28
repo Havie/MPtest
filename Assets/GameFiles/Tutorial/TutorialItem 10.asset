@@ -29,5 +29,5 @@ MonoBehaviour:
 
 
     Try picking up the green handle first, then the blue bolt.'
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: 939bf6c552ade0a4ca3502a5ac77e359, type: 3}
   _timeInSecondsBeforeNextInstruction: 1

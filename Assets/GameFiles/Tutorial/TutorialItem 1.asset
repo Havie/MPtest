@@ -18,5 +18,5 @@ MonoBehaviour:
   _description: "Each station has a set of tasks they are expected to perform.\n\nYou
     can view these tasks by clicking the \"?\" icon next to the timer, at the top
     of the screen. \n\nGo ahead and try it."
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: 054b978dd5a8ff04aad9b320005d5c9c, type: 3}
   _timeInSecondsBeforeNextInstruction: 1

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: TutorialItem 5
   m_EditorClassIdentifier: 
   _eventKey: 3
+  _onCompleteResponse: 0
   _title: Hand Limit
   _description: Try removing another item from the inventory and bringing it into
     the work space.
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: ed5a2d72f21826a4fa30d0f18cfb3e5e, type: 3}
   _timeInSecondsBeforeNextInstruction: 1
