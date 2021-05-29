@@ -20,5 +20,5 @@ MonoBehaviour:
 
     Now its time to
     return to the main menu and join a multiplayer session.'
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: b59d25530d10c354995f11ba744eeb0e, type: 3}
   _timeInSecondsBeforeNextInstruction: 0.5

@@ -18,5 +18,5 @@ MonoBehaviour:
   _description: "The canister is almost complete.\n\nRotate the canister to expose
     the back side of the handle,\nthen click the switch. \n\nIf quality is high enough
     it will transform to the final item."
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: 507462423d68afb448093c512b50206b, type: 3}
   _timeInSecondsBeforeNextInstruction: 1
