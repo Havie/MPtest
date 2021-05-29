@@ -25,5 +25,5 @@ MonoBehaviour:
     If you
     ever need to re-read the last tutorial instruction you can click the tab shown
     in the video.'
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: 6f8a1eeaa3ecab24a9cbbeb92418f2ac, type: 3}
   _timeInSecondsBeforeNextInstruction: 0

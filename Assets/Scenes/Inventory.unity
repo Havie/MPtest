@@ -484,7 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1587b68807d7f0c48b796ade9f0d34fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _customMouseCursor: {fileID: 2800000, guid: e81db6dc6e8627943a16cdfaa862b14a, type: 3}
+  _customMouseCursor: {fileID: 2800000, guid: 9dd9d11848cd97848bd6cba6684e48dc, type: 3}
 --- !u!114 &112527777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8355,6 +8355,11 @@ PrefabInstance:
       propertyPath: m_text
       value: "Welcome to the lean manufacturing tutorial ! \r\n\r\nHere we will guide
         you through a few steps to help you interact with the simulation."
+      objectReference: {fileID: 0}
+    - target: {fileID: 5974106069375620053, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7232850376825811755, guid: 339cf1641bf4bc148a9ae121b32fd6fb,
         type: 3}

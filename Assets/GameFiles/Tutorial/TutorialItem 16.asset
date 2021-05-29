@@ -21,5 +21,5 @@ MonoBehaviour:
 
     You can do so by opening your OUT bin and dragging the
     item into inventory slot. Or by dragging the item directly onto the OUT bin itself.'
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: 3d6c1f0d865678545ab330620b88a2f1, type: 3}
   _timeInSecondsBeforeNextInstruction: 1

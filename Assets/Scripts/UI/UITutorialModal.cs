@@ -19,6 +19,10 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     [SerializeField] GameObject _tab;
     [SerializeField] TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
+
+
+    public bool DISABLED = false;
+
     private void Start()
     {
         if (GameManager.Instance.IsTutorial)
@@ -75,6 +79,8 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 
     private void TutorialActionSuccess(Void cond)
     {
+        if (DISABLED)
+            return;
         var currTutorial = _tutorialSequence[_tutorialIndex];
         TutorialEvents.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
         HandleFollowUpActions(currTutorial.FollowUpResponse);

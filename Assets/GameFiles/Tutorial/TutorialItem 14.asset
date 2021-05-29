@@ -24,5 +24,5 @@ MonoBehaviour:
 
     Then swipe
     vertically on either disc till one has done a full 360 degree rotation.'
-  _video: {fileID: 32900000, guid: f562d5421a441a24a844c7d9686763e4, type: 3}
+  _video: {fileID: 32900000, guid: 922bc308e16806044ae1dcbf8f35af8b, type: 3}
   _timeInSecondsBeforeNextInstruction: 1
