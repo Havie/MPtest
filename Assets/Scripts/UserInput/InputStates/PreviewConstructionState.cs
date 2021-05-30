@@ -27,13 +27,13 @@ namespace UserInput
         /************************************************************************************************************************/
         public override void Execute(InputCommand command)
         {
-            Vector3 pos = command.Position;
-            CheckPreviewConstruction(command, pos);
+           // Vector3 pos = command.Position;
+            CheckPreviewConstruction(command);
         }
         /************************************************************************************************************************/
 
 
-        public bool CheckPreviewConstruction(InputCommand command, Vector3 pos)
+        public bool CheckPreviewConstruction(InputCommand command)
         {
             IConstructable moveableObject = _currentSelection as IConstructable;
             bool inputDown = command.DOWN || command.HOLD;

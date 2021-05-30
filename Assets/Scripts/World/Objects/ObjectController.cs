@@ -352,6 +352,7 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         return _parent == null ? this : _parent.FindAbsoluteParent();
     }
+    public int MyID() => (int)_myID;
     #endregion
 
     /************************************************************************************************************************/
@@ -375,11 +376,22 @@ public class ObjectController : HighlightableObject, IConstructable
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag.Equals("Table"))
+        if (!_hittingTable)
         {
-            _hittingTable = true;
-            //_lastGoodYAboveTable = this.transform.position.y;
-            return;
+            var otherGo = other.gameObject;
+            if (otherGo.tag.Equals("Table"))
+            {
+                _hittingTable = true;
+                return;
+            }
+            ///Bolts were able to land ontop of eachother after colliders got bigger,
+            ///do this to push them off eachother
+            var rb= otherGo.GetComponent<Rigidbody>();
+            if(rb)
+            {
+                Vector3 dir = (otherGo.transform.position - this.transform.position).normalized;
+                rb.AddForce(dir * 10);
+            }
         }
     }
 
