@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 14
   m_EditorClassIdentifier: 
   _eventKey: 10
-  _onCompleteResponse: 0
+  _onCompleteResponse: 8
   _title: Quality Actions
   _description: 'Rotation is the second type of quality action.
 

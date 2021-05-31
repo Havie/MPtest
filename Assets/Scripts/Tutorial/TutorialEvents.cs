@@ -7,7 +7,11 @@ public static class TutorialEvents
 {
     public enum eTutorialEvent { CONTINUE_BUTTON, INV_OPEN, INSTRUCTIONS, UIPART_REMOVED, PART_PICKEDUP, PART_DROPPED, PART_ROTATED ,HOLDING_HANDLE_BOLT, PART_CONSTRUCTED, QUALITY_ACTION_TAP, QUALITY_ACTION_ROTATE, SWITCH, ITEMASSIGNED, SHIP}
     public static bool ConstructionLocked { get; private set; }
+    public static bool SwitchLocked { get; private set; }
     public static void LockConstruction(bool cond) { ConstructionLocked = cond; }
+    public static void LockSwitch(bool cond) { SwitchLocked = cond; }
+    public static void LockBins(bool cond) { OnBinLocked?.Invoke(cond);}
+    public static event Action<bool> OnBinLocked;
     /************************************************************************************************************************/
 
     public static void RegisterForTutorialEvent(eTutorialEvent index, Action<Void> callback)

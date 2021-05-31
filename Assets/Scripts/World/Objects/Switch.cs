@@ -26,6 +26,10 @@ public class Switch : InteractableObject
 
     public override void OnInteract()
     {
+        if(GameManager.Instance.IsTutorial && TutorialEvents.SwitchLocked)
+        {
+            return;
+        }
         Debug.Log($"What actt");
         _on = !On;
         ToggleChildren(On);
