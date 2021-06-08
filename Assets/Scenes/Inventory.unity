@@ -6515,6 +6515,21 @@ PrefabInstance:
       propertyPath: m_firstOverflowCharacterIndex
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 2555038399510213953, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555038399510213953, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555038399510213953, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
       propertyPath: m_LocalPosition.x
