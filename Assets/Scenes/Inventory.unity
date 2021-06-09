@@ -6588,7 +6588,7 @@ PrefabInstance:
     - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 160
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 2555038399510213955, guid: 7d94f475735ed9f4f9ccbaddc41d80ed,
         type: 3}
@@ -11019,7 +11019,7 @@ PrefabInstance:
     - target: {fileID: 1341619779162170361, guid: 224493f12b6da8f419ef78fcd3d138d6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1341619779162170361, guid: 224493f12b6da8f419ef78fcd3d138d6,
         type: 3}
@@ -12318,7 +12318,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -126.5, y: -98.4}
+  m_AnchoredPosition: {x: -165, y: -98.1}
   m_SizeDelta: {x: 80.04675, y: 40.440292}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2085754809
@@ -12904,6 +12904,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InBinCanvas_Rect
+      objectReference: {fileID: 0}
+    - target: {fileID: 588519582685436532, guid: 407b501f476975b44af1f71a6f71f136,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 588519582685436533, guid: 407b501f476975b44af1f71a6f71f136,
         type: 3}
@@ -17150,6 +17155,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: OutBinCanvas_Rect
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160359910684320379, guid: 2513ca1a613c14843be25524dc7a6f84,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9160359911300399660, guid: 2513ca1a613c14843be25524dc7a6f84,
         type: 3}
