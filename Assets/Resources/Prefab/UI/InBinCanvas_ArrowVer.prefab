@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 7444349487138119531}
   - component: {fileID: 7444349487138119532}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: ObjCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -654,7 +654,7 @@ GameObject:
   - component: {fileID: 7444349487837757676}
   - component: {fileID: 7444349487837757677}
   m_Layer: 0
-  m_Name: InBinCanvas_Arrow
+  m_Name: InBinCanvas_ArrowVer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -754,7 +754,7 @@ GameObject:
   - component: {fileID: 7444349488312164518}
   - component: {fileID: 7444349488312164519}
   m_Layer: 0
-  m_Name: Text (TMP) (1)
+  m_Name: Username
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
