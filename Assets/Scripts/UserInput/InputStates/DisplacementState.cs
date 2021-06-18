@@ -9,6 +9,7 @@ namespace UserInput
         private IAssignable _lastSlot;
         private float _offsetFromFinger;
 
+        private bool _previewingInUi = false;
         public DisplacementState(UserInputManager input, float offsetFromFinger)
         {
             _brain = input;
@@ -27,6 +28,7 @@ namespace UserInput
 
         public override void EnableState(IInteractable currentSelection)
         {
+            _previewingInUi = false;
             _currentSelection = currentSelection;
             var moveableObject = _currentSelection as IMoveable;
             if (moveableObject != null)
@@ -83,19 +85,20 @@ namespace UserInput
                 }
                 else
                 {
-                     EnsureObjectIsInValidLocation(moveableObject);
+                    EnsureObjectIsInValidLocation(moveableObject);
                 }
 
                 //Really weird Fix to prevent raycast bug
                 FixRayCastBug();
                 _brain.SwitchState(_brain._freeState, _currentSelection);
             }
+
         }
 
         /// <summary>
         /// Shows the Icon of the picked up obj above your finger when moving an object
         /// </summary>
-        private void ShowMovingPreviewIcon(IMoveable moveableObject, Vector3 inputPos)
+        private void ShowIconAboveFinger(IMoveable moveableObject, Vector3 inputPos)
         {
             ObjectController oc = moveableObject as ObjectController;
             if (oc)
@@ -135,9 +138,9 @@ namespace UserInput
                 box.enabled = true;
             }
         }
-       /// <summary>
-       /// Changes the objects appearance to unhidden and undoes any slot previews
-       /// </summary>
+        /// <summary>
+        /// Changes the objects appearance to unhidden and undoes any slot previews
+        /// </summary>
         private void ResetObjectAndSlot(IConstructable moveableObject, Vector3 inputPos)
         {
             if (moveableObject != null)
@@ -158,20 +161,25 @@ namespace UserInput
             Vector3 worldLoc = _brain.GetInputWorldPos(_zDepth);
             worldLoc.z = moveableObject.DesiredSceneDepth();
             moveableObject.OnFollowInput(worldLoc);
-            ShowMovingPreviewIcon(moveableObject, inputPos);
+            ShowIconAboveFinger(moveableObject, inputPos);
 
+            ///Dont want to put into UI, if in a preview construction
             if (slot != null) ///we are hovering over a slot 
             {
                 MoveOverSlot(inputPos, moveableObject, slot);
             }
-            else if (PreviewManager._inPreview)
-            {
-                _brain.SwitchState(_brain._previewState, _currentSelection); ///dont want to reset the Object while in preview or it wont be hidden
-            }
             else
             {
-                ///Show the objects mesh again and undo any slot icon previews
-                ResetObjectAndSlot(moveableObject as IConstructable, inputPos);
+                ///We only want to preview a construction if were not interactng w the UI
+                if (PreviewManager._inPreview)
+                {
+                    _brain.SwitchState(_brain._previewState, _currentSelection); ///dont want to reset the Object while in preview or it wont be hidden
+                }
+                else
+                {
+                    ///Show the objects mesh again and undo any slot icon previews
+                    ResetObjectAndSlot(moveableObject as IConstructable, inputPos);
+                }
             }
         }
         private void MoveOverSlot(Vector3 inputPos, IMoveable moveableObject, IAssignable slot)
@@ -179,27 +187,24 @@ namespace UserInput
             UIManager.ShowPreviewMovingIcon(false, Vector3.zero, null);
             if (!slot.GetInUse())
             {
-                ObjectController oc = moveableObject as ObjectController;
-                if (oc)
+                IConstructable constructable = moveableObject as IConstructable;
+                if (constructable != null)
                 {
-                    bool didPreview = slot.PreviewSlot(ObjectManager.Instance.GetSpriteByID((int)oc._myID));
+                    bool didPreview = slot.PreviewSlot(ObjectManager.Instance.GetSpriteByID(constructable.MyID()));
                     ///The slot can accept this item
-                    if (didPreview) //|| !slot.RequiresCertainID()
+                    if (didPreview)
                     {
-                        IConstructable constructable = moveableObject as IConstructable;
-                        if (constructable != null)
-                        {
-                            constructable.ChangeAppearanceHidden(true);
-                            /*
-                                Show an icon of this item in the inventory:
-                                Enabling this helps with showing you pulled an item out of a slot,
-                                but then makes it less inuitive when you are putting an item over a slot
-                                that requires this ID.
-                                since this is barely noticeable under the finger on tablet, leave it off
-                            */
-                            //ShowDummyPreviewSlot(constructable, inputPos);
-                            UIManager.ShowPreviewInvSlot(false, Vector3.zero, null);
-                        }
+                        constructable.ChangeAppearanceHidden(true);
+                        /*
+                            Show an icon of this item in the inventory:
+                            Enabling this helps with showing you pulled an item out of a slot,
+                            but then makes it less inuitive when you are putting an item over a slot
+                            that requires this ID.
+                            since this is barely noticeable under the finger on tablet, leave it off
+                        */
+                        //ShowDummyPreviewSlot(constructable, inputPos);
+                        UIManager.ShowPreviewInvSlot(false, Vector3.zero, null);
+
                     }
                     else
                     {
@@ -220,6 +225,14 @@ namespace UserInput
 
                 _lastSlot = slot;
                 ShowDummyPreviewSlot(moveableObject as IConstructable, inputPos);
+            }
+            ///If we enter a construction preview state, we want to undo interactions with the UI
+            ///Let the player prioritize construction over putting items in bins.
+            ///This also prevents duplication bug 
+            if (PreviewManager._inPreview)
+            {
+                _lastSlot.UndoPreview();
+                _brain.SwitchState(_brain._previewState, _currentSelection);
             }
         }
         private void EnsureObjectIsInValidLocation(IMoveable moveableObject)
@@ -258,7 +271,7 @@ namespace UserInput
             else
             {
                 ResetObjectAndSlot(moveableObject as IConstructable, inputPos);
-            }    
+            }
         }
         private void HandleDeadZoneCheck(IMoveable moveableObject, UIDeadZone dz)
         {

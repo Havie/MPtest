@@ -278,7 +278,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     private void RemoveItem(bool noCallback)
     {
         --_numItemsStored;
-        UIManager.DebugLog($"Remove ITEM , new count = {_numItemsStored}");
+        //UIManager.DebugLog($"Remove ITEM , new count = {_numItemsStored}");
         if (_numItemsStored <= 0)
         {
             SwapBackgroundIMGs(false);

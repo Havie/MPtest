@@ -8,15 +8,15 @@ using System.Collections;
 
 public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 {
-    public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU , LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION}
+    public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU , LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION, LOCK_BINS, UNLOCK_BINS, DISABLE_SWITCH, ENABLE_SWITCH}
     
     [SerializeField] TextMeshProUGUI _txtTitle;
     [SerializeField] TextMeshProUGUI _txtBody;
     [SerializeField] VideoPlayer _video;
     [SerializeField] Image _bgIMG;
     [SerializeField] GameObject _modal;
-    [SerializeField] UserInput.UserInputManager _userInput;
     [SerializeField] GameObject _tab;
+    [SerializeField] UserInput.UserInputManager _userInput;
     [SerializeField] TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
 
@@ -126,6 +126,26 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
             case eFollowUpActions.UNLOCK_CONSTRUCTION:
                 {
                     TutorialEvents.LockConstruction(false);
+                    break;
+                }
+            case eFollowUpActions.LOCK_BINS:
+                {
+                    TutorialEvents.LockBins(true);
+                    break;
+                }
+            case eFollowUpActions.UNLOCK_BINS:
+                {
+                    TutorialEvents.LockBins(false);
+                    break;
+                }
+            case eFollowUpActions.DISABLE_SWITCH:
+                {
+                    TutorialEvents.LockSwitch(true);
+                    break;
+                }
+            case eFollowUpActions.ENABLE_SWITCH:
+                {
+                    TutorialEvents.LockSwitch(false);
                     break;
                 }
         }

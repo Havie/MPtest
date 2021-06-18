@@ -18,4 +18,4 @@ MonoBehaviour:
   _description: Parts can be removed from an inventory slot by tapping and holding
     on the item you wish to withdraw, then dragging your finger into the game space
   _video: {fileID: 32900000, guid: cee86011c937e8e44aeb6c7cb2730380, type: 3}
-  _timeInSecondsBeforeNextInstruction: 1
+  _timeInSecondsBeforeNextInstruction: 2

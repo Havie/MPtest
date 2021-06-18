@@ -12,4 +12,6 @@ public interface IConstructable : IMoveable
     void ChangeAppearancePreview();
 
     IConstructable FindAbsoluteParent();
+
+    int MyID();
 }

@@ -19,7 +19,7 @@ MonoBehaviour:
 
 
     Order
-    of operations is imporant,
+    of operations is important,
 
     The object that has something being attached
     to it must be picked up 1st.

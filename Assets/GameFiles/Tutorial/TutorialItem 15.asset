@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 15
   m_EditorClassIdentifier: 
   _eventKey: 11
-  _onCompleteResponse: 0
+  _onCompleteResponse: 6
   _title: Quality Control
   _description: "The canister is almost complete.\n\nRotate the canister to expose
     the back side of the handle,\nthen click the switch. \n\nIf quality is high enough

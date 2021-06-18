@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TutorialItem 2
   m_EditorClassIdentifier: 
   _eventKey: 2
-  _onCompleteResponse: 0
+  _onCompleteResponse: 7
   _title: Station Instructions
   _description: "Good Job! \nThese are just example instructions since you're playing
     the tutorial.\n\nGo ahead and close them out for now."

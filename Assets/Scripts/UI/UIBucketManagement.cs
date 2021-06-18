@@ -39,9 +39,10 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         _NORMAL = transform.localScale;
         _LARGER = _NORMAL * 1.45f;
         _SMALLER = _NORMAL * 0.5f;
+
+        TutorialEvents.OnBinLocked += LockBin;
     }
     /************************************************************************************************************************/
-
 
     #region Interface
     public bool GetInUse() => _inUse;
@@ -149,7 +150,6 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         else
             _myIcon.color = _VISIBLE;
     }
-
     private void AssignSprite(Sprite img)
     {
         if (_myIcon)
@@ -158,8 +158,6 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         // Debug.Log($"{this.gameObject.name} AssigndSprite = <color=green>{img.name}</color>");
 
     }
-
-
     private void DebugQualityIn()
     {
         if (_qualities.Count == 0)
@@ -194,13 +192,10 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
     {
         this.transform.localScale = _NORMAL;
     }
-
     public void SetSmaller()
     {
         this.transform.localScale = _SMALLER;
     }
-
-
     /** Find and remove an order from kittings in orders */
     private void CheckKitting()
     {
@@ -210,5 +205,11 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
             Debug.LogWarning($"kitting station removal has been disabled ID={_itemID}");
             //GameManager.instance._invKITTING.RemoveOrder(_itemID);
         }
+    }
+
+    private void LockBin(bool cond)
+    {
+        Debug.Log($"<color=red> disableSelf= {!cond} </color>");
+        this.GetComponent<Image>().enabled = !cond;
     }
 }
