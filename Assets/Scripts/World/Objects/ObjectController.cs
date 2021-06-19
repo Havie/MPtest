@@ -29,7 +29,6 @@ public class ObjectController : HighlightableObject, IConstructable
     [HideInInspector]
     public ObjectController _parent;
     ///Hand Stuff
-    [HideInInspector]
     public Transform _handLocation;
     private bool _pickedUp;
     [HideInInspector]
@@ -118,27 +117,10 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         if (_isSubObject)
             return;
-
-        var collider = this.GetComponent<Collider>();
-        float bottom = collider.bounds.center.y - collider.bounds.extents.y;
-        float top = collider.bounds.center.y + collider.bounds.extents.y;
-        float front = collider.bounds.center.z + collider.bounds.extents.z;
-        float back = collider.bounds.center.z - collider.bounds.extents.z;
-        float left = collider.bounds.center.x + collider.bounds.extents.x;
-        float right = collider.bounds.center.x - collider.bounds.extents.x;
-
-        var prefab = Resources.Load<GameObject>("Prefab/hand_loc_dummy");
-        if (prefab)
-        {
-            var dummy = GameObject.Instantiate<GameObject>(prefab, ObjectManager.Instance.transform);
-            _handLocation = dummy.transform;
-            var index = this.gameObject.name.IndexOf("(Clone)");
-            if (index != -1)
-                this.gameObject.name = this.gameObject.name.Substring(0, this.gameObject.name.IndexOf("(Clone)")) + "_" + _myID;
-            _handLocation.gameObject.name = this.gameObject.name + "_hand_dummy";
-            _handOffset = new Vector3(left, bottom, front) - this.transform.position;
-            _handStartZ = (this.transform.position + _handOffset).z;
-        }
+        Debug.Log($"...{this.gameObject.name}");
+        _handOffset = _handLocation.position - this.transform.position;
+        _handStartZ = (this.transform.position + _handOffset).z;
+        Debug.Log($"<color=blue> {_handLocation.gameObject.name} </color>{_handOffset}");
     }
     #endregion
     /************************************************************************************************************************/

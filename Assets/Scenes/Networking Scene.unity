@@ -5669,7 +5669,7 @@ MonoBehaviour:
         m_CallState: 2
   _hostMenuManager: {fileID: 326037683}
   _myComponent: {fileID: 1382121939}
-  _defaultValue: 45
+  _defaultValue: 30
 --- !u!1 &1198987081
 GameObject:
   m_ObjectHideFlags: 0

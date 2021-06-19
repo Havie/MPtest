@@ -37,6 +37,7 @@ Transform:
   - {fileID: 8381657289114586331}
   - {fileID: 665564026257913768}
   - {fileID: 1916560390424253697}
+  - {fileID: 6042776963260325217}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -103,7 +104,7 @@ MonoBehaviour:
   _rotateAroundAxis: 0
   _canFollow: 1
   _parent: {fileID: 0}
-  _handLocation: {fileID: 0}
+  _handLocation: {fileID: 6042776963260325217}
   _handIndex: 1
 --- !u!65 &1427891985832586209
 BoxCollider:
@@ -356,6 +357,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.04136752, y: 0.041367516, z: 0.21043825}
   m_Center: {x: 0, y: -0.00000009778887, z: -0.0018822439}
+--- !u!1 &3447402096767420888
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6042776963260325217}
+  m_Layer: 0
+  m_Name: HandLoc
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6042776963260325217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3447402096767420888}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.154, y: 0.338, z: 0.051}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 805222316804169311}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4254392372810415748
 GameObject:
   m_ObjectHideFlags: 0
