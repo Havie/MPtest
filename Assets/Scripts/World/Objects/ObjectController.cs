@@ -108,6 +108,8 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         if (_parent != null && (_myID == ObjectRecord.eItemID.PinkTop || _myID == ObjectRecord.eItemID.RedBot))
             return eRotationAxis.XAXIS;
+        else if (_myID == ObjectRecord.eItemID.BlueBolt)
+            return eRotationAxis.NONE;
         else
             return eRotationAxis.YAXIS;
     }
@@ -386,8 +388,8 @@ public class ObjectController : HighlightableObject, IConstructable
             }
             ///Bolts were able to land ontop of eachother after colliders got bigger,
             ///do this to push them off eachother
-            var rb= otherGo.GetComponent<Rigidbody>();
-            if(rb)
+            var rb = otherGo.GetComponent<Rigidbody>();
+            if (rb)
             {
                 Vector3 dir = (otherGo.transform.position - this.transform.position).normalized;
                 rb.AddForce(dir * 10);
