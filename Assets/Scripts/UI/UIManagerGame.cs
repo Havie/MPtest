@@ -36,7 +36,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] GameObject _defectBinObject = default;
     [SerializeField] GameObject _inBinObject = default;
     [SerializeField] GameObject _outBinObject = default;
-
+    [SerializeField] TextMeshProUGUI _inPlayerLabel = default;
+    [SerializeField] TextMeshProUGUI _outPlayerLabel = default;
 
     [Header("Buttons")]
     [SerializeField] TextMeshProUGUI _sendButtonOut = default;
@@ -98,9 +99,30 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
         if (_endResultsCanvas)
             _endResultsCanvas.SetActive(false);
-        //Setup the proper UI for our workStation:
-        WorkStation ws = GameManager.Instance._workStation;
+        var gm = GameManager.Instance;
 
+        //Setup the proper UI for our workStation:
+        WorkStationManager wm = gm.CurrentWorkStationManager;
+        WorkStation ws = gm._workStation;
+
+        int[] stationSequence = StationSequenceReader.GetProperSequence(wm);
+        int mySequenceIndex = StationSequenceReader.FindPlaceInSequence(stationSequence, (int)ws._myStation);
+
+        if (mySequenceIndex > 0)
+        {
+            var InPlayerStationID = stationSequence[mySequenceIndex - 1];
+            _inPlayerLabel.text = $"Station {InPlayerStationID}";
+        }
+        Debug.Log($"<color=orange> LOOKING @ </color>: {mySequenceIndex} vs {stationSequence.Length}");
+        if (mySequenceIndex+1 < stationSequence.Length ) 
+        {
+            var OutPlayerStationID = stationSequence[mySequenceIndex + 1];
+            _outPlayerLabel.text = $"Station {OutPlayerStationID}";
+        }
+        else
+        {
+            _outPlayerLabel.text ="Shipping";
+        }
         HandleKitting(ws);
         HandleQAStation(ws);
         HandleShippingStation(ws);
