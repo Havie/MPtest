@@ -5952,6 +5952,8 @@ MonoBehaviour:
   _loadingTxt: {fileID: 551706970}
   _workStationDropDown: {fileID: 786370438}
   _tmpConfirmWorkStation: {fileID: 863135810}
+  _playTutorial: {fileID: 2037934282}
+  _orTxt: {fileID: 428969688}
   _lobbyMenu: {fileID: 0}
   _tutorialWSManager: {fileID: 0}
 --- !u!4 &1316100032
