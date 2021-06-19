@@ -59,7 +59,7 @@ public static class HandManager
                 if (_handArray[0] != null)
                     _handArray[0].PickedUp(1); ///reset our hand index
                 _handArray[1] = null;
-                Debug.Log($"droped item");
+                //Debug.Log($"droped item");
             }
             else if (_handArray[1] == item)
             {
@@ -69,7 +69,7 @@ public static class HandManager
             if (weHaveItem)
             {
                 item.PutDown();
-                Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
+                //Debug.Log($"Dropping item: <color=red>{item.gameObject} </color>");
                 item.SetHandPreviewingMode(false);
                 CheckHandPositions();
                 CancelIntensityChangePreview();
