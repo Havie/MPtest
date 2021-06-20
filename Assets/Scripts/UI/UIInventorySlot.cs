@@ -116,6 +116,30 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     {
         RemoveItem(false);
     }
+    public void RemoveItem(bool noCallback)
+    {
+        --_numItemsStored;
+        //UIManager.DebugLog($"Remove ITEM , new count = {_numItemsStored}");
+        if (_numItemsStored <= 0)
+        {
+            SwapBackgroundIMGs(false);
+            _qualities.Clear();
+            if (RequiredID != -1)
+            {
+                AssignSpriteByID(RequiredID, true);
+                _itemID = -1;
+                _inUse = false;
+                SetNormal();
+                PlayCheckMarkAnim(false);
+            }
+            else
+                RestoreDefault();
+        }
+        if (!noCallback)
+        {
+            TellManager();
+        }
+    }
     public void SharedKanbanSlotChanged(bool isEmpty, List<QualityData> qualities)
     {
         if (isEmpty)
@@ -275,30 +299,7 @@ public class UIInventorySlot : MonoBehaviour, IAssignable
     {
         return _manager.TryAssignItem(id, count, qualities);
     }
-    private void RemoveItem(bool noCallback)
-    {
-        --_numItemsStored;
-        //UIManager.DebugLog($"Remove ITEM , new count = {_numItemsStored}");
-        if (_numItemsStored <= 0)
-        {
-            SwapBackgroundIMGs(false);
-            _qualities.Clear();
-            if (RequiredID != -1)
-            {
-                AssignSpriteByID(RequiredID, true);
-                _itemID = -1;
-                _inUse = false;
-                SetNormal();
-                PlayCheckMarkAnim(false);
-            }
-            else
-                RestoreDefault();
-        }
-        if (!noCallback)
-        {
-            TellManager();
-        }
-    }
+
     private void DebugQualityIn()
     {
         if (_qualities.Count == 0)

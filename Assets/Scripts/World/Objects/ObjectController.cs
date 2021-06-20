@@ -34,7 +34,6 @@ public class ObjectController : HighlightableObject, IConstructable
     [HideInInspector]
     public int _handIndex = 1;
     private Vector3 _handOffset;
-    private float _handStartZ;
 
     private Switch _switch;
     private Quaternion _startingRotation;
@@ -117,10 +116,8 @@ public class ObjectController : HighlightableObject, IConstructable
     {
         if (_isSubObject)
             return;
-        Debug.Log($"...{this.gameObject.name}");
+
         _handOffset = _handLocation.position - this.transform.position;
-        _handStartZ = (this.transform.position + _handOffset).z;
-        Debug.Log($"<color=blue> {_handLocation.gameObject.name} </color>{_handOffset}");
     }
     #endregion
     /************************************************************************************************************************/

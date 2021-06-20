@@ -30,7 +30,6 @@ public class Switch : InteractableObject
         {
             return;
         }
-        Debug.Log($"What actt");
         _on = !On;
         ToggleChildren(On);
         CheckQualityConditions(On);
