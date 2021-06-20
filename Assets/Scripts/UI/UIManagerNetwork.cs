@@ -245,11 +245,13 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     private void LoadInventoryScene(int stationIndex, bool isTutorial)
     {
-        GameManager.Instance.IsTutorial = isTutorial;
-        GameManager.Instance.StartWithWIP = isTutorial;
+        var gm = GameManager.Instance;
+
+        gm.IsTutorial = isTutorial;
+        gm.StartWithWIP = isTutorial ? true : gm._batchSize==1 ? true : false;
         SceneLoader.LoadLevel(_inventorySceneName);
         BeginLevel(stationIndex);
-        GameManager.instance.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
+        gm.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
     }
 
     private void OnDisable()

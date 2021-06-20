@@ -105,7 +105,13 @@ public class ObjectController : HighlightableObject, IConstructable
     private eRotationAxis DetermineRotationAccess()
     {
         if (_parent != null && (_myID == ObjectRecord.eItemID.PinkTop || _myID == ObjectRecord.eItemID.RedBot))
-            return eRotationAxis.XAXIS;
+        {
+            ///Dont rotate for final power, otherwise rotate discs
+            if (_parent._myID == ObjectRecord.eItemID.finalPower)
+                return eRotationAxis.NONE;
+            else
+                return eRotationAxis.XAXIS;
+        }
         else if (_myID == ObjectRecord.eItemID.BlueBolt)
             return eRotationAxis.NONE;
         else

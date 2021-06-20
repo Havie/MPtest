@@ -18981,6 +18981,8 @@ MonoBehaviour:
   _decreaseChangeOverTime: 0
   _HUDManagement: 0
   _HostDefectPausing: 0
+  StartWithWIP: 1
+  IsTutorial: 0
   _componentList: {fileID: 11400000, guid: d22a25fd5bbeb864b943c79a8b778f54, type: 2}
   _batchWorkStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,
     type: 2}
@@ -18988,6 +18990,7 @@ MonoBehaviour:
     type: 2}
   _pullWorkStationManager: {fileID: 11400000, guid: d1cb6a9cde483834ba58e689f501ea85,
     type: 2}
+  _tutorialWorkStationManager: {fileID: 0}
   _assemblyBook: {fileID: 11400000, guid: 3f89a0b3b15196041ba06985c236953d, type: 2}
 --- !u!1 &5893450995065223435
 GameObject:

@@ -1,15 +1,18 @@
 ﻿#pragma warning disable CS0649 // Ignore : "Field is never assigned to, and will always have its default value"
-using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class QualityData
 {
-    public int ID { get; private set; }
-    public int Actions { get; private set; }
+    [SerializeField] private int _id;
+    [SerializeField] private int _actions;
 
-    public QualityData(int iD, int actions)
+    public int ID => _id;
+    public int Actions => _actions;
+
+    public QualityData(int id, int actions)
     {
-        ID = iD;
-        Actions = actions;
+        _id = id;
+        _actions = actions;
     }
 }
