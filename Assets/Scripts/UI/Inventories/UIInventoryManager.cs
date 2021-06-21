@@ -32,6 +32,7 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
     [SerializeField] protected float _maxCellSize = 125f;
     [SerializeField] protected float _cellScaler = 5f;
 
+
     private float _gridCellWidth;
     private float _gridCellHeight;
     private int _numberOfColumns;
@@ -210,6 +211,11 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         return false;
     }
 
+    public bool TryAssignItem(int id, int count, List<QualityData> qualities)
+    {
+        ///Some problems here with COUNT
+        return AddItemToSlot(id, qualities, false);
+    }
     /**Used by all inventories initially to make required, and by IN-inventory with no specific slot in mind */
     public bool AddItemToSlot(int itemID, List<QualityData> qualities, bool makeRequired)
     {
@@ -219,21 +225,28 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
 
         if (_ADDCHAOTIC)
         {
-            return AddChaotic(itemID, qualities, makeRequired);
+            if( AddChaotic(itemID, qualities, makeRequired))
+            {
+                return true;
+            }
         }
         else //Normal add
         {
             foreach (UIInventorySlot slot in _slots)
             {
                 if (TryToAdd(slot, itemID, qualities, makeRequired))
+                {
                     return true;
+                }
             }
             if (_canAssignExtraSlots)
             {
                 foreach (UIInventorySlot slot in _extraSlots)
                 {
                     if (TryToAdd(slot, itemID, qualities, makeRequired))
+                    {
                         return true;
+                    }
                 }
                 //fell thru so we are full
                 //Debug.Log($"we fell thru ..creating new slot q valid={qualities == null}");
@@ -249,6 +262,8 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
 
         return false;
     }
+
+
 
     protected bool AddChaotic(int itemID, List<QualityData> qualities, bool makeRequired)
     {
@@ -389,11 +404,6 @@ public abstract class UIInventoryManager : MonoBehaviour, IInventoryManager
         return retList;
     }
 
-    public bool TryAssignItem(int id, int count, List<QualityData> qualities)
-    {
-        ///Some problems here with COUNT
-        return AddItemToSlot(id, qualities, false);
-    }
     
     public void KanbanInventoryChanged(bool isEmpty, int itemID, List<QualityData> qualityData)
     {

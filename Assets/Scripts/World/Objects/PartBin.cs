@@ -4,6 +4,12 @@ using UnityEngine;
 [RequireComponent(typeof(ClickToShow))]
 public class PartBin : HighlightableObject
 {
+    [SerializeField] Animator _animator = default;
+    [SerializeField] string _animTxt = "CompAdded";
+    [SerializeField] BatchEvent _uiEvent = default;
+
+
+
     private ClickToShow _toggle;
     private bool _isSelected;
 
@@ -13,6 +19,8 @@ public class PartBin : HighlightableObject
     {
         base.Awake();
         _toggle = this.GetComponent<ClickToShow>();
+        if (_uiEvent)
+            _uiEvent.OnEventRaised += PlayUIAnim;
     }
 
 
@@ -35,6 +43,15 @@ public class PartBin : HighlightableObject
         if(GameManager.Instance.IsTutorial)
         {
             TutorialEvents.CallOnInventoryOpened();
+        }
+    }
+
+    private void PlayUIAnim(BatchWrapper dummyData)
+    {
+        Debug.Log($"Play anim");
+        if(_animator)
+        {
+            _animator.SetTrigger(_animTxt);
         }
     }
 
