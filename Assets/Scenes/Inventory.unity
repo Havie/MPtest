@@ -6274,6 +6274,22 @@ PrefabInstance:
       propertyPath: _parent
       value: 
       objectReference: {fileID: 1096452717}
+    - target: {fileID: 1519082420696253463, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: _animTxt
+      value: CompSent
+      objectReference: {fileID: 0}
+    - target: {fileID: 1519082420696253463, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: _uiEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4,
+        type: 2}
+    - target: {fileID: 1519082420696253463, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 3613622563361391689}
     - target: {fileID: 1861592723927677251, guid: 224493f12b6da8f419ef78fcd3d138d6,
         type: 3}
       propertyPath: m_Name
@@ -10812,6 +10828,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840148388}
   m_CullTransparentMesh: 0
+--- !u!95 &1842319022 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9039342514449514685, guid: fa25b41fe8cbaf840b93204d2bc92d29,
+    type: 3}
+  m_PrefabInstance: {fileID: 6321247880140352923}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1846906904
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11468,7 +11490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5af33de720e0543ac660bd50449b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stationToInject: 4
+  _stationToInject: 1
   _developerInjections: 1
   _itemToInject: 17
   _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
@@ -11792,6 +11814,7 @@ MonoBehaviour:
   _outPlayerLabel: {fileID: 1127543797}
   _sendButtonOut: {fileID: 271076039}
   _sendButtonSmall: {fileID: 907940187}
+  _itemRecievedEvent: {fileID: 11400000, guid: 239771c4c06e02445b508d6e0ba63f7f, type: 2}
 --- !u!1 &2080655771
 GameObject:
   m_ObjectHideFlags: 0
@@ -12146,6 +12169,28 @@ PrefabInstance:
       propertyPath: _parent
       value: 
       objectReference: {fileID: 1096452717}
+    - target: {fileID: 1519082420696253463, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: _componentAddedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 3744e95aa011a324db8bc043d89e4495,
+        type: 2}
+    - target: {fileID: 1519082420696253463, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: _animTxt
+      value: CompAdded
+      objectReference: {fileID: 0}
+    - target: {fileID: 1519082420696253463, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: _uiEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 239771c4c06e02445b508d6e0ba63f7f,
+        type: 2}
+    - target: {fileID: 1519082420696253463, guid: 224493f12b6da8f419ef78fcd3d138d6,
+        type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 1842319022}
     - target: {fileID: 1861592723927677251, guid: 224493f12b6da8f419ef78fcd3d138d6,
         type: 3}
       propertyPath: m_Name
@@ -13372,6 +13417,12 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1963904818618974917, guid: ca58c9199303b3b43ba590d24a08378e,
+        type: 3}
+      propertyPath: _componentAddedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 3744e95aa011a324db8bc043d89e4495,
+        type: 2}
     - target: {fileID: 4382027254559713015, guid: ca58c9199303b3b43ba590d24a08378e,
         type: 3}
       propertyPath: _relatedInventory
@@ -13791,6 +13842,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc34501ff7c844d47b7121beaee5af48, type: 3}
+--- !u!95 &3613622563361391689 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2268084927629541755, guid: dc34501ff7c844d47b7121beaee5af48,
+    type: 3}
+  m_PrefabInstance: {fileID: 3613622563361391688}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3846938838768770818
 RectTransform:
   m_ObjectHideFlags: 0

@@ -43,7 +43,8 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     [SerializeField] TextMeshProUGUI _sendButtonOut = default;
     [SerializeField] TextMeshProUGUI _sendButtonSmall = default;
 
-
+    [Header("Events")]
+    [SerializeField] BatchEvent _itemRecievedEvent = default;
 
     ///TODO , why dont I just seralize these like everything else so its not circular?
     public UIInventoryManager _invIN { get; private set; }
@@ -113,7 +114,6 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             var InPlayerStationID = stationSequence[mySequenceIndex - 1];
             _inPlayerLabel.text = $"Station {InPlayerStationID}";
         }
-        Debug.Log($"<color=orange> LOOKING @ </color>: {mySequenceIndex} vs {stationSequence.Length}");
         if (mySequenceIndex+1 < stationSequence.Length ) 
         {
             var OutPlayerStationID = stationSequence[mySequenceIndex + 1];
@@ -281,6 +281,13 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     public void ItemReceived(int itemID, List<QualityData> qualities)
     {
         _invIN.AddItemToSlot(itemID, qualities, false);
+        InvokeDummyBatchEvent();
+    }
+    /// <summary> Used for PartBin to be able to listen for 1 event type, instead of a Batch and Void Event</summary>
+    private void InvokeDummyBatchEvent()
+    {
+        if (_itemRecievedEvent)
+            _itemRecievedEvent.Raise(new BatchWrapper(-1, 1, false));
     }
     #endregion
 
