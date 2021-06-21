@@ -240,10 +240,11 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     public void SlotStateChanged(UIInventorySlot slot)
     {
         var itemID = slot.GetItemID();
-        if (slot)
-            slot.RemoveItem();  ///prevent the anim from playing on wrong slot for FIFO, see ButtonShipped()
-        RemoveOrder(itemID);
-
+        if (slot && itemID != -1)
+        {
+            slot.RemoveItem(true);  ///prevent the anim from playing on wrong slot for FIFO, see ButtonShipped()
+            RemoveOrder(itemID);
+        }
     }
     protected virtual IEnumerator ButtonShipped(OrderButton orderButton)
     {
