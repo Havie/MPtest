@@ -55,6 +55,14 @@ public class ClientHandle : MonoSingleton<ClientHandle>
     {
         var gm = GameManager.Instance;
         WorkStation ws = gm._workStation;
+        if(ws == null)
+        {
+            ///Client didnt select a WorkStation
+            ///send -1 so Server can figure it out,
+            ///however server cant figure it out , because right now its "trusting" the client.
+            ///Need to redo logic so its more server authorative , but too big of a task right now for V1.
+            return;
+        }
         //UIManager.DebugLog($"The ws at time of request is : {ws._myStation}");
         int myStation = (int)ws._myStation;
         int output = (int)ws._sendOutputToStation;
