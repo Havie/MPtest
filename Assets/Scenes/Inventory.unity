@@ -11815,6 +11815,7 @@ MonoBehaviour:
   _sendButtonOut: {fileID: 271076039}
   _sendButtonSmall: {fileID: 907940187}
   _itemRecievedEvent: {fileID: 11400000, guid: 239771c4c06e02445b508d6e0ba63f7f, type: 2}
+  _batchSentEvent: {fileID: 11400000, guid: 707e4fe8b5633824ba24b2814b5469f4, type: 2}
 --- !u!1 &2080655771
 GameObject:
   m_ObjectHideFlags: 0

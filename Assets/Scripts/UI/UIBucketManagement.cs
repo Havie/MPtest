@@ -40,9 +40,30 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
         _LARGER = _NORMAL * 1.45f;
         _SMALLER = _NORMAL * 0.5f;
 
-        TutorialEvents.OnBinLocked += LockBin;
+       
+    }
+
+    private void OnEnable()
+    {
+        SubScribeToEvent(true);
+    }
+    private void OnDisable()
+    {
+        SubScribeToEvent(false);
     }
     /************************************************************************************************************************/
+
+    void SubScribeToEvent(bool cond)
+    {
+        if (cond)
+        {
+            TutorialEvents.OnBinLocked += LockBin;
+        }
+        else
+        {
+            TutorialEvents.OnBinLocked -= LockBin;
+        }
+    }
 
     #region Interface
     public bool GetInUse() => _inUse;

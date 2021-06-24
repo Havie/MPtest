@@ -96,6 +96,8 @@ public class sServerHandle
         //if (fromClient != stationID)
         //    Debug.Log($"[ServerHandle]!!..<color=yellow> why do IDs not match , game end vs Server end?</color>  {fromClient} vs {stationID}");
 
+        UIManager.DebugLog($"BatchRecieve so update cycleTime for : {stationID}");
+
         sServer._gameStatistics.StationSentBatch(stationID, batchSize, wasShipped, Time.time);
 
         var cycleTime = sServer._gameStatistics.GetCycleTimeForStation(stationID);
@@ -229,6 +231,12 @@ public class sServerHandle
             var invType = !isInInventory;
             sServerSend.SharedInventoryChanged(client.ID, invType, isRemovedItem, itemID, qualityData);
         }
+        ///Update our cycle times for PULL
+        if(!isRemovedItem)
+        {
+            int ourStationID = sharedInvs.GetSharedStationID(!isInInventory, client.ID, out float ignored);
+            sServer._gameStatistics.StationSentBatch(ourStationID, 1, false, Time.time);
+        }    
 
     }
 

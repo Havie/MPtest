@@ -64,8 +64,6 @@ public class sSharedInventories
         return -1;
     }
     /************************************************************************************************************************/
-
-
     /// <summary>
     /// Finds the inventory where the typed is mapped to the clients ID, null if not found
     /// </summary>
