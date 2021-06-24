@@ -45,6 +45,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 
     [Header("Events")]
     [SerializeField] BatchEvent _itemRecievedEvent = default;
+    [SerializeField] BatchEvent _batchSentEvent = default;
 
     ///TODO , why dont I just seralize these like everything else so its not circular?
     public UIInventoryManager _invIN { get; private set; }
@@ -114,14 +115,14 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
             var InPlayerStationID = stationSequence[mySequenceIndex - 1];
             _inPlayerLabel.text = $"Station {InPlayerStationID}";
         }
-        if (mySequenceIndex+1 < stationSequence.Length ) 
+        if (mySequenceIndex + 1 < stationSequence.Length)
         {
             var OutPlayerStationID = stationSequence[mySequenceIndex + 1];
             _outPlayerLabel.text = $"Station {OutPlayerStationID}";
         }
         else
         {
-            _outPlayerLabel.text ="Shipping";
+            _outPlayerLabel.text = "Shipping";
         }
         HandleKitting(ws);
         HandleQAStation(ws);
@@ -273,6 +274,7 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
         if (whichInventory)
         {
             whichInventory.KanbanInventoryChanged(isEmpty, itemID, qualityData);
+            InvokeDummyBatchEvent(isInInventory);
         }
         else
             UIManager.DebugLog($"..fatal no Inventory for : isIN={isInInventory} ");
@@ -281,13 +283,21 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     public void ItemReceived(int itemID, List<QualityData> qualities)
     {
         _invIN.AddItemToSlot(itemID, qualities, false);
-        InvokeDummyBatchEvent();
+        InvokeDummyBatchEvent(true);
     }
     /// <summary> Used for PartBin to be able to listen for 1 event type, instead of a Batch and Void Event</summary>
-    private void InvokeDummyBatchEvent()
+    private void InvokeDummyBatchEvent(bool isInBin)
     {
-        if (_itemRecievedEvent)
-            _itemRecievedEvent.Raise(new BatchWrapper(-1, 1, false));
+        if (isInBin)
+        {
+            if (_itemRecievedEvent)
+                _itemRecievedEvent.Raise(new BatchWrapper(-1, -1, false));
+        }
+        else
+        {
+            if (_batchSentEvent) ///THIS will cause a problem if itemCount != -1
+                _batchSentEvent.Raise(new BatchWrapper(-1, -1, false));
+        }
     }
     #endregion
 
