@@ -29,13 +29,11 @@ public class ObjectController : HighlightableObject, IConstructable
     [HideInInspector]
     public ObjectController _parent;
     ///Hand Stuff
-    [HideInInspector]
     public Transform _handLocation;
     private bool _pickedUp;
     [HideInInspector]
     public int _handIndex = 1;
     private Vector3 _handOffset;
-    private float _handStartZ;
 
     private Switch _switch;
     private Quaternion _startingRotation;
@@ -107,7 +105,15 @@ public class ObjectController : HighlightableObject, IConstructable
     private eRotationAxis DetermineRotationAccess()
     {
         if (_parent != null && (_myID == ObjectRecord.eItemID.PinkTop || _myID == ObjectRecord.eItemID.RedBot))
-            return eRotationAxis.XAXIS;
+        {
+            ///Dont rotate for final power, otherwise rotate discs
+            if (_parent._myID == ObjectRecord.eItemID.finalPower)
+                return eRotationAxis.NONE;
+            else
+                return eRotationAxis.XAXIS;
+        }
+        else if (_myID == ObjectRecord.eItemID.BlueBolt)
+            return eRotationAxis.NONE;
         else
             return eRotationAxis.YAXIS;
     }
@@ -117,26 +123,7 @@ public class ObjectController : HighlightableObject, IConstructable
         if (_isSubObject)
             return;
 
-        var collider = this.GetComponent<Collider>();
-        float bottom = collider.bounds.center.y - collider.bounds.extents.y;
-        float top = collider.bounds.center.y + collider.bounds.extents.y;
-        float front = collider.bounds.center.z + collider.bounds.extents.z;
-        float back = collider.bounds.center.z - collider.bounds.extents.z;
-        float left = collider.bounds.center.x + collider.bounds.extents.x;
-        float right = collider.bounds.center.x - collider.bounds.extents.x;
-
-        var prefab = Resources.Load<GameObject>("Prefab/hand_loc_dummy");
-        if (prefab)
-        {
-            var dummy = GameObject.Instantiate<GameObject>(prefab, ObjectManager.Instance.transform);
-            _handLocation = dummy.transform;
-            var index = this.gameObject.name.IndexOf("(Clone)");
-            if (index != -1)
-                this.gameObject.name = this.gameObject.name.Substring(0, this.gameObject.name.IndexOf("(Clone)")) + "_" + _myID;
-            _handLocation.gameObject.name = this.gameObject.name + "_hand_dummy";
-            _handOffset = new Vector3(left, bottom, front) - this.transform.position;
-            _handStartZ = (this.transform.position + _handOffset).z;
-        }
+        _handOffset = _handLocation.position - this.transform.position;
     }
     #endregion
     /************************************************************************************************************************/
@@ -386,8 +373,8 @@ public class ObjectController : HighlightableObject, IConstructable
             }
             ///Bolts were able to land ontop of eachother after colliders got bigger,
             ///do this to push them off eachother
-            var rb= otherGo.GetComponent<Rigidbody>();
-            if(rb)
+            var rb = otherGo.GetComponent<Rigidbody>();
+            if (rb)
             {
                 Vector3 dir = (otherGo.transform.position - this.transform.position).normalized;
                 rb.AddForce(dir * 10);

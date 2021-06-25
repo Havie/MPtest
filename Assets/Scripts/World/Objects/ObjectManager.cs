@@ -46,7 +46,6 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
     {
         return SpawnObject(itemID, Vector3.zero, null);
     }
-
     public GameObject SpawnObject(int itemID, Vector3 pos, List<QualityData> qualities)
     {
 
@@ -156,6 +155,12 @@ public class ObjectManager : StaticMonoBehaviour<ObjectManager>
         LoadQualitiesOntoObject(qualities, newObj);
 
         return newObj;
+    }
+
+    public QualityObject[] GetQualitiesForItemID(int itemID)
+    {
+        GameObject obj = _manager.GetObject(itemID);
+        return obj.GetComponentsInChildren<QualityObject>();
     }
 
     /************************************************************************************************************************/

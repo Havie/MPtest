@@ -5669,7 +5669,7 @@ MonoBehaviour:
         m_CallState: 2
   _hostMenuManager: {fileID: 326037683}
   _myComponent: {fileID: 1382121939}
-  _defaultValue: 45
+  _defaultValue: 30
 --- !u!1 &1198987081
 GameObject:
   m_ObjectHideFlags: 0
@@ -5952,6 +5952,8 @@ MonoBehaviour:
   _loadingTxt: {fileID: 551706970}
   _workStationDropDown: {fileID: 786370438}
   _tmpConfirmWorkStation: {fileID: 863135810}
+  _playTutorial: {fileID: 2037934282}
+  _orTxt: {fileID: 428969688}
   _lobbyMenu: {fileID: 0}
   _tutorialWSManager: {fileID: 0}
 --- !u!4 &1316100032
@@ -10064,7 +10066,7 @@ MonoBehaviour:
   _decreaseChangeOverTime: 0
   _HUDManagement: 0
   _HostDefectPausing: 0
-  StartWithWIP: 0
+  StartWithWIP: 1
   IsTutorial: 0
   _componentList: {fileID: 11400000, guid: d22a25fd5bbeb864b943c79a8b778f54, type: 2}
   _batchWorkStationManager: {fileID: 11400000, guid: 0b82d4f0c374c354a8859cd36504fba1,

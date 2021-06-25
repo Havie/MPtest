@@ -25,6 +25,8 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public Text _loadingTxt;
     public GameObject _workStationDropDown;
     public Button _tmpConfirmWorkStation;
+    public Button _playTutorial;
+    public Text _orTxt;
 
 
     [Header("MPLobby Components")]
@@ -84,12 +86,14 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     private void EnablePanel(bool cond)
     {
-        if (_bConnect && _bHost && _usernameField)
+        if (_bConnect && _bHost && _usernameField && _playTutorial && _orTxt)
         {
             _bConnect.gameObject.SetActive(cond);
             _bHost.gameObject.SetActive(cond);
             _usernameField.gameObject.SetActive(cond);
             _loadingTxt.gameObject.SetActive(!cond);
+            _playTutorial.gameObject.SetActive(cond);
+            _orTxt.gameObject.SetActive(cond);
         }
         else
             UIManager.DebugLogWarning("(UIManager): Missing EnablePanel objects");
@@ -241,11 +245,13 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     private void LoadInventoryScene(int stationIndex, bool isTutorial)
     {
-        GameManager.Instance.IsTutorial = isTutorial;
-        GameManager.Instance.StartWithWIP = isTutorial;
+        var gm = GameManager.Instance;
+
+        gm.IsTutorial = isTutorial;
+        gm.StartWithWIP = isTutorial ? true : gm._batchSize==1 ? true : false;
         SceneLoader.LoadLevel(_inventorySceneName);
         BeginLevel(stationIndex);
-        GameManager.instance.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
+        gm.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
     }
 
     private void OnDisable()

@@ -133,6 +133,9 @@ public class ClientSend : MonoSingleton<ClientSend>
     public void BatchSent(BatchWrapper batch)
     {
         //Debug.Log($"<color=yellow>Client Send BatchSent </color>{batch.StationId} , {batch.ItemCount}");
+        var itemCount = batch.ItemCount;
+        if (itemCount == -1)
+            return; ///Fail safe so we can queue dummy events for kanban bin animations
 
         using (sPacket packet = new sPacket((int)ClientPackets.batch))
         {

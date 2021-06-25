@@ -120,7 +120,9 @@ public class InSocket : Socket
                 if (roughlyOpposite)
                 {
                     // -1 is perfect match 
-                    valid = isProperAttachmentVelocity(maleSocket);
+                    ///Disable attachement velocity because people get too confused on this
+                    //valid = isProperAttachmentVelocity(maleSocket);
+                    valid = true;
                 }
                 else
                 {

@@ -68,9 +68,8 @@ public class StationInventory : UIInventoryManager
         //getAPrefix for naming our buttons in scene Hierarchy
         _prefix = "Station";
 
-        //Any slots added after this will be kept track of in an extra list incase we ever want to reset to base amount
-        _extraSlots = new List<UIInventorySlot>(); //Instantiated before for loop becuz CreateNewslot uses its Count
-
+        //_extraSlots = new List<UIInventorySlot>(); //Instantiated before for loop becuz CreateNewslot uses its Count
+        _canAssignExtraSlots = false;
         for (int i = 0; i < _INVENTORYSIZE; ++i)
         {
             //Add slot component to our list
