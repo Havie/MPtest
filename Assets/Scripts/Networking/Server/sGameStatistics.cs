@@ -100,6 +100,7 @@ public class sGameStatistics
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
     {
         ItemOrder order = new ItemOrder(itemID, createdTime, expectedTime);
+        Debug.Log($"<color=red> Enqueue {itemID} </color> at createdTime: {createdTime} ..expectedTime={expectedTime} ");
         _orders.Enqueue(order);
     }
     public void StationSentBatch(int stationID, int batchSize, bool wasShipped, float time)

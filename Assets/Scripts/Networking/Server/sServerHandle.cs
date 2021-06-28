@@ -110,9 +110,9 @@ public class sServerHandle
         float createdTime = packet.ReadFloat();
         float dueTime = packet.ReadFloat();
 
-        //Debug.Log("<color=green>[sServerHandle]</color> itemID Read was : " + itemID);
-        //Debug.Log("<color=green>[sServerHandle]</color> createdTime Read was : " + createdTime);
-        //Debug.Log("<color=green>[sServerHandle]</color> dueTime Read was : " + dueTime);
+        Debug.Log("<color=green>[sServerHandle]</color> itemID Read was : " + itemID);
+        Debug.Log("<color=green>[sServerHandle]</color> createdTime Read was : " + createdTime);
+        Debug.Log("<color=green>[sServerHandle]</color> dueTime Read was : " + dueTime);
 
         sServer._gameStatistics.CreatedAnOrder(itemID, createdTime, dueTime);
 
@@ -230,13 +230,14 @@ public class sServerHandle
         {
             var invType = !isInInventory;
             sServerSend.SharedInventoryChanged(client.ID, invType, isRemovedItem, itemID, qualityData);
+            ///Update our cycle times for PULL, wont work if receiving Client is Disconnected!
+            /// In theory player could add/remove item over and over from their kanban flag for better cycle times
+            if(!isRemovedItem && !isInInventory)
+            {
+                int ourStationID = sharedInvs.GetSharedStationID(!isInInventory, client.ID, out float ignored);
+                sServer._gameStatistics.StationSentBatch(ourStationID, 1, false, Time.time);
+            }    
         }
-        ///Update our cycle times for PULL
-        if(!isRemovedItem)
-        {
-            int ourStationID = sharedInvs.GetSharedStationID(!isInInventory, client.ID, out float ignored);
-            sServer._gameStatistics.StationSentBatch(ourStationID, 1, false, Time.time);
-        }    
 
     }
 

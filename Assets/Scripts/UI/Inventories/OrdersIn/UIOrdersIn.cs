@@ -77,8 +77,8 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         var bOrder = GameObject.Instantiate(_bORDERPREFAB);
         OrderButton ob = bOrder.GetComponent<OrderButton>();
         //Debug.Log("assign item with ID:" + itemID);
-        float deliveryTime = GetEstimatedDeliveryTime();
-        ob.SetOrder(itemID, deliveryTime);
+        float deliveryTime = GetEstimatedDeliveryTime(); ///This is a problem because the server needs to decide this, we will need an async wait here
+        ob.SetOrder(itemID, deliveryTime); 
         _orderList.Add(ob);
         bOrder.transform.SetParent(this.transform);
         bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
@@ -88,6 +88,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         //Get data based off of the incoming value
         if (_orderCreated)
         {
+            ///TODO order creation Time.time needs to be based off of SERVER Time, not local client time
             _orderCreated.Raise(new OrderWrapper(itemID, Time.time, deliveryTime));
         }
     }
@@ -137,7 +138,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
 
     private int PickAnItemIDFromFinalTask()
     {
-        var manager = GameManager.instance.CurrentWorkStationManager;
+        var manager = GameManager.Instance.CurrentWorkStationManager;
         var list = manager.GetStationList();
         var lastStation = list[list.Count - 1];
         var lastTaskList = lastStation.Tasks;
@@ -185,6 +186,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
 
     private float GetEstimatedDeliveryTime()
     {
+        ///TODO base this off round Duration / 10? or something adjustable [ ON SERVER] async wait
         return Time.time + 600;  ///10min 
     }
 
