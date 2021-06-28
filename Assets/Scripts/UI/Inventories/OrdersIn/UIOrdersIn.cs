@@ -21,15 +21,11 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     [SerializeField] TextMeshProUGUI _orderCountTxt = default;
     [SerializeField] TextMeshProUGUI _shippedCountTxt = default;
 
-    private GameObject _bORDERPREFAB;
-
-    private int _ORDERFREQUENCY;
-    private float _timeToOrder = float.MaxValue;
     protected bool _shouldDropParts = true;
 
+    private GameObject _bORDERPREFAB;
     private List<OrderButton> _orderList = new List<OrderButton>();
     private int _shippedCount = 0;
-
     private ComponentList _componentList;
     List<int> _usedIndicies = new List<int>();
 
@@ -50,48 +46,46 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
     {
         if (_bORDERPREFAB == null)
             _bORDERPREFAB = Resources.Load<GameObject>("Prefab/UI/bOrder_slot");
-
-        _ORDERFREQUENCY = GameManager.Instance._orderFrequency;
         _componentList = GameManager.Instance._componentList;
+        ///Listen for Server sending in new orders
+        _orderCreated.OnEventRaised += SendInNewOrder;
+        ///Whether or not we should drop parts when receiving a new order
         _shouldDropParts = CheckShouldDropParts();
+
+        Debug.Log($"<color=blue>Register for listen new order!</color>");
+    }
+    private void OnDisable()
+    {
+        _orderCreated.OnEventRaised -= SendInNewOrder;
     }
 
     protected abstract bool CheckShouldDropParts();
     /************************************************************************************************************************/
 
-
-    protected void Update()
+    public void SendInNewOrder(OrderWrapper order)
     {
-        /* if (Input.GetKeyDown(KeyCode.R))
-             RemoveOrder(_OrderList[_OrderList.Count / 2]);*/
+        _usedIndicies.Clear();
 
-        if (_timeToOrder > _ORDERFREQUENCY)
-            SendInNewOrder();
-        else
-            _timeToOrder += Time.deltaTime;
-    }
+        ///This is here incase we add more than 1 item to the game, TODO move into Server
+        var finalItemId = PickAnItemIDFromFinalTask();
 
-
-    public void AddOrder(int itemID)
-    {
-        var bOrder = GameObject.Instantiate(_bORDERPREFAB);
-        OrderButton ob = bOrder.GetComponent<OrderButton>();
-        //Debug.Log("assign item with ID:" + itemID);
-        float deliveryTime = GetEstimatedDeliveryTime(); ///This is a problem because the server needs to decide this, we will need an async wait here
-        ob.SetOrder(itemID, deliveryTime); 
-        _orderList.Add(ob);
-        bOrder.transform.SetParent(this.transform);
-        bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
-        bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
-        ob.SetManager(this);
-        UpdateOrderText();
-        //Get data based off of the incoming value
-        if (_orderCreated)
+        if (_shouldDropParts)
         {
-            ///TODO order creation Time.time needs to be based off of SERVER Time, not local client time
-            _orderCreated.Raise(new OrderWrapper(itemID, Time.time, deliveryTime));
+            List<ObjectRecord.eItemID> componentsNeeded = _componentList.GetComponentListByItemID(finalItemId);
+            int size = componentsNeeded.Count;
+            // printOrderList(componentOrder);
+            ObjectRecord.eItemID[] componentOrder = new ObjectRecord.eItemID[size];
+
+            foreach (var item in componentsNeeded)
+            {
+                componentOrder[GetUnusedIndex(size)] = item;
+            }
+
+            PartDropper.Instance.SendInOrder(componentOrder);
         }
+        AddOrder(finalItemId);
     }
+
 
 
     public bool RemoveOrder(int itemID)
@@ -114,7 +108,23 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         return false;
     }
 
-    public bool RemoveOrder(OrderButton orderButton)
+
+    /************************************************************************************************************************/
+    private void AddOrder(int itemID)
+    {
+        var bOrder = GameObject.Instantiate(_bORDERPREFAB);
+        OrderButton ob = bOrder.GetComponent<OrderButton>();
+        //Debug.Log("assign item with ID:" + itemID);
+        float deliveryTime = GetEstimatedDeliveryTime(); ///This is a problem because the server needs to decide this, we will need an async wait here
+        ob.SetOrder(itemID, deliveryTime);
+        _orderList.Add(ob);
+        bOrder.transform.SetParent(this.transform);
+        bOrder.transform.localPosition = FindPosition(_orderList.Count - 1);
+        bOrder.transform.localScale = new Vector3(1, 1, 1); /// no idea why these come in at 1.5, when the prefab and parent are at 1
+        ob.SetManager(this);
+        UpdateOrderText();
+    }
+    private bool RemoveOrder(OrderButton orderButton)
     {
         bool removed = _orderList.Contains(orderButton);
         Debug.Log($"..<color=blue>This is happening for: </color> {orderButton.Slot.gameObject.name}");
@@ -130,12 +140,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
 
         return removed;
     }
-
-
-    /************************************************************************************************************************/
-
     /**Kittings "Final ItemIDs should be the final item(s) that go to shipping */
-
     private int PickAnItemIDFromFinalTask()
     {
         var manager = GameManager.Instance.CurrentWorkStationManager;
@@ -147,29 +152,6 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
         var finalItem = finalItemList[Random.Range(0, finalItemList.Count)];
 
         return (int)finalItem;
-    }
-
-    private void SendInNewOrder()
-    {
-        _timeToOrder = 0;
-        _usedIndicies.Clear();
-
-        var finalItemId = PickAnItemIDFromFinalTask();
-        List<ObjectRecord.eItemID> componentsNeeded = _componentList.GetComponentListByItemID(finalItemId);
-        int size = componentsNeeded.Count;
-        ObjectRecord.eItemID[] componentOrder = new ObjectRecord.eItemID[size];
-
-        foreach (var item in componentsNeeded)
-        {
-            componentOrder[GetUnusedIndex(size)] = item;
-        }
-
-        // printOrderList(componentOrder);
-        if (_shouldDropParts)
-        {
-            PartDropper.Instance.SendInOrder(componentOrder);
-        }
-        AddOrder(finalItemId);
     }
 
     private int GetUnusedIndex(int size)
@@ -186,8 +168,7 @@ public abstract class UIOrdersIn : MonoBehaviour, IInventoryManager
 
     private float GetEstimatedDeliveryTime()
     {
-        ///TODO base this off round Duration / 10? or something adjustable [ ON SERVER] async wait
-        return Time.time + 600;  ///10min 
+        return GameManager.Instance.ExpectedDeliveryDelay;
     }
 
 

@@ -7114,6 +7114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948e81a18334eee48ad2f9892f08ba80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _orderCreated: {fileID: 11400000, guid: 9aaed4c8e09a41848b28567809ee990f, type: 2}
 --- !u!114 &1501261310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10057,6 +10058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 2
+  ExpectedDeliveryDelay: 400
   _batchSize: 2
   _autoSend: 0
   _addChaotic: 0

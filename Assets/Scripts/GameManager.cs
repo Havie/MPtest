@@ -10,9 +10,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     [Header("Game Modifiers")]
     ///TODO make these all accessors with priv set or Serialized:
+    ///Left like this because its way easier to change in the test scene for now
     #region Game Modifiers
     public int _roundDuration = 10; //In SECONDS  --> 60 =1 min
     public int _orderFrequency = 3;
+    public int ExpectedDeliveryDelay = 400; //seconds
     public int _batchSize = 10;
     public bool _autoSend = true;
     public bool _addChaotic = false;
@@ -28,8 +30,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     public bool RoundShouldStart { get; private set; } = false;
     public WorkStation _workStation { get; private set; }
-
-
 
     [Header("Resources")]
     public ComponentList _componentList;

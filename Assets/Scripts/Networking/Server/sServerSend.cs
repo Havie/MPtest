@@ -176,6 +176,16 @@ public class sServerSend
 
     }
 
+    public static void NewOrderCreated(int toClient, int itemID, float createTime, float expectedTime)
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.newOrderCreated))
+        {
+            packet.Write(itemID);
+            packet.Write(createTime);
+            packet.Write(expectedTime);
+            SendTCPData(toClient, packet);
+        }
+    }
     #endregion
 }
 

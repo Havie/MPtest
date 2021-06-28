@@ -25,8 +25,18 @@ public static class sServer
     ///Not loving all the public stuff , but the network code is written in this messy way everywhere so
     public static sGameStatistics _gameStatistics;
     public static sSharedInventories _sharedInventories;
+    public static sOrderManager _orderManager;
     public static int BatchSize { get; private set; }
 
+
+    /************************************************************************************************************************/
+    public static void Tick()
+    {
+        if (_orderManager != null)
+        {
+            _orderManager.Tick();
+        }
+    }
 
     /************************************************************************************************************************/
 
@@ -49,22 +59,25 @@ public static class sServer
         _maxPlayers = maxPlayers;
         _port = port;
 
-        Debug.Log("Starting Server..");
+        //Debug.Log("Starting Server..");
         InitServerData();
 
         _tcpListener = new TcpListener(IPAddress.Any, _port);
         _tcpListener.Start();
         _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
-
+        /// send out a message so other tablets listening can pick up our IP
         BroadCastIP();
         _iAmHost = true;
+
+        ///Init our internal game classes
         ResetStatistics();
         ResetSharedInventories();
+        ResetOrderManager();
 
         //_udpListener = new UdpClient(_port);
         // _udpListener.BeginReceive(UDPReceiveCallBack, null);
 
-        UIManager.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
+        //UIManager.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
     }
 
     public static void ResetStatistics()
@@ -74,6 +87,11 @@ public static class sServer
     public static void ResetSharedInventories()
     {
         _sharedInventories = new sSharedInventories();
+    }
+    public static void ResetOrderManager()
+    {
+        var gm = GameManager.Instance;
+        _orderManager = new sOrderManager(gm._orderFrequency, gm.ExpectedDeliveryDelay);
     }
 
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 

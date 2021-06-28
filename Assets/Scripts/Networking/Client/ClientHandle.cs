@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class ClientHandle : MonoSingleton<ClientHandle>
 {
+    [Header("Events")]
+    [SerializeField] OrderReceivedEvent _orderCreated;
+
     public void Welcome(sPacket packet)
     {
         string msg = packet.ReadString();
@@ -124,6 +127,16 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         return qualities;
     }
 
+    public void NewOrderCreated(sPacket packet)
+    {
+        if (_orderCreated)
+        {
+            int itemID = -1; //TODO MOVE TO SERVER WHEN ADDING MORE THAN 1 ITEM
+            float createTime = packet.ReadFloat();
+            float dueTime = packet.ReadFloat();
+            _orderCreated.Raise(new OrderWrapper(itemID, createTime, dueTime));
+        }
+    }
     public void OrderShipped(sPacket packet)
     {
         int itemID = packet.ReadInt();

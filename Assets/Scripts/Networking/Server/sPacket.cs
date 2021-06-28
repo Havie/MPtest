@@ -18,7 +18,8 @@ public enum ServerPackets
     orderShipped,
     requestTransportData,
     receiveTransportData,
-    sharedInventoryChanged
+    sharedInventoryChanged,
+    newOrderCreated
 }
 
 /// <summary>Sent from client to server.</summary>
