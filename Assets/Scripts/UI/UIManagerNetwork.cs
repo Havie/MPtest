@@ -101,33 +101,33 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     public void Connected(bool cond)
     {
-        if (!cond)
-            UIManager.DebugLogWarning($"connected to server = <color=red>{cond}</color>");
-
-        if (_loadingTxt)
-            StartCoroutine(ConnectionResultRoutine(cond));
+        StartCoroutine(ConnectionResultRoutine(cond));
     }
 
     IEnumerator ConnectionResultRoutine(bool cond)
     {
         if (cond)
         {
-            _loadingTxt.text = "Connection Success!";
-            yield return new WaitForSeconds(0.5f);
-            _loadingTxt.enabled = false;
-            ///OLD 
-            //SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
-            //DisplaySelectWorkStation();
+            if (_loadingTxt)
+            {
+                _loadingTxt.text = "Connection Success!";
+                yield return new WaitForSeconds(0.5f);
+                _loadingTxt.enabled = false;
+            }
             LoadLobbyScene();
 
         }
         else
         {
-            _loadingTxt.color = Color.red;
-            _loadingTxt.text = "Connection Failed! \nCheck Tablet is connected to internet";
-            yield return new WaitForSeconds(2f);
-            _loadingTxt.enabled = false;
-            _loadingTxt.color = Color.black;
+            UIManager.DebugLogWarning($"connected to server = <color=red>{cond}</color>");
+            if (_loadingTxt)
+            {
+                _loadingTxt.color = Color.red;
+                _loadingTxt.text = "Connection Failed! \nCheck Tablet is connected to internet";
+                yield return new WaitForSeconds(2f);
+                _loadingTxt.enabled = false;
+                _loadingTxt.color = Color.black;
+            }
             EnablePanel(true);
         }
 
@@ -157,13 +157,13 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         var stationID = _lobbyMenu.GetStationSelectionID();
         LoadInventoryScene(stationID, false);
     }
-    public void RequestRefresh() 
+    public void RequestRefresh()
     {
         ClientSend.Instance.RequestMPData();
     }
     public void ReceieveMPData(List<LobbyPlayer> playerData)
     {
-        if(_lobbyMenu)
+        if (_lobbyMenu)
             _lobbyMenu.ReceieveRefreshData(playerData);
     }
     public bool RegisterLobbyMenu(LobbyMenu menu)
@@ -175,10 +175,17 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     }
 
     #endregion
+    public void HostConnection()
+    {
+        Client.instance.IWillBeHost = true;
+        sNetworkManager.Instance.HostNetwork();
+        ConnectToServer("Trying to host connection");
+    }
 
     ///called from button
     public void ConnectToServer()
     {
+        EnablePanel(false);
         ConnectToServer("Trying to find server");
     }
 
@@ -193,7 +200,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         }
         else
             Debug.LogWarning("(UIManager): Missing ConnectToServer objects");
-        
+
     }
 
     public void LoadLobbyScene()
@@ -231,7 +238,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     {
         FileSaver.WriteToFileTest("test");
     }
-    
+
     public void LoadTutorial()
     {
         GameManager.Instance.BatchChanged(2);
@@ -248,7 +255,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         var gm = GameManager.Instance;
 
         gm.IsTutorial = isTutorial;
-        gm.StartWithWIP = isTutorial ? true : gm._batchSize==1 ? true : false;
+        gm.StartWithWIP = isTutorial ? true : gm._batchSize == 1 ? true : false;
         SceneLoader.LoadLevel(_inventorySceneName);
         BeginLevel(stationIndex);
         gm.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
