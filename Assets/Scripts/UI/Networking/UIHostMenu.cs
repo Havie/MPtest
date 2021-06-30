@@ -76,8 +76,6 @@ public class UIHostMenu : MonoBehaviour
         OnConfirmSettings?.Invoke();
     }
 
-
-
     private void HostConnection()
     {
         Client.instance.IWillBeHost = true;

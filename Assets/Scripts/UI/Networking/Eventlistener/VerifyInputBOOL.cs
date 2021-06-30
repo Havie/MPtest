@@ -7,14 +7,14 @@ using UnityEngine.UI;
 public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent>
 {
     public UIHostMenu _hostMenuManager;
-    public GameObject _myComponent;
+    //public GameObject _myComponent;
     public bool _defaultValue = false;
 
     private Toggle _inField;
 
     private void Awake()
     {
-        _inField = _myComponent.GetComponent<Toggle>();
+        _inField = this.GetComponentInChildren<Toggle>();
         if (_inField)
         {
             if (_inField.onValueChanged == null)

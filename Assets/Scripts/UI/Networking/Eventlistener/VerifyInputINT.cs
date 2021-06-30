@@ -7,14 +7,14 @@ using UnityEngine.UI;
 public class VerifyInputINT : GameEventListener<IntWrapper, IntEvent, UnityIntEvent>
 {
     public UIHostMenu _hostMenuManager;
-    public GameObject _myComponent;
+   // public GameObject _myComponent;
     public int _defaultValue = 2;
 
     private InputField _inField;
 
     private void Awake()
     {
-        _inField = _myComponent.GetComponent<InputField>();
+        _inField = this.GetComponentInChildren<InputField>();
         if (_inField)
         {
              _inField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return ValidateINT(addedChar); };
@@ -62,7 +62,7 @@ public class VerifyInputINT : GameEventListener<IntWrapper, IntEvent, UnityIntEv
 
 
 
-
+    /// <summary> Also called from button </summary>
     public void VerifyUserInput()
     {
         ///Convert to an Int and Update the GameManager 
