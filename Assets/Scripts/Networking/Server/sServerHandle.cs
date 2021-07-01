@@ -27,7 +27,7 @@ public class sServerHandle
     public static void StationInfoReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
-        //Debug.Log($"[ServerHandle] stationID Read was :  {stationID} ");
+        //Debug.Log($"<color=white>[ServerHandle]:StationInfoReceived</color> stationID Read was :  {stationID} ");
         ///This is somewhat unsafe
         sClient client = sServer._clients[fromClient];
         if (client != null)
@@ -39,7 +39,7 @@ public class sServerHandle
 
         }
         else
-            Debug.Log("Found an error w StationIDReceived");
+            Debug.Log("[sServerHandle] Found an error w StationIDReceived");
 
         ///Refresh the other clients on the network with this change
         foreach (var clientEntry in sServer._clients) ///this needs help
@@ -152,9 +152,9 @@ public class sServerHandle
             ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
             c.StartRound(roundDuration);
         }
-
-        ///Start ticking out OrderManager 1second later to let scene load, and send in the first order
-        ThreadManager.Instance.ExecuteOnMainThreadWithDelay(() => sServer._orderManager.BeginRound(), 1);
+        var gm = GameManager.Instance;
+        ///Start ticking out OrderManager 2second later to let scene load, and send in the first order
+        ThreadManager.Instance.ExecuteOnMainThreadWithDelay(() => sServer._orderManager.BeginRound(gm._orderFrequency, gm.ExpectedDeliveryDelay), 2);
 
 
     }
@@ -163,7 +163,7 @@ public class sServerHandle
     {
         float endTime = packet.ReadFloat();
 
-        Debug.Log("<color=white>[sServerHandle]</color> RoundEnded @ : " + endTime);
+        //Debug.Log("<color=white>[sServerHandle]</color> RoundEnded @ : " + endTime);
 
         var gameStats = sServer._gameStatistics;
 
@@ -195,8 +195,10 @@ public class sServerHandle
         }
         ///Print out and store our round results
         FileSaver.WriteToFile(rs);
+        ///Reset our states to be ready for the next round
         sServer.ResetStatistics();
         sServer.ResetSharedInventories();
+        sServer.ResetOrderManager();
     }
 
     /// <summary>
@@ -291,6 +293,7 @@ public class sServerHandle
 
     private static void UpdateOrderManager(int fromClient, int stationID)
     {
+        //Debug.Log($"<color=white>[ServerHandle]</color>trying to UpdateOrderManager");
         var gm = GameManager.Instance;
         if ((gm._batchSize == 1 && stationID == 6) || (gm._batchSize == 2 && stationID == 1))
         {

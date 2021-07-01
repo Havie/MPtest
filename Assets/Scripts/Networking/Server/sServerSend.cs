@@ -178,6 +178,7 @@ public class sServerSend
 
     public static void NewOrderCreated(int toClient, int itemID, float createTime, float expectedTime)
     {
+        Debug.Log($"ServerSend NewOrderCreated");
         using (sPacket packet = new sPacket((int)ServerPackets.newOrderCreated))
         {
             packet.Write(itemID);

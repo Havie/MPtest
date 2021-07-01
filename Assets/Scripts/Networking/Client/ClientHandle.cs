@@ -129,12 +129,14 @@ public class ClientHandle : MonoSingleton<ClientHandle>
 
     public void NewOrderCreated(sPacket packet)
     {
+        Debug.Log($"..ClientHandle : NewOrderCreated");
         if (_orderCreated)
         {
             int itemID = -1; //TODO MOVE TO SERVER WHEN ADDING MORE THAN 1 ITEM
             float createTime = packet.ReadFloat();
             float dueTime = packet.ReadFloat();
             _orderCreated.Raise(new OrderWrapper(itemID, createTime, dueTime));
+            Debug.Log($"invoked");
         }
     }
     public void OrderShipped(sPacket packet)

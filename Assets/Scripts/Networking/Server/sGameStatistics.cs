@@ -46,9 +46,9 @@ public class sGameStatistics
     {
         var totalShipped = GetTotalShipped();
         if(totalShipped>0)
-            UIManager.DebugLog($"result= <color=green> {totalShippingTime} / {totalShipped}  </color>");
+            UIManager.DebugLog($"Throughput result= <color=green> {totalShippingTime} / {totalShipped}  </color>");
         else
-            UIManager.DebugLog($"result= <color=red> {_currentRoundEndtime} / {_currentRoundTimeStart}  </color>");
+            UIManager.DebugLog($"Throughput result= <color=red> {_currentRoundEndtime} / {_currentRoundTimeStart}  </color>");
         return totalShipped > 0 ? ( totalShippingTime / totalShipped) : (_currentRoundEndtime - _currentRoundTimeStart);
     }
     /// <summary>

@@ -90,8 +90,11 @@ public static class sServer
     }
     public static void ResetOrderManager()
     {
-        var gm = GameManager.Instance;
-        _orderManager = new sOrderManager(gm._orderFrequency, gm.ExpectedDeliveryDelay);
+        if(_orderManager==null)
+        {
+            _orderManager = new sOrderManager();
+        }
+        _orderManager.Reset();
     }
 
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 

@@ -11,11 +11,11 @@ public class UIHostMenu : MonoBehaviour
 
     private void OnDisable()
     {
-        ///TODO Verify this is called when the GO is disabled, not the script on the GO
+        /// Ivoked from Button-Tab when User leaves Host Tab
         UpdateGameManager();
     }
 
-    ///Called from Button-Tab when User leaves Host Tab
+    
     public void UpdateGameManager()
     {
         OnConfirmSettings?.Invoke();

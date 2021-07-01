@@ -7,42 +7,43 @@ public class sOrderManager
     private int _orderFrequency;
     private int _expectedDeliveryTime;
     private float _timeToOrder;
-    List<int> _clientIDsTakeCare;
+    List<int> _revelantClientIDs;
 
     private bool _roundActive;
     /************************************************************************************************************************/
 
-    public sOrderManager(int orderFrequency, int expectedDeliveryDelay)
+    public sOrderManager()
     {
-        _orderFrequency = orderFrequency;
-        _expectedDeliveryTime = expectedDeliveryDelay;
-        _timeToOrder = float.MaxValue;
-        _clientIDsTakeCare = new List<int>();
-        _roundActive = false;
+        _revelantClientIDs = new List<int>();
+        Reset();
     }
     /************************************************************************************************************************/
 
     public void RegisterClientID(int clientId)
     {
-        if (_clientIDsTakeCare.Contains(clientId))
+        if (_revelantClientIDs.Contains(clientId))
             return;
 
-        _clientIDsTakeCare.Add(clientId);
+        //Debug.Log($"<color=white>RegisterClientID</color>: {clientId}");
+        _revelantClientIDs.Add(clientId);
     }
     public void UnregisterClientID(int clientId)
     {
-        if (!_clientIDsTakeCare.Contains(clientId))
+        if (!_revelantClientIDs.Contains(clientId))
             return;
-
-        _clientIDsTakeCare.Remove(clientId);
+        //Debug.Log($"<color=red>UNRegisterClientID</color>: {clientId}");
+        _revelantClientIDs.Remove(clientId);
     }
     public void Reset()
     {
-        _timeToOrder = 0;
-        _clientIDsTakeCare.Clear();
+        _timeToOrder = float.MaxValue;
+        _roundActive = false;
+        _revelantClientIDs.Clear();
     }
-    public void BeginRound()
+    public void BeginRound(int orderFrequency, int expectedDeliveryDelay)
     {
+        _orderFrequency = orderFrequency;
+        _expectedDeliveryTime = expectedDeliveryDelay;
         _roundActive = true;
     }
     public void EndRound()
@@ -63,15 +64,13 @@ public class sOrderManager
 
     private void SendInNewOrder()
     {
-        Debug.Log($"<color=white>WANT to send in new order..? </color>");
-        _timeToOrder = 0;
+         _timeToOrder = 0;
         ///Invoke call that calls client who owns UIOrdersIn.cs . SendInNewOrder()
-        foreach (var clientID in _clientIDsTakeCare)
+        foreach (var clientID in _revelantClientIDs)
         {
             int itemID = -1; //TODO
             float currTime = Time.time;
             sServerSend.NewOrderCreated(clientID, itemID, currTime, currTime + _expectedDeliveryTime);
-            Debug.Log($"<color=green>Sent in a new order!</color>");
         }
     }
 
