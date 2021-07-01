@@ -23,9 +23,8 @@ public class LobbyRow : MonoBehaviour
     {
         this.gameObject.name = "LobbyRow #" + num.ToString();
         _playerNumber.text = num.ToString();
-        _wsManager = dropDownManager;
-        _wsManager.SetupDropDown(_stationDropDown);
-        ManuallyChangeStation(stationID);
+        //ManuallyChangeStation(stationID);
+        UpdateWorkStationManager(dropDownManager);
         UpdateData(name, isInteractable, stationID);
         OnSelectionChanged += MonitorTaskInfoButton;
         MonitorTaskInfoButton(null);
@@ -34,9 +33,20 @@ public class LobbyRow : MonoBehaviour
 
     public void UpdateData(string name, bool isInteractable, int stationID)
     {
+        Debug.Log($"<color=blue>{gameObject.name}: </color> update= [{isInteractable} , {stationID} ]");
         _playerName.text = name;
         SetInteractable(isInteractable);
-        ManuallyChangeStation(stationID);
+        UpdateStation(); ///Update station without invoking a change
+    }
+
+    public void UpdateWorkStationManager(WorkStationManager wsm)
+    {
+        Debug.Log($"<color=orange>Update WSM</color>");
+        _wsManager = wsm;
+        int lastIndex = _stationDropDown.value;
+        _wsManager.SetupDropDown(_stationDropDown); ///Think this is resetting dropdown TO NONE
+        ManuallyChangeStation(lastIndex);
+        UpdateStation(); ///Update station without invoking a change
     }
 
     /// <summary>Sets which values in the dropdown are interactable </summary>
@@ -45,23 +55,18 @@ public class LobbyRow : MonoBehaviour
         _stationDropDown.SetLockedDropDownIndicies(invalidIndicies);
     }
 
-    /// <summary> Called anytime DropDown component changes at all, by UserInput or ManuallyChangeStation() </summary>
+    #region Buttons
+    /// <summary> Called from LobbyDropDown Component anytime theres a change by UserInput </summary>
     public void OnStationChanged()
     {
-        //Update Output Label
-        if (_wsManager)
+        if (UpdateStation())
         {
-            var stationPair = _wsManager.GetStationPair(_stationDropDown);
-            var newKey = (int)stationPair.Key._myStation;
-            if (_isActiveRow && newKey != WorkStationID)
-            {
-                HideInstructions(); ///If changed we cant update as ezily, and if change to NONE cant show at all, so best to hide instead of update
-                OnSelectionChanged?.Invoke(stationPair.Key);
-            }
-            WorkStationID = newKey;
-            _outputLabel.text = stationPair.Value;
+            ///Will update the server / everyone else:
+            KeyValuePair<WorkStation, string> stationPair = _wsManager.GetStationPair(_stationDropDown);
+            OnSelectionChanged?.Invoke(stationPair.Key);
         }
     }
+
 
     /// <summary> Called From Button </summary>
     public void OnToggleInstructions()
@@ -73,8 +78,33 @@ public class LobbyRow : MonoBehaviour
             lobbyInstructions.ToggleInstructions(img);
         }
     }
+    #endregion
     //**************PRIVATE******************************************************************//
+    /// <summary>Updates the workStation and hides the Instructions </summary>
+    private bool UpdateStation()
+    {
+        bool importantChange = false;
+        //Update Output Label
+        if (_wsManager)
+        {
+            KeyValuePair<WorkStation, string> stationPair = _wsManager.GetStationPair(_stationDropDown);
+            int newKey = (int)stationPair.Key._myStation;
+            importantChange = _isActiveRow && newKey != WorkStationID;
+            ///Update this rows display:
+            WorkStationID = newKey;
+            ManuallyChangeStation(WorkStationID);
+            _outputLabel.text = stationPair.Value;
+            if (importantChange)
+            {
+                HideInstructions(); ///If changed simply easier to hide instead of update
+            }
+        }
+        else
+            Debug.Log($"<color=red>{gameObject.name}::NO WSM</color>");
 
+        Debug.Log($"<color=yellow> UpdateStation() </color> = {importantChange} .._isActiveRow={_isActiveRow}");
+        return importantChange;
+    }
     /// <summary> Used to enable/disable this row, useful so players cant edit other players settings </summary>
     private void SetInteractable(bool cond)
     {
@@ -102,7 +132,7 @@ public class LobbyRow : MonoBehaviour
     {
         var invalid = ws == null || ws._myStation == WorkStation.eStation.SELF;
         _taskInfo.interactable = !invalid;
-        _lastKnownStation = ws;
+        _lastKnownStation = ws;///Cache the passed in WS so the instructions can query it
     }
     /// <summary>Force Hides station Instructions </summary>
     private void HideInstructions()
@@ -113,4 +143,5 @@ public class LobbyRow : MonoBehaviour
             lobbyInstructions.ShowInstructions(false);
         }
     }
+
 }

@@ -30,31 +30,35 @@ public class LobbyMenu : MonoBehaviour
 
     private void Start()
     {
-        ///Get some info from GameManager regarding settings
-        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
-        _startGameButton.interactable= UIManagerNetwork.Instance.RegisterLobbyMenu(this); //Slightly circular >.<
+        _startGameButton.interactable = UIManagerNetwork.Instance.RegisterLobbyMenu(this); //Slightly circular >.<
+        WorkStationManagerChanged();
         Refresh();
         WorkStationChanged(null); ///Will notify otherplayers were connected with No ws selected
+
     }
     public void ReceieveRefreshData(List<LobbyPlayer> incommingData)
     {
+        ///Everytime we get new data, assume the WSM changed since our GM updated via ClientHandle.ReceivedMpData
+        WorkStationManagerChanged();
+
         _lockedDropdownIds.Clear();
 
+        ///Update our existing rows by essentially removing _rows.Count from incommingData (will become an issue if players leave)
         foreach (LobbyRow row in _rows)
         {
-            var entry = incommingData[0];
-            incommingData.Remove(entry);
-            row.UpdateData(entry.Username, entry.IsInteractable, entry.StationID);
+            LobbyPlayer entry = incommingData[0]; ///Always 0 since we remove right below this line
+            incommingData.Remove(entry); ///Get rid of this entry we just saw
+            row.UpdateData( entry.Username, entry.IsInteractable, entry.StationID);
             _lockedDropdownIds.Add(entry.StationID); ///Dupes?
         }
-
-        foreach (var newPlayer in incommingData)
+        ///Any left over entries in incommingData means theres new players, so make a new row:
+        foreach (LobbyPlayer newPlayer in incommingData)
         {
             PlayerConnected(newPlayer.Username, newPlayer.IsInteractable, newPlayer.StationID);
             _lockedDropdownIds.Add(newPlayer.StationID); ///Dupes?
         }
 
-        if(_interactableRow)
+        if (_interactableRow)
         {
             _interactableRow.SetLockedDropDownIndicies(_lockedDropdownIds);
         }
@@ -64,7 +68,7 @@ public class LobbyMenu : MonoBehaviour
     {
         var row = CreateRow(name, isInteractable, stationID);
         _rows.Add(row);
-        if (isInteractable)
+        if (isInteractable)  ///Only set up a listener if this is the current players active row
         {
             if (_interactableRow != null)
             {
@@ -80,17 +84,26 @@ public class LobbyMenu : MonoBehaviour
     /// and update this players gameManager </summary>
     public void WorkStationChanged(WorkStation ws)
     {
-        if(_workstationManager)
+        if (_workstationManager)
             _workstationManager.UpdateStation(ws);
     }
 
-   
+    public void WorkStationManagerChanged()
+    {
+        ///Gets info from GameManager regarding settings
+        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
+        foreach (LobbyRow row in _rows)
+        {
+            row.UpdateWorkStationManager(_workstationManager);
+        }
+    }
+
     /// <summary> Called From Button only available to host /// </summary>
     public void HostWantsToStartRound()
     {
         UIManagerNetwork.Instance.HostStartsRound();
     }
-   
+
     /// <summary> Called From Network /// </summary>
     public int GetStationSelectionID()
     {
@@ -109,8 +122,8 @@ public class LobbyMenu : MonoBehaviour
     {
         UIManagerNetwork.Instance.RequestRefresh();
     }
-    
-   
+
+
     //**************PRIVATE******************************************************************//
     private LobbyRow CreateRow(string name, bool isInteractable, int stationID)
     {

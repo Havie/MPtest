@@ -19,6 +19,13 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         Client.instance._myId = myId;
         ClientSend.Instance.WelcomeReceived();
 
+        UpdateGameManagerVars(packet);
+
+        //give UDP the same port our tcp connection is using 
+        Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
+    }
+    public void UpdateGameManagerVars(sPacket packet)
+    {
         var instance = GameManager.Instance;
 
         instance._orderFrequency = packet.ReadInt();
@@ -32,14 +39,14 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         instance._HostDefectPausing = packet.ReadBool();
         instance.RoundDurationChanged(packet.ReadInt());
 
-        UIManager.DebugLog("WE read GameManager VARS:");
-
-        //give UDP the same port our tcp connection is using 
-        Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
+        UIManager.DebugLog("..read GameManager VARS from server");
     }
+
     public void ReceivedMpData(sPacket packet)
     {
-        //Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
+        UpdateGameManagerVars(packet);
+
+        Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
         List<LobbyPlayer> _players = new List<LobbyPlayer>();
         var count = packet.ReadInt();
 
