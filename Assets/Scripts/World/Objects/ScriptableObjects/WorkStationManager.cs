@@ -69,6 +69,7 @@ public class WorkStationManager : ScriptableObject
     {
         int wsID = dropdown.value;
         WorkStation ws = _workStations[wsID];
+        Debug.Log($"<color=purple>[WSM] DropDownVal= </color> {wsID} => {ws.StationName}");
         var outStation = ws._sendOutputToStation;
         string outName = "None";
         foreach (var station in _workStations)

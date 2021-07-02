@@ -40,11 +40,12 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         instance.RoundDurationChanged(packet.ReadInt());
 
         UIManager.DebugLog("..read GameManager VARS from server");
+        UIManagerNetwork.Instance.GameManagerVarsChanged(instance);
     }
 
     public void ReceivedMpData(sPacket packet)
     {
-        UpdateGameManagerVars(packet);
+        //UpdateGameManagerVars(packet);
 
         Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
         List<LobbyPlayer> _players = new List<LobbyPlayer>();
@@ -55,6 +56,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
             int id = packet.ReadInt();
             string userName = packet.ReadString();
             int stationID = packet.ReadInt();
+            Debug.Log($"<color=green>[ClientHandle] Read Station Info: </color> {stationID} : {userName}");
             bool isSelf = id == Client.instance._myId;
             _players.Add(new LobbyPlayer(id, userName, stationID, isSelf));
         }

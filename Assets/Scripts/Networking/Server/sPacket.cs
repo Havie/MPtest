@@ -19,7 +19,8 @@ public enum ServerPackets
     requestTransportData,
     receiveTransportData,
     sharedInventoryChanged,
-    newOrderCreated
+    newOrderCreated,
+    changedGMValues
 }
 
 /// <summary>Sent from client to server.</summary>

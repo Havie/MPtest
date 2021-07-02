@@ -26,7 +26,6 @@ public class LobbyRow : MonoBehaviour
         //ManuallyChangeStation(stationID);
         UpdateWorkStationManager(dropDownManager);
         UpdateData(name, isInteractable, stationID);
-        OnSelectionChanged += MonitorTaskInfoButton;
         MonitorTaskInfoButton(null);
         _outputLabel.text = _outputDefault;
     }
@@ -36,17 +35,24 @@ public class LobbyRow : MonoBehaviour
         Debug.Log($"<color=blue>{gameObject.name}: </color> update= [{isInteractable} , {stationID} ]");
         _playerName.text = name;
         SetInteractable(isInteractable);
-        UpdateStation(); ///Update station without invoking a change
+        /// Must assign the dropdown index first, or un-interactable rows are stuck at index 0
+        ManuallyChangeStation(stationID);
+        ///Update station without invoking a network change
+        UpdateStation();
     }
 
     public void UpdateWorkStationManager(WorkStationManager wsm)
     {
         Debug.Log($"<color=orange>Update WSM</color>");
         _wsManager = wsm;
-        int lastIndex = _stationDropDown.value;
-        _wsManager.SetupDropDown(_stationDropDown); ///Think this is resetting dropdown TO NONE
+        /// Hold onto our last index to reset after
+        int lastIndex = _stationDropDown.value; 
+        /// Repopulates the dropdown list with new station names (pointless now that we renamed all stations to 1,2,3,4 etc)
+        _wsManager.SetupDropDown(_stationDropDown); 
+        /// Put our selected index back to what we had chosen before
         ManuallyChangeStation(lastIndex);
-        UpdateStation(); ///Update station without invoking a change
+        ///Update station without invoking a network change
+        UpdateStation(); 
     }
 
     /// <summary>Sets which values in the dropdown are interactable </summary>
@@ -59,6 +65,7 @@ public class LobbyRow : MonoBehaviour
     /// <summary> Called from LobbyDropDown Component anytime theres a change by UserInput </summary>
     public void OnStationChanged()
     {
+        ///An importantChange Occurred or not :
         if (UpdateStation())
         {
             ///Will update the server / everyone else:
@@ -87,12 +94,14 @@ public class LobbyRow : MonoBehaviour
         //Update Output Label
         if (_wsManager)
         {
+            ///**Technically null safe becuz the wsm always retusn the default SELF station for NONE
             KeyValuePair<WorkStation, string> stationPair = _wsManager.GetStationPair(_stationDropDown);
             int newKey = (int)stationPair.Key._myStation;
             importantChange = _isActiveRow && newKey != WorkStationID;
-            ///Update this rows display:
             WorkStationID = newKey;
-            ManuallyChangeStation(WorkStationID);
+            ///Update the task info buttons workstation so it can get new instructions
+            MonitorTaskInfoButton(stationPair.Key);
+            ///Update this outputLabel to show who this station sends to
             _outputLabel.text = stationPair.Value;
             if (importantChange)
             {
@@ -124,12 +133,15 @@ public class LobbyRow : MonoBehaviour
     /// <summary> StationIDs match dropdown Indicies, so its an easy correlation</summary>
     private void ManuallyChangeStation(int index)
     {
+        Debug.Log($"<color=orange>ManuallyChangeStation-></color> {index}");
         _stationDropDown.value = index;
     }
 
     /// <summary> Whether or not to show the task button based on valid task </summary>
     private void MonitorTaskInfoButton(WorkStation ws)
     {
+        if (!_isActiveRow)
+            return; ///Dont let ppl click other stations instructions
         var invalid = ws == null || ws._myStation == WorkStation.eStation.SELF;
         _taskInfo.interactable = !invalid;
         _lastKnownStation = ws;///Cache the passed in WS so the instructions can query it

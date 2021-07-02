@@ -337,6 +337,7 @@ public class Client : MonoSingleton<Client>
         {
             //Setup the <index, Delegate> 
             { (int)ServerPackets.welcome, ClientHandle.Instance.Welcome } ,
+            { (int)ServerPackets.changedGMValues, ClientHandle.Instance.UpdateGameManagerVars } ,
             { (int)ServerPackets.sendMpData, ClientHandle.Instance.ReceivedMpData } ,
             //{ (int)ServerPackets.spawnPlayer, ClientHandle.Instance.SpawnPlayer }, //oldTutorial
             //{ (int)ServerPackets.playerPosition, ClientHandle.Instance.PlayerPosition }, //oldTutorial

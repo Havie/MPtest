@@ -52,7 +52,6 @@ public class sServerHandle
         }
     }
 
-
     public static void RequestMultiPlayerData(int fromClient, sPacket packet)
     {
         int clientIdCheck = packet.ReadInt();

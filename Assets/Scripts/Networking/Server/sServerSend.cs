@@ -51,19 +51,24 @@ public class sServerSend
 
     public static void Welcome(int toClient, string msg)
     {
-        /// Write all the GameManager DATA:
         using (sPacket packet = new sPacket((int)ServerPackets.welcome)) //Auto call packet.Dispose when done "UsingBlock"
         {
             packet.Write(msg);
             packet.Write(toClient);
-
             WriteGameManagerVars(packet);
-
             SendTCPData(toClient, packet);
         }
     }
 
-    private static void WriteGameManagerVars(sPacket packet)
+    public static void HostChangedGMValues()
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.changedGMValues)) 
+        {
+            WriteGameManagerVars(packet);
+            SendTCPDataToAll(packet); /// TODO should send to all except SELF
+        }
+    }
+    public static void WriteGameManagerVars(sPacket packet)
     {
         var instance = GameManager.Instance;
         packet.Write(instance._orderFrequency);
@@ -84,7 +89,7 @@ public class sServerSend
         var players = sPlayerData.GetPlayerData();
         using (sPacket packet = new sPacket((int)ServerPackets.sendMpData))
         {
-           WriteGameManagerVars(packet);
+            //WriteGameManagerVars(packet);
             packet.Write(players.Count);
 
             foreach (var player in players)

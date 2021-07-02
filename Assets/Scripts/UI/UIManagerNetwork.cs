@@ -166,12 +166,33 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         if (_lobbyMenu)
             _lobbyMenu.ReceieveRefreshData(playerData);
     }
+    public void GameManagerVarsChanged(GameManager gm)
+    {
+        if (_lobbyMenu)
+        {
+            _lobbyMenu.WorkStationManagerChanged(gm.CurrentWorkStationManager);
+        }
+    }
     public bool RegisterLobbyMenu(LobbyMenu menu)
     {
         //Slightly circular but needs to be set between scenes...
         _lobbyMenu = menu;
-
+        ///Menu needs to know if its the host
         return sServer._iAmHost;
+    }
+    public void RegisterHostMenu(UIHostMenu menu)
+    {
+        if(sServer._iAmHost)
+        {
+             menu.OnConfirmSettings += sServerSend.HostChangedGMValues;
+        }
+    }
+    public void UnRegisterHostMenu(UIHostMenu menu)
+    {
+        if (sServer._iAmHost)
+        {
+            menu.OnConfirmSettings -= sServerSend.HostChangedGMValues;
+        }
     }
 
     #endregion

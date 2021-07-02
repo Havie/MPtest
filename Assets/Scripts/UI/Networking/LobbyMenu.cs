@@ -8,6 +8,7 @@ public class LobbyMenu : MonoBehaviour
 
     [SerializeField] Transform _lobbyDiv = default;
     [SerializeField] Button _startGameButton = default;
+    [SerializeField] Button _hostTabButton = default;
     [SerializeField] Text _numPlayerText = default;
 
     GameObject _lobbyRowPrefab;
@@ -19,7 +20,7 @@ public class LobbyMenu : MonoBehaviour
 
     List<int> _lockedDropdownIds;
 
-
+    //****************************************************************************************//
 
     private void Awake()
     {
@@ -30,16 +31,18 @@ public class LobbyMenu : MonoBehaviour
 
     private void Start()
     {
-        _startGameButton.interactable = UIManagerNetwork.Instance.RegisterLobbyMenu(this); //Slightly circular >.<
-        WorkStationManagerChanged();
+        bool iAmHost = UIManagerNetwork.Instance.RegisterLobbyMenu(this); //Slightly circular >.<
+        _startGameButton.interactable = iAmHost;
+        _hostTabButton.interactable = iAmHost;
+        ///TODO find someotherway to abstract this class from knowing where to get the current WSM
+        WorkStationManagerChanged(GameManager.Instance.CurrentWorkStationManager);
         Refresh();
         WorkStationChanged(null); ///Will notify otherplayers were connected with No ws selected
 
     }
+    //****************************************************************************************//
     public void ReceieveRefreshData(List<LobbyPlayer> incommingData)
     {
-        ///Everytime we get new data, assume the WSM changed since our GM updated via ClientHandle.ReceivedMpData
-        WorkStationManagerChanged();
 
         _lockedDropdownIds.Clear();
 
@@ -64,22 +67,6 @@ public class LobbyMenu : MonoBehaviour
         }
     }
 
-    public void PlayerConnected(string name, bool isInteractable, int stationID)
-    {
-        var row = CreateRow(name, isInteractable, stationID);
-        _rows.Add(row);
-        if (isInteractable)  ///Only set up a listener if this is the current players active row
-        {
-            if (_interactableRow != null)
-            {
-                Debug.Log($"<color=yellow> more than 1 interactble Row?</color> {_interactableRow}");
-                _interactableRow.OnSelectionChanged -= WorkStationChanged;
-            }
-            _interactableRow = row;
-            _interactableRow.OnSelectionChanged += WorkStationChanged;
-        }
-    }
-
     /// <summary> This will send a message across network for other players to see changes 
     /// and update this players gameManager </summary>
     public void WorkStationChanged(WorkStation ws)
@@ -88,10 +75,11 @@ public class LobbyMenu : MonoBehaviour
             _workstationManager.UpdateStation(ws);
     }
 
-    public void WorkStationManagerChanged()
+    /// <summary> Swap out manager and update the lobby rows:</summary>
+    /// TODO- should get rid of the rows needing to hold this reference somehow?
+    public void WorkStationManagerChanged(WorkStationManager wsm)
     {
-        ///Gets info from GameManager regarding settings
-        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
+        _workstationManager = wsm;
         foreach (LobbyRow row in _rows)
         {
             row.UpdateWorkStationManager(_workstationManager);
@@ -135,5 +123,22 @@ public class LobbyMenu : MonoBehaviour
             return row;
         }
         return null;
+    }
+
+
+    private void PlayerConnected(string name, bool isInteractable, int stationID)
+    {
+        var row = CreateRow(name, isInteractable, stationID);
+        _rows.Add(row);
+        if (isInteractable)  ///Only set up a listener if this is the current players active row
+        {
+            if (_interactableRow != null)
+            {
+                Debug.Log($"<color=yellow> more than 1 interactble Row?</color> {_interactableRow}");
+                _interactableRow.OnSelectionChanged -= WorkStationChanged;
+            }
+            _interactableRow = row;
+            _interactableRow.OnSelectionChanged += WorkStationChanged;
+        }
     }
 }

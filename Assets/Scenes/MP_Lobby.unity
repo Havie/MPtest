@@ -13491,6 +13491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lobbyDiv: {fileID: 1711430665}
   _startGameButton: {fileID: 2026077526}
+  _hostTabButton: {fileID: 634487411}
   _numPlayerText: {fileID: 136984334}
 --- !u!1 &2064900095
 GameObject:
