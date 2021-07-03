@@ -2213,7 +2213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be6fd3cc857c3b44289c0495e088c82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inventorySceneName: Inventory
+  _inventorySceneName: Work_Station
   _mpLobbySceneName: MP_Lobby
   _networkingCanvas: {fileID: 1148312936}
   _bConnect: {fileID: 1327848549}

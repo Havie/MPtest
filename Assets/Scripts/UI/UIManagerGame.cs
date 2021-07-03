@@ -8,10 +8,6 @@ using System.Collections.Generic;
 [DefaultExecutionOrder(-9999)] ///Load early to beat Injector
 public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
 {
-    //[Header("Scene Loading Info")]
-    const string _lobbyScene = "MP_Lobby";
-    const string _mainMentSceneName = "Networking Scene";
-
     [Header("Game Components")]
     public GameObject _inventoryCanvas;  ///TODO fix this ref being public
     [SerializeField] GameObject _normalInInventory = default;
@@ -258,14 +254,14 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     ///Called from end results modal 
     public void ContinueFromEndResults()
     {
-        //TODO?- reload to main menu and let them reconnect with new host settings / start over?
-        SceneLoader.LoadLevel(_lobbyScene);
+        //TODO?- reload to lobby where they can stay connected in session
+        SceneLoader.LoadLevel(SceneNames.eSceneNames.MP_Lobby.ToString());
 
     }
 
     public void ReturnToMainMenu()
     {
-        SceneLoader.LoadLevel(_mainMentSceneName);
+        SceneLoader.LoadLevel(SceneNames.eSceneNames.Main_Menu.ToString());
     }
 
     public void KanbanUpdateInventory(bool isInInventory, bool isEmpty, int itemID, List<QualityData> qualityData)

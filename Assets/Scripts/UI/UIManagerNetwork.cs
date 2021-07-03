@@ -12,11 +12,6 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 {
     WorkStationManager _workstationManager;
 
-    [Header("Scene Loading Info")]
-    [SerializeField] string _inventorySceneName = "Inventory";
-    [SerializeField] string _mpLobbySceneName = "MP_Lobby";
-
-
     [Header("Networking Components")]
     public GameObject _networkingCanvas;
     public Button _bConnect;
@@ -227,7 +222,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public void LoadLobbyScene()
     {
         Debug.Log("load scene");
-        SceneLoader.LoadLevel(_mpLobbySceneName);
+        SceneLoader.LoadLevel(SceneNames.eSceneNames.MP_Lobby.ToString());
     }
 
     public void EnableHostButton(bool cond)
@@ -277,7 +272,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
         gm.IsTutorial = isTutorial;
         gm.StartWithWIP = isTutorial ? true : gm._batchSize == 1 ? true : false;
-        SceneLoader.LoadLevel(_inventorySceneName);
+        SceneLoader.LoadLevel(SceneNames.eSceneNames.Work_Station.ToString());
         BeginLevel(stationIndex);
         gm.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
     }

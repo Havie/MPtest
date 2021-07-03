@@ -22,7 +22,11 @@ using UnityEngine;
     public void CallBatchChanged(IntWrapper val) 
     {
         GameManager.Instance.BatchChanged(val);
-    } 
+    }
+    public void CallOnDeliveryTimeChanged(IntWrapper val)
+    {
+        GameManager.Instance.DeliveryTimeChanged(val);
+    }
 
     public void CallBatchChanged(int val)
     {
@@ -60,5 +64,10 @@ using UnityEngine;
     public void CallHostDefectPausingChanged(bool cond)
     {
         GameManager.Instance.HostDefectPausingChanged(cond);
+    }
+    public void CallOnStartWithWIP(bool cond)
+    {
+        Debug.Log($"wrapper = {cond}");
+        GameManager.Instance.StartWithWIPChanged(cond);
     }
 }

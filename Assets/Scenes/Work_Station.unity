@@ -8948,7 +8948,7 @@ GameObject:
   - component: {fileID: 1501261306}
   - component: {fileID: 1501261309}
   m_Layer: 0
-  m_Name: ClientManager
+  m_Name: ClientManager (gets replaced)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8994,6 +8994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948e81a18334eee48ad2f9892f08ba80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _orderCreated: {fileID: 0}
 --- !u!1 &1578912222
 GameObject:
   m_ObjectHideFlags: 0
@@ -11715,6 +11716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roundDuration: 90
   _orderFrequency: 5
+  ExpectedDeliveryDelay: 400
   _batchSize: 1
   _autoSend: 0
   _addChaotic: 0

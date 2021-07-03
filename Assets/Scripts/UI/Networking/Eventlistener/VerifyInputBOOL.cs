@@ -10,11 +10,14 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
     //public GameObject _myComponent;
     public bool _defaultValue = false;
 
-    private Toggle _inField;
+    [SerializeField]private Toggle _inField;
 
     private void Awake()
     {
-        _inField = this.GetComponentInChildren<Toggle>();
+        if (_inField == null)
+        {
+            _inField = this.GetComponentInChildren<Toggle>();
+        }
         if (_inField)
         {
             if (_inField.onValueChanged == null)
@@ -49,9 +52,9 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
 
     public void VerifyUserInput()
     {
-        //Debug.Log($"The new value is :{_inField.isOn}");
+        Debug.Log($"The _inField value is :{_inField.isOn}");
 
-        ///Convert to an Int and Update the GameManager 
+        ///Convert to a bool and Update the GameManager 
         _gameEvent.Raise(_inField.isOn);
 
     }

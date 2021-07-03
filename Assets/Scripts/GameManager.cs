@@ -110,6 +110,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void RoundDurationChanged(int duration) { _roundDuration = duration; }
     public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
     public void BatchChanged(IntWrapper val) { ValidateBatchSize(val._value); } ///from button Events
+    public void DeliveryTimeChanged(IntWrapper val) { ExpectedDeliveryDelay = val._value; }
     public void BatchChanged(int val) { ValidateBatchSize(val); } ///from ClientHandle
     public void AutoSendChanged(bool cond) { _autoSend = cond; ValidateAutoSend(); }
     public void AddChaoticChanged(bool cond) { _addChaotic = cond; }
@@ -119,7 +120,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void DecreasedChangedOverTimeChanged(bool cond) { _decreaseChangeOverTime = cond; }
     public void HUDManagementChanged(bool cond) { _HUDManagement = cond; }
     public void HostDefectPausingChanged(bool cond) { _HostDefectPausing = cond; }
-
+    public void StartWithWIPChanged(bool cond)  { StartWithWIP = cond; }
     #endregion
 
     public void SetRoundShouldStart(bool cond)

@@ -64,8 +64,8 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 
         if (_tutorialIndex >= _tutorialSequence.Length)
         {
+            //Debug.Log($"END OF TUTORIAL");
             Destroy(this);
-            Debug.Log($"END OF TUTORIAL");
             return;
         }
         TutorialItem t = _tutorialSequence[_tutorialIndex];
@@ -84,7 +84,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
         var currTutorial = _tutorialSequence[_tutorialIndex];
         TutorialEvents.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
         HandleFollowUpActions(currTutorial.FollowUpResponse);
-        ///Give the player a second to see the results of their actions
+        ///Give the player a fixed duration to see the results of their actions
         StartCoroutine(NextStepDelay(currTutorial.TimeDelayBeforeNextInstruction));
 
     }

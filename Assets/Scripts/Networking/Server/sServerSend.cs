@@ -71,16 +71,19 @@ public class sServerSend
     public static void WriteGameManagerVars(sPacket packet)
     {
         var instance = GameManager.Instance;
-        packet.Write(instance._orderFrequency);
-        packet.Write(instance._isStackable); ///needs to be before batchChanged
-        packet.Write(instance._batchSize);
-        packet.Write(instance._autoSend);
-        packet.Write(instance._addChaotic);
-        packet.Write(instance._workStationArrangement);
-        packet.Write(instance._workStationTaskChanging);
-        packet.Write(instance._HUDManagement);
-        packet.Write(instance._HostDefectPausing);
-        packet.Write(instance._roundDuration);
+        if (instance) //Application is quitting
+        {
+            packet.Write(instance._orderFrequency);
+            packet.Write(instance._isStackable); ///needs to be before batchChanged
+            packet.Write(instance._batchSize);
+            packet.Write(instance._autoSend);
+            packet.Write(instance._addChaotic);
+            packet.Write(instance._workStationArrangement);
+            packet.Write(instance._workStationTaskChanging);
+            packet.Write(instance._HUDManagement);
+            packet.Write(instance._HostDefectPausing);
+            packet.Write(instance._roundDuration);
+        }
     }
 
     public static void SendMultiPlayerData(int toClient)

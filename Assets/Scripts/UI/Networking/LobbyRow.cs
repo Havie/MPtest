@@ -19,7 +19,7 @@ public class LobbyRow : MonoBehaviour
     private WorkStation _lastKnownStation;
     private bool _isActiveRow = false;
     //***************************************************************************************//
-    public void initialize(int num, string name, WorkStationManager dropDownManager, bool isInteractable, int stationID)
+    public void Initialize(int num, string name, WorkStationManager dropDownManager, bool isInteractable, int stationID)
     {
         this.gameObject.name = "LobbyRow #" + num.ToString();
         _playerNumber.text = num.ToString();
@@ -29,10 +29,10 @@ public class LobbyRow : MonoBehaviour
         MonitorTaskInfoButton(null);
         _outputLabel.text = _outputDefault;
     }
-
+    
+    /// <summary> Updates the current row stored & displayed data </summary>
     public void UpdateData(string name, bool isInteractable, int stationID)
     {
-        Debug.Log($"<color=blue>{gameObject.name}: </color> update= [{isInteractable} , {stationID} ]");
         _playerName.text = name;
         SetInteractable(isInteractable);
         /// Must assign the dropdown index first, or un-interactable rows are stuck at index 0
@@ -40,10 +40,10 @@ public class LobbyRow : MonoBehaviour
         ///Update station without invoking a network change
         UpdateStation();
     }
-
+    
+    /// <summary> Update the current WorkStationManager so proper instructions/station names are displayed and selected on start</summary>
     public void UpdateWorkStationManager(WorkStationManager wsm)
     {
-        Debug.Log($"<color=orange>Update WSM</color>");
         _wsManager = wsm;
         /// Hold onto our last index to reset after
         int lastIndex = _stationDropDown.value; 
@@ -73,7 +73,6 @@ public class LobbyRow : MonoBehaviour
             OnSelectionChanged?.Invoke(stationPair.Key);
         }
     }
-
 
     /// <summary> Called From Button </summary>
     public void OnToggleInstructions()
