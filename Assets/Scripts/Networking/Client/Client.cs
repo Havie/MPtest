@@ -354,7 +354,7 @@ public class Client : MonoSingleton<Client>
        // Debug.Log("InitClientData packets ");
     }
 
-    private void Disconnect()
+    public void Disconnect()
     {
         if (_isConnected)
         {

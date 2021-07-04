@@ -255,13 +255,12 @@ public class UIManagerGame : MonoSingletonBackwards<UIManagerGame>
     public void ContinueFromEndResults()
     {
         //TODO?- reload to lobby where they can stay connected in session
-        SceneLoader.LoadLevel(SceneNames.eSceneNames.MP_Lobby.ToString());
-
+        SceneTracker.Instance.LoadScene(SceneTracker.eSceneName.MP_Lobby);
     }
 
     public void ReturnToMainMenu()
     {
-        SceneLoader.LoadLevel(SceneNames.eSceneNames.Main_Menu.ToString());
+        SceneTracker.Instance.LoadScene(SceneTracker.eSceneName.Main_Menu);
     }
 
     public void KanbanUpdateInventory(bool isInInventory, bool isEmpty, int itemID, List<QualityData> qualityData)

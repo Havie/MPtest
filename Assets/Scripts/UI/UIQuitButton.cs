@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-	public static class SceneNames 
-	{
-	   public enum eSceneNames { Main_Menu, MP_Lobby, Work_Station }
-	}
+public class UIQuitButton : MonoBehaviour
+{
+    public void Clicked()
+    {
+        SceneTracker.Instance.ExitScene();
+    }
+}

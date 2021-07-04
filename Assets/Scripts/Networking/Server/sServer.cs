@@ -39,7 +39,7 @@ public static class sServer
     }
 
     /************************************************************************************************************************/
-
+    #region Init
     public static void ListenForHostBroadCasts()
     {
         _udpListener = new UdpClient(sNetworkManager._defaultPort);
@@ -53,7 +53,6 @@ public static class sServer
         _udpListener.Send(data, data.Length, "255.255.255.255", sNetworkManager._defaultPort);
 
     }
-
     public static void Start(int maxPlayers, int port)
     {
         _maxPlayers = maxPlayers;
@@ -79,7 +78,24 @@ public static class sServer
 
         //UIManager.DebugLog($"Server started on IP:<color=green>{GetLocalIPAddress()} </color> Port:<color=blue> {_port}. </color>");
     }
+    #endregion //init
 
+    #region Network Related
+    public static void DisconnectClient(int clientID)
+    {
+        ///Dont like how anyone could pass in any ID, would rather pass in the sClient, problem is the
+        ///TCP/UDP classes dont have access to the SClient, only the ID. Want to avoid circularness
+        if (_clients.TryGetValue(clientID, out sClient client))
+        {
+            client.Disconnect();
+            /// Do not Remove the Client from the dictonary, these are meant to always exist ,see InitServerData
+            //_clients.Remove(clientID);
+            ///TODO notify players on server?
+        }
+    }
+    #endregion //NetworkRelated
+
+    #region GameRelated
     public static void ResetStatistics()
     {
         _gameStatistics = new sGameStatistics();
@@ -90,13 +106,13 @@ public static class sServer
     }
     public static void ResetOrderManager()
     {
-        if(_orderManager==null)
+        if (_orderManager == null)
         {
             _orderManager = new sOrderManager();
         }
         _orderManager.Reset();
     }
-
+    #endregion //GameRelated
     ///Note: I think this method is Asynchronous which means it will be run on a different thread, so 
     ///      game logic like UIManager.DebugLog is not safe (and will sometimes crash without error and mess other things up)
     private static void TCPConnectCallback(IAsyncResult result)
@@ -106,7 +122,7 @@ public static class sServer
             TcpClient client = _tcpListener.EndAcceptTcpClient(result);
             _tcpListener.BeginAcceptTcpClient(new AsyncCallback(TCPConnectCallback), null);
             Debug.Log($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color>");
-            ///WARNING TRYING TO PRINT THIS TO THE WINDOW CRASHES WITH NO WARNINGS 
+            ///WARNING TRYING TO PRINT THIS TO THE WINDOW CRASHES WITH NO WARNINGS , something to do w threads
             //UIManager.DebugLog($"Incoming connection from <color=green>{client.Client.RemoteEndPoint}</color> .");
 
             for (int i = 1; i <= _maxPlayers; ++i)

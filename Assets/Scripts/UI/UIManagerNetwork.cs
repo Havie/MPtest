@@ -221,8 +221,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     public void LoadLobbyScene()
     {
-        Debug.Log("load scene");
-        SceneLoader.LoadLevel(SceneNames.eSceneNames.MP_Lobby.ToString());
+        SceneTracker.Instance.LoadScene(SceneTracker.eSceneName.MP_Lobby);
     }
 
     public void EnableHostButton(bool cond)
@@ -272,7 +271,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
         gm.IsTutorial = isTutorial;
         gm.StartWithWIP = isTutorial ? true : gm._batchSize == 1 ? true : false;
-        SceneLoader.LoadLevel(SceneNames.eSceneNames.Work_Station.ToString());
+        SceneTracker.Instance.LoadScene(SceneTracker.eSceneName.Work_Station);
         BeginLevel(stationIndex);
         gm.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
     }
