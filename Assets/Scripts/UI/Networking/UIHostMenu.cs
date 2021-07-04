@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class UIHostMenu : MonoBehaviour
 {
-    /// All of the button components subscribe to OnConfirmSettings via the serialized event interface
+    ///When changes to the HostMenu options are confirmed this gets invoked
     public System.Action OnConfirmSettings;
 
     public void OnEnable()
     {
-        ///Dont like the circularness of this, but network menu needs to register the callback
+        ///Dont like the circularness of this, but network menu needs to register the callback,
+        ///and this class shouldnt need to know about the actual network classes
         UIManagerNetwork.Instance.RegisterHostMenu(this);
     }
 
@@ -29,9 +30,6 @@ public class UIHostMenu : MonoBehaviour
     /// <summary> Ensure the components update their values/GM, also tells Server  </summary>
     public void UpdateGameManager()
     {
-        ///WARNING: this actually isnt working becuz its being called from "OnDisable"
-        ///and by the time all the events subscribed to this delegate are called, 
-        ///their onDisable has already deregistered their listener, so they invoke nothing
         OnConfirmSettings?.Invoke();
     }
 

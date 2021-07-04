@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class VerifyInputINT : GameEventListener<IntWrapper, IntEvent, UnityIntEvent>
 {
-    public UIHostMenu _hostMenuManager; ///Will find in parent if null
-   // public GameObject _myComponent;
     public int _defaultValue = 2;
 
     private InputField _inField; ///Will find in child
@@ -20,7 +18,6 @@ public class VerifyInputINT : GameEventListener<IntWrapper, IntEvent, UnityIntEv
         {
             SetupMonitorAndValidator();
             AssignPreferredDefaultValue();
-            SetUpHostCallBack();
         }
         else
             Debug.LogWarning($"Missing InputField for {this.gameObject.name}");
@@ -55,19 +52,6 @@ public class VerifyInputINT : GameEventListener<IntWrapper, IntEvent, UnityIntEv
          return ValidateINT(addedChar);
     }
 
-    /// <summary> When the host wants to confirm settings, lock in our changes</summary>
-    private void SetUpHostCallBack()
-    {
-
-        if (_hostMenuManager == null)
-            _hostMenuManager = this.GetComponentInParent<UIHostMenu>();
-
-        if (_hostMenuManager)
-            _hostMenuManager.OnConfirmSettings += VerifyUserInput;
-        else
-            Debug.LogWarning($"no _hostMenuManager for {this.gameObject.name}  , will not update settings properly");
-
-    }
 
     /// <summary> Ensures User input is a valid char #</summary>
     private char ValidateINT(char charToValidate)

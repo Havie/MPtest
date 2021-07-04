@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent>
 {
-    public UIHostMenu _hostMenuManager;
-    //public GameObject _myComponent;
     public bool _defaultValue = false;
 
     [SerializeField]private Toggle _inField;
@@ -24,7 +22,6 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
         {
             AssignValidatorListener();
             AssignPreferredDefaultValue();
-            SetUpHostCallBack();
         }
         else
             Debug.LogWarning($"Missing InputField for {this.gameObject.name}");
@@ -48,21 +45,6 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
     {
         _inField.isOn = _defaultValue;
     }
-
-    /// <summary> When the host wants to confirm settings, lock in our changes</summary>
-    private void SetUpHostCallBack()
-    {
-
-        if (_hostMenuManager == null)
-            _hostMenuManager = this.GetComponentInParent<UIHostMenu>();
-
-        if (_hostMenuManager)
-            _hostMenuManager.OnConfirmSettings += VerifyUserInput;
-        else
-            Debug.LogWarning($"no _hostMenuManager for {this.gameObject.name}  , will not update settings properly");
-
-    }
-
 
     public void VerifyUserInput()
     {
