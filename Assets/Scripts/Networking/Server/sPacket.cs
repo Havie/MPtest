@@ -32,7 +32,6 @@ public enum ClientPackets
     requestMpData,
     item, 
     batch,
-    orderCreated,
     defectAdded,
     roundBegin,
     roundEnd,

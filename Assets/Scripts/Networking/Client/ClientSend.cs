@@ -146,17 +146,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             SendTCPData(packet);
         }
     }
-    public void OrderCreated(OrderWrapper order)
-    {
-        Debug.Log($"<color=white>(ClientSend) Order Created</color>");
-        using (sPacket packet = new sPacket((int)ClientPackets.orderCreated))
-        {
-            packet.Write(order.ItemID);
-            packet.Write(order.CreatedTime);
-            packet.Write(order.DueTime);
-            SendTCPData(packet);
-        }
-    }
     public void DefectAdded(DefectWrapper defect)
     {
         //Debug.Log($"<color=orange>(ClientSend) DefectAdded</color>");

@@ -12,7 +12,9 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
 
     [SerializeField]private Toggle _inField;
 
-    private void Awake()
+    ///Have to do this as Start, otherwise gameEventListeners RegisterListeners OnEnable are too slow
+
+    private void Start()
     {
         if (_inField == null)
         {
@@ -20,14 +22,8 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
         }
         if (_inField)
         {
-            if (_inField.onValueChanged == null)
-            {
-                _inField.onValueChanged.AddListener(delegate
-                {
-                    VerifyUserInput();
-                });
-            }
-            _inField.isOn = _defaultValue;
+            AssignValidatorListener();
+            AssignPreferredDefaultValue();
             SetUpHostCallBack();
         }
         else
@@ -35,7 +31,25 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
 
 
     }
+    /// <summary> Manually assign our listener if not assigned in inspector</summary>
+    private void AssignValidatorListener()
+    {
+        if (_inField.onValueChanged == null)
+        {
+            _inField.onValueChanged.AddListener(delegate
+            {
+                VerifyUserInput();
+            });
+        }
+    }
 
+    /// <summary> Make sure our starting value meets the expected setting visually</summary>
+    private void AssignPreferredDefaultValue()
+    {
+        _inField.isOn = _defaultValue;
+    }
+
+    /// <summary> When the host wants to confirm settings, lock in our changes</summary>
     private void SetUpHostCallBack()
     {
 
@@ -52,8 +66,6 @@ public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent
 
     public void VerifyUserInput()
     {
-        Debug.Log($"The _inField value is :{_inField.isOn}");
-
         ///Convert to a bool and Update the GameManager 
         _gameEvent.Raise(_inField.isOn);
 

@@ -110,7 +110,7 @@ public class LobbyRow : MonoBehaviour
         else
             Debug.Log($"<color=red>{gameObject.name}::NO WSM</color>");
 
-        Debug.Log($"<color=yellow> UpdateStation() </color> = {importantChange} .._isActiveRow={_isActiveRow}");
+        //Debug.Log($"<color=yellow> UpdateStation() </color> = {importantChange} .._isActiveRow={_isActiveRow}");
         return importantChange;
     }
     /// <summary> Used to enable/disable this row, useful so players cant edit other players settings </summary>
@@ -132,7 +132,7 @@ public class LobbyRow : MonoBehaviour
     /// <summary> StationIDs match dropdown Indicies, so its an easy correlation</summary>
     private void ManuallyChangeStation(int index)
     {
-        Debug.Log($"<color=orange>ManuallyChangeStation-></color> {index}");
+        //Debug.Log($"<color=orange>ManuallyChangeStation-></color> {index}");
         _stationDropDown.value = index;
     }
 

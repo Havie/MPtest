@@ -67,7 +67,6 @@ using UnityEngine;
     }
     public void CallOnStartWithWIP(bool cond)
     {
-        Debug.Log($"wrapper = {cond}");
         GameManager.Instance.StartWithWIPChanged(cond);
     }
 }

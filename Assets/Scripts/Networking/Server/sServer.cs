@@ -240,7 +240,6 @@ public static class sServer
                 { (int)ClientPackets.requestMpData , sServerHandle.RequestMultiPlayerData},
                 { (int)ClientPackets.item , sServerHandle.ItemReceived},
                 { (int)ClientPackets.batch , sServerHandle.BatchReceived},
-                { (int)ClientPackets.orderCreated , sServerHandle.OrderCreated},
                 { (int)ClientPackets.defectAdded , sServerHandle.DefectAdded},
                 { (int)ClientPackets.roundBegin , sServerHandle.RoundBegin},
                 { (int)ClientPackets.roundEnd , sServerHandle.RoundEnded},
@@ -249,7 +248,7 @@ public static class sServer
 
             };
 
-        Debug.Log("Initilalized Packets.");
+        //Debug.Log("Initilalized Packets.");
     }
 
     private static bool LookLikeIpAddress(string s)

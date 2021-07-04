@@ -6,8 +6,7 @@ using UnityEngine;
 public class UIHostMenu : MonoBehaviour
 {
     /// All of the button components subscribe to OnConfirmSettings via the serialized event interface
-    public delegate void ConfirmSettings();
-    public event ConfirmSettings OnConfirmSettings;
+    public System.Action OnConfirmSettings;
 
     public void OnEnable()
     {
@@ -19,13 +18,20 @@ public class UIHostMenu : MonoBehaviour
     {
         /// Ivoked from Button-Tab when User leaves Host Tab
         UpdateGameManager();
-        UIManagerNetwork.Instance.UnRegisterHostMenu(this);
+        UIManagerNetwork networkManager = UIManagerNetwork.Instance;
+        if (networkManager)
+        {
+            networkManager.UnRegisterHostMenu(this);
+        }
     }
 
 
     /// <summary> Ensure the components update their values/GM, also tells Server  </summary>
     public void UpdateGameManager()
     {
+        ///WARNING: this actually isnt working becuz its being called from "OnDisable"
+        ///and by the time all the events subscribed to this delegate are called, 
+        ///their onDisable has already deregistered their listener, so they invoke nothing
         OnConfirmSettings?.Invoke();
     }
 

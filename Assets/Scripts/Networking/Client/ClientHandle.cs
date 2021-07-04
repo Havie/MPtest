@@ -47,7 +47,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
     {
         //UpdateGameManagerVars(packet);
 
-        Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
+        //Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
         List<LobbyPlayer> _players = new List<LobbyPlayer>();
         var count = packet.ReadInt();
 
@@ -56,9 +56,9 @@ public class ClientHandle : MonoSingleton<ClientHandle>
             int id = packet.ReadInt();
             string userName = packet.ReadString();
             int stationID = packet.ReadInt();
-            Debug.Log($"<color=green>[ClientHandle] Read Station Info: </color> {stationID} : {userName}");
             bool isSelf = id == Client.instance._myId;
             _players.Add(new LobbyPlayer(id, userName, stationID, isSelf));
+            //Debug.Log($"<color=green>[ClientHandle] Read Station Info: </color> {stationID} : {userName}");
         }
 
         UIManagerNetwork.Instance.ReceieveMPData(_players);
@@ -136,16 +136,15 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         return qualities;
     }
 
-    public void NewOrderCreated(sPacket packet)
+    public void NewOrderReceived(sPacket packet)
     {
-        Debug.Log($"..ClientHandle : NewOrderCreated");
         if (_orderCreated)
         {
-            int itemID = -1; //TODO MOVE TO SERVER WHEN ADDING MORE THAN 1 ITEM
+            int itemID = packet.ReadInt();
             float createTime = packet.ReadFloat();
             float dueTime = packet.ReadFloat();
             _orderCreated.Raise(new OrderWrapper(itemID, createTime, dueTime));
-            Debug.Log($"invoked");
+            //Debug.Log($"NewOrderReceived createTime={createTime} , dueTime={dueTime} ");
         }
     }
     public void OrderShipped(sPacket packet)

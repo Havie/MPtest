@@ -106,22 +106,6 @@ public class sServerHandle
         Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
-    public static void OrderCreated(int fromClient, sPacket packet)
-    {
-        int itemID = packet.ReadInt();
-        float createdTime = packet.ReadFloat();
-        float dueTime = packet.ReadFloat();
-
-        Debug.Log("<color=green>[sServerHandle]</color> itemID Read was : " + itemID);
-        Debug.Log("<color=green>[sServerHandle]</color> createdTime Read was : " + createdTime);
-        Debug.Log("<color=green>[sServerHandle]</color> dueTime Read was : " + dueTime);
-
-        sServer._gameStatistics.CreatedAnOrder(itemID, createdTime, dueTime);
-
-        Debug.Log("<color=purple>[sServerHandle]</color> WIP= : " + sServer._gameStatistics.GetWIP());
-
-    }
-
     public static void DefectAdded(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();

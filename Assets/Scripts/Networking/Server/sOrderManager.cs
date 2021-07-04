@@ -42,6 +42,7 @@ public class sOrderManager
     }
     public void BeginRound(int orderFrequency, int expectedDeliveryDelay)
     {
+        //Debug.Log($"<color=white>[BEGINROUND] </color> orderFrequency={orderFrequency} expectedDeliveryDelay={expectedDeliveryDelay} ");
         _orderFrequency = orderFrequency;
         _expectedDeliveryTime = expectedDeliveryDelay;
         _roundActive = true;
@@ -70,7 +71,10 @@ public class sOrderManager
         {
             int itemID = -1; //TODO
             float currTime = Time.time;
-            sServerSend.NewOrderCreated(clientID, itemID, currTime, currTime + _expectedDeliveryTime);
+            float dueTime = currTime + _expectedDeliveryTime;
+            sServerSend.NewOrderCreated(clientID, itemID, currTime, dueTime);
+            ///TODO pass in a copy of _gameStatistics in constructor
+            sServer._gameStatistics.CreatedAnOrder(itemID, currTime, dueTime);
         }
     }
 
