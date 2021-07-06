@@ -8,17 +8,6 @@ public class SceneTracker : MonoSingleton<SceneTracker>
     private eSceneName _currentScene = eSceneName.Main_Menu;
 
 
-
-    private void Update()
-    {
-        ///TMP 
-        ///
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            ExitScene();
-        }
-    }
-
     public void LoadScene(eSceneName sceneName)
     {
         SceneLoader.LoadLevel(sceneName.ToString());
@@ -32,7 +21,8 @@ public class SceneTracker : MonoSingleton<SceneTracker>
         {
             case eSceneName.Main_Menu:
                 {
-                    ///Ask to quit the game
+                    ///TODO- a prompt that asks to quit the game?
+                    Application.Quit();
                     break;
                 }
             case eSceneName.MP_Lobby:

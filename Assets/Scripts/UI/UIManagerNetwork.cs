@@ -16,11 +16,10 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     public GameObject _networkingCanvas;
     public Button _bConnect;
     public Button _bHost;
+    public Button _bTutorial;
+    public Button _bQuit;
     public InputField _usernameField;
     public Text _loadingTxt;
-    public GameObject _workStationDropDown;
-    public Button _tmpConfirmWorkStation;
-    public Button _playTutorial;
     public Text _orTxt;
 
 
@@ -40,13 +39,9 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     {
         UIManager.RegisterNetworkManager(this);
 
-        SetUpWorkStationDropDownMenu(); ///Will need to be called again when client, but for non network scene need a call here as well
-
-        if (_loadingTxt && _tmpConfirmWorkStation && _workStationDropDown)
+        if (_loadingTxt)
         {
             _loadingTxt.enabled = false;
-            _tmpConfirmWorkStation.gameObject.SetActive(false);
-            _workStationDropDown.SetActive(false);
             //Debug.Log(" confirm station off");
         }
         else
@@ -66,28 +61,17 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         UIManager.RegisterGameManager(null);
     }
 
-    private void SetUpWorkStationDropDownMenu()
-    {
-        Debug.Log($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
-        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
-
-        //Set up workstation selection
-        if (_workstationManager != null && _workStationDropDown)
-            _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
-        else
-            UIManager.DebugLogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
-
-    }
 
     private void EnablePanel(bool cond)
     {
-        if (_bConnect && _bHost && _usernameField && _playTutorial && _orTxt)
+        if (_bConnect && _bHost && _usernameField && _bTutorial && _bQuit && _orTxt)
         {
             _bConnect.gameObject.SetActive(cond);
             _bHost.gameObject.SetActive(cond);
             _usernameField.gameObject.SetActive(cond);
             _loadingTxt.gameObject.SetActive(!cond);
-            _playTutorial.gameObject.SetActive(cond);
+            _bTutorial.gameObject.SetActive(cond);
+            _bQuit.gameObject.SetActive(cond);
             _orTxt.gameObject.SetActive(cond);
         }
         else

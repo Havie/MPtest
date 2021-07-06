@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIQuitButton : MonoBehaviour
 {
-    public void Clicked()
+    public void Quit()
     {
         SceneTracker.Instance.ExitScene();
     }
