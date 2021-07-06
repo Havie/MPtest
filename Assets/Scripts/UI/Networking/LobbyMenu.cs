@@ -49,6 +49,12 @@ public class LobbyMenu : MonoBehaviour
         ///Update our existing rows by essentially removing _rows.Count from incommingData (will become an issue if players leave)
         foreach (LobbyRow row in _rows)
         {
+            if (incommingData.Count < 1)
+            {
+                row.gameObject.SetActive(false);
+                break;
+            }
+            row.gameObject.SetActive(true);
             LobbyPlayer entry = incommingData[0]; ///Always 0 since we remove right below this line
             incommingData.Remove(entry); ///Get rid of this entry we just saw
             row.UpdateData( entry.Username, entry.IsInteractable, entry.StationID);

@@ -225,6 +225,9 @@ public class sClient
         Debug.Log($"{Tcp._socket.Client.RemoteEndPoint} has disconnected");
         Tcp.Disconnect();
         Udp.Disconnect();
+        ///Remove them from the game data
+        sPlayerData.RemovePlayerInfo(ID);
+        sServerHandle.RefreshAllButOneClientsMPData(this);
     }
 
 

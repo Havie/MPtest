@@ -41,6 +41,11 @@ public class sServerHandle
         else
             Debug.Log("[sServerHandle] Found an error w StationIDReceived");
 
+        RefreshAllButOneClientsMPData(client);
+    }
+
+    public static void RefreshAllButOneClientsMPData(sClient client)
+    {
         ///Refresh the other clients on the network with this change
         foreach (var clientEntry in sServer._clients) ///this needs help
         {
