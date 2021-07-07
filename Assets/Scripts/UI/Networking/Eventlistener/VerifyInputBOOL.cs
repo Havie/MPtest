@@ -6,52 +6,49 @@ using UnityEngine.UI;
 
 public class VerifyInputBOOL : GameEventListener<bool, BoolEvent, UnityBoolEvent>
 {
-    public UIHostMenu _hostMenuManager;
-    public GameObject _myComponent;
     public bool _defaultValue = false;
 
-    private Toggle _inField;
+    [SerializeField]private Toggle _inField;
 
-    private void Awake()
+    ///Have to do this as Start, otherwise gameEventListeners RegisterListeners OnEnable are too slow
+
+    private void Start()
     {
-        _inField = _myComponent.GetComponent<Toggle>();
+        if (_inField == null)
+        {
+            _inField = this.GetComponentInChildren<Toggle>();
+        }
         if (_inField)
         {
-            if (_inField.onValueChanged == null)
-            {
-                _inField.onValueChanged.AddListener(delegate
-                {
-                    VerifyUserInput();
-                });
-            }
-            _inField.isOn = _defaultValue;
-            SetUpHostCallBack();
+            AssignValidatorListener();
+            AssignPreferredDefaultValue();
         }
         else
             Debug.LogWarning($"Missing InputField for {this.gameObject.name}");
 
 
     }
-
-    private void SetUpHostCallBack()
+    /// <summary> Manually assign our listener if not assigned in inspector</summary>
+    private void AssignValidatorListener()
     {
-
-        if (_hostMenuManager == null)
-            _hostMenuManager = this.GetComponentInParent<UIHostMenu>();
-
-        if (_hostMenuManager)
-            _hostMenuManager.OnConfirmSettings += VerifyUserInput;
-        else
-            Debug.LogWarning($"no _hostMenuManager for {this.gameObject.name}  , will not update settings properly");
-
+        if (_inField.onValueChanged == null)
+        {
+            _inField.onValueChanged.AddListener(delegate
+            {
+                VerifyUserInput();
+            });
+        }
     }
 
+    /// <summary> Make sure our starting value meets the expected setting visually</summary>
+    private void AssignPreferredDefaultValue()
+    {
+        _inField.isOn = _defaultValue;
+    }
 
     public void VerifyUserInput()
     {
-        //Debug.Log($"The new value is :{_inField.isOn}");
-
-        ///Convert to an Int and Update the GameManager 
+        ///Convert to a bool and Update the GameManager 
         _gameEvent.Raise(_inField.isOn);
 
     }

@@ -13,7 +13,17 @@ public static class sPlayerData
         sPlayer pl = new sPlayer(clientID, userName);
         _players.Add(pl);
     }
-
+    public static void RemovePlayerInfo(int clientID)
+    {
+        foreach (var player in _players)
+        {
+            if(player.ID == clientID)
+            {
+                _players.Remove(player);
+                return;
+            }
+        }
+    }
 
     public static void SetStationDataForPlayer(int stationID, int fromClient)
     {

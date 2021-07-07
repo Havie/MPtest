@@ -72,9 +72,9 @@ public class sClient
             try
             {
                 int byteLength = _stream.EndRead(result);
-                if (byteLength <= 0)
+                if (byteLength <= 0) ///Error checking
                 {
-                    sServer._clients[_id].Disconnect();
+                    sServer.DisconnectClient(_id);
                     return;
                 }
 
@@ -86,9 +86,8 @@ public class sClient
             }
             catch (Exception e)
             {
-                ///This is happening when coming in and out of the networking after a round:
                 Debug.Log($"<color=red>Error receiving TCP data </color>: {e}");
-                sServer._clients[_id].Disconnect();
+                sServer.DisconnectClient(_id);
             }
         }
 
@@ -226,6 +225,9 @@ public class sClient
         Debug.Log($"{Tcp._socket.Client.RemoteEndPoint} has disconnected");
         Tcp.Disconnect();
         Udp.Disconnect();
+        ///Remove them from the game data
+        sPlayerData.RemovePlayerInfo(ID);
+        sServerHandle.RefreshAllButOneClientsMPData(this);
     }
 
 

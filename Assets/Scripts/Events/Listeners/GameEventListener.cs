@@ -27,7 +27,6 @@ public abstract class GameEventListener<T, E, UER> : MonoBehaviour,
     {
         if (!_gameEvent)
             return;
-
         _gameEvent.DeregisterListener(this);
     }
 

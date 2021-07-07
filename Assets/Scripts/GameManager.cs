@@ -10,9 +10,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     [Header("Game Modifiers")]
     ///TODO make these all accessors with priv set or Serialized:
+    ///Left like this because its way easier to change in the test scene for now
     #region Game Modifiers
     public int _roundDuration = 10; //In SECONDS  --> 60 =1 min
     public int _orderFrequency = 3;
+    public int ExpectedDeliveryDelay = 400; //seconds
     public int _batchSize = 10;
     public bool _autoSend = true;
     public bool _addChaotic = false;
@@ -28,8 +30,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     public bool RoundShouldStart { get; private set; } = false;
     public WorkStation _workStation { get; private set; }
-
-
 
     [Header("Resources")]
     public ComponentList _componentList;
@@ -92,12 +92,11 @@ public class GameManager : MonoSingleton<GameManager>
     ///Things are reliant on batchsize
     private void ValidateBatchSize(int amnt)
     {
-        Debug.Log($"<color=orange> BATCH CHANGED TO:</color> {amnt}");
+        //Debug.Log($"<color=orange>GM BATCH CHANGED TO:</color> {amnt}");
         _batchSize = amnt;
         ValidateAutoSend();
         DetermineCurrentWorkStation();
-       // Debug.Log($"<color=white>GM BatchChanged</color> val:{amnt}--> {CurrentWorkStationManager}");
-    }
+     }
     ///We need to base auto send off batch
     private void ValidateAutoSend()
     {
@@ -111,6 +110,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void RoundDurationChanged(int duration) { _roundDuration = duration; }
     public void OrderFreqChanged(IntWrapper val) { _orderFrequency = val._value; }
     public void BatchChanged(IntWrapper val) { ValidateBatchSize(val._value); } ///from button Events
+    public void DeliveryTimeChanged(IntWrapper val) { ExpectedDeliveryDelay = val._value; }
     public void BatchChanged(int val) { ValidateBatchSize(val); } ///from ClientHandle
     public void AutoSendChanged(bool cond) { _autoSend = cond; ValidateAutoSend(); }
     public void AddChaoticChanged(bool cond) { _addChaotic = cond; }
@@ -120,7 +120,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void DecreasedChangedOverTimeChanged(bool cond) { _decreaseChangeOverTime = cond; }
     public void HUDManagementChanged(bool cond) { _HUDManagement = cond; }
     public void HostDefectPausingChanged(bool cond) { _HostDefectPausing = cond; }
-
+    public void StartWithWIPChanged(bool cond)  { StartWithWIP = cond; }
     #endregion
 
     public void SetRoundShouldStart(bool cond)

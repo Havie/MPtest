@@ -18,7 +18,9 @@ public enum ServerPackets
     orderShipped,
     requestTransportData,
     receiveTransportData,
-    sharedInventoryChanged
+    sharedInventoryChanged,
+    newOrderCreated,
+    changedGMValues
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -30,7 +32,6 @@ public enum ClientPackets
     requestMpData,
     item, 
     batch,
-    orderCreated,
     defectAdded,
     roundBegin,
     roundEnd,

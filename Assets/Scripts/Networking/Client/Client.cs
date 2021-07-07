@@ -337,6 +337,7 @@ public class Client : MonoSingleton<Client>
         {
             //Setup the <index, Delegate> 
             { (int)ServerPackets.welcome, ClientHandle.Instance.Welcome } ,
+            { (int)ServerPackets.changedGMValues, ClientHandle.Instance.UpdateGameManagerVars } ,
             { (int)ServerPackets.sendMpData, ClientHandle.Instance.ReceivedMpData } ,
             //{ (int)ServerPackets.spawnPlayer, ClientHandle.Instance.SpawnPlayer }, //oldTutorial
             //{ (int)ServerPackets.playerPosition, ClientHandle.Instance.PlayerPosition }, //oldTutorial
@@ -346,13 +347,14 @@ public class Client : MonoSingleton<Client>
             { (int)ServerPackets.roundEnd, ClientHandle.Instance.RoundEnded },
             { (int)ServerPackets.orderShipped, ClientHandle.Instance.OrderShipped },
             { (int)ServerPackets.requestTransportData, ClientHandle.Instance.RequestTransportData },
-            { (int)ServerPackets.sharedInventoryChanged, ClientHandle.Instance.KanbanInventoryChanged }
+            { (int)ServerPackets.sharedInventoryChanged, ClientHandle.Instance.KanbanInventoryChanged },
+            { (int)ServerPackets.newOrderCreated, ClientHandle.Instance.NewOrderReceived }
         };
 
        // Debug.Log("InitClientData packets ");
     }
 
-    private void Disconnect()
+    public void Disconnect()
     {
         if (_isConnected)
         {

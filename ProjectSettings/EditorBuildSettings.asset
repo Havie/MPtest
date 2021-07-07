@@ -12,16 +12,16 @@ EditorBuildSettings:
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/Networking Scene.unity
+    path: Assets/Scenes/Main_Menu.unity
     guid: f8abd47e85583ef44954195587098845
   - enabled: 1
     path: Assets/Scenes/MP_Lobby.unity
     guid: 49137169f83a1c7428677d5289d2b795
   - enabled: 1
-    path: Assets/Scenes/Inventory.unity
+    path: Assets/Scenes/Work_Station.unity
     guid: 05dbd784c0fd73c459f0b21f0e1b9c7e
   - enabled: 0
-    path: Assets/Scenes/VFXTesting01.unity
+    path: Assets/Scenes/Testing/VFXTesting01.unity
     guid: 2e35e7f9c2f3b3f4b93d9f2dcd07f583
   - enabled: 0
     path: Assets/Scenes/EmptyScene01.unity

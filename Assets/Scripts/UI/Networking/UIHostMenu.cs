@@ -5,82 +5,32 @@ using UnityEngine;
 
 public class UIHostMenu : MonoBehaviour
 {
+    ///When changes to the HostMenu options are confirmed this gets invoked
+    public System.Action OnConfirmSettings;
 
-    [Header("Scene Components")]
-    public GameObject _connectionObjects;
-    public GameObject _buttonHost;
-
-    [SerializeField] List<GameObject> _hostOptions = new List<GameObject>();
-
-    public GameObject _buttonCreateRoom;
-
-    public delegate void ConfirmSettings();
-    public event ConfirmSettings OnConfirmSettings;
-
-
-    private void Awake()
+    public void OnEnable()
     {
-        ShowMenuOptions(false);
-    }
-    public void OnConnection(bool cond)
-    {
-        if(!cond)
-        {
-            HideHostCustomization();
-            UIManagerNetwork.Instance.EnableHostButton(true);
-        }
-        UIManagerNetwork.Instance.OnConnectionResult -= OnConnection;
+        ///Dont like the circularness of this, but network menu needs to register the callback,
+        ///and this class shouldnt need to know about the actual network classes
+        UIManagerNetwork.Instance.RegisterHostMenu(this);
     }
 
-    ///Called from Button
-    public void ShowHostCustomization()
+    private void OnDisable()
     {
-        ShowMenuOptions(true);
-        _connectionObjects.SetActive(false);
-    }
-
-    public void HideHostCustomization()
-    {
-        ShowMenuOptions(false);
-        _connectionObjects.SetActive(true);
-    }
-
-    ///Called from Button
-    public void CreateRoom()
-    {
+        /// Ivoked from Button-Tab when User leaves Host Tab
         UpdateGameManager();
-        HostConnection();
-
-
-        ///Should put this in a coroutine, that runs this after saying "..Creating Room.."
-        /// Because Client was connecting before sNetworkManager ran Start 
-        ShowMenuOptions(false);
-        UIManagerNetwork.Instance.OnConnectionResult += OnConnection;
-        UIManagerNetwork.Instance.ConnectToServer("Trying to host connection");
-    }
-
-    private void ShowMenuOptions(bool cond)
-    {
-        _buttonHost.SetActive(!cond);
-
-        foreach (var item in _hostOptions)
+        UIManagerNetwork networkManager = UIManagerNetwork.Instance;
+        if (networkManager)
         {
-            item.SetActive(cond);
+            networkManager.UnRegisterHostMenu(this);
         }
-
-        _buttonCreateRoom.SetActive(cond);
     }
 
-    private void UpdateGameManager()
+
+    /// <summary> Ensure the components update their values/GM, also tells Server  </summary>
+    public void UpdateGameManager()
     {
         OnConfirmSettings?.Invoke();
     }
 
-
-
-    private void HostConnection()
-    {
-        Client.instance.IWillBeHost = true;
-        sNetworkManager.Instance.HostNetwork();
-    }
 }

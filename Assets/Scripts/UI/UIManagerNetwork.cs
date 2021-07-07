@@ -12,20 +12,14 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 {
     WorkStationManager _workstationManager;
 
-    [Header("Scene Loading Info")]
-    [SerializeField] string _inventorySceneName = "Inventory";
-    [SerializeField] string _mpLobbySceneName = "MP_Lobby";
-
-
     [Header("Networking Components")]
     public GameObject _networkingCanvas;
     public Button _bConnect;
     public Button _bHost;
+    public Button _bTutorial;
+    public Button _bQuit;
     public InputField _usernameField;
     public Text _loadingTxt;
-    public GameObject _workStationDropDown;
-    public Button _tmpConfirmWorkStation;
-    public Button _playTutorial;
     public Text _orTxt;
 
 
@@ -45,13 +39,9 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     {
         UIManager.RegisterNetworkManager(this);
 
-        SetUpWorkStationDropDownMenu(); ///Will need to be called again when client, but for non network scene need a call here as well
-
-        if (_loadingTxt && _tmpConfirmWorkStation && _workStationDropDown)
+        if (_loadingTxt)
         {
             _loadingTxt.enabled = false;
-            _tmpConfirmWorkStation.gameObject.SetActive(false);
-            _workStationDropDown.SetActive(false);
             //Debug.Log(" confirm station off");
         }
         else
@@ -71,28 +61,17 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         UIManager.RegisterGameManager(null);
     }
 
-    private void SetUpWorkStationDropDownMenu()
-    {
-        //DebugLog($"Switching WS::{_workstationManager} to WS::{GameManager.instance.CurrentWorkStationManager}");
-        _workstationManager = GameManager.Instance.CurrentWorkStationManager;
-
-        //Set up workstation selection
-        if (_workstationManager != null && _workStationDropDown)
-            _workstationManager.SetupDropDown(_workStationDropDown.GetComponent<Dropdown>());
-        else
-            UIManager.DebugLogWarning("(UIManager): Missing _workstationManager or _workStationDropDown  (if in a test scene without networking this <color=yellow>*might*</color> be fine) ");
-
-    }
 
     private void EnablePanel(bool cond)
     {
-        if (_bConnect && _bHost && _usernameField && _playTutorial && _orTxt)
+        if (_bConnect && _bHost && _usernameField && _bTutorial && _bQuit && _orTxt)
         {
             _bConnect.gameObject.SetActive(cond);
             _bHost.gameObject.SetActive(cond);
             _usernameField.gameObject.SetActive(cond);
             _loadingTxt.gameObject.SetActive(!cond);
-            _playTutorial.gameObject.SetActive(cond);
+            _bTutorial.gameObject.SetActive(cond);
+            _bQuit.gameObject.SetActive(cond);
             _orTxt.gameObject.SetActive(cond);
         }
         else
@@ -101,33 +80,33 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
 
     public void Connected(bool cond)
     {
-        if (!cond)
-            UIManager.DebugLogWarning($"connected to server = <color=red>{cond}</color>");
-
-        if (_loadingTxt)
-            StartCoroutine(ConnectionResultRoutine(cond));
+        StartCoroutine(ConnectionResultRoutine(cond));
     }
 
     IEnumerator ConnectionResultRoutine(bool cond)
     {
         if (cond)
         {
-            _loadingTxt.text = "Connection Success!";
-            yield return new WaitForSeconds(0.5f);
-            _loadingTxt.enabled = false;
-            ///OLD 
-            //SetUpWorkStationDropDownMenu();///resetup incase our host changed the batch size/other settings
-            //DisplaySelectWorkStation();
+            if (_loadingTxt)
+            {
+                _loadingTxt.text = "Connection Success!";
+                yield return new WaitForSeconds(0.5f);
+                _loadingTxt.enabled = false;
+            }
             LoadLobbyScene();
 
         }
         else
         {
-            _loadingTxt.color = Color.red;
-            _loadingTxt.text = "Connection Failed! \nCheck Tablet is connected to internet";
-            yield return new WaitForSeconds(2f);
-            _loadingTxt.enabled = false;
-            _loadingTxt.color = Color.black;
+            UIManager.DebugLogWarning($"connected to server = <color=red>{cond}</color>");
+            if (_loadingTxt)
+            {
+                _loadingTxt.color = Color.red;
+                _loadingTxt.text = "Connection Failed! \nCheck Tablet is connected to internet";
+                yield return new WaitForSeconds(2f);
+                _loadingTxt.enabled = false;
+                _loadingTxt.color = Color.black;
+            }
             EnablePanel(true);
         }
 
@@ -157,28 +136,56 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         var stationID = _lobbyMenu.GetStationSelectionID();
         LoadInventoryScene(stationID, false);
     }
-    public void RequestRefresh() 
+    public void RequestRefresh()
     {
         ClientSend.Instance.RequestMPData();
     }
     public void ReceieveMPData(List<LobbyPlayer> playerData)
     {
-        if(_lobbyMenu)
+        if (_lobbyMenu)
             _lobbyMenu.ReceieveRefreshData(playerData);
+    }
+    public void GameManagerVarsChanged(GameManager gm)
+    {
+        if (_lobbyMenu)
+        {
+            _lobbyMenu.WorkStationManagerChanged(gm.CurrentWorkStationManager);
+        }
     }
     public bool RegisterLobbyMenu(LobbyMenu menu)
     {
         //Slightly circular but needs to be set between scenes...
         _lobbyMenu = menu;
-
+        ///Menu needs to know if its the host
         return sServer._iAmHost;
+    }
+    public void RegisterHostMenu(UIHostMenu menu)
+    {
+        if(sServer._iAmHost)
+        {
+             menu.OnConfirmSettings += sServerSend.HostChangedGMValues;
+        }
+    }
+    public void UnRegisterHostMenu(UIHostMenu menu)
+    {
+        if (sServer._iAmHost)
+        {
+            menu.OnConfirmSettings -= sServerSend.HostChangedGMValues;
+        }
     }
 
     #endregion
+    public void HostConnection()
+    {
+        Client.instance.IWillBeHost = true;
+        sNetworkManager.Instance.HostNetwork();
+        ConnectToServer("Trying to host connection");
+    }
 
     ///called from button
     public void ConnectToServer()
     {
+        EnablePanel(false);
         ConnectToServer("Trying to find server");
     }
 
@@ -193,13 +200,12 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         }
         else
             Debug.LogWarning("(UIManager): Missing ConnectToServer objects");
-        
+
     }
 
     public void LoadLobbyScene()
     {
-        Debug.Log("load scene");
-        SceneLoader.LoadLevel(_mpLobbySceneName);
+        SceneTracker.Instance.LoadScene(SceneTracker.eSceneName.MP_Lobby);
     }
 
     public void EnableHostButton(bool cond)
@@ -231,7 +237,7 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
     {
         FileSaver.WriteToFileTest("test");
     }
-    
+
     public void LoadTutorial()
     {
         GameManager.Instance.BatchChanged(2);
@@ -248,8 +254,8 @@ public class UIManagerNetwork : MonoSingletonBackwards<UIManagerNetwork>
         var gm = GameManager.Instance;
 
         gm.IsTutorial = isTutorial;
-        gm.StartWithWIP = isTutorial ? true : gm._batchSize==1 ? true : false;
-        SceneLoader.LoadLevel(_inventorySceneName);
+        gm.StartWithWIP = isTutorial ? true : gm._batchSize == 1 ? true : false;
+        SceneTracker.Instance.LoadScene(SceneTracker.eSceneName.Work_Station);
         BeginLevel(stationIndex);
         gm.SetRoundShouldStart(!isTutorial); ///No timer? not needed?
     }

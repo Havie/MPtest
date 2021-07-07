@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class ClientHandle : MonoSingleton<ClientHandle>
 {
+    [Header("Events")]
+    [SerializeField] OrderReceivedEvent _orderCreated;
+
     public void Welcome(sPacket packet)
     {
         string msg = packet.ReadString();
@@ -16,6 +19,13 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         Client.instance._myId = myId;
         ClientSend.Instance.WelcomeReceived();
 
+        UpdateGameManagerVars(packet);
+
+        //give UDP the same port our tcp connection is using 
+        Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
+    }
+    public void UpdateGameManagerVars(sPacket packet)
+    {
         var instance = GameManager.Instance;
 
         instance._orderFrequency = packet.ReadInt();
@@ -29,13 +39,14 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         instance._HostDefectPausing = packet.ReadBool();
         instance.RoundDurationChanged(packet.ReadInt());
 
-        UIManager.DebugLog("WE read GameManager VARS:");
-
-        //give UDP the same port our tcp connection is using 
-        Client.instance._udp.Connect(((IPEndPoint)Client.instance._tcp._socket.Client.LocalEndPoint).Port);
+        UIManager.DebugLog("..read GameManager VARS from server");
+        UIManagerNetwork.Instance.GameManagerVarsChanged(instance);
     }
+
     public void ReceivedMpData(sPacket packet)
     {
+        //UpdateGameManagerVars(packet);
+
         //Debug.Log($"[ClientHandle]<color=green> Received refreshData From server</color>");
         List<LobbyPlayer> _players = new List<LobbyPlayer>();
         var count = packet.ReadInt();
@@ -47,6 +58,7 @@ public class ClientHandle : MonoSingleton<ClientHandle>
             int stationID = packet.ReadInt();
             bool isSelf = id == Client.instance._myId;
             _players.Add(new LobbyPlayer(id, userName, stationID, isSelf));
+            //Debug.Log($"<color=green>[ClientHandle] Read Station Info: </color> {stationID} : {userName}");
         }
 
         UIManagerNetwork.Instance.ReceieveMPData(_players);
@@ -124,6 +136,17 @@ public class ClientHandle : MonoSingleton<ClientHandle>
         return qualities;
     }
 
+    public void NewOrderReceived(sPacket packet)
+    {
+        if (_orderCreated)
+        {
+            int itemID = packet.ReadInt();
+            float createTime = packet.ReadFloat();
+            float dueTime = packet.ReadFloat();
+            _orderCreated.Raise(new OrderWrapper(itemID, createTime, dueTime));
+            //Debug.Log($"NewOrderReceived createTime={createTime} , dueTime={dueTime} ");
+        }
+    }
     public void OrderShipped(sPacket packet)
     {
         int itemID = packet.ReadInt();

@@ -46,9 +46,9 @@ public class sGameStatistics
     {
         var totalShipped = GetTotalShipped();
         if(totalShipped>0)
-            UIManager.DebugLog($"result= <color=green> {totalShippingTime} / {totalShipped}  </color>");
+            UIManager.DebugLog($"Throughput result= <color=green> {totalShippingTime} / {totalShipped}  </color>");
         else
-            UIManager.DebugLog($"result= <color=red> {_currentRoundEndtime} / {_currentRoundTimeStart}  </color>");
+            UIManager.DebugLog($"Throughput result= <color=red> {_currentRoundEndtime} / {_currentRoundTimeStart}  </color>");
         return totalShipped > 0 ? ( totalShippingTime / totalShipped) : (_currentRoundEndtime - _currentRoundTimeStart);
     }
     /// <summary>
@@ -100,6 +100,7 @@ public class sGameStatistics
     public void CreatedAnOrder(int itemID, float createdTime, float expectedTime)
     {
         ItemOrder order = new ItemOrder(itemID, createdTime, expectedTime);
+        Debug.Log($"<color=red> Enqueue {itemID} </color> at createdTime: {createdTime} ..expectedTime={expectedTime} ");
         _orders.Enqueue(order);
     }
     public void StationSentBatch(int stationID, int batchSize, bool wasShipped, float time)
