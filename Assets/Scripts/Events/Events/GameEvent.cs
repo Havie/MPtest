@@ -30,7 +30,7 @@ public abstract class GameEvent<T> : ScriptableObject
 
     public  void Raise(T type)
     {
-       //Debug.Log("Raise was called count=" + _listeners.Count);
+       //Debug.Log($"<color=green>{this.name}</color>:: Raise was called _listenersCount=" + _listeners.Count);
        for(int i = _listeners.Count-1; i>=0; --i)
         {
             _listeners[i].OnEventRaised(type);

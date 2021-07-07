@@ -51,13 +51,28 @@ public class sServerSend
 
     public static void Welcome(int toClient, string msg)
     {
-        /// Write all the GameManager DATA:
         using (sPacket packet = new sPacket((int)ServerPackets.welcome)) //Auto call packet.Dispose when done "UsingBlock"
         {
             packet.Write(msg);
             packet.Write(toClient);
+            WriteGameManagerVars(packet);
+            SendTCPData(toClient, packet);
+        }
+    }
 
-            var instance = GameManager.Instance;
+    public static void HostChangedGMValues()
+    {
+        using (sPacket packet = new sPacket((int)ServerPackets.changedGMValues)) 
+        {
+            WriteGameManagerVars(packet);
+            SendTCPDataToAll(packet); /// TODO should send to all except SELF
+        }
+    }
+    public static void WriteGameManagerVars(sPacket packet)
+    {
+        var instance = GameManager.Instance;
+        if (instance) //Application is quitting
+        {
             packet.Write(instance._orderFrequency);
             packet.Write(instance._isStackable); ///needs to be before batchChanged
             packet.Write(instance._batchSize);
@@ -68,17 +83,16 @@ public class sServerSend
             packet.Write(instance._HUDManagement);
             packet.Write(instance._HostDefectPausing);
             packet.Write(instance._roundDuration);
-
-
-            SendTCPData(toClient, packet);
         }
     }
 
     public static void SendMultiPlayerData(int toClient)
     {
+
         var players = sPlayerData.GetPlayerData();
         using (sPacket packet = new sPacket((int)ServerPackets.sendMpData))
         {
+            //WriteGameManagerVars(packet);
             packet.Write(players.Count);
 
             foreach (var player in players)
@@ -176,6 +190,17 @@ public class sServerSend
 
     }
 
+    public static void NewOrderCreated(int toClient, int itemID, float createTime, float expectedTime)
+    {
+        Debug.Log($"ServerSend NewOrderCreated toClient#{toClient} , itemID={itemID}, createTime={createTime},  expectedTime={expectedTime}");
+        using (sPacket packet = new sPacket((int)ServerPackets.newOrderCreated))
+        {
+            packet.Write(itemID);
+            packet.Write(createTime);
+            packet.Write(expectedTime);
+            SendTCPData(toClient, packet);
+        }
+    }
     #endregion
 }
 

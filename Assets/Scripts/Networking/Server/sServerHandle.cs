@@ -27,18 +27,25 @@ public class sServerHandle
     public static void StationInfoReceived(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
-        //Debug.Log($"[ServerHandle] stationID Read was :  {stationID} ");
+        //Debug.Log($"<color=white>[ServerHandle]:StationInfoReceived</color> stationID Read was :  {stationID} ");
         ///This is somewhat unsafe
         sClient client = sServer._clients[fromClient];
         if (client != null)
         {
             client.SetWorkStationInfo(stationID);
             sPlayerData.SetStationDataForPlayer(stationID, fromClient);
+            ///Verify If client is pull shipping, or batch kitting to register to OrderManager:
+            UpdateOrderManager(fromClient, stationID);
 
         }
         else
-            Debug.Log("Found an error w StationIDReceived");
+            Debug.Log("[sServerHandle] Found an error w StationIDReceived");
 
+        RefreshAllButOneClientsMPData(client);
+    }
+
+    public static void RefreshAllButOneClientsMPData(sClient client)
+    {
         ///Refresh the other clients on the network with this change
         foreach (var clientEntry in sServer._clients) ///this needs help
         {
@@ -104,22 +111,6 @@ public class sServerHandle
         Debug.Log($"The CycleTime for Station#{stationID} is currently: <color=purple> {cycleTime} </color>");
     }
 
-    public static void OrderCreated(int fromClient, sPacket packet)
-    {
-        int itemID = packet.ReadInt();
-        float createdTime = packet.ReadFloat();
-        float dueTime = packet.ReadFloat();
-
-        //Debug.Log("<color=green>[sServerHandle]</color> itemID Read was : " + itemID);
-        //Debug.Log("<color=green>[sServerHandle]</color> createdTime Read was : " + createdTime);
-        //Debug.Log("<color=green>[sServerHandle]</color> dueTime Read was : " + dueTime);
-
-        sServer._gameStatistics.CreatedAnOrder(itemID, createdTime, dueTime);
-
-        Debug.Log("<color=purple>[sServerHandle]</color> WIP= : " + sServer._gameStatistics.GetWIP());
-
-    }
-
     public static void DefectAdded(int fromClient, sPacket packet)
     {
         int stationID = packet.ReadInt();
@@ -133,17 +124,14 @@ public class sServerHandle
 
     public static void RoundBegin(int fromClient, sPacket packet)
     {
-        float roundStart = packet.ReadFloat();
-        int roundDuration = packet.ReadInt();
+        //float roundStart = packet.ReadFloat();
+        //int roundDuration = packet.ReadInt();
 
+        float roundStart = Time.time; //base this off server time 
+        int roundDuration = GameManager.Instance._roundDuration; //base this off hosts GM
         //Debug.Log("<color=white>[sServerHandle]</color> RoundBegin @ : " + roundStart);
 
-        ///I wish something on the server was ticking so we could keep track of time on it,
-        ///but instead we will let the hosts Timer call an end event to trigger RoundEnd
-        ///We could Tick on the sNetworkManager but feels wrong
-
         sServer._gameStatistics.RoundBegin(roundStart);
-        var batchSize = GameManager.Instance._batchSize;
         foreach (sClient c in sServer.GetClients())
         {
             ///Set up the KanBan flags for pull and shared inv for batch
@@ -152,6 +140,10 @@ public class sServerHandle
             ///This will call all 6 since they are init, but calls wont go anywhere for those not connected
             c.StartRound(roundDuration);
         }
+        var gm = GameManager.Instance;
+        ///Start ticking out OrderManager 2second later to let scene load, and send in the first order
+        ThreadManager.Instance.ExecuteOnMainThreadWithDelay(() => sServer._orderManager.BeginRound(gm._orderFrequency, gm.ExpectedDeliveryDelay), 2);
+
 
     }
 
@@ -159,11 +151,12 @@ public class sServerHandle
     {
         float endTime = packet.ReadFloat();
 
-        Debug.Log("<color=white>[sServerHandle]</color> RoundEnded @ : " + endTime);
+        //Debug.Log("<color=white>[sServerHandle]</color> RoundEnded @ : " + endTime);
 
         var gameStats = sServer._gameStatistics;
 
         gameStats.RoundEnded(endTime);
+        sServer._orderManager.EndRound();
 
         float thruPut = gameStats.GetThroughput();
         int shippedOnTime = gameStats.GetShippedOnTime();
@@ -190,8 +183,10 @@ public class sServerHandle
         }
         ///Print out and store our round results
         FileSaver.WriteToFile(rs);
+        ///Reset our states to be ready for the next round
         sServer.ResetStatistics();
         sServer.ResetSharedInventories();
+        sServer.ResetOrderManager();
     }
 
     /// <summary>
@@ -230,13 +225,14 @@ public class sServerHandle
         {
             var invType = !isInInventory;
             sServerSend.SharedInventoryChanged(client.ID, invType, isRemovedItem, itemID, qualityData);
+            ///Update our cycle times for PULL, wont work if receiving Client is Disconnected!
+            /// In theory player could add/remove item over and over from their kanban flag for better cycle times
+            if(!isRemovedItem && !isInInventory)
+            {
+                int ourStationID = sharedInvs.GetSharedStationID(!isInInventory, client.ID, out float ignored);
+                sServer._gameStatistics.StationSentBatch(ourStationID, 1, false, Time.time);
+            }    
         }
-        ///Update our cycle times for PULL
-        if(!isRemovedItem)
-        {
-            int ourStationID = sharedInvs.GetSharedStationID(!isInInventory, client.ID, out float ignored);
-            sServer._gameStatistics.StationSentBatch(ourStationID, 1, false, Time.time);
-        }    
 
     }
 
@@ -283,5 +279,18 @@ public class sServerHandle
         return qualities;
     }
 
-
+    private static void UpdateOrderManager(int fromClient, int stationID)
+    {
+        //Debug.Log($"<color=white>[ServerHandle]</color>trying to UpdateOrderManager");
+        var gm = GameManager.Instance;
+        if ((gm._batchSize == 1 && stationID == 6) || (gm._batchSize == 2 && stationID == 1))
+        {
+            sServer._orderManager.RegisterClientID(fromClient);
+        }
+        else
+        {
+            ///Client could have previously picked an important station, so must de-register
+            sServer._orderManager.UnregisterClientID(fromClient);
+        }
+    }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ClientSend : MonoSingleton<ClientSend>
 {
+
     private  void SendTCPData(sPacket packet)
     {
         packet.WriteLength();
@@ -66,12 +67,12 @@ public class ClientSend : MonoSingleton<ClientSend>
         if (!sServer._iAmHost)
             return;
 
-        Debug.Log($"<color=white>(ClientSend) Round Begin </color>");
+        //Debug.Log($"<color=white>(ClientSend) Round Begin </color>");
         using (sPacket packet = new sPacket((int)ClientPackets.roundBegin))
         {
-            packet.Write(Time.unscaledTime);
-            ///other clients shud already have this, might be un-needed, if removed, remove on receieve too
-            packet.Write(GameManager.Instance._roundDuration); 
+            ///Send an empty Packet and let the sServer set the time/duration there
+            //packet.Write(Time.unscaledTime);
+            //packet.Write(GameManager.Instance._roundDuration); 
             SendTCPData(packet);
         }
     }
@@ -142,17 +143,6 @@ public class ClientSend : MonoSingleton<ClientSend>
             packet.Write(batch.StationId);
             packet.Write(batch.ItemCount);
             packet.Write(batch.IsShipped);
-            SendTCPData(packet);
-        }
-    }
-    public void OrderCreated(OrderWrapper order)
-    {
-        Debug.Log($"<color=white>(ClientSend) Order Created</color>");
-        using (sPacket packet = new sPacket((int)ClientPackets.orderCreated))
-        {
-            packet.Write(order.ItemID);
-            packet.Write(order.CreatedTime);
-            packet.Write(order.DueTime);
             SendTCPData(packet);
         }
     }
