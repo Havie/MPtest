@@ -25,6 +25,5 @@ public class TutorialItem : ScriptableObject
 
     public float TimeDelayBeforeNextInstruction => _timeInSecondsBeforeNextInstruction;
     [SerializeField] float _timeInSecondsBeforeNextInstruction =1;
-    ///TODO how to detect action? Unity event i guess
 
 }
