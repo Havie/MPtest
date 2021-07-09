@@ -1,28 +1,53 @@
 ﻿#pragma warning disable CS0649 // Ignore : "Field is never assigned to, and will always have its default value"
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class UIMenuController : MonoBehaviour
 {
-    [SerializeField] GameObject _gameMenu = default;
-    [SerializeField] GameObject _tutorialMenu = default;
-
-    private bool _isTutorial;
-    private bool _isOn;
+    [SerializeField] UIInGameMenuButton _menuButtonPREFAB = default;
+    [SerializeField] Transform _instantationTransform = default;
+    ///Call this when we close ourselves if anyone needs to know
+    public System.Action OnClose;
     /************************************************************************************************************************/
-    private void Awake()
+
+    /// <summary>Called from X button on Module</summary>
+    public void CloseSelf()
     {
-        _isTutorial = GameManager.Instance.IsTutorial;
+        OnClose.Invoke();
+        this.gameObject.SetActive(false);
     }
-    public void ToggleMenu()
+
+    protected void CreateNewButton(string label, System.Action callback)
     {
-        _isOn = !_isOn;
-        if (_isTutorial)
+        if (_menuButtonPREFAB)
         {
-            _tutorialMenu.SetActive(_isOn);
-            return;
+            UIInGameMenuButton button = GameObject.Instantiate(_menuButtonPREFAB, _instantationTransform);
+            button.SetUpButton(label, callback);
         }
-        _gameMenu.SetActive(_isOn);
     }
+
+    ///Try to auto set up self
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        TryFindComponents();
+    }
+
+    private void TryFindComponents()
+    {
+        if (_menuButtonPREFAB == null)
+        {
+            _menuButtonPREFAB = Resources.Load<UIInGameMenuButton>("Prefab/UI/IG_MenuButton");
+        }
+        if (_instantationTransform == null)
+        {
+            var vertLayoutChild = this.GetComponentInChildren<VerticalLayoutGroup>();
+            if (vertLayoutChild)
+            {
+                _instantationTransform = vertLayoutChild.transform;
+            }
+        }
+    }
+#endif
 }
