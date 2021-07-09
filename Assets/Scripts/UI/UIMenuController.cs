@@ -18,13 +18,15 @@ public class UIMenuController : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    protected void CreateNewButton(string label, System.Action callback)
+    protected UIInGameMenuButton CreateNewButton(string label, System.Action callback)
     {
         if (_menuButtonPREFAB)
         {
             UIInGameMenuButton button = GameObject.Instantiate(_menuButtonPREFAB, _instantationTransform);
             button.SetUpButton(label, callback);
+            return button;
         }
+        return null;
     }
 
     ///Try to auto set up self
