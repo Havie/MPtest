@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class UIInGameOptionsMenu : UIMenuController
 {
+    [Header("Scene Components")]
+    [SerializeField] TutorialManager _tutorialManager = default;
+    [Header("Self Components")]
     [SerializeField] GameObject _menuLabelTxt = default; ///The Text that says "Menu"
     [SerializeField] Button _backButton = default; ///The button hidden in the header
 
@@ -13,6 +16,12 @@ public class UIInGameOptionsMenu : UIMenuController
 
     private bool _showTutorialSet;
     /************************************************************************************************************************/
+    private void OnDisable()
+    {
+        ///If we get closed, we wana reset our state back to the main menu
+        ResetSelf();
+    }
+
     private void Start()
     {
         if (_backButton)
@@ -33,10 +42,14 @@ public class UIInGameOptionsMenu : UIMenuController
     }
     private void LoadTutorialButtons()
     {
-        ///TODO load the story branches from the tutorial somehow
-        _buttonSetTut.Add(CreateNewButton("Tutorial 1", UnknownAction));
-        _buttonSetTut.Add(CreateNewButton("Tutorial 2", UnknownAction));
-        _buttonSetTut.Add(CreateNewButton("Tutorial 3", UnknownAction));
+        if (!_tutorialManager)
+            return;
+        foreach ( var stage in _tutorialManager.GetStages())
+        {
+            ///probably need to get data down into the button too
+            _buttonSetTut.Add(CreateNewButton(stage.StageName, TutorialModalChosen));
+        }
+
     }
 
     private void ShowTutorial()
@@ -77,8 +90,18 @@ public class UIInGameOptionsMenu : UIMenuController
         }
     }
 
-    private void UnknownAction()
+    private void TutorialModalChosen(UIInGameMenuButton fromButton)
     {
+        ///TODO get data off the button from a data wrapper class 
+        ShowTutorialWidget();
+    }
+    private void ShowTutorialWidget()
+    {
+        this.gameObject.SetActive(false);
+    }
 
+    private void ResetSelf()
+    {
+        ShowMainMenu();
     }
 }

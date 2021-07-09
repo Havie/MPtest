@@ -28,6 +28,16 @@ public class UIMenuController : MonoBehaviour
         }
         return null;
     }
+    protected UIInGameMenuButton CreateNewButton(string label, System.Action<UIInGameMenuButton> wrappedCallBack)
+    {
+        if (_menuButtonPREFAB)
+        {
+            UIInGameMenuButton button = GameObject.Instantiate(_menuButtonPREFAB, _instantationTransform);
+            button.SetUpButton(label, wrappedCallBack);
+            return button;
+        }
+        return null;
+    }
 
     ///Try to auto set up self
 #if UNITY_EDITOR

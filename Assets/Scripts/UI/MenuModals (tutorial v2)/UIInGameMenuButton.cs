@@ -8,6 +8,8 @@ public class UIInGameMenuButton : MonoBehaviour
 {
     [SerializeField] Button _button = default;
     [SerializeField] TextMeshProUGUI _buttonTxt = default;
+
+    System.Action<UIInGameMenuButton> _wrappedCallback;
     /************************************************************************************************************************/
 
     private void Awake()
@@ -25,8 +27,24 @@ public class UIInGameMenuButton : MonoBehaviour
         {
             _button.onClick.AddListener(delegate { callback(); });
         }
+    }   
+    public void SetUpButton(string label, System.Action<UIInGameMenuButton> callback)
+    {
+        if (_buttonTxt)
+        {
+            _buttonTxt.text = label;
+        }
+        if(_button)
+        {
+            _button.onClick.AddListener(delegate { WrappedCallback(); });
+            _wrappedCallback += callback;
+        }
     }
 
+    private void WrappedCallback()
+    {
+        _wrappedCallback.Invoke(this);
+    }
 
 
     private void FindComponents()
