@@ -9,6 +9,7 @@ public class UIMenuController : MonoBehaviour
     [SerializeField] Transform _instantationTransform = default;
     ///Call this when we close ourselves if anyone needs to know
     public System.Action OnClose;
+    
     /************************************************************************************************************************/
 
     /// <summary>Called from X button on Module</summary>
@@ -28,11 +29,12 @@ public class UIMenuController : MonoBehaviour
         }
         return null;
     }
-    protected UIInGameMenuButton CreateNewButton(string label, System.Action<UIInGameMenuButton> wrappedCallBack)
+    protected UIInGameMenuButton CreateNewButton(string label, IButtonData data, System.Action<UIInGameMenuButton, IButtonData> instantationAction, System.Action<UIInGameMenuButton> wrappedCallBack)
     {
         if (_menuButtonPREFAB)
         {
             UIInGameMenuButton button = GameObject.Instantiate(_menuButtonPREFAB, _instantationTransform);
+            instantationAction?.Invoke(button, data);
             button.SetUpButton(label, wrappedCallBack);
             return button;
         }

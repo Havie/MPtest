@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TutorialItem", menuName = "Tutorial/ Tutorial Stage")]
 
-public class TutorialStage : ScriptableObject, IButtonData
+public interface IButtonData 
 {
-    public string StageName => _stageName;
-    [SerializeField] string _stageName = default;
+    string GetID();
     /************************************************************************************************************************/
 
-    public string GetID() => StageName;
 }

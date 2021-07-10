@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class UIInGameMenuManager : MonoBehaviour
 {
-    [SerializeField] GameObject _gameMenu = default;
-    [SerializeField] GameObject _tutorialMenu = default;
+    [SerializeField] UIMenuController _gameMenu = default;
+    [SerializeField] UIMenuController _tutorialMenu = default;
 
     private bool _isTutorial;
     private bool _isOn;
@@ -21,25 +21,30 @@ public class UIInGameMenuManager : MonoBehaviour
         _isOn = !_isOn;
         if (_isTutorial)
         {
-            _tutorialMenu.SetActive(_isOn);
+            ToggleMenu(_tutorialMenu);
             return;
         }
-        _gameMenu.SetActive(_isOn);
+        ToggleMenu(_gameMenu);
     }
 
+    private void ToggleMenu(UIMenuController menu)
+    {
+        if(menu)
+        {
+            menu.gameObject.SetActive(_isOn);
+        }
+    }
     /// <summary> Menus are allowed to close themselves and we need to know if they do to reset our state </summary>
     private void ListenForMenuCloses()
     {
-        UIInGameOptionsMenu igMenu = _gameMenu.GetComponent<UIInGameOptionsMenu>();
-        if(igMenu)
+        if(_gameMenu)
         {
-            igMenu.OnClose += WidgetClosedSelf;
+            _gameMenu.OnClose += WidgetClosedSelf;
         }
         ///Listen for this regardless of if its the tutorial or not, because we can still reach this menu
-        UIInGameOptionsMenu tutMenu = _tutorialMenu.GetComponent<UIInGameOptionsMenu>();
-        if (tutMenu)
+        if (_tutorialMenu)
         {
-            tutMenu.OnClose += WidgetClosedSelf;
+            _tutorialMenu.OnClose += WidgetClosedSelf;
         }
     }
     private void WidgetClosedSelf()

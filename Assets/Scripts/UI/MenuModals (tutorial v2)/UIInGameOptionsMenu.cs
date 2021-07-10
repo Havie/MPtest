@@ -47,7 +47,7 @@ public class UIInGameOptionsMenu : UIMenuController
         foreach ( var stage in _tutorialManager.GetStages())
         {
             ///probably need to get data down into the button too
-            _buttonSetTut.Add(CreateNewButton(stage.StageName, TutorialModalChosen));
+            _buttonSetTut.Add(CreateNewButton(stage.StageName, stage, AssignButtonData,TutorialModalChosen));
         }
 
     }
@@ -93,7 +93,12 @@ public class UIInGameOptionsMenu : UIMenuController
     private void TutorialModalChosen(UIInGameMenuButton fromButton)
     {
         ///TODO get data off the button from a data wrapper class 
+        TutorialStage stage = (TutorialStage)fromButton.Data;
         ShowTutorialWidget();
+    }
+    private void AssignButtonData(UIInGameMenuButton button, IButtonData stage )
+    {
+        button.AssignData(stage);
     }
     private void ShowTutorialWidget()
     {

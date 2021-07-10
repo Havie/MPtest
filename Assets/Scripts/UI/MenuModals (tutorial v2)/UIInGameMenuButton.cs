@@ -8,7 +8,7 @@ public class UIInGameMenuButton : MonoBehaviour
 {
     [SerializeField] Button _button = default;
     [SerializeField] TextMeshProUGUI _buttonTxt = default;
-
+    public IButtonData Data { get; private set; }
     System.Action<UIInGameMenuButton> _wrappedCallback;
     /************************************************************************************************************************/
 
@@ -41,6 +41,10 @@ public class UIInGameMenuButton : MonoBehaviour
         }
     }
 
+    public void AssignData(IButtonData data)
+    {
+        Data = data;
+    }
     private void WrappedCallback()
     {
         _wrappedCallback.Invoke(this);

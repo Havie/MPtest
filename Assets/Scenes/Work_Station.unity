@@ -14025,8 +14025,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d46b778f5db1d45b1c0a843ba1243d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameMenu: {fileID: 474387191}
-  _tutorialMenu: {fileID: 7232850376240753058}
+  _gameMenu: {fileID: 474387192}
+  _tutorialMenu: {fileID: 0}
 --- !u!114 &86624275678646706
 MonoBehaviour:
   m_ObjectHideFlags: 0
