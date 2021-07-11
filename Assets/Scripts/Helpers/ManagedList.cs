@@ -9,7 +9,7 @@ namespace Helpers
 
         private Transform _transform;
         private static T _itemPREFAB;
-        List<T> _infiniteItemList = new List<T>();
+        protected List<T> _infiniteItemList = new List<T>();
         System.Action<T> _initalizationAction;
         System.Action<int, T, E> _unboxingAction;
         private static bool _initalized = false;

@@ -7,10 +7,14 @@ using TMPro;
 
 public class UITutorialContentModal : MonoBehaviour
 {
+    [Header("Default End Step")]
+    [SerializeField] TutorialItem _OnFinishedItem = default;
+    [Header("Self Components")]
     [SerializeField] TextMeshProUGUI _descriptionText = default;
     [SerializeField] VideoPlayer _video = default;
     [SerializeField] Button _leftButton = default;
     [SerializeField] Button _rightButton = default;
+
     /************************************************************************************************************************/
 
     public void DisplayInfo(TutorialItem item)
@@ -22,7 +26,10 @@ public class UITutorialContentModal : MonoBehaviour
         }
         else
         {
-            Debug.Log($"<color=yellow> Missing TutorialItem Info </color>");
+            if (_OnFinishedItem) ///Prevent an infinite loop if unassigned
+            {
+                DisplayInfo(_OnFinishedItem); 
+            }
         }
     }
 

@@ -18047,6 +18047,7 @@ MonoBehaviour:
   _video: {fileID: 5741024870225399525}
   _leftButton: {fileID: 5408156926609845369}
   _rightButton: {fileID: 6757335070868526829}
+  _OnFinishedItem: {fileID: 11400000, guid: b63ec910e06ff3942bf9923e4035d198, type: 2}
 --- !u!1 &4356790674499212186
 GameObject:
   m_ObjectHideFlags: 0
