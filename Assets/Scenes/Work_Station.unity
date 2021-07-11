@@ -18043,6 +18043,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df029e7e0eb7cb34f8b134b8c70cdab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _descriptionText: {fileID: 538635440278755492}
+  _video: {fileID: 5741024870225399525}
+  _leftButton: {fileID: 5408156926609845369}
+  _rightButton: {fileID: 6757335070868526829}
 --- !u!1 &4356790674499212186
 GameObject:
   m_ObjectHideFlags: 0
@@ -22247,7 +22251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tabPREFAB: {fileID: 1467067940042248586, guid: cd2b924baee09cc4fadd40e63c9c2dab,
     type: 3}
-  _contentModal: {fileID: 0}
+  _contentModal: {fileID: 4283530024492365764}
   _instantationLocation: {fileID: 5431149719742263291}
   _endTab: {fileID: 3231518155709459509}
 --- !u!222 &7201301089452747902
@@ -22436,7 +22440,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tabManager: {fileID: 7200466819063486347}
-  _modal: {fileID: 0}
 --- !u!222 &7232850376240753063
 CanvasRenderer:
   m_ObjectHideFlags: 0

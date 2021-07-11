@@ -66,14 +66,15 @@ public class UITutorialTabManager : MonoBehaviour
         }
         _activeTab = tab as UITutorialTab;
         _activeTab.SetFocused(true);
-        ///Fill Content Div:
-        _contentModal.DisplayInfo();
+        ///Fill Content Div: (this interface is a bit sketchy)
+        _contentModal.DisplayInfo(_activeTab.Data as TutorialItem);
     }
 
     private void AssignInfoToTab(int index, UITutorialTab tab, TutorialItem item)
     {
         tab.SetInfo(index, item.TitleTxt);
         tab.SetFocused(tab == _activeTab); ///Should always be false?
+        tab.AssignData(item);
      }
 
     private void GoRight()

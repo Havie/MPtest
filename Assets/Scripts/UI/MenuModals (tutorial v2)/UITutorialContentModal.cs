@@ -13,9 +13,17 @@ public class UITutorialContentModal : MonoBehaviour
     [SerializeField] Button _rightButton = default;
     /************************************************************************************************************************/
 
-    public void DisplayInfo()
+    public void DisplayInfo(TutorialItem item)
     {
-
+        if (item)
+        {
+            _descriptionText.text = item.bodyTxt;
+            _video.clip = item.VideoGif;
+        }
+        else
+        {
+            Debug.Log($"<color=yellow> Missing TutorialItem Info </color>");
+        }
     }
 
     public void SetButtonNavigationCallBack(bool isLeftArrow, System.Action callback)
