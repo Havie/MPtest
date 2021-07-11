@@ -14,8 +14,10 @@ public class UIInGameMenuManager : MonoBehaviour
     private void Awake()
     {
         _isTutorial = GameManager.Instance.IsTutorial;
-        ListenForMenuCloses();
+        //ListenForMenuCloses();
     }
+
+    /// <summary>Called from close button's on both menus</summary>
     public void ToggleMenu()
     {
         _isOn = !_isOn;
@@ -34,6 +36,9 @@ public class UIInGameMenuManager : MonoBehaviour
             menu.gameObject.SetActive(_isOn);
         }
     }
+    
+    /* Can bring this back if we want to be less dependent, but for now let the close button have a 
+     * seralized reference to this.Toggle()
     /// <summary> Menus are allowed to close themselves and we need to know if they do to reset our state </summary>
     private void ListenForMenuCloses()
     {
@@ -55,4 +60,5 @@ public class UIInGameMenuManager : MonoBehaviour
         }
         _isOn = false;
     }
+    */
 }

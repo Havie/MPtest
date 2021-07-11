@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: Stage 1
   m_EditorClassIdentifier: 
   _stageName: Stage 1
+  _tutorialSequence:
+  - {fileID: 11400000, guid: 8d904b161bc1b2d4c9af6efe932527b9, type: 2}
+  - {fileID: 11400000, guid: 8d2f69cccfb5a8841ac862a65970cf74, type: 2}
+  - {fileID: 11400000, guid: 2b14c36410ef5444eb890b70622343a4, type: 2}

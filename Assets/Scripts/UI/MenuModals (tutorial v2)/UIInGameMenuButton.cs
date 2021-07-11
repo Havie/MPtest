@@ -6,13 +6,13 @@ using TMPro;
 [RequireComponent(typeof(Button))]
 public class UIInGameMenuButton : MonoBehaviour
 {
-    [SerializeField] Button _button = default;
-    [SerializeField] TextMeshProUGUI _buttonTxt = default;
+    [SerializeField] protected Button _button = default;
+    [SerializeField] protected TextMeshProUGUI _buttonTxt = default;
     public IButtonData Data { get; private set; }
     System.Action<UIInGameMenuButton> _wrappedCallback;
     /************************************************************************************************************************/
 
-    private void Awake()
+    protected virtual void Awake()
     {
         FindComponents();
     }

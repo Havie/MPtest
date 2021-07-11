@@ -7,6 +7,7 @@ public class UIInGameOptionsMenu : UIMenuController
 {
     [Header("Scene Components")]
     [SerializeField] TutorialManager _tutorialManager = default;
+    [SerializeField] UITutorialModalController _tutorialModalController = default;
     [Header("Self Components")]
     [SerializeField] GameObject _menuLabelTxt = default; ///The Text that says "Menu"
     [SerializeField] Button _backButton = default; ///The button hidden in the header
@@ -89,20 +90,24 @@ public class UIInGameOptionsMenu : UIMenuController
             item.gameObject.SetActive(cond);
         }
     }
-
     private void TutorialModalChosen(UIInGameMenuButton fromButton)
     {
-        ///TODO get data off the button from a data wrapper class 
+        /// get data off the button from a data wrapper class 
         TutorialStage stage = (TutorialStage)fromButton.Data;
-        ShowTutorialWidget();
+        ///We dont load the stage here (thats in the tutorial mode only)
+        //_tutorialManager.LoadStage(stage);
+        ///Instead we load the psuedo widget that shows the shared info
+        ShowTutorialWidget(stage);
     }
     private void AssignButtonData(UIInGameMenuButton button, IButtonData stage )
     {
         button.AssignData(stage);
     }
-    private void ShowTutorialWidget()
+    private void ShowTutorialWidget(TutorialStage stage)
     {
         this.gameObject.SetActive(false);
+        _tutorialModalController.gameObject.SetActive(true);
+        _tutorialModalController.LoadTutorialStage(stage);
     }
 
     private void ResetSelf()

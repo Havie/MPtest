@@ -7,7 +7,7 @@ public class UIMenuController : MonoBehaviour
 {
     [SerializeField] UIInGameMenuButton _menuButtonPREFAB = default;
     [SerializeField] Transform _instantationTransform = default;
-    ///Call this when we close ourselves if anyone needs to know
+    ///Call this when we close ourselves if anyone needs to know (phased out, just calling UIInGameMenuManager.Toggle now)
     public System.Action OnClose;
     
     /************************************************************************************************************************/
