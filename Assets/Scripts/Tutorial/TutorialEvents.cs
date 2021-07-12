@@ -37,9 +37,9 @@ public static class TutorialEvents
             case eTutorialEvent.CONTINUE_BUTTON:
                 {
                     if (add)
-                        OnFirstContinueClicked += callback;
+                        OnContinueClicked += callback;
                     else
-                        OnFirstContinueClicked -= callback;
+                        OnContinueClicked -= callback;
                     break;
                 }
             case eTutorialEvent.INV_OPEN:
@@ -152,8 +152,8 @@ public static class TutorialEvents
     }
 
     /************************************************************************************************************************/
-    public static void CallOnContinueClicked() { OnFirstContinueClicked?.Invoke(new Void()); }
-    static event Action<Void> OnFirstContinueClicked;
+    public static void CallOnContinueClicked() { OnContinueClicked?.Invoke(new Void()); }
+    static event Action<Void> OnContinueClicked;
 
     public static void CallOnInventoryOpened() { OnInventoryOpen?.Invoke(new Void()); }
     static event Action<Void> OnInventoryOpen;

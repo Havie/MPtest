@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class UIInGameMenuManager : MonoBehaviour
 {
-    [SerializeField] UIMenuController _gameMenu = default;
-    [SerializeField] UIMenuController _tutorialMenu = default;
+    [SerializeField] GameObject _gameMenu = default; //UIMenuController
+    [SerializeField] GameObject _tutorialMenu = default;
 
     private bool _isTutorial;
     private bool _isOn;
@@ -29,11 +29,11 @@ public class UIInGameMenuManager : MonoBehaviour
         ToggleMenu(_gameMenu);
     }
 
-    private void ToggleMenu(UIMenuController menu)
+    private void ToggleMenu(GameObject menu)
     {
         if(menu)
         {
-            menu.gameObject.SetActive(_isOn);
+            menu.SetActive(_isOn);
         }
     }
     

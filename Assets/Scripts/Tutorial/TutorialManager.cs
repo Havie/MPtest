@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class TutorialManager :  MonoBehaviour //InstanceMonoBehaviour<TutorialManager>
 {
+    [SerializeField] UITutorialModalController _tutorialModalController = default;
     [SerializeField] TutorialStage[] _stages = default;
-
+    
     /************************************************************************************************************************/
 
     public TutorialStage[] GetStages()
@@ -19,5 +20,8 @@ public class TutorialManager :  MonoBehaviour //InstanceMonoBehaviour<TutorialMa
     {
         ///Updates the game logic to start running this stage of the tutorial
         ///cant really encapsulate inside of Stage cuz its read only data w no scene refs
+        _tutorialModalController.LoadTutorialStage(stage);
     }
+
+
 }

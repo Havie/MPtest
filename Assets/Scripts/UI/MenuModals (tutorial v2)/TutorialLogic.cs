@@ -1,43 +1,33 @@
 ﻿#pragma warning disable CS0649 // Ignore : "Field is never assigned to, and will always have its default value"
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using UnityEngine.Video;
 using UnityEngine.UI;
 using System.Collections;
 
-public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
+public class TutorialLogic : InstanceMonoBehaviour<TutorialLogic>
 {
-    public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU , LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION, LOCK_BINS, UNLOCK_BINS, DISABLE_SWITCH, ENABLE_SWITCH}
-    
-    [SerializeField] TextMeshProUGUI _txtTitle;
-    [SerializeField] TextMeshProUGUI _txtBody;
-    [SerializeField] VideoPlayer _video;
-    [SerializeField] Image _bgIMG;
-    [SerializeField] GameObject _modal;
-    [SerializeField] GameObject _tab;
-    [SerializeField] UserInput.UserInputManager _userInput;
-    [SerializeField] TutorialItem[] _tutorialSequence = default;
+    public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU, LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION, LOCK_BINS, UNLOCK_BINS, DISABLE_SWITCH, ENABLE_SWITCH }
+
+    [SerializeField] private UserInput.UserInputManager _userInput = default;
+    [SerializeField] private Button _continueButton = default;
+    private TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
-
-
-    public bool DISABLED = false;
+    private bool DISABLED = false;
 
     private void Start()
     {
-        if (GameManager.Instance.IsTutorial)
+        ///Set up our listener w the continue button to advance the tutorial
+        _continueButton.onClick.AddListener(delegate { ProgressTutorial(); });
+        ShowContinueButton(false);
+        if (_userInput == null)
         {
-            if (_userInput == null)
-            {
-                _userInput = FindObjectOfType<UserInput.UserInputManager>();
-            }
-            _userInput.AcceptInput = false;
-            LoadNextTutorialData();
+            _userInput = FindObjectOfType<UserInput.UserInputManager>();
         }
-        else
-        {
-            Destroy(this);
-        }
+    }
+    public void InitTutorialStage(TutorialItem[] sequence)
+    {
+        _tutorialSequence = sequence;
+        LoadNextTutorialData();
+        ShowContinueButton(true);
     }
 
     /// <summary>
@@ -46,14 +36,13 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     public void ProgressTutorial()
     {
         ///Close the Menu
-        ShowPopup(false);
+        ShowContinueButton(false);
         TutorialEvents.CallOnContinueClicked();
     }
 
-    public void ShowPopup(bool cond)
+    public void ShowContinueButton(bool cond)
     {
-        _modal.SetActive(cond);
-        _bgIMG.enabled = cond;
+        _continueButton.gameObject.SetActive(cond);
         _userInput.AcceptInput = !cond;
     }
 
@@ -69,9 +58,6 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
             return;
         }
         TutorialItem t = _tutorialSequence[_tutorialIndex];
-        _txtTitle.text = t.TitleTxt;
-        _txtBody.text = t.bodyTxt;
-        _video.clip = t.VideoGif;
         /// Set next listener for completed action
         TutorialEvents.RegisterForTutorialEvent(t.EventKey, TutorialActionSuccess);
 
@@ -93,7 +79,7 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
     {
         yield return new WaitForSeconds(delayInSeconds);
         /// setup for the next event
-        ShowPopup(true);
+        ShowContinueButton(true);
         LoadNextTutorialData();
 
     }
@@ -153,8 +139,6 @@ public class UITutorialModal : InstanceMonoBehaviour<UITutorialModal>
 
     private void OnDestroy()
     {
-        ShowPopup(false);
-        if (_tab)
-            Destroy(_tab);
+        ShowContinueButton(false);
     }
 }
