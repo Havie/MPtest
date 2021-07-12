@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 0
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 208956468912732013}
   - component: {fileID: 1467067940042248586}
   m_Layer: 5
-  m_Name: FocusedDiv
+  m_Name: TutorialTab (focused)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -379,3 +379,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _button: {fileID: 208956468912732013}
   _buttonTxt: {fileID: 1255523132268070421}
+  _image: {fileID: 0}
