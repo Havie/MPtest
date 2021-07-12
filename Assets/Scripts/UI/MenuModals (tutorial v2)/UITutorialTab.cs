@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Helpers;
+
 public class UITutorialTab : UIInGameMenuButton
 {
     [SerializeField] Image _image;
-
+    private static Color _colorOn;
+    private static Color _colorOff;
+    private static bool _colorsLoaded;
     private string _myIndexNumber;
     private string _myTitle;
     /************************************************************************************************************************/
@@ -13,7 +17,9 @@ public class UITutorialTab : UIInGameMenuButton
     {
         base.Awake();
         FindImage();
+        LoadStaticColors();
     }
+
 
     public void SetInfo(int stepNumber, string label)
     {
@@ -37,7 +43,9 @@ public class UITutorialTab : UIInGameMenuButton
     {
         if (_image)
         {
-            _image.enabled = cond;
+            Color bColor = cond ? _colorOn : _colorOff;
+            Debug.Log($"set color to : {cond} --> {bColor}");
+            _image .color= bColor;
         }
         SetDisplay(cond);
     }
@@ -61,6 +69,22 @@ public class UITutorialTab : UIInGameMenuButton
         if (_image == null)
         {
             _image = this.GetComponent<Image>();
+        }
+    }
+
+    private static void LoadStaticColors()
+    {
+        if (!_colorsLoaded)
+        {
+            ColorManager cm = Resources.Load<ColorManager>("ColorManager");
+            if (cm)
+            {
+                _colorOn = cm.TutorialTabOn;
+                _colorOff = cm.TutorialTabOff;
+                _colorsLoaded = true;
+            }
+            else
+                Debug.Log($"<color=red> Missing ColorManager in Resouce Folder</color>");
         }
     }
 

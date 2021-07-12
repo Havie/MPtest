@@ -17123,7 +17123,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3231518155709459508}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -18043,11 +18043,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df029e7e0eb7cb34f8b134b8c70cdab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _OnFinishedItem: {fileID: 11400000, guid: b63ec910e06ff3942bf9923e4035d198, type: 2}
   _descriptionText: {fileID: 538635440278755492}
   _video: {fileID: 5741024870225399525}
   _leftButton: {fileID: 5408156926609845369}
   _rightButton: {fileID: 6757335070868526829}
-  _OnFinishedItem: {fileID: 11400000, guid: b63ec910e06ff3942bf9923e4035d198, type: 2}
 --- !u!1 &4356790674499212186
 GameObject:
   m_ObjectHideFlags: 0
