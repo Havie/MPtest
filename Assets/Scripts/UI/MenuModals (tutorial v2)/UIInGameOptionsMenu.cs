@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIInGameOptionsMenu : UIMenuController
+public class UIInGameOptionsMenu : UITutorialStageMenu
 {
-    [Header("Scene Components")]
-    [SerializeField] TutorialManager _tutorialManager = default;
     [Header("Self Components")]
     [SerializeField] GameObject _menuLabelTxt = default; ///The Text that says "Menu"
     [SerializeField] Button _backButton = default; ///The button hidden in the header
 
     private List<UIInGameMenuButton> _buttonSetMain = new List<UIInGameMenuButton>();
-    private List<UIInGameMenuButton> _buttonSetTut = new List<UIInGameMenuButton>();
 
     private bool _showTutorialSet;
     /************************************************************************************************************************/
@@ -22,15 +19,15 @@ public class UIInGameOptionsMenu : UIMenuController
         ResetSelf();
     }
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake(); ///Load the tutorialButtonSet
         if (_backButton)
         {
             _backButton.onClick.AddListener(delegate { ShowMainMenuSets(); });
             ShowBackButton(false);
         }
         LoadMainMenuButtons();
-        LoadTutorialButtons();
         _showTutorialSet = false;
         SwitchMenuSets();
     }
@@ -40,16 +37,6 @@ public class UIInGameOptionsMenu : UIMenuController
         _buttonSetMain.Add(CreateNewButton("Tutorial", ShowTutorialSets));
         _buttonSetMain.Add(CreateNewButton("Quit", SceneTracker.Instance.ExitScene));
     }
-    private void LoadTutorialButtons()
-    {
-        if (!_tutorialManager)
-            return;
-        foreach ( var stage in _tutorialManager.GetStages())
-        {
-            _buttonSetTut.Add(CreateNewButton(stage.StageName, stage, AssignButtonData,TutorialModalChosen));
-        }
-    }
-
     private void ShowTutorialSets()
     {
         _showTutorialSet = true;
@@ -69,7 +56,7 @@ public class UIInGameOptionsMenu : UIMenuController
     }
     private void SwitchMenuSets()
     {
-        if(_showTutorialSet)
+        if (_showTutorialSet)
         {
             ToggleASet(_buttonSetMain, false);
             ToggleASet(_buttonSetTut, true);
@@ -87,23 +74,6 @@ public class UIInGameOptionsMenu : UIMenuController
             item.gameObject.SetActive(cond);
         }
     }
-    private void TutorialModalChosen(UIInGameMenuButton fromButton)
-    {
-        /// get data off the button from a data wrapper class 
-        TutorialStage stage = (TutorialStage)fromButton.Data;
-        ///Instead we load the widget that shows stage  info
-        ShowTutorialWidget(stage);
-    }
-    private void AssignButtonData(UIInGameMenuButton button, IButtonData stage )
-    {
-        button.AssignData(stage);
-    }
-    private void ShowTutorialWidget(TutorialStage stage)
-    {
-        this.gameObject.SetActive(false);
-        _tutorialManager.LoadStage(stage);
-    }
-
     private void ResetSelf()
     {
         ShowMainMenuSets();

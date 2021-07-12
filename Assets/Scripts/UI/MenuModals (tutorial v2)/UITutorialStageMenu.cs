@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UITutorialLockedMenu : UIMenuController
+public class UITutorialStageMenu : UIMenuController
 {
     [Header("Scene Components")]
-    [SerializeField] TutorialManager _tutorialManager = default;
+    [SerializeField] protected TutorialManager _tutorialManager = default;
 
-    private List<UIInGameMenuButton> _buttonSetTut = new List<UIInGameMenuButton>();
+    protected List<UIInGameMenuButton> _buttonSetTut = new List<UIInGameMenuButton>();
     /************************************************************************************************************************/
 
-    private void Awake()
+    protected virtual void Awake()
     {
         LoadTutorialButtons();
     }
-
     private void LoadTutorialButtons()
     {
         if (!_tutorialManager)
@@ -25,7 +24,6 @@ public class UITutorialLockedMenu : UIMenuController
             _buttonSetTut.Add(CreateNewButton(stage.StageName, stage, AssignButtonData, TutorialModalChosen));
         }
     }
-
     private void AssignButtonData(UIInGameMenuButton button, IButtonData stage)
     {
         button.AssignData(stage);
@@ -34,9 +32,9 @@ public class UITutorialLockedMenu : UIMenuController
     {
         /// get data off the button from a data wrapper class 
         TutorialStage stage = (TutorialStage)fromButton.Data;
-        ShowTutorialVideo(stage);
+        OnStageSelected(stage);
     }
-    private void ShowTutorialVideo(TutorialStage stage)
+    private void OnStageSelected(TutorialStage stage)
     {
         this.gameObject.SetActive(false);
         _tutorialManager.LoadStage(stage);

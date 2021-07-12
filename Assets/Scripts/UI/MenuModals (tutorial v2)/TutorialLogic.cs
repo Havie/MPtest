@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class TutorialLogic : InstanceMonoBehaviour<TutorialLogic>
+public class TutorialLogic : MonoBehaviour 
 {
     public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU, LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION, LOCK_BINS, UNLOCK_BINS, DISABLE_SWITCH, ENABLE_SWITCH }
-
+    public System.Action OnSequenceFinished;
     [SerializeField] private UserInput.UserInputManager _userInput = default;
     [SerializeField] private Button _continueButton = default;
     private TutorialItem[] _tutorialSequence = default;
@@ -42,7 +42,10 @@ public class TutorialLogic : InstanceMonoBehaviour<TutorialLogic>
 
     public void ShowContinueButton(bool cond)
     {
-        _continueButton.gameObject.SetActive(cond);
+        if (_continueButton)
+        {
+            _continueButton.gameObject.SetActive(cond);
+        }
         _userInput.AcceptInput = !cond;
     }
 
@@ -53,8 +56,8 @@ public class TutorialLogic : InstanceMonoBehaviour<TutorialLogic>
 
         if (_tutorialIndex >= _tutorialSequence.Length)
         {
-            //Debug.Log($"END OF TUTORIAL");
-            Destroy(this);
+            Debug.Log($"END OF TUTORIAL Seq");
+            OnSequenceFinished?.Invoke();
             return;
         }
         TutorialItem t = _tutorialSequence[_tutorialIndex];
@@ -81,7 +84,6 @@ public class TutorialLogic : InstanceMonoBehaviour<TutorialLogic>
         /// setup for the next event
         ShowContinueButton(true);
         LoadNextTutorialData();
-
     }
 
     private void HandleFollowUpActions(eFollowUpActions action)

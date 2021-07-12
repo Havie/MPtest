@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class UIInGameMenuManager : MonoBehaviour
+public class UIInGameHelpButton : MonoBehaviour
 {
     [SerializeField] GameObject _gameMenu = default; //UIMenuController
     [SerializeField] GameObject _tutorialMenu = default;
@@ -17,7 +17,9 @@ public class UIInGameMenuManager : MonoBehaviour
         //ListenForMenuCloses();
     }
 
-    /// <summary>Called from close button's on both menus</summary>
+    /// <summary>Called from close button's on both menus,
+    /// NB: The TutorialMenu actually turns itself off when its Non-Tutorial mode, it has to, but lets us know
+    /// </summary>
     public void ToggleMenu()
     {
         _isOn = !_isOn;

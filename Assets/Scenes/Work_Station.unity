@@ -1928,6 +1928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb76e720d7efa543ba5403d739138a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _logic: {fileID: 279993709}
   _tutorialModalController: {fileID: 7232850376240753059}
   _stages:
   - {fileID: 11400000, guid: 354c42155dd39c346b3cda5029c7902a, type: 2}
@@ -14409,6 +14410,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7232850376240753058}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &301994626227174184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15161,7 +15173,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1072813116212814410}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56dfb6ce8d01c9f458860a29b5dde2f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e1791d80bd2b6545b2abad21f5a3161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _menuButtonPREFAB: {fileID: 7191134685093858017, guid: a2692406e613c6f49bcdac1c6b40c0eb,
@@ -21034,7 +21046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78fe0a894fc53d64eaf9163c1d653590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _logic: {fileID: 279993709}
   _tabManager: {fileID: 7200466819063486347}
   _lockedTutorialDiv: {fileID: 1072813116212814410}
   _videoDiv: {fileID: 7232850376542340085}

@@ -40,10 +40,15 @@ public class UIInGameMenuButton : MonoBehaviour
             _wrappedCallback += callback;
         }
     }
-
     public void AssignData(IButtonData data)
     {
         Data = data;
+    }
+    
+    public void LockButton(bool cond)
+    {
+        _button.interactable = !cond;
+        ///TODO display lock icon
     }
     private void WrappedCallback()
     {

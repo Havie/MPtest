@@ -42,8 +42,8 @@ public class UITutorialTabManager : MonoBehaviour
             Init();
 
         _managedList.DisplayList(sequence);
-        _activeTab = _managedList.GetFirstItemInList();
-        _activeTab.SetFocused(true);
+        ///Force set our first tab to be clicked/display info
+        TabClickedCallBack(_managedList.GetFirstItemInList());
         _endTab.transform.SetAsLastSibling();
     }
     public void OnFinish()
