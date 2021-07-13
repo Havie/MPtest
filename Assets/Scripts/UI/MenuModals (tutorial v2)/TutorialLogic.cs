@@ -18,7 +18,7 @@ public class TutorialLogic : MonoBehaviour
     {
         ///Set up our listener w the continue button to advance the tutorial
         _continueButton.onClick.AddListener(delegate { ProgressTutorial(); });
-        ShowContinueButton(false);
+        ShowModalPopup(false);
         if (_userInput == null)
         {
             _userInput = FindObjectOfType<UserInput.UserInputManager>();
@@ -28,7 +28,7 @@ public class TutorialLogic : MonoBehaviour
     {
         _tutorialSequence = sequence;
         LoadNextTutorialData();
-        ShowContinueButton(true);
+        ShowModalPopup(true);
     }
 
     /// <summary>
@@ -39,15 +39,19 @@ public class TutorialLogic : MonoBehaviour
         var currTutorial = _tutorialSequence[_tutorialIndex];
 
         ///Close the Menu
-        ShowContinueButton(false);
+        ShowModalPopup(false);
         TutorialEvents.CallOnContinueClicked();
     }
 
 
-    /// We are going to need each step to dictate if it has to show continue button, or close module?
 
-    public void ShowContinueButton(bool cond)
+    public void ShowModalPopup(bool cond)
     {
+        Debug.Log($"We are showingModal = {cond}");
+        if(_tutorialModal)
+        {
+            _tutorialModal.gameObject.SetActive(cond);
+        }
         if (_continueButton)
         {
             _continueButton.gameObject.SetActive(cond);
@@ -89,7 +93,7 @@ public class TutorialLogic : MonoBehaviour
     {
         yield return new WaitForSeconds(delayInSeconds);
         /// setup for the next event
-        ShowContinueButton(true);
+        ShowModalPopup(true);
         LoadNextTutorialData();
     }
 
@@ -148,6 +152,6 @@ public class TutorialLogic : MonoBehaviour
 
     private void OnDestroy()
     {
-        ShowContinueButton(false);
+        ShowModalPopup(false);
     }
 }

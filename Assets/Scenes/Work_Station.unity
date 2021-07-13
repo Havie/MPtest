@@ -1947,6 +1947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _userInput: {fileID: 112527774}
+  _tutorialModal: {fileID: 7232850376240753058}
   _continueButton: {fileID: 2102202644}
 --- !u!1 &289886723 stripped
 GameObject:
@@ -21058,6 +21059,12 @@ MonoBehaviour:
   _lockedTutorialDiv: {fileID: 1072813116212814410}
   _videoDiv: {fileID: 7232850376542340085}
   _descriptionTxtArea: {fileID: 538635440278755492}
+  _stageDescription: 'Please select from one of the following unlocked stages.
+
+
+
+    New
+    stages can be unlocked by completing previous ones'
 --- !u!222 &7232850376240753063
 CanvasRenderer:
   m_ObjectHideFlags: 0
