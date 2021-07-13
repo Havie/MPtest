@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: Stage 2
   m_EditorClassIdentifier: 
   _stageName: Stage 2
+  _stageDescription: INSERT DESC
+  _tutorialSequence: []

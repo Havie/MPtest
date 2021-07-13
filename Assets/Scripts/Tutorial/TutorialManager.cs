@@ -23,6 +23,10 @@ public class TutorialManager : MonoBehaviour //InstanceMonoBehaviour<TutorialMan
         ///TODO figure this out, shudnt have reg to logic, since the _tutorialModalController Does
         _logic.OnSequenceFinished += FinishCurrentStage;
     }
+    private void OnDisable()
+    {
+        _logic.OnSequenceFinished -= FinishCurrentStage;
+    }
 
     public TutorialStage[] GetStages()
     {
