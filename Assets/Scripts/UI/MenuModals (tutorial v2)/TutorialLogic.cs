@@ -8,6 +8,7 @@ public class TutorialLogic : MonoBehaviour
     public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU, LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION, LOCK_BINS, UNLOCK_BINS, DISABLE_SWITCH, ENABLE_SWITCH }
     public System.Action OnSequenceFinished;
     [SerializeField] private UserInput.UserInputManager _userInput = default;
+    [SerializeField] private GameObject _tutorialModal = default;
     [SerializeField] private Button _continueButton = default;
     private TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
@@ -35,10 +36,15 @@ public class TutorialLogic : MonoBehaviour
     /// </summary>
     public void ProgressTutorial()
     {
+        var currTutorial = _tutorialSequence[_tutorialIndex];
+
         ///Close the Menu
         ShowContinueButton(false);
         TutorialEvents.CallOnContinueClicked();
     }
+
+
+    /// We are going to need each step to dictate if it has to show continue button, or close module?
 
     public void ShowContinueButton(bool cond)
     {
@@ -73,6 +79,7 @@ public class TutorialLogic : MonoBehaviour
         var currTutorial = _tutorialSequence[_tutorialIndex];
         TutorialEvents.UnRegisterForTutorialEvent(currTutorial.EventKey, TutorialActionSuccess);
         HandleFollowUpActions(currTutorial.FollowUpResponse);
+        Debug.Log($"Trying to enact followUpResponse : {currTutorial.FollowUpResponse} ");
         ///Give the player a fixed duration to see the results of their actions
         StartCoroutine(NextStepDelay(currTutorial.TimeDelayBeforeNextInstruction));
 
