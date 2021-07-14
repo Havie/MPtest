@@ -41,7 +41,7 @@ public class UITutorialTabManager : MonoBehaviour
     {
         if (!_isInitalized)
             Init();
-
+        ///TODO We need passed in data about which item is unlocked or not
         _managedList.DisplayList(sequence);
         ///Force set our first tab to be clicked/display info
         TabClickedCallBack(_managedList.GetFirstItemInList());
@@ -53,6 +53,10 @@ public class UITutorialTabManager : MonoBehaviour
         TabClickedCallBack(_endTab);
     }
     
+    public void EnableGoingDirection(eTabDir dir)
+    {
+        _contentModal.EnableContentArrow(dir == eTabDir.LEFT);
+    }
     public void DisableGoingDirection(eTabDir dir)
     {
         _contentModal.DisableContentArrow(dir == eTabDir.LEFT);

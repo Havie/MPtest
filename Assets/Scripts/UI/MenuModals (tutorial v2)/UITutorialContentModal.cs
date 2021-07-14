@@ -38,11 +38,18 @@ public class UITutorialContentModal : MonoBehaviour
         Button button = PickCorrectArrowButton(isLeftArrow);
         button.onClick.AddListener(delegate { callback(); });
     }
-
+    public void EnableContentArrow(bool isLeftArrow)
+    {
+        Debug.Log($"ENABLE CONTENT ARROW");
+        ToggleContentArrow(PickCorrectArrowButton(isLeftArrow), true);
+    }
     public void DisableContentArrow(bool isLeftArrow)
     {
-        Button button = PickCorrectArrowButton(isLeftArrow);
-        button.gameObject.SetActive(false);
+        ToggleContentArrow(PickCorrectArrowButton(isLeftArrow), false);
+    }
+    private void ToggleContentArrow(Button button , bool cond)
+    {
+        button.gameObject.SetActive(cond);
     }
     private Button PickCorrectArrowButton(bool isLeftArrow)
     {

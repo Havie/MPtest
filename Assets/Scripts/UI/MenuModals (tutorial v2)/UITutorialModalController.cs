@@ -19,23 +19,29 @@ public class UITutorialModalController : MonoBehaviour
     {
         _isTutorial = isTutorial;
         ShowStageMenu(_isTutorial);
-        if(_isTutorial)
-        {
-            ///The player is not clicking the right tab
-            _tabManager.DisableGoingDirection(UITutorialTabManager.eTabDir.RIGHT);
-        }
+
     }
     /************************************************************************************************************************/
 
     ///If we're in the tutorial , show the other menu that replaces the video
     public void ShowStageMenu(bool cond)
     {
+        Debug.Log($"ShowStageMenu: {cond}");
         _lockedTutorialDiv.SetActive(cond);
         _videoDiv.SetActive(!cond);
         if (cond)
         {
             ///Set the default text for stage selection
             _descriptionTxtArea.text = _stageDescription;
+            /// There is no left/right navigation on the stage menu
+            _tabManager.DisableGoingDirection(UITutorialTabManager.eTabDir.RIGHT);
+            _tabManager.DisableGoingDirection(UITutorialTabManager.eTabDir.LEFT);
+        }
+        else
+        {
+            ///Show the Arrows for the content display and let the TabManager figure out if they are interactable or not
+            _tabManager.EnableGoingDirection(UITutorialTabManager.eTabDir.RIGHT);
+            _tabManager.EnableGoingDirection(UITutorialTabManager.eTabDir.LEFT);
         }
     }
     ///Show the main functionality of the widget, which are the steps and videos
