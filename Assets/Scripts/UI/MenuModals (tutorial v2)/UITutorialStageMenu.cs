@@ -34,9 +34,8 @@ public class UITutorialStageMenu : UIMenuController
         TutorialStage stage = (TutorialStage)fromButton.Data;
         OnStageSelected(stage);
     }
-    private void OnStageSelected(TutorialStage stage)
+    protected virtual void OnStageSelected(TutorialStage stage)
     {
-        this.gameObject.SetActive(false);
         _tutorialManager.LoadStage(stage);
     }
 }

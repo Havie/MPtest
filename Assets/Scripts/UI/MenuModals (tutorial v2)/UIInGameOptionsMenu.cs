@@ -31,7 +31,12 @@ public class UIInGameOptionsMenu : UITutorialStageMenu
         _showTutorialSet = false;
         SwitchMenuSets();
     }
-
+    protected override void OnStageSelected(TutorialStage stage)
+    {
+        base.OnStageSelected(stage);
+        //Turn ourself off, since LockableMenu is controller by the TutorialModalController
+        this.gameObject.SetActive(false);
+    }
     private void LoadMainMenuButtons()
     {
         _buttonSetMain.Add(CreateNewButton("Tutorial", ShowTutorialSets));

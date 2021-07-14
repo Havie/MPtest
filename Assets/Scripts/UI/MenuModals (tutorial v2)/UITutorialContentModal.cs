@@ -35,8 +35,18 @@ public class UITutorialContentModal : MonoBehaviour
 
     public void SetButtonNavigationCallBack(bool isLeftArrow, System.Action callback)
     {
-        Button button = isLeftArrow ? _leftButton : _rightButton;
+        Button button = PickCorrectArrowButton(isLeftArrow);
         button.onClick.AddListener(delegate { callback(); });
+    }
+
+    public void DisableContentArrow(bool isLeftArrow)
+    {
+        Button button = PickCorrectArrowButton(isLeftArrow);
+        button.gameObject.SetActive(false);
+    }
+    private Button PickCorrectArrowButton(bool isLeftArrow)
+    {
+        return isLeftArrow ? _leftButton : _rightButton;
     }
 }
 

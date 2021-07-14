@@ -1947,7 +1947,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _userInput: {fileID: 112527774}
-  _tutorialModal: {fileID: 7232850376240753058}
   _continueButton: {fileID: 2102202644}
 --- !u!1 &289886723 stripped
 GameObject:

@@ -20,8 +20,8 @@ public class TutorialManager : MonoBehaviour //InstanceMonoBehaviour<TutorialMan
     private void Start()
     {
         _tutorialModalController.Init(_isTutorial);
-        ///TODO figure this out, shudnt have reg to logic, since the _tutorialModalController Does
         _logic.OnSequenceFinished += FinishCurrentStage;
+        _logic.SetModal(_tutorialModalController.gameObject);
     }
     private void OnDisable()
     {

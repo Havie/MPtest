@@ -5,6 +5,7 @@ using Helpers;
 
 public class UITutorialTabManager : MonoBehaviour
 {
+    public enum eTabDir { LEFT, RIGHT}
     [Header("Prefab")]
     [SerializeField] UITutorialTab _tabPREFAB = default;
     [Header("Other Components")]
@@ -52,6 +53,10 @@ public class UITutorialTabManager : MonoBehaviour
         TabClickedCallBack(_endTab);
     }
     
+    public void DisableGoingDirection(eTabDir dir)
+    {
+        _contentModal.DisableContentArrow(dir == eTabDir.LEFT);
+    }
     /************************************************************************************************************************/
     private void InitTab(UITutorialTab tab)
     {

@@ -19,6 +19,11 @@ public class UITutorialModalController : MonoBehaviour
     {
         _isTutorial = isTutorial;
         ShowStageMenu(_isTutorial);
+        if(_isTutorial)
+        {
+            ///The player is not clicking the right tab
+            _tabManager.DisableGoingDirection(UITutorialTabManager.eTabDir.RIGHT);
+        }
     }
     /************************************************************************************************************************/
 

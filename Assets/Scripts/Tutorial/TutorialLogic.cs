@@ -8,11 +8,13 @@ public class TutorialLogic : MonoBehaviour
     public enum eFollowUpActions { NONE, SPAWNPARTS, MAINMENU, LOCK_CONSTRUCTION, UNLOCK_CONSTRUCTION, LOCK_BINS, UNLOCK_BINS, DISABLE_SWITCH, ENABLE_SWITCH }
     public System.Action OnSequenceFinished;
     [SerializeField] private UserInput.UserInputManager _userInput = default;
-    [SerializeField] private GameObject _tutorialModal = default;
     [SerializeField] private Button _continueButton = default;
+    private GameObject _tutorialModal = default;
     private TutorialItem[] _tutorialSequence = default;
     private int _tutorialIndex = -1; //Start below 0 so we can progress right away
     private bool DISABLED = false;
+
+    /************************************************************************************************************************/
 
     private void Start()
     {
@@ -24,6 +26,13 @@ public class TutorialLogic : MonoBehaviour
             _userInput = FindObjectOfType<UserInput.UserInputManager>();
         }
     }
+
+    public void SetModal(GameObject modal)
+    {
+        _tutorialModal = modal;
+    }
+    /************************************************************************************************************************/
+
     public void InitTutorialStage(TutorialItem[] sequence)
     {
         _tutorialSequence = sequence;
@@ -31,9 +40,7 @@ public class TutorialLogic : MonoBehaviour
         ShowModalPopup(true);
     }
 
-    /// <summary>
-    /// Called from Continue Button
-    /// </summary>
+    /// <summary> Called from Continue Button</summary>
     public void ProgressTutorial()
     {
         var currTutorial = _tutorialSequence[_tutorialIndex];
@@ -42,8 +49,6 @@ public class TutorialLogic : MonoBehaviour
         ShowModalPopup(false);
         TutorialEvents.CallOnContinueClicked();
     }
-
-
 
     public void ShowModalPopup(bool cond)
     {
@@ -58,6 +63,9 @@ public class TutorialLogic : MonoBehaviour
         }
         _userInput.AcceptInput = !cond;
     }
+
+
+    /************************************************************************************************************************/
 
     private void LoadNextTutorialData()
     {
