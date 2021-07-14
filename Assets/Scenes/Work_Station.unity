@@ -21058,12 +21058,16 @@ MonoBehaviour:
   _lockedTutorialDiv: {fileID: 1072813116212814410}
   _videoDiv: {fileID: 7232850376542340085}
   _descriptionTxtArea: {fileID: 538635440278755492}
-  _stageDescription: 'Please select from one of the following unlocked stages.
+  _stageDescription: 'Welcome to the Buzz Digital Tutorial.
+
+
+    Please select from
+    one of the following unlocked stages.
 
 
 
-    New
-    stages can be unlocked by completing previous ones'
+    New stages can be unlocked by completing
+    previous ones'
 --- !u!222 &7232850376240753063
 CanvasRenderer:
   m_ObjectHideFlags: 0
