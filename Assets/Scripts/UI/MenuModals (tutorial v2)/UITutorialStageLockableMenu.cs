@@ -18,8 +18,8 @@ public class UITutorialStageLockableMenu : UITutorialStageMenu
         foreach (UIInGameMenuButton button in _buttonSetTut)
         {
             TutorialStage stage = button.Data as TutorialStage;
-            bool isLocked = _tutorialManager.StageIsLocked(stage);
-            button.LockButton(isLocked);
+            bool isUnlocked = TutorialUnlocks.isStageUnlocked(stage);
+            button.LockButton(!isUnlocked);
         }
     }
 }

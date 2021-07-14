@@ -19,6 +19,7 @@ public class TutorialManager : MonoBehaviour //InstanceMonoBehaviour<TutorialMan
 
     private void Start()
     {
+        TutorialUnlocks.SetStages(_stages); ///safe guards against duplicates
         _tutorialModalController.Init(_isTutorial);
         _logic.OnSequenceFinished += FinishCurrentStage;
         _logic.SetModal(_tutorialModalController.gameObject);
@@ -48,21 +49,10 @@ public class TutorialManager : MonoBehaviour //InstanceMonoBehaviour<TutorialMan
     public void FinishCurrentStage()
     {
         ++_finishedStageCount;
+        TutorialUnlocks.UnlockStage(_stages[_finishedStageCount]);
         _tutorialModalController.ShowStageMenu(true);
     }
 
-    public bool StageIsLocked(TutorialStage stage)
-    {
-        for(int i = 0; i< _stages.Length; ++i)
-        {
-            if(stage==_stages[i])
-            {
-                return i > _finishedStageCount;
-            }
-        }
-
-        return true;
-    }
     private void BeginExecuteTutorialLogic(TutorialStage stage)
     {
         _logic.InitTutorialStage(stage.TutorialSequence.ToArray());
