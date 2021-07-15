@@ -18,18 +18,23 @@ public class UITutorialTabManager : MonoBehaviour
     private bool _isInitalized = false;
     /************************************************************************************************************************/
 
-    private void Start()
-    {
-        if (!_isInitalized)
-            Init();
-    }
-    private void Init()
+    private void Init(bool isTutorial)
     {
         ///Init our resizeable list
         _managedList.Init(_instantationLocation, _tabPREFAB, InitTab, AssignInfoToTab);
         /// Init our endTab
         _endTab.SetInfo(-1, "Finished");
         _endTab.SetUpButton("Finished", OnFinish);
+        if(isTutorial)
+        {
+            ///Lock the finished tab so it can be unlocked after completing the last step
+            _endTab.LockButton(true);
+        }
+        else
+        {
+            ///Dont show the finished tab in this version of the help menu
+            _endTab.gameObject.SetActive(false);
+        }
         /// Init our content divs nav arrows to interact like  a tab 
         _contentModal.SetButtonNavigationCallBack(true, GoLeft);
         _contentModal.SetButtonNavigationCallBack(false, GoRight);
@@ -37,11 +42,10 @@ public class UITutorialTabManager : MonoBehaviour
     }
     /************************************************************************************************************************/
 
-    public void LoadSequenece(List<TutorialItem> sequence)
+    public void LoadSequenece(List<TutorialItem> sequence, bool isTutorial)
     {
         if (!_isInitalized)
-            Init();
-        ///TODO We need passed in data about which item is unlocked or not
+            Init(isTutorial);
         _managedList.DisplayList(sequence);
         ///Force set our first tab to be clicked/display info
         TabClickedCallBack(_managedList.GetFirstItemInList());
@@ -77,12 +81,18 @@ public class UITutorialTabManager : MonoBehaviour
         _activeTab.SetFocused(true);
         ///Fill Content Div: (this interface is a bit sketchy)
         _contentModal.DisplayInfo(_activeTab.Data as TutorialItem);
+        ///TODO figure out if we can go left/right on the modal based on this Item's index / ItemStep?
     }
 
     private void AssignInfoToTab(int index, UITutorialTab tab, TutorialItem item)
     {
+        ///Assign the title text and keep track of our index in the list
         tab.SetInfo(index, item.TitleTxt);
+        ///Change the display to if its the active tab or not
         tab.SetFocused(tab == _activeTab); ///Should always be false?
+        ///Set the button to interactable based on if its been unlocked or not yet via the tutorial
+        tab.LockButton(!TutorialUnlocks.IsStepUnlocked(item));
+        ///Store the item data for later
         tab.AssignData(item);
      }
 

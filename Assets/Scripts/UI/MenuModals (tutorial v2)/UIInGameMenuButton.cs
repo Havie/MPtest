@@ -44,7 +44,6 @@ public class UIInGameMenuButton : MonoBehaviour
     {
         Data = data;
     }
-    
     public void LockButton(bool cond)
     {
         _button.interactable = !cond;

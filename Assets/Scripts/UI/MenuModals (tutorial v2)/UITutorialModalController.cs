@@ -26,7 +26,6 @@ public class UITutorialModalController : MonoBehaviour
     ///If we're in the tutorial , show the other menu that replaces the video
     public void ShowStageMenu(bool cond)
     {
-        Debug.Log($"ShowStageMenu: {cond}");
         _lockedTutorialDiv.SetActive(cond);
         _videoDiv.SetActive(!cond);
         if (cond)
@@ -47,7 +46,7 @@ public class UITutorialModalController : MonoBehaviour
     ///Show the main functionality of the widget, which are the steps and videos
     public void LoadTutorialStage(TutorialStage stage)
     {
-        _tabManager.LoadSequenece(stage.TutorialSequence);
+        _tabManager.LoadSequenece(stage.TutorialSequence, _isTutorial);
         this.gameObject.SetActive(true);
         if (_isTutorial)
         {

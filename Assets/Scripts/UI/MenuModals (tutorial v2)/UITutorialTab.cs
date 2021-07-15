@@ -41,6 +41,7 @@ public class UITutorialTab : UIInGameMenuButton
 
     public void SetFocused(bool cond)
     {
+        Debug.Log($"{this.gameObject.name} set Focused =  {cond}");
         if (_image) ///Change the color of our tab based on if were focused or not
         {
             Color bColor = cond ? _colorOn : _colorOff;
