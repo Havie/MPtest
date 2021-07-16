@@ -5,7 +5,7 @@ using Helpers;
 
 public class UITutorialTabManager : MonoBehaviour
 {
-    public enum eTabDir { LEFT, RIGHT}
+    public enum eTabDir { LEFT, RIGHT }
     [Header("Prefab")]
     [SerializeField] UITutorialTab _tabPREFAB = default;
     [Header("Other Components")]
@@ -29,13 +29,13 @@ public class UITutorialTabManager : MonoBehaviour
     }
     private void Subscribe(bool cond)
     {
-        if(cond)
+        if (cond)
         {
-            TutorialUnlocks.OnStepUnlocked += FigeOutIfActiveTabCanNavigate;
+            TutorialUnlocks.OnStepUnlocked += TutorialAdvanced;
         }
         else
         {
-            TutorialUnlocks.OnStepUnlocked -= FigeOutIfActiveTabCanNavigate;
+            TutorialUnlocks.OnStepUnlocked -= TutorialAdvanced;
         }
     }
     private void Init(bool isTutorial)
@@ -45,7 +45,7 @@ public class UITutorialTabManager : MonoBehaviour
         /// Init our endTab
         _endTab.SetInfo(-1, "Finished");
         _endTab.SetUpButton("Finished", OnFinish);
-        if(isTutorial)
+        if (isTutorial)
         {
             ///Lock the finished tab so it can be unlocked after completing the last step
             _endTab.LockButton(true);
@@ -76,7 +76,7 @@ public class UITutorialTabManager : MonoBehaviour
         //The finished tab
         TabClickedCallBack(_endTab);
     }
-    
+
     public void EnableGoingDirection(eTabDir dir)
     {
         _contentModal.EnableContentArrow(dir == eTabDir.LEFT);
@@ -89,17 +89,20 @@ public class UITutorialTabManager : MonoBehaviour
     private void InitTab(UITutorialTab tab)
     {
         tab.SetUpButton("", IgnoreTabClickCallBack);
+        ///HACK- Disable button component here, to make ImageComponent work as expected with UIInGameMenuButton.SetFocused()
+        ///In order to preserve some functionality if we ever want to reuse the logic for making tabs clickable
+        tab.GetComponent<UnityEngine.UI.Button>().enabled = false;
+        Debug.Log($"Disabled : {tab} from being clicked");
     }
     private void IgnoreTabClickCallBack(UIInGameMenuButton tab)
     {
         ///Decided via design these tabs arent supposed to clicked, only the arrows
-        tab.LockButton(true);
     }
 
     private void TabClickedCallBack(UIInGameMenuButton tab)
     {
         ///Reset old tab
-        if(_activeTab)
+        if (_activeTab)
         {
             _activeTab.SetFocused(false);
         }
@@ -120,16 +123,16 @@ public class UITutorialTabManager : MonoBehaviour
         tab.SetInfo(index, item.TitleTxt);
         ///Change the display to if its the active tab or not
         tab.SetFocused(tab == _activeTab); ///Should always be false?
-        ///Set the button to interactable based on if its been unlocked or not yet via the tutorial
+                                           ///Set the button to interactable based on if its been unlocked or not yet via the tutorial
         tab.LockButton(!TutorialUnlocks.IsStepUnlocked(item));
         ///Store the item data for later
         tab.AssignData(item);
-     }
+    }
 
     private void GoRight()
     {
         var rightIndex = _managedList.GetIndexOfManagedItem(_activeTab) + 1;
-        if (!TryClickTabAtIndex(rightIndex ))
+        if (!TryClickTabAtIndex(rightIndex))
         {
             ///We are on the last item in the managed list, so manually click finish tab
             OnFinish();
@@ -138,7 +141,7 @@ public class UITutorialTabManager : MonoBehaviour
 
     private void GoLeft()
     {
-        int leftIndex = _managedList.GetIndexOfManagedItem(_activeTab) -1 ;
+        int leftIndex = _managedList.GetIndexOfManagedItem(_activeTab) - 1;
         if (_activeTab == _endTab)
         {
             /// We are on the finish tab which is not apart of the managed list, so click the last item in managed list
@@ -150,9 +153,23 @@ public class UITutorialTabManager : MonoBehaviour
 
     private bool TryClickTabAtIndex(int index)
     {
-       return  _managedList.EnactOnManagedItemByIndex(index, TabClickedCallBack);
+        return _managedList.EnactOnManagedItemByIndex(index, TabClickedCallBack);
     }
 
+    private void TutorialAdvanced(TutorialItem item)
+    {
+        var currIndex = _managedList.GetIndexOfManagedItem(_activeTab);
+        UITutorialTab tab = _managedList.GetManagedItemAtIndex(currIndex + 1);
+        if (tab && tab.Data as TutorialItem == item)
+        {
+            GoRight();
+        }
+        else
+        {
+            Debug.Log($"<color=red> NO tab at index </color>: {currIndex + 1} for Unlockitem : {item} ");
+        }
+
+    }
     private void FigeOutIfActiveTabCanNavigate()
     {
         var currIndex = _managedList.GetIndexOfManagedItem(_activeTab);

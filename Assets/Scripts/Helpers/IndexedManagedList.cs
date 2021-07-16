@@ -34,6 +34,12 @@ namespace Helpers
             }
             return false;
         }
+        public T GetManagedItemAtIndex(int index)
+        {
+            if (index < 0 || index > _infiniteItemList.Count - 1)
+                return null;
+            return _infiniteItemList[index];
+        }
 
 	}
 }
