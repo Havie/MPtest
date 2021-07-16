@@ -79,6 +79,7 @@ public class TutorialLogic : MonoBehaviour
             return;
         }
         TutorialItem t = _tutorialSequence[_tutorialIndex];
+        TutorialUnlocks.UnlockStep(t);
         /// Set next listener for completed action
         TutorialEvents.RegisterForTutorialEvent(t.EventKey, TutorialActionSuccess);
 

@@ -42,10 +42,15 @@ public class UIInGameMenuButton : MonoBehaviour
     }
     public void AssignData(IButtonData data)
     {
+#if UNITY_EDITOR
+        Debug.Log($"<color=red> Changed Button name</color> --> {this.gameObject.name } to {"MenuButton_" + data.ToString()}");
+        this.gameObject.name = "MenuButton_" + data.ToString();
+#endif
         Data = data;
     }
     public void LockButton(bool cond)
     {
+        Debug.Log($"<color=yellow>{this.gameObject.name}</color> LockButton =  {cond} ..  _button.interactable = {!cond}");
         _button.interactable = !cond;
         ///TODO display lock icon
     }

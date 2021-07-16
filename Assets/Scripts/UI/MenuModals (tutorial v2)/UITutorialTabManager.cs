@@ -13,11 +13,31 @@ public class UITutorialTabManager : MonoBehaviour
     [Header("Self Components")]
     [SerializeField] private Transform _instantationLocation = default;
     [SerializeField] private UITutorialTab _endTab = default;
+    [Header("Settings")]
+    [SerializeField] private int _headerPixelWidthMax = 1000; ///TODO implement logic for this 
     private IndexedManagedList<UITutorialTab, TutorialItem> _managedList = new IndexedManagedList<UITutorialTab, TutorialItem>();
     private UITutorialTab _activeTab = default;
     private bool _isInitalized = false;
     /************************************************************************************************************************/
-
+    private void OnDestroy()
+    {
+        Subscribe(false);
+    }
+    private void Start()
+    {
+        Subscribe(true);
+    }
+    private void Subscribe(bool cond)
+    {
+        if(cond)
+        {
+            TutorialUnlocks.OnStepUnlocked += FigeOutIfActiveTabCanNavigate;
+        }
+        else
+        {
+            TutorialUnlocks.OnStepUnlocked -= FigeOutIfActiveTabCanNavigate;
+        }
+    }
     private void Init(bool isTutorial)
     {
         ///Init our resizeable list
@@ -68,20 +88,30 @@ public class UITutorialTabManager : MonoBehaviour
     /************************************************************************************************************************/
     private void InitTab(UITutorialTab tab)
     {
-        tab.SetUpButton("", TabClickedCallBack);
+        tab.SetUpButton("", IgnoreTabClickCallBack);
+    }
+    private void IgnoreTabClickCallBack(UIInGameMenuButton tab)
+    {
+        ///Decided via design these tabs arent supposed to clicked, only the arrows
+        tab.LockButton(true);
     }
 
     private void TabClickedCallBack(UIInGameMenuButton tab)
     {
+        ///Reset old tab
         if(_activeTab)
         {
             _activeTab.SetFocused(false);
         }
+        ///Cache our new tab
         _activeTab = tab as UITutorialTab;
         _activeTab.SetFocused(true);
-        ///Fill Content Div: (this interface is a bit sketchy)
-        _contentModal.DisplayInfo(_activeTab.Data as TutorialItem);
-        ///TODO figure out if we can go left/right on the modal based on this Item's index / ItemStep?
+        /// grab data from the button (this interface is a bit sketchy)
+        var tutorialItem = _activeTab.Data as TutorialItem;
+        ///Fill Content Div:
+        _contentModal.DisplayInfo(tutorialItem);
+        /// figure out if we can go left/right on the modal based on this Item's index / ItemStep? (will lock arrows/other tabs)
+        FigeOutIfActiveTabCanNavigate();
     }
 
     private void AssignInfoToTab(int index, UITutorialTab tab, TutorialItem item)
@@ -98,7 +128,8 @@ public class UITutorialTabManager : MonoBehaviour
 
     private void GoRight()
     {
-        if(!TryClickTabAtIndex(_managedList.GetIndexOfManagedItem(_activeTab) + 1))
+        var rightIndex = _managedList.GetIndexOfManagedItem(_activeTab) + 1;
+        if (!TryClickTabAtIndex(rightIndex ))
         {
             ///We are on the last item in the managed list, so manually click finish tab
             OnFinish();
@@ -107,13 +138,13 @@ public class UITutorialTabManager : MonoBehaviour
 
     private void GoLeft()
     {
-        int index = _managedList.GetIndexOfManagedItem(_activeTab) -1 ;
+        int leftIndex = _managedList.GetIndexOfManagedItem(_activeTab) -1 ;
         if (_activeTab == _endTab)
         {
             /// We are on the finish tab which is not apart of the managed list, so click the last item in managed list
-            index = _managedList.GetLastIndex();
+            leftIndex = _managedList.GetLastIndex();
         }
-        TryClickTabAtIndex(index);
+        TryClickTabAtIndex(leftIndex);
 
     }
 
@@ -121,4 +152,37 @@ public class UITutorialTabManager : MonoBehaviour
     {
        return  _managedList.EnactOnManagedItemByIndex(index, TabClickedCallBack);
     }
+
+    private void FigeOutIfActiveTabCanNavigate()
+    {
+        var currIndex = _managedList.GetIndexOfManagedItem(_activeTab);
+        _managedList.EnactOnManagedItemByIndex(currIndex - 1, InspectTabLeft);
+        _managedList.EnactOnManagedItemByIndex(currIndex + 1, InspectTabRight);
+    }
+
+    private void InspectTabRight(UITutorialTab tab)
+    {
+        HandleTabAndArrow(tab, eTabDir.RIGHT);
+    }
+    private void InspectTabLeft(UITutorialTab tab)
+    {
+        HandleTabAndArrow(tab, eTabDir.LEFT);
+    }
+    private void HandleTabAndArrow(UITutorialTab tab, eTabDir dir)
+    {
+        bool isUnlocked = TutorialUnlocks.IsStepUnlocked(tab.Data as TutorialItem);
+        tab.LockButton(!isUnlocked);
+        if (!isUnlocked)
+        {
+            ///Disable Arrow
+            DisableGoingDirection(dir);
+        }
+        else
+        {
+            ///Enable Arrow
+            EnableGoingDirection(dir);
+        }
+    }
+
+
 }

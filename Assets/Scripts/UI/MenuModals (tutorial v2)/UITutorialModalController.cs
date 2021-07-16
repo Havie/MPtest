@@ -36,12 +36,9 @@ public class UITutorialModalController : MonoBehaviour
             _tabManager.DisableGoingDirection(UITutorialTabManager.eTabDir.RIGHT);
             _tabManager.DisableGoingDirection(UITutorialTabManager.eTabDir.LEFT);
         }
-        else
-        {
-            ///Show the Arrows for the content display and let the TabManager figure out if they are interactable or not
-            _tabManager.EnableGoingDirection(UITutorialTabManager.eTabDir.RIGHT);
-            _tabManager.EnableGoingDirection(UITutorialTabManager.eTabDir.LEFT);
-        }
+        //else
+        ///let the TabManager figure out if they are interactable or not
+
     }
     ///Show the main functionality of the widget, which are the steps and videos
     public void LoadTutorialStage(TutorialStage stage)

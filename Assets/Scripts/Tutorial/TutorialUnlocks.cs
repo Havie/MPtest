@@ -4,8 +4,11 @@ using UnityEngine;
 
 public static class TutorialUnlocks
 {
-    private static Dictionary<TutorialStage, bool> _stageMap ;
-    private static Dictionary<TutorialItem, bool> _itemMap ;
+    public static System.Action OnStageUnlocked;
+    public static System.Action OnStepUnlocked;
+
+    private static Dictionary<TutorialStage, bool> _stageMap;
+    private static Dictionary<TutorialItem, bool> _itemMap;
 
     private static bool _hasBeenSet = false;
     /************************************************************************************************************************/
@@ -40,11 +43,31 @@ public static class TutorialUnlocks
     }
     public static void UnlockStage(TutorialStage stage)
     {
-        _stageMap[stage] = true;
+        Debug.Log($"<color=green>UNlockStage!</color> = {stage}");
+        UnlockTrueInStageMap(stage);
+        OnStageUnlocked?.Invoke();
+
+    }
+    private static void UnlockTrueInStageMap(TutorialStage stage)
+    {
+        if (_stageMap.ContainsKey(stage))
+            _stageMap[stage] = true;
+        else
+            _stageMap.Add(stage, true);
     }
     public static void UnlockStep(TutorialItem step)
     {
-        _itemMap[step] = true;
+        Debug.Log($"<color=green>UNlockS tEP!</color> = {step}");
+        UnlockedTrueInStepMap(step);
+        OnStepUnlocked?.Invoke();
+    }
+
+    private static void UnlockedTrueInStepMap(TutorialItem step)
+    {
+        if (_itemMap.ContainsKey(step))
+            _itemMap[step] = true;
+        else
+            _itemMap.Add(step, true);
     }
 
     public static bool isStageUnlocked(TutorialStage stage)
@@ -56,6 +79,7 @@ public static class TutorialUnlocks
     public static bool IsStepUnlocked(TutorialItem step)
     {
         _itemMap.TryGetValue(step, out bool cond);
+        Debug.Log($"<color=green>IS {step} unlocked</color> = {cond}");
         return cond;
     }
 }

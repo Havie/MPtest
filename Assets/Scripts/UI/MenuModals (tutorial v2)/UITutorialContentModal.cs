@@ -49,6 +49,7 @@ public class UITutorialContentModal : MonoBehaviour
     }
     private void ToggleContentArrow(Button button , bool cond)
     {
+        Debug.Log($"<color=orange>{button.gameObject.name}</color> ToggleContentArrow =  {cond} ..  _button.SetActive = {cond}");
         button.gameObject.SetActive(cond);
     }
     private Button PickCorrectArrowButton(bool isLeftArrow)
