@@ -14,6 +14,8 @@ public class UITutorialContentModal : MonoBehaviour
     [SerializeField] VideoPlayer _video = default;
     [SerializeField] Button _leftButton = default;
     [SerializeField] Button _rightButton = default;
+    [SerializeField] private Button _continueButton = default;
+    [SerializeField] private Button _returnButton = default;
 
     /************************************************************************************************************************/
 
@@ -23,12 +25,15 @@ public class UITutorialContentModal : MonoBehaviour
         {
             _descriptionText.text = item.bodyTxt;
             _video.clip = item.VideoGif;
+            ShowReturnButton(false);
         }
         else
         {
             if (_OnFinishedItem) ///Prevent an infinite loop if unassigned
             {
-                DisplayInfo(_OnFinishedItem); 
+                DisplayInfo(_OnFinishedItem);
+                ///Show the button that replaced the continue button and returns us to the stage selection
+                ShowReturnButton(true);
             }
         }
     }
@@ -55,6 +60,11 @@ public class UITutorialContentModal : MonoBehaviour
     private Button PickCorrectArrowButton(bool isLeftArrow)
     {
         return isLeftArrow ? _leftButton : _rightButton;
+    }
+    private void ShowReturnButton(bool cond)
+    {
+        _returnButton.gameObject.SetActive(cond);
+        _continueButton.gameObject.SetActive(!cond);
     }
 }
 

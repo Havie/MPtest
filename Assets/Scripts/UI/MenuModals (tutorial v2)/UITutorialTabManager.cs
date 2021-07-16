@@ -32,10 +32,12 @@ public class UITutorialTabManager : MonoBehaviour
         if (cond)
         {
             TutorialUnlocks.OnStepUnlocked += TutorialAdvanced;
+            TutorialUnlocks.OnStageUnlocked += SequenceFinished;
         }
         else
         {
             TutorialUnlocks.OnStepUnlocked -= TutorialAdvanced;
+            TutorialUnlocks.OnStageUnlocked -= SequenceFinished;
         }
     }
     private void Init(bool isTutorial)
@@ -44,7 +46,7 @@ public class UITutorialTabManager : MonoBehaviour
         _managedList.Init(_instantationLocation, _tabPREFAB, InitTab, AssignInfoToTab);
         /// Init our endTab
         _endTab.SetInfo(-1, "Finished");
-        _endTab.SetUpButton("Finished", OnFinish);
+        _endTab.SetUpButton("Finished", OnFinish); ///This is semi unused now becuz tabs cant be clicked anymore
         if (isTutorial)
         {
             ///Lock the finished tab so it can be unlocked after completing the last step
@@ -71,11 +73,7 @@ public class UITutorialTabManager : MonoBehaviour
         TabClickedCallBack(_managedList.GetFirstItemInList());
         _endTab.transform.SetAsLastSibling();
     }
-    public void OnFinish()
-    {
-        //The finished tab
-        TabClickedCallBack(_endTab);
-    }
+
 
     public void EnableGoingDirection(eTabDir dir)
     {
@@ -111,6 +109,7 @@ public class UITutorialTabManager : MonoBehaviour
         _activeTab.SetFocused(true);
         /// grab data from the button (this interface is a bit sketchy)
         var tutorialItem = _activeTab.Data as TutorialItem;
+        Debug.Log($"<color=purple>DataFromTab= </color> {tutorialItem}");
         ///Fill Content Div:
         _contentModal.DisplayInfo(tutorialItem);
         /// figure out if we can go left/right on the modal based on this Item's index / ItemStep? (will lock arrows/other tabs)
@@ -128,7 +127,11 @@ public class UITutorialTabManager : MonoBehaviour
         ///Store the item data for later
         tab.AssignData(item);
     }
-
+    private void OnFinish()
+    {
+        //The finished tab
+        TabClickedCallBack(_endTab);
+    }
     private void GoRight()
     {
         var rightIndex = _managedList.GetIndexOfManagedItem(_activeTab) + 1;
@@ -173,6 +176,17 @@ public class UITutorialTabManager : MonoBehaviour
     private void FigeOutIfActiveTabCanNavigate()
     {
         var currIndex = _managedList.GetIndexOfManagedItem(_activeTab);
+        if (currIndex== -1)
+        {
+            ///We are outside of the list range 
+            if(_activeTab==_endTab)
+            {
+                ///Force them to only be able to return to stage menu
+                DisableGoingDirection(eTabDir.LEFT);
+                DisableGoingDirection(eTabDir.RIGHT);
+            }
+            return;
+        }
         if (!_managedList.EnactOnManagedItemByIndex(currIndex - 1, InspectTabLeft))
         {
             ///There are no more items to the left, so disable left arrow
@@ -184,7 +198,6 @@ public class UITutorialTabManager : MonoBehaviour
             DisableGoingDirection(eTabDir.RIGHT);
         }
     }
-
     private void InspectTabRight(UITutorialTab tab)
     {
         HandleTabAndArrow(tab, eTabDir.RIGHT);
@@ -196,6 +209,7 @@ public class UITutorialTabManager : MonoBehaviour
     private void HandleTabAndArrow(UITutorialTab tab, eTabDir dir)
     {
         bool isUnlocked = TutorialUnlocks.IsStepUnlocked(tab.Data as TutorialItem);
+        Debug.Log($"{dir}...IsStepUnlocked : {tab.Data as TutorialItem}  = {isUnlocked}");
         ///Disable/Enable the tab in the header
         tab.LockButton(!isUnlocked);
         if (!isUnlocked)
@@ -209,6 +223,10 @@ public class UITutorialTabManager : MonoBehaviour
             EnableGoingDirection(dir);
         }
     }
-
-
+        
+    private void SequenceFinished(TutorialStage stage)
+    {
+        ///Display the final Tab
+        OnFinish();
+    }
 }

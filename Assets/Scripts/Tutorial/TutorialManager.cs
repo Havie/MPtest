@@ -50,7 +50,8 @@ public class TutorialManager : MonoBehaviour //InstanceMonoBehaviour<TutorialMan
     {
         ++_finishedStageCount;
         TutorialUnlocks.UnlockStage(_stages[_finishedStageCount]);
-        _tutorialModalController.ShowStageMenu(true);
+        ///Let the continue button in Modal advance this upon reaching finished Step
+        //_tutorialModalController.ShowStageMenu(true); 
     }
 
     private void BeginExecuteTutorialLogic(TutorialStage stage)
