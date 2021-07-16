@@ -173,8 +173,16 @@ public class UITutorialTabManager : MonoBehaviour
     private void FigeOutIfActiveTabCanNavigate()
     {
         var currIndex = _managedList.GetIndexOfManagedItem(_activeTab);
-        _managedList.EnactOnManagedItemByIndex(currIndex - 1, InspectTabLeft);
-        _managedList.EnactOnManagedItemByIndex(currIndex + 1, InspectTabRight);
+        if (!_managedList.EnactOnManagedItemByIndex(currIndex - 1, InspectTabLeft))
+        {
+            ///There are no more items to the left, so disable left arrow
+            DisableGoingDirection(eTabDir.LEFT);
+        }
+        if (!_managedList.EnactOnManagedItemByIndex(currIndex + 1, InspectTabRight))
+        {
+            ///There are no more items to the right so disable right arrow
+            DisableGoingDirection(eTabDir.RIGHT);
+        }
     }
 
     private void InspectTabRight(UITutorialTab tab)
@@ -188,15 +196,16 @@ public class UITutorialTabManager : MonoBehaviour
     private void HandleTabAndArrow(UITutorialTab tab, eTabDir dir)
     {
         bool isUnlocked = TutorialUnlocks.IsStepUnlocked(tab.Data as TutorialItem);
+        ///Disable/Enable the tab in the header
         tab.LockButton(!isUnlocked);
         if (!isUnlocked)
         {
-            ///Disable Arrow
+            ///Disable Arrow in the content
             DisableGoingDirection(dir);
         }
         else
         {
-            ///Enable Arrow
+            ///Enable Arrow in the content
             EnableGoingDirection(dir);
         }
     }
