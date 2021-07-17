@@ -15,10 +15,10 @@ MonoBehaviour:
   _eventKey: 0
   _onCompleteResponse: 2
   _title: Tutorial Complete!
-  _description: 'Great Job. You''ve completed the tutorial!
+  _description: 'Great Job. You completed this section of the tutorial.
 
 
-    Now its time to
-    return to the main menu and join a multiplayer session.'
+    Click
+    the return button to go back to the stage menu.'
   _video: {fileID: 32900000, guid: b59d25530d10c354995f11ba744eeb0e, type: 3}
   _timeInSecondsBeforeNextInstruction: 0.5

@@ -230,7 +230,8 @@ public class UIBucketManagement : MonoBehaviour, IAssignable
 
     private void LockBin(bool cond)
     {
-        Debug.Log($"<color=red> disableSelf= {!cond} </color>");
+        Debug.Log($"{gameObject.name}<color=red> LockedBin= {!cond} </color>");
+        ///Cant raycast a disabled image component
         this.GetComponent<Image>().enabled = !cond;
     }
 }

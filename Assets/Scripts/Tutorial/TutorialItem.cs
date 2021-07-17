@@ -6,13 +6,13 @@ using UnityEngine.Video;
 
 
 [CreateAssetMenu(fileName = "TutorialItem", menuName = "Tutorial/ Tutorial Item")]
-public class TutorialItem : ScriptableObject
+public class TutorialItem : ScriptableObject , IButtonData
 {
     public TutorialEvents.eTutorialEvent EventKey => _eventKey;
     [SerializeField] TutorialEvents.eTutorialEvent _eventKey;
 
-    public UITutorialModal.eFollowUpActions FollowUpResponse => _onCompleteResponse;
-    [SerializeField] UITutorialModal.eFollowUpActions _onCompleteResponse;
+    public TutorialLogic.eFollowUpActions FollowUpResponse => _onCompleteResponse;
+    [SerializeField] TutorialLogic.eFollowUpActions _onCompleteResponse;
     public string TitleTxt => _title;
     [SerializeField] string _title;
 
@@ -25,5 +25,9 @@ public class TutorialItem : ScriptableObject
 
     public float TimeDelayBeforeNextInstruction => _timeInSecondsBeforeNextInstruction;
     [SerializeField] float _timeInSecondsBeforeNextInstruction =1;
+
+    /************************************************************************************************************************/
+    /// interface - IButtonData
+    public string GetID() => EventKey.ToString();
 
 }
