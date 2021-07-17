@@ -17275,6 +17275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _button: {fileID: 3231518155709459510}
   _buttonTxt: {fileID: 6766260030792109872}
+  _rect: {fileID: 9073604207068914034}
   _image: {fileID: 3189432803980304224}
 --- !u!114 &3231518155709459510
 MonoBehaviour:
@@ -21278,7 +21279,7 @@ MonoBehaviour:
   _contentModal: {fileID: 4283530024492365764}
   _instantationLocation: {fileID: 5431149719742263291}
   _endTab: {fileID: 3231518155709459509}
-  _headerPixelWidthMax: 1000
+  _headerPixelWidthMax: 600
 --- !u!222 &7201301089452747902
 CanvasRenderer:
   m_ObjectHideFlags: 0

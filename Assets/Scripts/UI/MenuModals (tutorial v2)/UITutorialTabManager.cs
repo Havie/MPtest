@@ -72,6 +72,7 @@ public class UITutorialTabManager : MonoBehaviour
         ///Force set our first tab to be clicked/display info
         TabClickedCallBack(_managedList.GetFirstItemInList());
         _endTab.transform.SetAsLastSibling();
+        ControlMaxWidth();
     }
     public void HideTabs(bool cond)
     {
@@ -115,6 +116,8 @@ public class UITutorialTabManager : MonoBehaviour
         _contentModal.DisplayInfo(tutorialItem);
         /// figure out if we can go left/right on the modal based on this Item's index / ItemStep? (will lock arrows/other tabs)
         FigeOutIfActiveTabCanNavigate();
+        ///Ensure our tabs text fits in the space 
+        ControlMaxWidth();
     }
 
     private void AssignInfoToTab(int index, UITutorialTab tab, TutorialItem item)
@@ -127,6 +130,8 @@ public class UITutorialTabManager : MonoBehaviour
         tab.LockButton(!TutorialUnlocks.IsStepUnlocked(item));
         ///Store the item data for later
         tab.AssignData(item);
+        ///Ensure our tabs text fits in the space 
+        ControlMaxWidth();
     }
     private void OnFinish()
     {
@@ -174,10 +179,10 @@ public class UITutorialTabManager : MonoBehaviour
     private void FigeOutIfActiveTabCanNavigate()
     {
         var currIndex = _managedList.GetIndexOfManagedItem(_activeTab);
-        if (currIndex== -1)
+        if (currIndex == -1)
         {
             ///We are outside of the list range 
-            if(_activeTab==_endTab)
+            if (_activeTab == _endTab)
             {
                 ///Force them to only be able to return to stage menu
                 DisableGoingDirection(eTabDir.LEFT);
@@ -226,5 +231,54 @@ public class UITutorialTabManager : MonoBehaviour
         ///Display the final Tab
         OnFinish();
     }
-    
+    private void ControlMaxWidth()
+    {
+        ///Controls how many tabs are displayed based on the text size of each tab
+        float width = 0;
+        int activeIndex = _managedList.GetIndexOfManagedItem(_activeTab);
+        for (int i = 0; i <= _managedList.GetLastIndex(); i++)
+        {
+            UITutorialTab tab = _managedList.GetManagedItemAtIndex(i);
+            ///Start with every tab off
+            tab.SetFocused(false);
+            tab.gameObject.SetActive(false);
+            ///always show 1 tab behind curr index and active tab
+            if (i == activeIndex - 1)
+            {
+                tab.gameObject.SetActive(true);
+                width += tab.Width();
+            }
+            else if (i == activeIndex)
+            {
+                tab.gameObject.SetActive(true);
+                tab.SetFocused(true); ///So we get the proper reading from Width
+                width += tab.Width();
+            }
+            else if (i > activeIndex)
+            {
+                if (width < _headerPixelWidthMax)
+                {
+                    tab.gameObject.SetActive(true);
+                }
+                width += tab.Width();
+            }
+        }
+        //Debug.Log($"[{_managedList.GetLastIndex()}]The total  width = {width}   vs {_headerPixelWidthMax}");
+        HandleEndTabDisplay(width);
+    }
+
+    private void HandleEndTabDisplay(float width)
+    {
+        if (width > _headerPixelWidthMax)
+        {
+            ///Display "..."
+            _endTab.SetInfo(-2, "...");
+        }
+        else
+        {
+            ///Display "finished"
+            _endTab.SetInfo(-1, "Finished");
+        }
+        _endTab.SetFocused(_activeTab == _endTab);
+    }
 }

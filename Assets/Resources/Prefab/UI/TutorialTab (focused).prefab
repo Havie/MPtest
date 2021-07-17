@@ -316,4 +316,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _button: {fileID: 208956468912732013}
   _buttonTxt: {fileID: 1255523132268070421}
-  _image: {fileID: 0}
+  _rect: {fileID: 320531778376754642}
+  _image: {fileID: 6710285347882914540}
