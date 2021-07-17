@@ -32,10 +32,10 @@ public class UITutorialTab : UIInGameMenuButton
         ///This is still not working as expected seems to be returning all sorts of old/wrong info
         if (val == 0)
         {
-            ///It seems 1 char = 85 width, however multiple characters seems to be something like 1char = 25px. Must be some kind of base padding
+            ///It seems 1 char = 85 width, however multiple characters seems to be something like 1char = 25px. Must be some kind of base padding im not willing to spend more time on
             val = (_isFocused ? _myTitle.Length * _textScaleFactor : 85f);
         }
-        Debug.Log($"<color=red>{val}</color>{this.gameObject.name}<color=yellow>STATE:</color> _isFocused={_isFocused} _myTitle[{_myTitle}, {_myTitle.Length}]  , _myIndexNumber[{_myIndexNumber}, {_myIndexNumber.Length}]");
+        //Debug.Log($"<color=red>{val}</color>{this.gameObject.name}<color=yellow>STATE:</color> _isFocused={_isFocused} _myTitle[{_myTitle}, {_myTitle.Length}]  , _myIndexNumber[{_myIndexNumber}, {_myIndexNumber.Length}]");
         return val;
     }
     public void SetInfo(int stepNumber, string label)
