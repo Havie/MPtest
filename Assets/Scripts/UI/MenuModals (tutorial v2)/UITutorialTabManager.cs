@@ -73,8 +73,10 @@ public class UITutorialTabManager : MonoBehaviour
         TabClickedCallBack(_managedList.GetFirstItemInList());
         _endTab.transform.SetAsLastSibling();
     }
-
-
+    public void HideTabs(bool cond)
+    {
+        _instantationLocation.gameObject.SetActive(!cond);
+    }
     public void EnableGoingDirection(eTabDir dir)
     {
         _contentModal.EnableContentArrow(dir == eTabDir.LEFT);
@@ -90,7 +92,6 @@ public class UITutorialTabManager : MonoBehaviour
         ///HACK- Disable button component here, to make ImageComponent work as expected with UIInGameMenuButton.SetFocused()
         ///In order to preserve some functionality if we ever want to reuse the logic for making tabs clickable
         tab.GetComponent<UnityEngine.UI.Button>().enabled = false;
-        Debug.Log($"Disabled : {tab} from being clicked");
     }
     private void IgnoreTabClickCallBack(UIInGameMenuButton tab)
     {
@@ -141,7 +142,6 @@ public class UITutorialTabManager : MonoBehaviour
             OnFinish();
         }
     }
-
     private void GoLeft()
     {
         int leftIndex = _managedList.GetIndexOfManagedItem(_activeTab) - 1;
@@ -153,12 +153,10 @@ public class UITutorialTabManager : MonoBehaviour
         TryClickTabAtIndex(leftIndex);
 
     }
-
     private bool TryClickTabAtIndex(int index)
     {
         return _managedList.EnactOnManagedItemByIndex(index, TabClickedCallBack);
     }
-
     private void TutorialAdvanced(TutorialItem item)
     {
         var currIndex = _managedList.GetIndexOfManagedItem(_activeTab);
@@ -223,10 +221,10 @@ public class UITutorialTabManager : MonoBehaviour
             EnableGoingDirection(dir);
         }
     }
-        
     private void SequenceFinished(TutorialStage stage)
     {
         ///Display the final Tab
         OnFinish();
     }
+    
 }

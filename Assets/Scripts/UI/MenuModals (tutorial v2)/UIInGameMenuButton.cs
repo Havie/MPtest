@@ -54,12 +54,11 @@ public class UIInGameMenuButton : MonoBehaviour
         _button.interactable = !cond;
         ///TODO display lock icon
     }
+    /************************************************************************************************************************/
     private void WrappedCallback()
     {
         _wrappedCallback.Invoke(this);
     }
-
-
     private void FindComponents()
     {
         if (_button == null)

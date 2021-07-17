@@ -12,12 +12,15 @@ public class UITutorialTab : UIInGameMenuButton
     private static bool _colorsLoaded;
     private string _myIndexNumber;
     private string _myTitle;
+
+    private bool _isInit = false;
     /************************************************************************************************************************/
     protected override void Awake()
     {
         base.Awake();
         FindImage();
         LoadStaticColors();
+        _isInit = true;
     }
 
 
@@ -42,6 +45,9 @@ public class UITutorialTab : UIInGameMenuButton
     public void SetFocused(bool cond)
     {
         //Debug.Log($"<color=white>{this.gameObject.name}</color> set Focused =  {cond}");
+        if (!_isInit)
+            Awake();
+
         if (_image) ///Change the color of our tab based on if were focused or not
         {
             Color bColor = cond ? _colorOn : _colorOff;

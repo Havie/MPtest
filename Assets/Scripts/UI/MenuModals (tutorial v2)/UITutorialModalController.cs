@@ -28,6 +28,7 @@ public class UITutorialModalController : MonoBehaviour
     {
         _lockedTutorialDiv.SetActive(cond);
         _videoDiv.SetActive(!cond);
+        _tabManager.HideTabs(cond);
         if (cond)
         {
             ///Set the default text for stage selection
